@@ -1,0 +1,6 @@
+dist/
+server/invest-coach-server*
+server/*.exe
+*.db
+__pycache__/
+.env
