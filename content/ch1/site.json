@@ -1,0 +1,425 @@
+{
+  "id": "invest-coach-redflags-ch1",
+  "title": "投资教练 · 财报红旗 第一章：收入的水分",
+  "tag": "财报红旗 · 第一章",
+  "about": "这一章训练一件事：从财报数字里看出「收入的水分」——先理解三张表和记账规则，再学两面互相印证的红旗，最后在真实 SEC 执法案例上做完整判断。本站只做历史案例复盘与判断习惯训练，不提供任何投资建议、不输出任何前瞻信号；「信息不足，无法判断」在这里是可以得满分的答案。",
+  "reorder": "与教科书顺序的三处刻意差异：① 案例先行——第一案（whole-task）在只学两个基础节点后立即出现，先凭直觉判断再学工具（v3 §3.2 whole-task first；§3.3.5 故事先行）；② 红旗清单后置——清单是最后一个节点，定位为验证工具而非初判工具（v3 §3.3.5，清单初判压低职业怀疑有成体系实证）；③ 元能力横插——基率与证伪思维作为 cross 节点嵌在红旗与案例之间，而非附录（v3 §3.1/§3.6）。",
+  "x_note": "扩展字段说明（原 schema 之外）：ageStart 语义重用为图层深度 1–7（validator 的 hard 边单调性检查继续有效），age 显示为「第 N 层」；x_qtype=该节点题型（题型=节点位置的函数，v3 §3.2，第一章全部规则判分）；x_pairs=该节点的混淆对清单（v3 §3.6 一等公民，look=看起来一样的表象 / a=红旗解读 / b=无辜解读 / key=区分线索）；x_level=题面材料呈现难度（v3 §4 阶梯：L1 两行数字面板 / L2 简化三表）。screens 留空为有意为之——填内容是 §6 计划第 2 步。",
+  "x_version": "ch1-graph-v1（2026-08-21）｜已审定冻结 2026-08-22：8 项裁决全部通过，零改动",
+  "sources": [
+    { "name": "SEC AAER 1393 / LR-17001", "type": "官方认定（公有领域）", "url": "https://www.sec.gov/litigation/litreleases/lr17001.htm", "note": "Sunbeam 案，2001-05-15：SEC 指控 Dunlap 等人以 channel stuffing、bill-and-hold、cookie jar reserves 等手段虚增业绩" },
+    { "name": "Sunbeam FY1997 10-K", "type": "原始财报（EDGAR，公有领域）", "url": "https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000003662&type=10-K", "note": "案例数字唯一取数源；含重述前后对照，步骤 2 从此档核定全部数字" },
+    { "name": "Schilit, Financial Shenanigans", "type": "教材", "url": "https://www.mhprofessional.com/financial-shenanigans-fourth-edition-9781260117264-usa", "note": "红旗体系、DSO 用法、Sunbeam 案分析的教材级出处；canon 只存指针不复制内容" },
+    { "name": "Graham & Meredith (1937)", "type": "教材（正典）", "url": "https://openlibrary.org/works/OL3931356W", "note": "《The Interpretation of Financial Statements》——「格雷厄姆怎么说」层的三表与科目正典出处" },
+    { "name": "FASB ASC 606 / IFRS 15；ASC 230 / IAS 7", "type": "会计准则", "url": "https://asc.fasb.org/", "note": "收入确认（606/15）与现金流量表分类（230/IAS 7）的准则出处指针" },
+    { "name": "Beneish (1999)", "type": "论文", "url": "https://doi.org/10.2469/faj.v55.n5.2296", "note": "The Detection of Earnings Manipulation, FAJ 55(5)：M-Score；DSRI（应收/收入指数）= 红旗一的学术锚" },
+    { "name": "Sloan (1996)", "type": "论文", "url": "https://www.jstor.org/stable/248290", "note": "The Accounting Review 71(3)：应计与现金流持续性差异 = 红旗二的学术锚" },
+    { "name": "Dyck, Morse & Zingales (2023)", "type": "论文", "url": "https://doi.org/10.1007/s11142-022-09738-5", "note": "How Pervasive Is Corporate Fraud? Rev. Acc. Studies：舞弊基率约 10%（v3 §3.6 已裁决，不重开）" },
+    { "name": "Heuer (1999)", "type": "美政府出版物（公有领域）", "url": "https://www.cia.gov/resources/csi/books-monographs/psychology-of-intelligence-analysis-2/", "note": "Psychology of Intelligence Analysis, CIA：竞争假设分析（ACH）= 证伪元能力的正典出处" },
+    { "name": "Sedlmeier & Gigerenzer (2001)", "type": "论文", "url": "https://doi.org/10.1037/0096-3445.130.3.380", "note": "JEP: General 130(3)：自然频数教学法 = 基率节点的教法出处" }
+  ],
+  "nodes": [
+    {
+      "id": "three-statements",
+      "icon": "🗂️",
+      "name": "三张表的分工",
+      "domain": "基础规则",
+      "age": "第1层",
+      "ageStart": 1,
+      "desc": "利润表讲「赚没赚」、资产负债表讲「有什么欠什么」、现金流量表讲「钱真的动没动」——三张表各管一摊，讲的却是同一家公司，互相对不上就是线索。",
+      "canon": {
+        "term": "财务报表三大报表（The Three Financial Statements）",
+        "formal": "完整财务报告由利润表（一段时期的经营成果）、资产负债表（某一时点的财务状况）与现金流量表（一段时期的现金收支）构成，三者经复式记账勾稽关联，应能相互印证。",
+        "source": "Graham & Meredith (1937)",
+        "textbook": "CFA Level I · FSA · Introduction to Financial Statement Analysis"
+      },
+      "evidence": [
+        "能说出每张表回答什么问题（业绩 / 家底 / 现金）",
+        "给出「应收账款 / 净利润 / 经营现金流」能指认各自属于哪张表",
+        "能说出三张表讲同一家公司、应当互相印证"
+      ],
+      "x_qtype": "点选/多选（规则判分）",
+      "screens": []
+    },
+    {
+      "id": "growth-rate",
+      "icon": "➗",
+      "name": "增速怎么算",
+      "domain": "基础规则",
+      "age": "第1层",
+      "ageStart": 1,
+      "desc": "同比增速 =（今年 − 去年）÷ 去年。单个增速只是数字，两个科目的增速放在一起比，才能看出「谁跑得快」——本章所有红旗都建立在这一步算术上。",
+      "canon": {
+        "term": "同比增长率与横向分析（YoY Growth Rate; Horizontal Analysis）",
+        "formal": "增长率 =（本期数 − 基期数）/ 基期数；横向分析通过比较各科目跨期变动率识别结构性变化，基期数值过小时增长率失真。",
+        "source": "Schilit, Financial Shenanigans",
+        "textbook": "CFA Level I · FSA · Financial Analysis Techniques（横向分析）"
+      },
+      "evidence": [
+        "给两年数字能算出同比增速",
+        "能比较两个科目的增速并说出谁跑得快",
+        "知道基数很小时增速会失真"
+      ],
+      "x_qtype": "点选/多选（规则判分）",
+      "screens": []
+    },
+    {
+      "id": "accrual-basis",
+      "icon": "🧾",
+      "name": "先记账后收钱",
+      "domain": "基础规则",
+      "age": "第2层",
+      "ageStart": 2,
+      "desc": "会计规则允许「货发了就记收入」，哪怕钱还没到账。这不是漏洞，是权责发生制的设计——但它让利润和现金天然有时间差，本章两面红旗都长在这块土壤上。",
+      "canon": {
+        "term": "权责发生制与收入确认（Accrual Basis; Revenue Recognition）",
+        "formal": "收入在履约义务完成时确认，而非收到现金时确认（ASC 606 / IFRS 15 五步模型）；由此产生的利润与现金流时间差构成应计项。",
+        "source": "FASB ASC 606 / IFRS 15；ASC 230 / IAS 7",
+        "textbook": "CFA Level I · FSA · Revenue Recognition（ASC 606 五步模型）"
+      },
+      "evidence": [
+        "能判断「发货未收款」该不该记收入（该记）",
+        "能用一句话解释为什么利润 ≠ 现金",
+        "能举一个生活里「先记账后收钱」的例子"
+      ],
+      "x_qtype": "点选/多选（规则判分）",
+      "screens": []
+    },
+    {
+      "id": "receivables",
+      "icon": "💳",
+      "name": "应收账款",
+      "domain": "基础规则",
+      "age": "第3层",
+      "ageStart": 3,
+      "desc": "卖了货、开了票、钱还没收到——这笔「别人欠的钱」就叫应收账款，躺在资产负债表里。收入涨它正常也跟着涨，但两条腿的步子应该差不多大。",
+      "canon": {
+        "term": "应收账款（Accounts Receivable）",
+        "formal": "企业因销售商品或提供劳务应向购买方收取的款项，列报于资产负债表流动资产；在赊销模式下与营业收入同向变动。",
+        "source": "Graham & Meredith (1937)",
+        "textbook": "CFA Level I · FSA · Understanding Balance Sheets（流动资产）"
+      },
+      "evidence": [
+        "能用一句不含术语的话解释应收账款是什么",
+        "能说出应收与收入的正常关系（大致同步增长）",
+        "能说出应收增速暂时高于收入的至少一个正常原因"
+      ],
+      "x_qtype": "点选/多选（规则判分）",
+      "screens": []
+    },
+    {
+      "id": "ocf",
+      "icon": "💧",
+      "name": "经营现金流",
+      "domain": "基础规则",
+      "age": "第3层",
+      "ageStart": 3,
+      "desc": "现金流量表里「经营活动」那一段：主业到底收进来多少真金白银。它和净利润是两套算法算同一门生意，短期可以不同，长期应该互相靠近。",
+      "canon": {
+        "term": "经营活动现金流量（Cash Flow from Operations, OCF/CFO）",
+        "formal": "现金流量表将现金流分为经营、投资、筹资三类活动；经营活动现金净流量反映主营业务的现金创造能力，与净利润之差主要由应计项与营运资本变动构成。",
+        "source": "FASB ASC 606 / IFRS 15；ASC 230 / IAS 7",
+        "textbook": "CFA Level I · FSA · Understanding Cash Flow Statements"
+      },
+      "evidence": [
+        "能把一笔现金流归入经营 / 投资 / 筹资",
+        "能说出净利润与经营现金流为什么会不同",
+        "知道长期看两者应大致收敛"
+      ],
+      "x_qtype": "点选/多选（规则判分）",
+      "screens": []
+    },
+    {
+      "id": "case-first-look",
+      "icon": "🔍",
+      "name": "第一案",
+      "domain": "实战案例",
+      "age": "第2层",
+      "ageStart": 2,
+      "desc": "只给你两家公司各两行数字：收入增速、应收增速。凭直觉做一次完整判断：哪家更让你不安，还是信息不足无法判断？答错没有任何代价——你还没学工具，这一案是让你先「摸过整件事」。",
+      "canon": {
+        "term": "Sunbeam 1997 财报事件·引子（SEC AAER No. 1393）",
+        "formal": "SEC 认定 Sunbeam 管理层以渠道塞货、bill-and-hold 等手段虚增收入以制造重组成功假象；本节点材料为其 1997 年数字的两行简化版，匿名呈现为「A 公司」。",
+        "source": "SEC AAER 1393 / LR-17001",
+        "textbook": "SEC 执法档案 · 收入确认类欺诈经典案（引子，L1 面板）"
+      },
+      "evidence": [
+        "完成一次带信心标注的整体判断",
+        "能说出自己的判断依据了哪个数字",
+        "用过一次「信息不足，无法判断」选项（知道它存在且体面）"
+      ],
+      "x_qtype": "whole-task：结论三选（A 可疑 / B 可疑 / 无法判断）+ 信心标注（规则判分，本案不计分）",
+      "x_level": "L1",
+      "x_pairs": [
+        {
+          "look": "两家公司收入和应收都在快速增长",
+          "a": "A 公司：收入 +16%、应收 +59%——两条腿步子差太多（Sunbeam 1997 前三季的简化，数字待步骤 2 从 10-K 核定）",
+          "b": "B 公司：收入 +30%、应收 +33%——涨得更猛但步调一致（干净对照，步骤 2 选定实名案例）",
+          "key": "不是看谁涨得猛，是看两条腿步子是否一致"
+        }
+      ],
+      "screens": []
+    },
+    {
+      "id": "rf1",
+      "icon": "🚩",
+      "name": "应收跑赢收入",
+      "domain": "红旗识别",
+      "age": "第4层",
+      "ageStart": 4,
+      "desc": "红旗一：应收账款增速持续高于收入增速——每一块钱新收入里，越来越大的比例只是「记了账的欠条」。它指向收入质量，归因链直指收入确认。单季不算，持续才算。",
+      "canon": {
+        "term": "应收增速持续高于收入增速（Receivables Outgrowing Revenue; Beneish DSRI）",
+        "formal": "应收账款相对营业收入的比例趋势性上升（DSRI = 本期应收/收入 ÷ 上期应收/收入 > 1 且持续）提示激进收入确认或信用政策放宽，为盈余操纵检测模型的核心变量之一。",
+        "source": "Beneish (1999)",
+        "textbook": "Beneish M-Score · DSRI；Financial Shenanigans · 收入类操纵的侦测信号"
+      },
+      "evidence": [
+        "给两行增速能判定红旗成立与否",
+        "能解释为什么「持续」才算数（单季波动不算）",
+        "能不看提示说出至少两个无辜解释"
+      ],
+      "x_qtype": "判断 + 理由多选 + 「无法判断」选项（规则判分；自由文本理由仅存档供错题复盘，不判分）",
+      "x_level": "L1",
+      "x_pairs": [
+        {
+          "look": "应收增速连续两年跑赢收入增速",
+          "a": "激进/提前确认收入，收入质量恶化（Sunbeam 型）",
+          "b": "头部大客户集中度上升、账期随谈判地位延长",
+          "key": "查客户集中度与账期披露；看经营现金流是否同步恶化"
+        },
+        {
+          "look": "应收激增且应收/收入比跳升",
+          "a": "向渠道塞货，货实际没卖出去（channel stuffing）",
+          "b": "商业模式转向赊销/分期（如设备商转租赁），结构性一次跳变",
+          "key": "造假是逐季爬升，模式切换是一次性台阶；看业务模式披露与分部口径"
+        },
+        {
+          "look": "应收同比 +80% 远超收入 +20%",
+          "a": "虚构收入挂在应收上",
+          "b": "年内并购并表，基数不可比",
+          "key": "查并购公告与备考（pro forma）口径；剔除并表后重算增速"
+        }
+      ],
+      "screens": []
+    },
+    {
+      "id": "rf2",
+      "icon": "⚠️",
+      "name": "利润没变现金",
+      "domain": "红旗识别",
+      "age": "第4层",
+      "ageStart": 4,
+      "desc": "红旗二：净利润年年漂亮，经营现金流却持续为负或远低于利润——赚的是「账面上的钱」。背离的缺口总要堆在某个科目里，顺着缺口找科目，就找到了故事的另一半。",
+      "canon": {
+        "term": "净利润与经营现金流持续背离（NI–OCF Divergence; 高应计盈余）",
+        "formal": "盈余中应计成分占比高、现金成分占比低时，盈余持续性与质量更低（Sloan 1996）；净利润持续显著高于经营现金净流量提示盈余质量恶化。",
+        "source": "Sloan (1996)",
+        "textbook": "The Accounting Review 71(3) · 应计异象；Financial Shenanigans · 现金流侦测信号"
+      },
+      "evidence": [
+        "给三年净利润与经营现金流两条线能判定是否背离",
+        "能说出背离的一恶一善两种成因",
+        "能说出「持续背离」与「一次性背离」的区别"
+      ],
+      "x_qtype": "判断 + 理由多选 + 「无法判断」选项（规则判分；自由文本理由仅存档）",
+      "x_level": "L1",
+      "x_pairs": [
+        {
+          "look": "净利润为正，经营现金流连续为负",
+          "a": "纸面利润：收入挂在应收上收不回来（欺诈或激进确认）",
+          "b": "高速扩张期：备货与营运资本吞掉现金（成长型公司常态）",
+          "key": "看缺口去向科目：堆在应收（可疑）还是存货/预付为扩张备货（中性）；再看毛利率是否异常"
+        },
+        {
+          "look": "某一年经营现金流大幅低于净利润",
+          "a": "操纵苗头初现",
+          "b": "大单回款跨期 / 季节性错位，次年回正",
+          "key": "拉长到三年看趋势——一次背离是问号，持续背离才是红旗"
+        }
+      ],
+      "screens": []
+    },
+    {
+      "id": "dso",
+      "icon": "⏱️",
+      "name": "回款要几天",
+      "domain": "红旗识别",
+      "age": "第5层",
+      "ageStart": 5,
+      "desc": "应收周转天数 DSO = 应收 ÷ 收入 × 365：平均一笔货款要等多少天才收回。它和「应收跑赢收入」是同一件事的两种算法，换成天数后更直观、更抗基数失真，但只能和自己的历史、同行业比。",
+      "canon": {
+        "term": "应收账款周转天数（Days Sales Outstanding, DSO）",
+        "formal": "DSO = 期末应收账款 / 营业收入 × 365；DSO 趋势性拉长与应收增速高于收入增速在数学上等价，为收入质量分析的标准活动比率。",
+        "source": "Schilit, Financial Shenanigans",
+        "textbook": "CFA Level I · FSA · Financial Analysis Techniques（活动比率）"
+      },
+      "evidence": [
+        "能用公式算出 DSO",
+        "能解释 DSO 拉长与红旗一是同一现象的两种算法",
+        "知道 DSO 只能纵向比自己、横向比同行，跨行业比较无意义"
+      ],
+      "x_qtype": "判断 + 理由多选 + 「无法判断」选项（规则判分）",
+      "x_level": "L1",
+      "x_pairs": [
+        {
+          "look": "DSO 从 60 天拉长到 85 天",
+          "a": "回款恶化 / 激进确认收入",
+          "b": "客户结构转向大企业或对公业务，行业天然长账期",
+          "key": "先和自己历史比、再和同行比；客户结构变化会在收入构成披露里留痕"
+        }
+      ],
+      "screens": []
+    },
+    {
+      "id": "corroborate",
+      "icon": "🔗",
+      "name": "让现金作证",
+      "domain": "红旗识别",
+      "age": "第5层",
+      "ageStart": 5,
+      "desc": "看见应收异常只是「假设」，下一步去现金流量表求证：利润没变成现金、缺口恰好堆在应收——两面红旗互相作证，可疑度才升级。一阳一阴时，无辜解释的概率反而大增。",
+      "canon": {
+        "term": "红旗印证 / 交叉验证（Corroborating Red Flags）",
+        "formal": "单一信号存在多重成因，收入质量判断需多信号交叉验证；净利润与经营现金流之差可分解至营运资本科目（应收变动为主要去向之一），构成机制层面的印证链。",
+        "source": "Schilit, Financial Shenanigans",
+        "textbook": "Financial Shenanigans · 红旗组合使用；CFA Level II · FSA · Evaluating Quality of Financial Reports"
+      },
+      "evidence": [
+        "见到红旗一阳性能主动说出「下一步查现金流量表」",
+        "能解释两面红旗在机制上为何是同一枚硬币（NI−OCF 缺口 ≈ 应计堆积，应收是主要去向）",
+        "能给组合态正确定性：双阳 = 升级深查，一阳一阴 = 无辜解释概率大增"
+      ],
+      "x_qtype": "判断 + 理由多选 + 「无法判断」选项（规则判分）",
+      "x_level": "L1",
+      "x_pairs": [
+        {
+          "look": "应收跑赢收入（红旗一阳性）",
+          "a": "经营现金流同步恶化（双阳）→ 可疑升级，进入深查",
+          "b": "经营现金流健康、缺口能被存货或季节性解释（一阳一阴）→ 无辜解释概率大增",
+          "key": "印证不是凑第二个红旗，是看两个信号是否指向同一机制"
+        }
+      ],
+      "screens": []
+    },
+    {
+      "id": "base-rate",
+      "icon": "🎲",
+      "name": "红旗≠实锤",
+      "domain": "元能力",
+      "age": "第3层",
+      "ageStart": 3,
+      "desc": "大样本研究估计：任一年份约 10% 的大型上市公司涉财务舞弊。倒过来说：100 家「长得可疑」的公司里，多数其实有无辜解释。红旗是求证的理由，不是定罪的证据——而任何题库里的红旗浓度都远高于真实世界。",
+      "canon": {
+        "term": "基率 / 先验概率（Base Rate; Prior Probability）",
+        "formal": "Dyck–Morse–Zingales 借安然—安达信事件的自然实验外推，估计任意年份约 10% 的大型上市公司实施证券欺诈；忽略基率会系统性高估单一信号的定罪力（基率谬误），自然频数表征可显著改善贝叶斯推理正确率。",
+        "source": "Dyck, Morse & Zingales (2023)",
+        "textbook": "Review of Accounting Studies 28 · 舞弊普遍性；Sedlmeier & Gigerenzer (2001) · 自然频数教学法"
+      },
+      "evidence": [
+        "能用「100 家公司里有……」的自然频数句式复述基率含义",
+        "看到单一红旗能先说「多半不是造假，但值得求证」",
+        "能说出为什么题库里的红旗比例不等于真实世界比例"
+      ],
+      "x_qtype": "多选 + 自然频数填空（规则判分）",
+      "screens": []
+    },
+    {
+      "id": "falsification",
+      "icon": "⚖️",
+      "name": "先替它辩护",
+      "domain": "元能力",
+      "age": "第5层",
+      "ageStart": 5,
+      "desc": "看到红旗，先问一句：「什么样的正常经营也长这样？」列出无辜解释、逐个用证据排除；排除不掉，就诚实地选「无法判断」。这是医生的鉴别诊断、情报分析师的竞争假设分析——同一门功夫。",
+      "canon": {
+        "term": "竞争假设分析 / 证伪思维（Analysis of Competing Hypotheses, ACH）",
+        "formal": "对同一组证据列举全部合理假设，以「证据能否否定假设」而非「证据能否支持假设」为筛选准绳；优先寻找反证的流程性方法可对抗确认偏误。",
+        "source": "Heuer (1999)",
+        "textbook": "Psychology of Intelligence Analysis · Ch.8 ACH（美政府公有领域出版物）"
+      },
+      "evidence": [
+        "给一个红旗能先列出至少 2 个无辜解释再下判断",
+        "能说出「排除不掉无辜解释就选无法判断」",
+        "能识别自己只在找支持证据的时刻（确认偏误自查）"
+      ],
+      "x_qtype": "判断 + 理由多选 + 「无法判断」选项（规则判分）",
+      "screens": []
+    },
+    {
+      "id": "case-final",
+      "icon": "⚔️",
+      "name": "终局对决",
+      "domain": "实战案例",
+      "age": "第6层",
+      "ageStart": 6,
+      "desc": "两家公司的简化三表（8–12 科目）摆在面前：一家是实名的 Sunbeam 1997——你第一课就见过它的两行数字；另一家应收同样在激增，但另有隐情。判断哪家更可疑、援引证据、标注信心——或者诚实地说无法判断。",
+      "canon": {
+        "term": "Sunbeam 1997 全案 × 无辜对照（SEC AAER No. 1393）",
+        "formal": "SEC 认定 Sunbeam 1997 年报告业绩的相当部分源于会计手段（渠道塞货、bill-and-hold、储备释放）；本节点以其重述前数字构造 L2 简化三表，与一家应收激增但解释无辜的实名公司构成整案级判别任务。",
+        "source": "Sunbeam FY1997 10-K",
+        "textbook": "SEC 执法档案 · 收入确认类欺诈经典案（全案，L2 简化三表）"
+      },
+      "evidence": [
+        "能给出结论并援引至少 2 条相互独立的证据",
+        "能对无辜对照说出「为什么不可疑」",
+        "信心标注与判断质量大体一致（校准雏形，进入错题档案）"
+      ],
+      "x_qtype": "whole-task：结论三选 + 证据多选 + 信心标注（规则判分）",
+      "x_level": "L2",
+      "x_pairs": [
+        {
+          "look": "两家公司的应收增速都远超收入增速",
+          "a": "Sunbeam：双红旗齐阳 + 期末突击发货痕迹（bill-and-hold 在附注留痕）",
+          "b": "对照公司：账期 / 季节 / 模式解释成立，经营现金流无恙（步骤 2 选定实名案例，候选方向：年付制企业软件商的 Q4 应收季节性）",
+          "key": "整案级判别：先替双方辩护，再看谁的无辜解释被现金流量表否决"
+        }
+      ],
+      "screens": []
+    },
+    {
+      "id": "checklist-after",
+      "icon": "📋",
+      "name": "你的清单",
+      "domain": "实战案例",
+      "age": "第7层",
+      "ageStart": 7,
+      "desc": "走完案例，把两面红旗整理成一张「复核清单」。记住使用顺序：先自由判断，再用清单查漏。清单是验证工具，不是初判工具——反着用，它会替你思考，麻痹你的怀疑心。",
+      "canon": {
+        "term": "验证式清单（Verification Checklist）",
+        "formal": "决策清单应用于判断之后的系统性复核（查漏补缺），而非判断之前的机械遍历；财务红旗清单的教材形态见 Schilit 各部末的侦测要点汇总。",
+        "source": "Schilit, Financial Shenanigans",
+        "textbook": "Financial Shenanigans · 各部侦测要点汇总"
+      },
+      "evidence": [
+        "能复述清单的正确用法（先判断，后复核）",
+        "能用清单复核先前的案例并至少查出一处遗漏",
+        "能说出清单初判的害处（漏掉清单外项目、压低怀疑心）"
+      ],
+      "x_qtype": "整理 / 排序型（规则判分）",
+      "screens": []
+    }
+  ],
+  "edges": [
+    { "from": "three-statements", "to": "accrual-basis", "type": "hard" },
+    { "from": "three-statements", "to": "ocf", "type": "hard" },
+    { "from": "three-statements", "to": "case-first-look", "type": "hard" },
+    { "from": "growth-rate", "to": "case-first-look", "type": "hard" },
+    { "from": "accrual-basis", "to": "receivables", "type": "hard" },
+    { "from": "accrual-basis", "to": "rf2", "type": "hard" },
+    { "from": "receivables", "to": "rf1", "type": "hard" },
+    { "from": "case-first-look", "to": "rf1", "type": "hard" },
+    { "from": "case-first-look", "to": "base-rate", "type": "hard" },
+    { "from": "ocf", "to": "rf2", "type": "hard" },
+    { "from": "rf1", "to": "dso", "type": "hard" },
+    { "from": "rf1", "to": "falsification", "type": "hard" },
+    { "from": "rf1", "to": "corroborate", "type": "hard" },
+    { "from": "rf2", "to": "corroborate", "type": "hard" },
+    { "from": "corroborate", "to": "case-final", "type": "hard" },
+    { "from": "case-final", "to": "checklist-after", "type": "hard" },
+    { "from": "receivables", "to": "rf2", "type": "soft" },
+    { "from": "dso", "to": "case-final", "type": "soft" },
+    { "from": "base-rate", "to": "corroborate", "type": "cross" },
+    { "from": "falsification", "to": "case-final", "type": "cross" }
+  ]
+}
