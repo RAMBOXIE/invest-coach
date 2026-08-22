@@ -149,16 +149,28 @@ def validate(path):
             if covered and covered != set(range(len(ev))):
                 errors.append(f"{nid}: x_covers 未全覆盖 evidence（已覆盖 {sorted(covered)}）")
 
-    # R8 复训题库（出现即校验）
-    bank = data.get("x_review_bank")
-    if bank is not None:
-        all_pair_ids = {p.get("id") for n in nodes for p in (n.get("x_pairs") or []) if p.get("id")}
-        seen_sides = defaultdict(set)
-        for item in bank:
-            seen_sides[item.get("pair_id")].add(item.get("side"))
-        for pid in all_pair_ids:
-            if seen_sides.get(pid, set()) != {"a", "b"}:
-                errors.append(f"x_review_bank 未覆盖混淆对 {pid} 的 a/b 双面")
+    # R8 复训题库：增量门禁——screens 已填的节点，其混淆对必须 a/b 双面入库（ERROR）；
+    # screens 未填节点的混淆对缺库仅 WARN（批次推进中允许）。库内 quiz 结构一并校验。
+    bank = data.get("x_review_bank") or []
+    seen_sides = defaultdict(set)
+    for bi, item in enumerate(bank):
+        seen_sides[item.get("pair_id")].add(item.get("side"))
+        q = item.get("quiz") or {}
+        opts = q.get("opts") or []
+        if len(opts) < 2 or not any(o.get("ok") for o in opts):
+            errors.append(f"x_review_bank[{bi}]（{item.get('pair_id')}/{item.get('side')}）quiz 需 ≥2 选项且 ≥1 正确")
+    for n in nodes:
+        for p in n.get("x_pairs") or []:
+            pid = p.get("id")
+            if not pid:
+                continue
+            sides = seen_sides.get(pid, set())
+            if sides != {"a", "b"}:
+                msg = f"混淆对 {pid} 复训库未齐 a/b 双面（现有 {sorted(sides) or '无'}）"
+                if n.get("screens"):
+                    errors.append(msg)
+                else:
+                    warns.append(msg + "（该节点 screens 未填，暂不强制）")
 
     if screens_pending:
         warns.append(f"{screens_pending} 个节点 screens 为空（第 2 步待填）")

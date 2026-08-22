@@ -10,8 +10,8 @@
 |---|---|---|---|
 | `x_note` | string | 扩展字段的人类可读说明 | 在用 |
 | `x_version` | string | 内容版本（如 ch1-graph-v1） | 在用 |
-| `x_coaches` | array | 教练原型 `{id, name, school, intro, canon_sources[], style_lines[]}`；人格字段（name/style_lines）不得用真人名，出处字段（intro/canon_sources）必须真名真书 | 第 2 步 |
-| `x_review_bank` | array | 复训变体题库 `{pair_id, side: "a"\|"b", quiz}`，每对每面 ≥1 题 | 第 2 步 |
+| `x_coaches` | array | 教练原型 `{id, name, school, intro, canon_sources[], style_lines: [{when, t}]}`；`when ∈ correct/wrong/overconfident/underconfident/hint_used/na_honest/na_dodge/pair_repeat/streak/complete`，`t` ≤40 字；人格字段（name/style_lines）不得用真人名，出处字段（intro/canon_sources）必须真名真书 | 在用 |
+| `x_review_bank` | array | 复训变体题库 `{pair_id, side: "a"\|"b", quiz}`，每对每面 ≥1 题；screens 已填节点的混淆对缺库=ERROR，未填=WARN（增量门禁）；复训变体题可为构造题（不指名真实公司、不含市场事实主张），指名真实公司时须走数字核定 | 在用 |
 
 ## 节点
 
@@ -29,8 +29,9 @@
 | `screens[].x_covers` | int[] | 该屏覆盖的 evidence 下标；并集须全覆盖 | 第 2 步 |
 | `quiz.hints` | string[3] | 三级提示（指方向→指位置→给原则） | 第 2 步 |
 | `quiz.confidence` | bool | 该题需信心标注（红旗层及以上必为 true） | 第 2 步 |
-| `quiz.x_pair` | string | 题目挂靠的混淆对 id | 第 2 步 |
-| `quiz.opts[].na` | bool | 「信息不足，无法判断」选项标记 | 第 2 步 |
+| `quiz.x_pair` | string | 题目挂靠的混淆对 id | 在用 |
+| `quiz.opts[].na` | bool | 「信息不足，无法判断」选项标记 | 在用 |
+| `quiz.x_kind` | string | 题的角色：`main`（正题，计分）/ `pretest`（前测，不计分，第一案）/ `decision`（决策转化，可多正确）/ `review`（复训变体） | 在用 |
 
 ## 负面契约
 
