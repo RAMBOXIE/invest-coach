@@ -2,7 +2,9 @@
 
 基契约 = agent-graph-learning 原 schema（`id/title/tag/about/reorder/sources/nodes/edges`；node 含 `canon{term,formal,source,textbook}` + `evidence[]` + `screens[]`；edge `{from,to,type∈hard|soft|cross}`）。
 
-**规则：一切扩展字段以 `x_` 前缀命名，必须先登记在本文件，`tools/validate.py` 按白名单强校验，未登记即 ERROR。**
+**规则：一切扩展字段以 `x_` 前缀命名，必须先登记在本文件，`tools/validate.py` 按白名单强校验，未登记即 ERROR。**白名单校验作用于四层：顶层、节点层、canon 层、屏层、quiz 层。
+
+**出处分层契约（详见 `知识可靠性与LLM边界_v1.md` §3）**：每条事实断言必须落在 L1 原始档（sha256+行号+逐字引文）/ L2 正典（DOI/ISBN/条款号+页章）/ L3 本站口径（必须显式标「本章口径」）/ L4 教学措辞（豁免出处，**不豁免算术自洽**）之一；不属于任何一层不得上线。
 
 ## 顶层
 
@@ -12,6 +14,12 @@
 | `x_version` | string | 内容版本（如 ch1-graph-v1） | 在用 |
 | `x_coaches` | array | 教练原型 `{id, name, school, intro, canon_sources[], style_lines: [{when, t}]}`；`when ∈ correct/wrong/overconfident/underconfident/hint_used/na_honest/na_dodge/pair_repeat/streak/complete`，`t` ≤40 字；人格字段（name/style_lines）不得用真人名，出处字段（intro/canon_sources）必须真名真书 | 在用 |
 | `x_review_bank` | array | 复训变体题库 `{pair_id, side: "a"\|"b", quiz}`，每对每面 ≥1 题；screens 已填节点的混淆对缺库=ERROR，未填=WARN（增量门禁）；复训变体题可为构造题（不指名真实公司、不含市场事实主张），指名真实公司时须走数字核定 | 在用 |
+
+## canon
+
+| 字段 | 类型 | 说明 | 状态 |
+|---|---|---|---|
+| `canon.x_cite` | string | 出处的精确定位：章/页/条款号（如 `IAS 1 §10`、`Beneish (1999), FAJ 55(5):24-36 · Table 3`、`AAER 1393 · 认定段`）。**禁止编造**——查不到就留空，R16 会以 WARN 提示 | 在用 |
 
 ## 节点
 
