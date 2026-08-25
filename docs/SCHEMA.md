@@ -21,6 +21,16 @@
 |---|---|---|---|
 | `canon.x_cite` | string | 出处的精确定位：章/页/条款号（如 `IAS 1 §10`、`Beneish (1999), FAJ 55(5):24-36 · Table 3`、`AAER 1393 · 认定段`）。**禁止编造**——查不到就留空，R16 会以 WARN 提示 | 在用 |
 
+## 健壮性字段（2026-08-22 裁决新增）
+
+| 字段 | 类型 | 说明 | 状态 |
+|---|---|---|---|
+| `quiz.x_id` | string | 题的全局唯一稳定 id（节点题 `<node>-qN`，复训题 `rv-<pair>-<side>`）。遥测/错题档案/勘误/回滚的主键——**已发布 id 永不复用、改正确答案必须发新 id** | 在用 |
+| 节点 `x_prov` | object | `{drafted_by, model, drafted_at, reviewed_by, reviewed_at, reviewed_hash}`。reviewed_hash = 节点内容指纹（validate 的 node_hash）；内容一改审核自动过期；`--release` 时未签字即 ERROR | 在用 |
+| 教练 `x_identity` | string | 固定身份自述（学派原型非真人、非持牌顾问、AI 起草人工核对、思想出处、不判分不荐股不看当下）。运行时被问身份/资格时逐字输出 | 在用 |
+| `content/ch1/facts.json` | 文件 | 数字账本：evidence 文件 sha256 + 事实条目（accession+行号+口径）+ 真实公司语境数字 token 白名单（R12 强制命中） | 在用 |
+| `evidence/*.txt` | 文件 | EDGAR 原档存档（公有领域），sha256 由 facts.json 锚定，validate 校验防篡改/防链接腐烂 | 在用 |
+
 ## 节点
 
 | 字段 | 类型 | 说明 | 状态 |

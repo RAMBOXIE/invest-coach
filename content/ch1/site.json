@@ -2,10 +2,10 @@
   "id": "invest-coach-redflags-ch1",
   "title": "投资教练 · 财报红旗 第一章：收入的水分",
   "tag": "财报红旗 · 第一章",
-  "about": "这一章训练一件事：从财报数字里看出「收入的水分」——先理解三张表和记账规则，再学两面互相印证的红旗，最后在真实 SEC 执法案例上做完整判断。本站只做历史案例复盘与判断习惯训练，不提供任何投资建议、不输出任何前瞻信号；「信息不足，无法判断」在这里是可以得满分的答案。",
+  "about": "这一章训练一件事：从财报数字里看出「收入的水分」——先理解三张表和记账规则，再学两面互相印证的红旗，最后在真实 SEC 执法案例上做完整判断。本站只做历史案例复盘与判断习惯训练，不提供任何投资建议、不输出任何前瞻信号；「信息不足，无法判断」在这里是可以得满分的答案。 关于 AI 的角色：术语与定义来自本站所列的正典出处与官方档案（每条可溯源）；通俗解释与教练点评由 AI 起草、经人工核对后固定内置；教练是学派原型，不是真人。判分由页面内置的规则完成，AI 不参与判分。",
   "reorder": "与教科书顺序的三处刻意差异：① 案例先行——第一案（whole-task）在只学两个基础节点后立即出现，先凭直觉判断再学工具（v3 §3.2 whole-task first；§3.3.5 故事先行）；② 红旗清单后置——清单是最后一个节点，定位为验证工具而非初判工具（v3 §3.3.5，清单初判压低职业怀疑有成体系实证）；③ 元能力横插——基率与证伪思维作为 cross 节点嵌在红旗与案例之间，而非附录（v3 §3.1/§3.6）。",
   "x_note": "扩展字段说明（登记簿见 docs/SCHEMA.md）：ageStart=图层深度 1–7；x_qtype=节点题型；x_pairs=混淆对（id/look/a/b/key）；x_level=材料难度 L1/L2；x_coaches=教练原型（人格字段不用真人名，出处字段必须真名真书）；x_review_bank=复训变体题库（pair_id × a/b 面）；x_coach_notes=案例节点三声道点评（UI 默认只显主教练）；quiz 扩展：hints=三级提示、confidence=需信心三档、opts[].na=「无法判断」选项、x_pair=挂靠混淆对、x_kind=main|pretest|decision|review。",
-  "x_version": "ch1-content-batch2r1（2026-08-22）｜图=ch1-graph-v1 审定冻结不动｜已填 8/14 节点；复训库 6 对 12 题；教练×3。r1 = 出处审计后的 P0 勘误轮（见 docs/勘误_第一章.md 与 docs/知识可靠性与LLM边界_v1.md）：修正 canon 归因错配 5 处、AAER 编号错配、Sloan 越界、ASC 606 控制权判据、DSO 三口径、ocf 自我否证、基率贝叶斯误用、教练出处拆分、构造题算术 4 处、补 1 道 na 满分题。真实公司数字仍全部经 EDGAR 原档核定；人工逐条审核尚未进行（x_prov 机制待裁决）",
+  "x_version": "ch1-content-batch2r2（2026-08-22）｜r2 = 健壮性轮：AI 披露入 about+教练 x_identity；全部 quiz 稳定 x_id；节点 x_prov（drafted=llm/claude-opus-5，reviewed 空=未审）；决策转化题第三人称化；数字账本 facts.json + 原档 evidence/ 入库。图 ch1-graph-v1 不动；人工逐条审核（G1/G2）仍未进行",
   "sources": [
     {
       "name": "SEC AAER 1393（对公司的行政程序）",
@@ -168,7 +168,8 @@
           "when": "complete",
           "t": "一章读完。市面上的故事千变万化，报表的行数不变。"
         }
-      ]
+      ],
+      "x_identity": "我是「账房先生」——一个学派原型，不是真人，也不是持牌顾问。我的点评由 AI 起草、经人工核对。思想出处：Graham & Meredith《The Interpretation of Financial Statements》(1937)。我不判分、不荐股、不看当下行情，只带你读已结案的账。"
     },
     {
       "id": "risk",
@@ -232,7 +233,8 @@
           "when": "complete",
           "t": "一章完。多数疑点求证后会散——但漏掉的那个最贵。"
         }
-      ]
+      ],
+      "x_identity": "我是「风控官」——一个学派原型，不是真人，也不是持牌顾问。我的点评由 AI 起草、经人工核对。思想出处：Schilit《财务诡计》与 SEC 会计执法档案（AAER）。我不判分、不荐股、不看当下行情，只带你走求证链。"
     },
     {
       "id": "behav",
@@ -292,7 +294,8 @@
           "when": "complete",
           "t": "一章完。你学到的不只是红旗，还有你自己犯错的形状。"
         }
-      ]
+      ],
+      "x_identity": "我是「行为教授」——一个学派原型，不是真人，也不是持牌顾问。我的点评由 AI 起草、经人工核对。思想出处：Baron & Hershey (1988) 结果偏误、Kahneman & Tversky (1979) 前景理论。我不判分、不荐股、不看当下行情，只研究你怎么犯错。"
     }
   ],
   "x_review_bank": [
@@ -324,7 +327,8 @@
         ],
         "confidence": true,
         "x_pair": "c1-p1",
-        "x_kind": "review"
+        "x_kind": "review",
+        "x_id": "rv-c1-p1-a"
       }
     },
     {
@@ -355,7 +359,8 @@
         ],
         "confidence": true,
         "x_pair": "c1-p1",
-        "x_kind": "review"
+        "x_kind": "review",
+        "x_id": "rv-c1-p1-b"
       }
     },
     {
@@ -386,7 +391,8 @@
         ],
         "confidence": true,
         "x_pair": "rf1-p1",
-        "x_kind": "review"
+        "x_kind": "review",
+        "x_id": "rv-rf1-p1-a"
       }
     },
     {
@@ -417,7 +423,8 @@
         ],
         "confidence": true,
         "x_pair": "rf1-p1",
-        "x_kind": "review"
+        "x_kind": "review",
+        "x_id": "rv-rf1-p1-b"
       }
     },
     {
@@ -448,7 +455,8 @@
         ],
         "confidence": true,
         "x_pair": "rf1-p2",
-        "x_kind": "review"
+        "x_kind": "review",
+        "x_id": "rv-rf1-p2-a"
       }
     },
     {
@@ -479,7 +487,8 @@
         ],
         "confidence": true,
         "x_pair": "rf1-p2",
-        "x_kind": "review"
+        "x_kind": "review",
+        "x_id": "rv-rf1-p2-b"
       }
     },
     {
@@ -510,7 +519,8 @@
         ],
         "confidence": true,
         "x_pair": "rf1-p3",
-        "x_kind": "review"
+        "x_kind": "review",
+        "x_id": "rv-rf1-p3-a"
       }
     },
     {
@@ -541,7 +551,8 @@
         ],
         "confidence": true,
         "x_pair": "rf1-p3",
-        "x_kind": "review"
+        "x_kind": "review",
+        "x_id": "rv-rf1-p3-b"
       }
     },
     {
@@ -572,7 +583,8 @@
         ],
         "confidence": true,
         "x_pair": "rf2-p1",
-        "x_kind": "review"
+        "x_kind": "review",
+        "x_id": "rv-rf2-p1-a"
       }
     },
     {
@@ -603,7 +615,8 @@
         ],
         "confidence": true,
         "x_pair": "rf2-p1",
-        "x_kind": "review"
+        "x_kind": "review",
+        "x_id": "rv-rf2-p1-b"
       }
     },
     {
@@ -634,7 +647,8 @@
         ],
         "confidence": true,
         "x_pair": "rf2-p2",
-        "x_kind": "review"
+        "x_kind": "review",
+        "x_id": "rv-rf2-p2-a"
       }
     },
     {
@@ -665,7 +679,8 @@
         ],
         "confidence": true,
         "x_pair": "rf2-p2",
-        "x_kind": "review"
+        "x_kind": "review",
+        "x_id": "rv-rf2-p2-b"
       }
     }
   ],
@@ -736,7 +751,8 @@
               "此刻的状态（有什么、欠什么）记在哪张表？",
               "原则：时点状态归资产负债表，期间流量归另外两张"
             ],
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "three-statements-q1"
           },
           "x_covers": [
             1
@@ -765,14 +781,23 @@
               "差额是凭空消失了，还是被记在了某处？",
               "原则：三表勾稽——任何差额都能在第三张表找到落点"
             ],
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "three-statements-q2"
           },
           "x_covers": [
             0,
             2
           ]
         }
-      ]
+      ],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "growth-rate",
@@ -797,7 +822,7 @@
       "screens": [
         {
           "h": "谁涨得猛？",
-          "body": "<p>A 公司收入多了 2 个亿，B 公司只多了 2 千万。</p><p>谁更厉害？</p><details><summary>👆 点一下</summary><p><b>没法说</b>——缺一个分母。A 去年若有 100 亿，只涨了 2%；B 去年若只有 4 千万，翻了一倍半。增长，要看「相对去年长了多少」。</p></details>",
+          "body": "<p>甲公司收入多了 2 个亿，乙公司只多了 2 千万。</p><p>谁更厉害？</p><details><summary>👆 点一下</summary><p><b>没法说</b>——缺一个分母。甲去年若有 100 亿，只涨了 2%；乙去年若只有 4 千万，翻了一倍半。增长，要看「相对去年长了多少」。</p></details>",
           "x_covers": [
             0
           ]
@@ -840,7 +865,8 @@
               "收入是 +20%；应收算出来是多少？",
               "原则：比增速比的是百分比，绝对额会骗人"
             ],
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "growth-rate-q1"
           },
           "x_covers": [
             0,
@@ -870,13 +896,22 @@
               "9 万对 10 亿，意味着什么？",
               "原则：基数太小时增速失真，先看绝对额和占比"
             ],
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "growth-rate-q2"
           },
           "x_covers": [
             2
           ]
         }
-      ]
+      ],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "accrual-basis",
@@ -944,7 +979,8 @@
               "履约完成了吗？",
               "原则：权责发生制——履约即确认，收款是另一件事"
             ],
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "accrual-basis-q1"
           },
           "x_covers": [
             0
@@ -973,14 +1009,23 @@
               "记账和收钱是同一时刻吗？",
               "原则：权责发生制制造时间差，时间差沉淀在资产负债表"
             ],
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "accrual-basis-q2"
           },
           "x_covers": [
             1,
             2
           ]
         }
-      ]
+      ],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "receivables",
@@ -1049,7 +1094,8 @@
               "「应收」两个字，收的是谁的钱？",
               "原则：应收=我的资产（别人欠我）；应付/预收=我的负债"
             ],
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "receivables-q1"
           },
           "x_covers": [
             0
@@ -1078,14 +1124,23 @@
               "生意扩大一倍，欠条池子会怎样？",
               "原则：应收随收入同步增长是常态，步差悬殊才是信号"
             ],
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "receivables-q2"
           },
           "x_covers": [
             1,
             2
           ]
         }
-      ]
+      ],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "ocf",
@@ -1154,7 +1209,8 @@
               "厂房是商品，还是家当？",
               "原则：主业收付=经营；买卖家当=投资；借还分红=筹资"
             ],
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "ocf-q1"
           },
           "x_covers": [
             0
@@ -1183,14 +1239,23 @@
               "赊出去的账，最后只有两种结局",
               "原则：长期收敛；持续不收敛=盈余质量恶化"
             ],
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "ocf-q2"
           },
           "x_covers": [
             1,
             2
           ]
         }
-      ]
+      ],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "case-first-look",
@@ -1262,7 +1327,8 @@
             ],
             "confidence": true,
             "x_pair": "c1-p1",
-            "x_kind": "pretest"
+            "x_kind": "pretest",
+            "x_id": "case-first-look-q1"
           },
           "x_covers": [
             0,
@@ -1278,7 +1344,7 @@
         },
         {
           "quiz": {
-            "q": "决策题：假设你持有 A 公司的股票，看完这两行数字，下一步？",
+            "q": "决策题：一位投资者持有 A 公司的股票。看完这两行数字，TA 最像样的下一步是？",
             "opts": [
               {
                 "t": "记下疑点，去查它的现金流量表和账期披露——求证之后再动",
@@ -1304,13 +1370,22 @@
               "原则：动作与证据成色相称——疑点配求证，实锤才配清仓"
             ],
             "confidence": true,
-            "x_kind": "decision"
+            "x_kind": "decision",
+            "x_id": "case-first-look-q2"
           },
           "x_covers": [
             0
           ]
         }
-      ]
+      ],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "rf1",
@@ -1405,7 +1480,8 @@
             ],
             "confidence": true,
             "x_pair": "rf1-p1",
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "rf1-q1"
           },
           "x_covers": [
             0,
@@ -1438,14 +1514,23 @@
             ],
             "confidence": true,
             "x_pair": "rf1-p3",
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "rf1-q2"
           },
           "x_covers": [
             0,
             2
           ]
         }
-      ]
+      ],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "rf2",
@@ -1534,7 +1619,8 @@
             ],
             "confidence": true,
             "x_pair": "rf2-p1",
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "rf2-q1"
           },
           "x_covers": [
             0,
@@ -1567,7 +1653,8 @@
             ],
             "confidence": true,
             "x_pair": "rf2-p2",
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "rf2-q2"
           },
           "x_covers": [
             0,
@@ -1600,14 +1687,23 @@
             ],
             "confidence": true,
             "x_pair": "rf2-p2",
-            "x_kind": "main"
+            "x_kind": "main",
+            "x_id": "rf2-q3"
           },
           "x_covers": [
             1,
             2
           ]
         }
-      ]
+      ],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "dso",
@@ -1647,7 +1743,15 @@
           "key": "先问口径（分子期末还是平均），再问方向。跨来源的 DSO 不对齐口径就比，是本章最容易犯的技术性错误"
         }
       ],
-      "screens": []
+      "screens": [],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "corroborate",
@@ -1679,7 +1783,15 @@
           "key": "印证不是凑第二个红旗，是看两个信号是否指向同一机制"
         }
       ],
-      "screens": []
+      "screens": [],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "base-rate",
@@ -1702,7 +1814,15 @@
         "能说出为什么题库里的红旗比例不等于真实世界比例"
       ],
       "x_qtype": "多选 + 自然频数填空（规则判分）",
-      "screens": []
+      "screens": [],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "falsification",
@@ -1725,7 +1845,15 @@
         "能识别自己只在找支持证据的时刻（确认偏误自查）"
       ],
       "x_qtype": "判断 + 理由多选 + 「无法判断」选项（规则判分）",
-      "screens": []
+      "screens": [],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "case-final",
@@ -1758,7 +1886,15 @@
           "key": "整案级判别：先替双方辩护，再看谁的无辜解释被现金流量表否决"
         }
       ],
-      "screens": []
+      "screens": [],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     },
     {
       "id": "checklist-after",
@@ -1781,7 +1917,15 @@
         "能说出清单初判的害处（漏掉清单外项目、压低怀疑心）"
       ],
       "x_qtype": "整理 / 排序型（规则判分）",
-      "screens": []
+      "screens": [],
+      "x_prov": {
+        "drafted_by": "llm",
+        "model": "claude-opus-5",
+        "drafted_at": "2026-08-22",
+        "reviewed_by": "",
+        "reviewed_at": "",
+        "reviewed_hash": ""
+      }
     }
   ],
   "edges": [

@@ -1,0 +1,168 @@
+{
+ "_note": "数字账本（R12/R13 的机器可读层）。真实公司语境（含 Sunbeam/Dell/A 公司/B 公司/本章案主 标记的字符串）中出现的数字 token 必须命中本表，否则 validate ERROR。构造题（无标记）豁免出处、由 R13 管自洽。人类可读版：docs/数据核定_第一章.md。",
+ "evidence_files": [
+  {
+   "file": "evidence/sunbeam-10k405-fy1997.txt",
+   "sha256": "1faf63ae3b437a07905af831a5a1d9954929b7cfceb8e148fa99a3935f25e5a9",
+   "source": "Sunbeam FY1997 10-K405",
+   "accession": "0000950170-98-000413"
+  },
+  {
+   "file": "evidence/dell-10k-fy1998.txt",
+   "sha256": "2e2539e8dfa0a9e3a4c8179d81a1d69d8e9b272ee35e729467cadbb859ba6e55",
+   "source": "Dell FY1998 10-K",
+   "accession": "0000950134-98-003218"
+  }
+ ],
+ "facts": [
+  {
+   "id": "sb-rev-g",
+   "company": "Sunbeam",
+   "item": "净销售额同比",
+   "value": "+18.7%",
+   "basis": "984.2→1168.2 $M（档内自证 18.7%）",
+   "accession": "0000950170-98-000413",
+   "line": "L1095/L1170/L1972"
+  },
+  {
+   "id": "sb-ar-g",
+   "company": "Sunbeam",
+   "item": "应收净额同比",
+   "value": "+38.5%",
+   "basis": "213,438→295,550 $K",
+   "accession": "0000950170-98-000413",
+   "line": "L2035"
+  },
+  {
+   "id": "sb-ni",
+   "company": "Sunbeam",
+   "item": "1997 净利",
+   "value": "$109.4M（约 1.09 亿）",
+   "basis": "109,415 $K",
+   "accession": "0000950170-98-000413",
+   "line": "L1109/L1993"
+  },
+  {
+   "id": "sb-ocf",
+   "company": "Sunbeam",
+   "item": "1997 经营现金流",
+   "value": "−$8.2M（约 −820 万）",
+   "basis": "(8,249) $K",
+   "accession": "0000950170-98-000413",
+   "line": "L2175"
+  },
+  {
+   "id": "sb-securitization",
+   "company": "Sunbeam",
+   "item": "出售应收进款计入经营现金流",
+   "value": "$59M（5,900 万）；剔除后 OCF ≈ −$67M（−6,700 万）",
+   "basis": "MD&A 自述 + 附注",
+   "accession": "0000950170-98-000413",
+   "line": "L1477/L2664"
+  },
+  {
+   "id": "sb-fraud-amount",
+   "company": "Sunbeam",
+   "item": "SEC 认定 1997 舞弊金额",
+   "value": "报告 income 1.89 亿中至少 6,200 万来自会计舞弊",
+   "basis": "AAER 1393 / Rel. 33-7976",
+   "accession": "AAER-1393",
+   "line": "认定段"
+  },
+  {
+   "id": "dl-rev-g",
+   "company": "Dell",
+   "item": "净收入同比",
+   "value": "+58.9%",
+   "basis": "7,759→12,327 $M（档内自证 59%）",
+   "accession": "0000950134-98-003218",
+   "line": "L916/L976"
+  },
+  {
+   "id": "dl-ar-g",
+   "company": "Dell",
+   "item": "应收净额同比",
+   "value": "+64.6%",
+   "basis": "903→1,486 $M",
+   "accession": "0000950134-98-003218",
+   "line": "L1406"
+  },
+  {
+   "id": "dl-dso-avg",
+   "company": "Dell",
+   "item": "DSO（公司自证，平均口径）",
+   "value": "37→36 天",
+   "basis": "档内 Days of sales in accounts receivable 36/37/42",
+   "accession": "0000950134-98-003218",
+   "line": "L1191"
+  },
+  {
+   "id": "dl-dso-ending",
+   "company": "Dell",
+   "item": "DSO（本站期末口径推算）",
+   "value": "42.5→44.0 天",
+   "basis": "903/7759×365=42.5；1486/12327×365=44.0（推算值，非档内原文）",
+   "accession": "0000950134-98-003218",
+   "line": "由 L916/L1406 推算"
+  },
+  {
+   "id": "sb-dso-ending",
+   "company": "Sunbeam",
+   "item": "DSO（本站期末口径推算）",
+   "value": "79→92 天",
+   "basis": "213.4/984.2×365=79.2；295.6/1168.2×365=92.3（推算值）",
+   "accession": "0000950170-98-000413",
+   "line": "由 L1972/L2035 推算"
+  },
+  {
+   "id": "dl-2010-settlement",
+   "company": "Dell",
+   "item": "2010 年 SEC 和解（终局披露用，与 FY1998 无关）",
+   "value": "$100M；Michael Dell 个人 $4M；涉 2001–2006 披露与会计（Intel 独占性付款）",
+   "basis": "SEC LR-21599（2010-07-22），已核实",
+   "accession": "LR-21599",
+   "line": "—"
+  }
+ ],
+ "approved_tokens": {
+  "18.7": "sb-rev-g",
+  "38.5": "sb-ar-g",
+  "58.9": "dl-rev-g",
+  "64.6": "dl-ar-g",
+  "109.4": "sb-ni",
+  "1.09": "sb-ni（亿美元表述）",
+  "8.2": "sb-ocf",
+  "820": "sb-ocf（万美元表述）",
+  "59": "sb-securitization",
+  "5900": "sb-securitization",
+  "67": "sb-securitization",
+  "6700": "sb-securitization",
+  "1.89": "sb-fraud-amount",
+  "6200": "sb-fraud-amount",
+  "37": "dl-dso-avg",
+  "36": "dl-dso-avg",
+  "42.5": "dl-dso-ending",
+  "44.0": "dl-dso-ending",
+  "44": "dl-dso-ending",
+  "79": "sb-dso-ending",
+  "92": "sb-dso-ending",
+  "1996": "年份",
+  "1997": "年份",
+  "1998": "年份",
+  "1987": "年份（SFAS 95）",
+  "2001": "年份（AAER）",
+  "2010": "年份（Dell 和解）",
+  "10": "文书名 10-K",
+  "405": "文书名 10-K405",
+  "100": "dl-2010-settlement（$100M）／泛指口语",
+  "1": "泛指口语（1 块钱等）",
+  "1.1": "步差倍数（由 dl 两增速推算）",
+  "2": "泛指口语",
+  "6": "步差约 6 个点（由 dl 两增速推算）",
+  "8": "界面泛指（8–12 科目）",
+  "12": "界面泛指（8–12 科目）",
+  "60": "看 60 秒（界面指令）",
+  "45": "构造题 K 公司账期（bank，同串含案主引用）",
+  "90": "构造题 K 公司账期（bank，同串含案主引用）"
+ }
+}

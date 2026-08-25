@@ -14,8 +14,10 @@ import pathlib
 from collections import defaultdict
 
 TOP_X = {"x_note", "x_version", "x_coaches", "x_review_bank"}
-NODE_X = {"x_qtype", "x_level", "x_pairs", "x_coach_notes"}
-QUIZ_X = {"x_pair", "x_kind"}
+NODE_X = {"x_qtype", "x_level", "x_pairs", "x_coach_notes", "x_prov"}
+QUIZ_X = {"x_pair", "x_kind", "x_id"}
+COACH_X = {"x_identity"}
+REAL_MARKERS = ("Sunbeam", "Dell", "A 公司", "B 公司", "本章案主", "案主")
 EDGE_TYPES = {"hard", "soft", "cross"}
 PAIR_FIELDS = ("look", "a", "b", "key")
 LEVELS = {"L1", "L2"}
@@ -33,13 +35,20 @@ ERA = [("现金流量表", 1987), ("ASC 606", 2014), ("IFRS 15", 2014), ("DSRI",
 TODO_MARKERS = ("待核", "待补", "待定稿", "TODO", "推荐沿用", "候选方向")
 
 
-def check_quiz(q, loc, deep, errors, warns, na_stats):
+def check_quiz(q, loc, deep, errors, warns, na_stats, qids):
     """R6/R17/R19/R20：题的结构、答案键、深层节点必备字段。"""
     for k in q:
         if k.startswith("x_") and k not in QUIZ_X:
             errors.append(f"{loc}: quiz 未登记字段 {k}")
     if "llm" in json.dumps(q).lower() or "judge" in json.dumps(q).lower():
         errors.append(f"{loc}: 题内出现 llm/judge 相关键或值（v3 §2.6 判分只能是规则引擎）")
+    qid = q.get("x_id")
+    if not qid:
+        errors.append(f"{loc}: quiz 缺稳定 x_id（遥测/档案/勘误的主键）")
+    elif qid in qids:
+        errors.append(f"{loc}: x_id「{qid}」重复")
+    else:
+        qids.add(qid)
     kind = q.get("x_kind")
     if kind not in KINDS:
         errors.append(f"{loc}: x_kind「{kind}」不在 {sorted(KINDS)}")
@@ -68,9 +77,60 @@ def check_quiz(q, loc, deep, errors, warns, na_stats):
         na_stats.append(bool(nas and nas[0].get("ok")))
 
 
-def validate(path):
+def node_hash(n):
+    """节点内容指纹：canon/desc/evidence/screens/x_pairs 任何改动都会使已有审核签字过期。"""
+    import hashlib
+    core = {k: n.get(k) for k in ("desc", "canon", "evidence", "screens", "x_pairs", "x_coach_notes")}
+    return hashlib.sha256(json.dumps(core, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
+
+
+TAG = re.compile(r"<[^>]+>")
+NUMTOK = re.compile(r"\d+(?:,\d{3})*(?:\.\d+)?")
+
+
+def check_facts(data, facts_path, errors, warns):
+    """R12：真实公司语境中的数字必须命中数字账本；R11b：原档 sha256 必须与账本一致。"""
+    import hashlib
+    fp = pathlib.Path(facts_path)
+    if not fp.exists():
+        errors.append("缺少数字账本 content/ch1/facts.json")
+        return
+    facts = json.loads(fp.read_text(encoding="utf-8"))
+    allowed = set(facts.get("approved_tokens", {}))
+    for ef in facts.get("evidence_files", []):
+        f = fp.parent.parent.parent / ef["file"]
+        if not f.exists():
+            errors.append(f"原档缺失: {ef['file']}")
+        elif hashlib.sha256(f.read_bytes()).hexdigest() != ef["sha256"]:
+            errors.append(f"原档被改动（sha256 不符）: {ef['file']}")
+
+    def scan(s, loc):
+        if not isinstance(s, str) or not any(m in s for m in REAL_MARKERS):
+            return
+        visible = TAG.sub(" ", s)
+        for tok in NUMTOK.findall(visible):
+            if tok.replace(",", "") not in allowed:
+                errors.append(f"{loc}: 真实公司语境出现未登记数字「{tok}」——先核定进 facts.json")
+
+    def walk(o, loc):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                walk(v, f"{loc}.{k}")
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                walk(v, f"{loc}[{i}]")
+        else:
+            scan(o, loc)
+
+    for n in data.get("nodes", []):
+        walk({k: n.get(k) for k in ("desc", "screens", "x_pairs", "x_coach_notes")}, n["id"])
+    walk(data.get("x_review_bank", []), "bank")
+
+
+def validate(path, release=False):
     errors, warns = [], []
     na_stats = []
+    qids = set()
     data = json.loads(pathlib.Path(path).read_text(encoding="utf-8"))
     nodes = data.get("nodes", [])
     edges = data.get("edges", [])
@@ -224,11 +284,21 @@ def validate(path):
             covered.update(s.get("x_covers", []))
             q = s.get("quiz")
             if q:
-                check_quiz(q, f"{nid}/screens[{si}]", deep, errors, warns, na_stats)
+                check_quiz(q, f"{nid}/screens[{si}]", deep, errors, warns, na_stats, qids)
         # R18 x_covers：有 screens 就查全覆盖，空集即 ERROR（去掉旧实现的短路）
         if screens:
             if covered != set(range(len(ev))):
                 errors.append(f"{nid}: x_covers 未全覆盖 evidence（已覆盖 {sorted(covered)}，需 {list(range(len(ev)))}）")
+        # R23 x_prov：来源与审核签字（reviewed 为空=未审：平时 WARN，--release 时 ERROR）
+        pv = n.get("x_prov") or {}
+        for k in ("drafted_by", "model", "drafted_at"):
+            if not pv.get(k):
+                errors.append(f"{nid}: x_prov.{k} 缺失（LLM 产出必须登记来源）")
+        if screens:
+            if not pv.get("reviewed_by"):
+                (errors if release else warns).append(f"{nid}: 未经人工审核签字（x_prov.reviewed_by 为空）" + ("" if release else "——poc-trial 定版（--release）前必须补"))
+            elif pv.get("reviewed_hash") != node_hash(n):
+                errors.append(f"{nid}: 审核已过期——内容 hash 与 x_prov.reviewed_hash 不符，改动后必须重审")
 
     # R8 复训题库：增量门禁——screens 已填的节点，其混淆对必须 a/b 双面入库（ERROR）；
     # screens 未填节点的混淆对缺库仅 WARN（批次推进中允许）。库内 quiz 结构一并校验。
@@ -247,7 +317,7 @@ def validate(path):
         # R20 复训题的 quiz.x_pair 必须与外层 pair_id 一致（防复训队列训练相反判别）
         if q.get("x_pair") != pid:
             errors.append(f"{loc}: quiz.x_pair「{q.get('x_pair')}」与外层 pair_id 不一致")
-        check_quiz(q, loc, True, errors, warns, na_stats)
+        check_quiz(q, loc, True, errors, warns, na_stats, qids)
     for n in nodes:
         for p in n.get("x_pairs") or []:
             pid = p.get("id")
@@ -274,6 +344,11 @@ def validate(path):
                 errors.append(f"{loc}: canon_sources「{cs}」未命中 sources[]")
         if not co.get("canon_sources"):
             errors.append(f"{loc}: canon_sources 为空（学派出处必填）")
+        if not co.get("x_identity"):
+            errors.append(f"{loc}: x_identity 为空（AI 披露与身份自述必填，被问身份时逐字输出）")
+        for k in co:
+            if k.startswith("x_") and k not in COACH_X:
+                errors.append(f"{loc}: 未登记的教练字段 {k}")
         persona_text = (co.get("name") or "") + " " + " ".join(l.get("t", "") for l in co.get("style_lines") or [])
         for tok in author_tokens:
             if tok in persona_text:
@@ -283,6 +358,9 @@ def validate(path):
                 errors.append(f"{loc}: style_lines[{li}].when「{ln.get('when')}」不在枚举内")
             if len(ln.get("t") or "") > 40:
                 errors.append(f"{loc}: style_lines[{li}] 超过 40 字")
+
+    # R12/R11b 数字账本与原档指纹
+    check_facts(data, pathlib.Path(path).parent / "facts.json", errors, warns)
 
     # R21 provenance 待办标记扫描（非合规禁词扫描）
     blob = json.dumps(data, ensure_ascii=False)
@@ -318,5 +396,7 @@ if __name__ == "__main__":
         sys.stdout.reconfigure(encoding="utf-8")
     except AttributeError:
         pass
+    args = [a for a in sys.argv[1:] if a != "--release"]
+    release = "--release" in sys.argv[1:]
     default = pathlib.Path(__file__).resolve().parent.parent / "content" / "ch1" / "site.json"
-    sys.exit(validate(sys.argv[1] if len(sys.argv) > 1 else default))
+    sys.exit(validate(args[0] if args else default, release=release))
