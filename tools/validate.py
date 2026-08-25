@@ -13,8 +13,8 @@ import sys
 import pathlib
 from collections import defaultdict
 
-TOP_X = {"x_note", "x_version", "x_coaches", "x_review_bank"}
-NODE_X = {"x_qtype", "x_level", "x_pairs", "x_coach_notes", "x_prov", "x_cards", "x_ruleout", "x_selfcheck", "x_anchors"}
+TOP_X = {"x_note", "x_version", "x_coaches", "x_review_bank", "x_lab", "x_facts"}
+NODE_X = {"x_qtype", "x_level", "x_pairs", "x_coach_notes", "x_prov", "x_cards", "x_ruleout", "x_selfcheck", "x_anchors", "x_casefile"}
 QUIZ_X = {"x_pair", "x_kind", "x_id"}
 COACH_X = {"x_identity"}
 REAL_MARKERS = ("Sunbeam", "Dell", "A 公司", "B 公司", "本章案主", "案主")
@@ -394,6 +394,31 @@ def validate(path, release=False):
         for a in anchors:
             if a not in bank_ids:
                 errors.append(f"{nid}: 锚题 {a} 不在复训库中")
+
+    # R25 案卷（v3）：status 枚举、面板类型、溯源徽标命中数字账本
+    import json as _j, pathlib as _p
+    _fp=_p.Path(path).parent/'facts.json'
+    _fids=set()
+    if _fp.exists():
+        _fids={f["id"] for f in _j.loads(_fp.read_text(encoding="utf-8")).get("facts",[])}
+    CF_STATUS={"settled","regulator_asked","teaching"}
+    CF_KIND={"cmp","trend","note","quote"}
+    for n in nodes:
+        cf=n.get("x_casefile")
+        if not cf: 
+            if "x_level" in n and n.get("screens"):
+                warns.append(f"{n['id']}: 深层节点缺 x_casefile（材料屏仍是旧教学屏串接）")
+            continue
+        if cf.get("status") not in CF_STATUS:
+            errors.append(f"{n['id']}: x_casefile.status「{cf.get('status')}」不在 {sorted(CF_STATUS)}")
+        if cf.get("status")!="teaching" and not cf.get("srcs"):
+            errors.append(f"{n['id']}: 非 teaching 案卷必须有溯源徽标 srcs")
+        for pn in cf.get("panels") or []:
+            if pn.get("kind") not in CF_KIND:
+                errors.append(f"{n['id']}: 案卷面板 kind「{pn.get('kind')}」非法")
+        for s in cf.get("srcs") or []:
+            if s.get("f") not in _fids:
+                errors.append(f"{n['id']}: 溯源徽标指向未登记事实「{s.get('f')}」")
 
     # R21 provenance 待办标记扫描（非合规禁词扫描）
     blob = json.dumps(data, ensure_ascii=False)

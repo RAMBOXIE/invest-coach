@@ -35,6 +35,10 @@ def main(argv):
         return 1
 
     data = json.loads(CONTENT.read_text(encoding="utf-8"))
+    # 溯源徽标需要事实条目：把 facts.json 的 facts 按 id 注入 SITE.x_facts（只读展示用）
+    fp = CONTENT.parent / "facts.json"
+    if fp.exists():
+        data["x_facts"] = {f["id"]: f for f in json.loads(fp.read_text(encoding="utf-8")).get("facts", [])}
     # </ 转义防止 JSON 字符串意外闭合 <script>
     payload = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     html = tpl.replace(DATA_MARKER, payload)

@@ -104,6 +104,28 @@
   .cmp .ok{color:#2e9c68}
   .src{display:inline-flex;align-items:center;gap:4px;font-size:11px;color:var(--violet);
     background:#f0e8fa;border-radius:999px;padding:4px 9px;margin:2px 4px 2px 0;min-height:30px}
+  /* 案卷 */
+  .cfhead{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:2px 0 8px}
+  .cfcode{font-size:11px;letter-spacing:1.5px;color:var(--violet);font-weight:700}
+  .cfstat{font-size:10.5px;border-radius:999px;padding:2px 8px}
+  .cfstat.set{background:#e8f8ef;color:#2e9c68}
+  .cfstat.ask{background:#fff2d9;color:#a5761b}
+  .cfstat.tea{background:#eee;color:#777}
+  .cfas{font-size:11px;color:var(--soft);margin-left:auto}
+  .cfbrief{font-size:15.5px;line-height:1.7;font-weight:600;margin:2px 0 12px}
+  .cfnote{font-size:13.5px;line-height:1.7;color:var(--soft);background:#f6f1e2;
+    border-radius:10px;padding:9px 11px;margin:9px 0}
+  .cq{margin:10px 0;padding:11px 13px;background:#f3ead6;border-left:3px solid var(--violet);
+    border-radius:0 10px 10px 0;font-size:13.5px;line-height:1.75}
+  .cq cite{display:block;margin-top:6px;font-size:11.5px;color:var(--soft);font-style:normal}
+  .cfdis{font-size:11px;line-height:1.6;color:var(--soft);border-top:1px dashed var(--line);
+    padding-top:8px;margin-top:12px}
+  .srcrow{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
+  a.src{text-decoration:none}
+  .labcard{background:linear-gradient(150deg,rgba(90,169,230,.14),rgba(255,255,255,.05));
+    border:1px solid rgba(90,169,230,.35)}
+  .labtag{font-size:10.5px;background:rgba(90,169,230,.25);color:#bfe0ff;
+    border-radius:999px;padding:2px 8px;margin-left:6px}
   /* 证据 chip */
   .cards{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
   .card-c{border:2px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;
@@ -288,9 +310,28 @@ function render(){
   v.innerHTML=TAB==='today'?viewToday():TAB==='atlas'?viewAtlas():viewMe();
   bindView();
 }
+/* ① 调度器：规则驱动（证据显示个性化排序相对交错无增量，工程预算不压在这里） */
+function plan(){
+  const dues=duePairs();
+  const items=[];
+  if(dues.length)items.push({kind:'review',n:dues.length,mins:Math.max(1,Math.round(dues.length*0.5))});
+  const weak=Object.entries(S.pairs).filter(([p,a])=>PAIRS[p]&&a.wrong>=2&&a.due>Date.now())
+    .sort((a,b)=>b[1].wrong-a[1].wrong)[0];
+  const nx=nextNode();
+  if(nx)items.push({kind:'node',node:nx,mins:isDeep(nx)?6:3});
+  if(weak)items.push({kind:'weak',pair:weak[0],wrong:weak[1].wrong});
+  if((SITE.x_lab||{}).cases||[])items.push({kind:'lab'});
+  return {items,dues,nx,weak};
+}
 function viewToday(){
-  const dues=duePairs(), nx=nextNode(), done=lit.size, total=SITE.nodes.length;
+  const P=plan();
+  const dues=P.dues, nx=P.nx, done=lit.size, total=SITE.nodes.length;
   let h='';
+  const totalMins=P.items.filter(i=>i.mins).reduce((s,i)=>s+i.mins,0);
+  if(totalMins)h+=`<div class="sec" style="padding:10px 14px">
+    <div style="display:flex;align-items:center;gap:8px;font-size:13px">
+      <span style="color:var(--gold);font-weight:700">今天的安排</span>
+      <span style="color:#a49cc4">约 ${totalMins} 分钟 · ${P.items.filter(i=>i.mins).length} 项</span></div></div>`;
   if(dues.length){
     h+=`<div class="sec"><h2>复训到期</h2>
       <button class="cta ghost" id="go-review">🔁 ${dues.length} 道混淆对 · 约 ${dues.length}0 秒</button>
@@ -307,6 +348,18 @@ function viewToday(){
       <p>14 个节点都过了闭卷锚题。接下来靠复训维持——它比新课更能说明你学会了没有。</p>
       <button class="cta ghost" id="go-card">📋 复制成绩单</button></div>`;
   }
+  if(P.weak){const pm=PAIRS[P.weak[0]];
+    h+=`<div class="sec"><h2>你的雷区</h2>
+      <div style="font-size:14px;line-height:1.6">「${pm.look}」——你在这个对上站错过 <b class="num">${P.weak[1].wrong}</b> 次。</div>
+      <div class="tip">区分线索：${pm.key}</div>
+      <div class="tip">它还没到复训时间（${new Date(P.weak[1].due).toLocaleDateString()}）。到点会自动出现在上面。</div></div>`;}
+  const lab=(SITE.x_lab||{}).cases||[];
+  if(lab.length){const lc=lab[0];
+    h+=`<div class="sec labcard"><h2>时事案卷 · 实验室<span class="labtag">未签字 · 不计分</span></h2>
+      <div style="font-size:15px;font-weight:600;line-height:1.5">${lc.company}</div>
+      <div class="tip">${lc.asof} 期 · 机器从 SEC 原始申报值确定性算出的形状${lc.letter?' · 监管已就相关科目问询':''}</div>
+      <button class="cta ghost" id="go-lab" style="margin-top:10px">读一卷（只读数，不定性）</button>
+      <div class="tip" style="margin-top:8px">这一卷由管线自动产出、尚未经人工签字，所以：不进错题档案、不进复训、不计校准分、不能点亮任何节点。</div></div>`;}
   h+=`<div class="sec"><h2>进度</h2><div class="stats">
     <div class="st"><div class="v num">${done}/${total}</div><div class="k">已点亮</div></div>
     <div class="st"><div class="v num">${acc()==null?'—':acc()+'%'}</div><div class="k">首答正确率</div></div>
@@ -382,6 +435,7 @@ function viewMe(){
 function bindView(){
   const g=id=>document.getElementById(id);
   if(g('go-review'))g('go-review').onclick=startReview;
+  if(g('go-lab'))g('go-lab').onclick=openLab;
   if(g('go-node'))g('go-node').onclick=e=>openNode(e.currentTarget.dataset.id);
   if(g('go-coach'))g('go-coach').onclick=()=>pickCoach(false);
   if(g('go-card'))g('go-card').onclick=()=>navigator.clipboard.writeText(scorecard()).then(()=>toast('成绩单已复制 📋'));
@@ -414,6 +468,47 @@ function openSheet(dismissable){
 }
 function closeSheet(){document.getElementById('scrim').classList.remove('show');
   document.getElementById('sheet').classList.remove('show');}
+
+/* ============ 案卷渲染（③ 手机原生材料屏） ============ */
+const FACTS={};   // 溯源徽标 → 事实条目（构建期由 facts.json 注入 SITE，运行时兜底用 srcs 文本）
+function cfHTML(cf,opts){
+  opts=opts||{};
+  let h=`<div class="cfhead"><span class="cfcode">${cf.code||'案卷'}</span>`;
+  if(cf.status==='regulator_asked')h+=`<span class="cfstat ask">监管已问询</span>`;
+  else if(cf.status==='settled')h+=`<span class="cfstat set">已认定</span>`;
+  else h+=`<span class="cfstat tea">教学构造</span>`;
+  if(cf.asof)h+=`<span class="cfas">${cf.asof}</span>`;
+  h+=`</div><p class="cfbrief">${cf.brief||''}</p>`;
+  for(const pn of cf.panels||[]){
+    if(pn.kind==='cmp'){
+      const two=(pn.cols||[]).filter(Boolean).length>1;
+      h+=`<div class="cmp"><div class="hd" style="${two?'':'grid-template-columns:1.3fr 1fr'}"><span>${pn.title||''}</span>
+        <span>${(pn.cols||[''])[0]||''}</span>${two?`<span>${pn.cols[1]}</span>`:''}</div>`;
+      for(const r of pn.rows||[]){
+        h+=`<div class="rw" style="${two?'':'grid-template-columns:1.3fr 1fr'}"><span>${r.k}</span>
+          <span class="num ${r.flagA?'hl':''}">${r.a||''}</span>${two?`<span class="num ${r.flagB?'hl':''} ${r.okB?'ok':''}">${r.b||''}</span>`:''}</div>`;
+      }
+      h+=`</div>`;
+    } else if(pn.kind==='trend'){
+      h+=`<div class="cmp"><div class="hd" style="grid-template-columns:1.2fr repeat(3,1fr)"><span>${pn.title||''}</span><span>第1年</span><span>第2年</span><span>第3年</span></div>`;
+      for(const s of pn.series||[]){
+        h+=`<div class="rw" style="grid-template-columns:1.2fr repeat(3,1fr)"><span>${s.k}</span>`+
+           (s.v||[]).map(v=>`<span class="num ${s.flag?'hl':''}">${v}</span>`).join('')+`</div>`;
+      }
+      h+=`</div>`;
+    } else if(pn.kind==='quote'){
+      h+=`<blockquote class="cq">${pn.t}<cite>${pn.src||''}</cite></blockquote>`;
+    } else {
+      h+=`<p class="cfnote">${pn.t}</p>`;
+    }
+  }
+  if((cf.srcs||[]).length)
+    h+=`<div class="srcrow">${cf.srcs.map(s=>`<button class="src" data-src="${s.f}">🔗 ${s.t}</button>`).join('')}</div>`;
+  if(cf.letter)h+=`<div class="srcrow"><a class="src" href="${cf.letter.url}" target="_blank" rel="noopener">📄 SEC 问询函 · ${cf.letter.filed}</a></div>`;
+  if(cf.disclaimer)h+=`<p class="cfdis">${cf.disclaimer}</p>`;
+  if(opts.teach)h+=`<button class="hintbtn" id="cf-teach" style="margin-top:10px">📚 补课：这一节的概念讲解</button>`;
+  return h;
+}
 
 /* ============ 判卷台：一节课 ============ */
 const stage=document.getElementById('stage');
@@ -458,13 +553,37 @@ document.getElementById('stage-x').onclick=()=>{stage.classList.remove('show');R
 
 /* — 拍 1 材料 — */
 function mat(){
-  const n=R.node;
+  const n=R.node, cf=n.x_casefile;
   const scr=(n.screens||[]).filter(s=>!s.quiz);
-  const body=`<div class="step-t">案卷材料</div><h3>${n.icon} ${n.name}</h3>
-    ${scr.map(s=>`${s.h?`<h3 style="font-size:16px;margin-top:16px">${s.h}</h3>`:''}${s.body||''}`).join('')}
-    ${n.canon?`<button class="src" id="st-canon">${canonLabel(n.canon.source)}</button>`:''}`;
-  return{body,foot:`<button class="cta" id="st-next">读完了，开始判</button>`,
-    bind(){const c=document.getElementById('st-canon');if(c)c.onclick=()=>showCanon(n);}};
+  let body=`<div class="step-t">案卷材料</div><h3>${n.icon} ${n.name}</h3>`;
+  if(cf){                                   // ③ 案卷优先，讲解按需
+    body+=cfHTML(cf,{teach:scr.length>0});
+  }else{                                    // 基础概念节点：仍走教学屏
+    body+=scr.map(s=>`${s.h?`<h3 style="font-size:16px;margin-top:16px">${s.h}</h3>`:''}${s.body||''}`).join('');
+  }
+  if(n.canon)body+=`<div class="srcrow"><button class="src" id="st-canon">${canonLabel(n.canon.source)}</button></div>`;
+  return{body,foot:`<button class="cta" id="st-next">${cf?'看完了，开始判卷':'读完了，开始判'}</button>`,
+    bind(){
+      const c=document.getElementById('st-canon');if(c)c.onclick=()=>showCanon(n);
+      const tb=document.getElementById('cf-teach');
+      if(tb)tb.onclick=()=>{document.getElementById('sheet').innerHTML=
+        `<h3 style="margin:0 0 6px;font-size:16px">📚 补课 · ${n.name}</h3>`+
+        scr.map(s=>`${s.h?`<h4 style="font-size:15px;margin:14px 0 4px">${s.h}</h4>`:''}${s.body||''}`).join('')+
+        `<button class="cta ghost" id="sh-x" style="margin-top:10px">看完了</button>`;
+        openSheet(true);document.getElementById('sh-x').onclick=closeSheet;};
+      SB().querySelectorAll('[data-src]').forEach(b=>b.onclick=()=>showFact(b.dataset.src));
+    }};
+}
+function showFact(fid){
+  const f=(SITE.x_facts||{})[fid];
+  document.getElementById('sheet').innerHTML=f?
+    `<h3 style="margin:0 0 6px;font-size:16px">🔗 溯源</h3>
+     <p style="font-size:15px;line-height:1.7"><b>${f.item}</b><br>${f.value}</p>
+     <p class="tip">口径：${f.basis||'—'}<br>档案：${f.accession} · ${f.line}<br>公司：${f.company}</p>
+     <p class="tip">这个数字不是我们写的，是从原始申报文件里取的——行号在上面，任何人都能复核。</p>
+     <button class="cta ghost" id="sh-x">关闭</button>`
+    :`<p style="font-size:15px">该数字的溯源条目未加载。</p><button class="cta ghost" id="sh-x">关闭</button>`;
+  openSheet(true);document.getElementById('sh-x').onclick=closeSheet;
 }
 function showCanon(n){
   document.getElementById('sheet').innerHTML=`<h3 style="margin:0 0 8px;font-size:16px">${n.canon.term}</h3>
@@ -560,6 +679,31 @@ function cc(){
           k:q.x_kind||'main',ms:Date.now()-R.t0,noscore:NOSCORE.has(R.node.id)?1:0});
         drawStage();});}};
 }
+/* ① 系统主动触发：不摆「有问题问我」，由规则触发教练介入 */
+function maybeIntervene(ctx){
+  const c=coach();if(!c)return;
+  let why=null,body=null;
+  if(ctx.overconf){why='overconfident';
+    body=`你刚才标了「很有把握」，但答错了。<b>这正是校准分要治的病</b>——不是知识不够，是把握感和证据不匹配。<br><br>
+      下次遇到同类题，先问自己一句：我手上有几条相互独立的证据？只有一条的时候，「比较有把握」就够了。`;}
+  else if(ctx.pairRepeat){const pm=PAIRS[ctx.pair];why='pair_repeat';
+    body=`你在「${pm.look}」这个对上已经站错 <b>${ctx.wrong}</b> 次了。<br><br>
+      区分线索就一句：<b>${pm.key}</b><br><br>这个对会被排到你复训队列的最前面。`;}
+  else if(ctx.anchorFail){why='wrong';
+    body=`锚题没过——这一节不点亮。<br><br>这不是惩罚：锚题换了公司，考的是你能不能把方法搬到新材料上。回去把案卷和证据链再走一遍，换一道锚题再来。`;}
+  if(!why)return;
+  const l=line(why);
+  document.getElementById('sheet').innerHTML=
+    `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+       <span style="font-size:22px">🎓</span><b style="font-size:16px">${c.name}</b>
+       <span class="tip" style="margin:0 0 0 auto">教练主动来找你</span></div>
+     ${l?`<p style="font-size:15px;line-height:1.7;font-weight:600">${l.t}</p>`:''}
+     <p style="font-size:14.5px;line-height:1.75">${body}</p>
+     <button class="cta ghost" id="sh-x">知道了</button>`;
+  openSheet(true);document.getElementById('sh-x').onclick=closeSheet;
+  track('coach_intervene',{why});
+}
+
 function recordFirst(q,rec){
   if(S.answers[q.x_id])return;
   S.answers[q.x_id]=rec;
@@ -571,8 +715,12 @@ function recordFirst(q,rec){
     else if(rec.c){S.calib.streak++;S.calib.best=Math.max(S.calib.best,S.calib.streak);
       if(rec.conf===.55)S.calib.under++;}
   }
+  let iv=null;
+  if(q.confidence&&!rec.noscore&&rec.conf===.95&&!rec.c&&!rec.na)iv={overconf:1};
   if(q.x_pair&&PAIRS[q.x_pair]){const a=ensurePair(q.x_pair);
-    if(!rec.c&&!rec.na&&!rec.noscore){a.wrong++;a.lastWrong=rec.side||'node';}}
+    if(!rec.c&&!rec.na&&!rec.noscore){a.wrong++;a.lastWrong=rec.side||'node';
+      if(a.wrong>=2)iv={pairRepeat:1,pair:q.x_pair,wrong:a.wrong};}}
+  if(iv)setTimeout(()=>maybeIntervene(iv),650);
   track('first_answer',{quiz_id:q.x_id,pair_id:q.x_pair||null,side:rec.side||null,kind:rec.k,
     correct:rec.c,na:rec.na,conf:rec.conf||null,hints:rec.h,latency:rec.ms});
   save();
@@ -668,7 +816,8 @@ function an(){
         const a=S.anchors[R.node.id]=S.anchors[R.node.id]||{attempts:0,seen:[]};
         a.attempts++;if(!a.seen.includes(R.anchor.quiz.x_id))a.seen.push(R.anchor.quiz.x_id);
         if(o.ok){R.aDone=true;R.aPass=true;R.aFb='✓ '+q.fb;a.passed_at=Date.now();}
-        else{R.aDone=true;R.aPass=false;R.aFb=q.fb+'<br><br><b>这一节还没点亮</b>——不扣分，回去把材料和证据链再走一遍，换一道锚题再来。';}
+        else{R.aDone=true;R.aPass=false;R.aFb=q.fb+'<br><br><b>这一节还没点亮</b>——不扣分，回去把材料和证据链再走一遍，换一道锚题再来。';
+          setTimeout(()=>maybeIntervene({anchorFail:1}),650);}
         if(R.anchor.pair){const p=ensurePair(R.anchor.pair);p.seen++;p.lastSide=R.anchor.side;
           if(o.ok)p.hl=Math.min(64,p.hl*2);else{p.hl=Math.max(.5,p.hl/2);p.wrong++;p.lastWrong=R.anchor.side;}
           p.due=Date.now()+p.hl*DAY;}
@@ -696,6 +845,43 @@ function lightUp(){
   document.getElementById('stage-foot').innerHTML=`<button class="cta" id="st-done">回到今日</button>`;
   document.getElementById('stage-prog').style.width='100%';
   document.getElementById('st-done').onclick=()=>{stage.classList.remove('show');R=null;render();flush();};
+}
+
+/* ============ ② 时事案卷（实验室，不计分） ============ */
+function openLab(){
+  const lc=((SITE.x_lab||{}).cases||[])[0];if(!lc)return;
+  R={mode:'lab',case:lc,step:0,tried:new Set(),done:false};
+  stage.classList.add('show');track('lab_open',{case:lc.id});drawLab();
+}
+function drawLab(){
+  const lc=R.case;
+  document.getElementById('stage-prog').style.width=(R.step?100:50)+'%';
+  document.getElementById('stage-n').textContent=(R.step+1)+'/2';
+  const b=SB(),f=document.getElementById('stage-foot');
+  if(R.step===0){
+    b.innerHTML=`<div class="step-t">时事案卷 · 实验室</div>${cfHTML(lc,{})}
+      <p class="cfnote">这一卷的边界：<b>只读数字的形状，不对这家公司下任何定性判断</b>。监管问了什么、公司怎么答，才是要读的东西。</p>`;
+    f.innerHTML=`<button class="cta" id="lab-next">看完了</button>`;
+    b.querySelectorAll('[data-src]').forEach(x=>x.onclick=()=>showFact(x.dataset.src));
+    document.getElementById('lab-next').onclick=()=>{R.step=1;drawLab();};
+    return;
+  }
+  const q=lc.quiz;
+  let h=`<div class="step-t">读数题 · 不计分</div><p class="prompt">${q.q}</p>`;
+  h+=q.opts.map((o,i)=>{let c='';
+    if(R.done&&o.ok)c=' right';else if(R.tried.has(i)&&!o.ok)c=' wrong';
+    return `<button class="opt${c}" data-l="${i}" ${R.done||R.tried.has(i)?'disabled':''}>${o.t}</button>`;}).join('');
+  if(R.fb)h+=`<div class="fb${R.done?' good':''}">${R.fb}</div>`;
+  if(R.done)h+=`<div class="cfnote">这一卷不计入你的任何成绩——它由管线自动产出、还没人签字。<br>
+    管线：${lc.provenance.computed_by}<br>取数标签：${lc.provenance.tags.revenue} / ${lc.provenance.tags.receivables}</div>`;
+  b.innerHTML=h;
+  f.innerHTML=`<button class="cta" id="lab-x" ${R.done?'':'disabled'}>回到今日</button>`;
+  b.querySelectorAll('[data-l]:not([disabled])').forEach(x=>x.onclick=()=>{
+    const i=+x.dataset.l,o=q.opts[i];R.tried.add(i);
+    if(o.ok){R.done=true;R.fb=q.fb;}else{R.fb='再看一眼两行数字的相对关系。';}
+    track('lab_answer',{case:lc.id,correct:o.ok?1:0});drawLab();});
+  const bx=document.getElementById('lab-x');
+  if(bx)bx.onclick=()=>{stage.classList.remove('show');R=null;render();flush();};
 }
 
 /* ============ 复训 ============ */
