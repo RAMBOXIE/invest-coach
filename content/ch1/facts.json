@@ -12,6 +12,12 @@
    "sha256": "2e2539e8dfa0a9e3a4c8179d81a1d69d8e9b272ee35e729467cadbb859ba6e55",
    "source": "Dell FY1998 10-K",
    "accession": "0000950134-98-003218"
+  },
+  {
+   "file": "evidence/sunbeam-10ka-fy1997-restated.txt",
+   "sha256": "62dd01d68dc4b5286d4ab2f45014d8ed090e9d7854feb62cc614de5a5d9d9935",
+   "source": "Sunbeam FY1997 10-K/A（重述版）",
+   "accession": "0000950170-98-002145"
   }
  ],
  "facts": [
@@ -131,6 +137,51 @@
    "basis": "经营活动现金流调节表",
    "accession": "0000950170-98-000413",
    "line": "L2164"
+  },
+  {
+   "id": "dl-ocf",
+   "company": "Dell",
+   "item": "FY1998 经营现金流 vs 净利",
+   "value": "OCF +$1,592M vs 净利 +$944M（OCF 远高于净利）",
+   "basis": "现金流量表",
+   "accession": "0000950134-98-003218",
+   "line": "L1526-1536"
+  },
+  {
+   "id": "sb-billhold",
+   "company": "Sunbeam",
+   "item": "bill-and-hold 销售披露",
+   "value": "1997-12-29 时点约占合并收入 3%（公司自证于收入确认附注）",
+   "basis": "REVENUE RECOGNITION 附注",
+   "accession": "0000950170-98-000413",
+   "line": "L2352-2363"
+  },
+  {
+   "id": "sb-restated-sales",
+   "company": "Sunbeam",
+   "item": "重述后 1997 净销售额",
+   "value": "$1,073.1M，+9%（档内自证「an increase of $88.9 million or 9%」）；原报 1,168.2（+18.7%）→ 蒸发 $95.1M",
+   "basis": "重述版利润表与 MD&A",
+   "accession": "0000950170-98-002145",
+   "line": "L743/L995/L2080"
+  },
+  {
+   "id": "sb-restated-ni",
+   "company": "Sunbeam",
+   "item": "重述后 1997 净利",
+   "value": "$38.3M；原报 109.4 → 蒸发约 65%",
+   "basis": "重述版利润表",
+   "accession": "0000950170-98-002145",
+   "line": "L758/L2101"
+  },
+  {
+   "id": "sb-restated-ar",
+   "company": "Sunbeam",
+   "item": "重述后应收净额",
+   "value": "209,754→228,460 $K（+8.9% 推算）；原报 +38.5%——重述后两条腿（+9.0%/+8.9%）完全同步",
+   "basis": "重述版资产负债表；原/重述对照见 L4173",
+   "accession": "0000950170-98-002145",
+   "line": "L2152/L4173"
   }
  ],
  "approved_tokens": {
@@ -173,6 +224,25 @@
   "60": "看 60 秒（界面指令）",
   "45": "构造题 K 公司账期（bank，同串含案主引用）",
   "90": "构造题 K 公司账期（bank，同串含案主引用）",
-  "84.6": "sb-ar-change"
+  "84.6": "sb-ar-change",
+  "1592": "dl-ocf",
+  "944": "dl-ocf",
+  "1362": "dl-ocf（FY1997 对照）",
+  "3": "sb-billhold（约 3% 收入）",
+  "1073.1": "sb-restated-sales",
+  "1168.2": "sb-rev-g（原报绝对额）",
+  "95.1": "sb-restated-sales（原报−重述，推算）",
+  "9.0": "sb-restated-sales（档内自证 9%）",
+  "9": "sb-restated-sales",
+  "38.3": "sb-restated-ni",
+  "65": "sb-restated-ni（蒸发比例，推算）",
+  "8.9": "sb-restated-ar（推算）",
+  "2006": "年份（Dell 和解涉案期）",
+  "4": "泛指口语",
+  "9.44": "dl-ocf（净利 $944M 的亿元表述）",
+  "15.92": "dl-ocf（OCF $1,592M 的亿元表述）",
+  "1393": "文书号 AAER 1393",
+  "11": "月份（1998-11 重述）",
+  "30": "sb-restated-ar（原报与重述步差之差 ≈30 个点，推算）"
  }
 }
