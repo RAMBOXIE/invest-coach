@@ -3,8 +3,9 @@
    判分仍是规则引擎；教练画外音用预置文案，LLM 接入后只改措辞不改结论。 */
 (function () {
   'use strict';
-  const STORY = (SITE.x_stories || [])[0];
-  if (!STORY) return;
+  const STORIES = SITE.x_stories || [];
+  if (!STORIES.length) return;
+  let STORY = STORIES[0];
 
   const el = document.getElementById('sty');
   const bodyEl = document.getElementById('sty-body');
@@ -13,7 +14,8 @@
 
   let ST = null;  // {i, pick, conf, twinOk, asked:[], done:Set}
 
-  window.openStory = function () {
+  window.openStory = function (cid) {
+    STORY = STORIES.find(s => s.case_id === cid) || STORIES[0];
     ST = { i: 0, pick: null, conf: null, twinOk: null, asked: [], seen: new Set() };
     el.classList.add('show');
     track('story_open', { case: STORY.case_id });
@@ -229,7 +231,15 @@
     // 故事读完 → 该判据进入复训队列（按标签，不按故事）
     if (typeof ensurePair === 'function') {
       const n = byId[node];
-      (n && n.x_pairs || []).forEach(p => { if (p.id) ensurePair(p.id); });
+      let pairs = (n && n.x_pairs || []).filter(p => p.id);
+      if (!pairs.length) {
+        // 元能力节点（base-rate / falsification）自身没有混淆对：
+        // 退而挂到它 cross 边指向的下游节点的混淆对上——判据仍按标签复训，不按故事
+        const down = (SITE.edges || []).filter(e => e.from === node).map(e => byId[e.to]).filter(Boolean);
+        pairs = down.flatMap(d => (d.x_pairs || []).filter(p => p.id)).slice(0, 2);
+      }
+      pairs.forEach(p => ensurePair(p.id));
+      if (!pairs.length) console.warn('故事', STORY.case_id, '的判据节点', node, '无可挂的混淆对');
       save();
     }
     track('story_finish', { case: STORY.case_id });
@@ -262,26 +272,63 @@
     if (log) log.scrollIntoView({ block: 'end' });
   }
   function turnHTML(t) {
+    if (t.pending) return `<div class="turn"><div class="me">你：${t.q}</div>
+      <p class="ln dim" style="font-size:17px">……正在从原档里找</p></div>`;
     return `<div class="turn"><div class="me">你：${t.q}</div>
       ${t.silence ? `<p class="ln dim" style="font-size:17px">${t.quote}</p>`
                   : docQuote({ text: t.quote, src: t.src, line: t.line })}
       ${vo(t.coach)}</div>`;
   }
   function ask(q) {
-    const hit = matchQA(q);
-    ST.asked.push({ q, quote: hit.quote, src: hit.src, line: hit.line, coach: hit.coach, silence: hit.silence });
-    track('story_ask', { case: STORY.case_id, matched: hit.id || 'fallback' });
-    save && save();
+    ST.asked.push({ q, pending: true });
     drawAsk();
+    resolveQA(q).then(({ hit, via }) => {
+      const i = ST.asked.findIndex(x => x.pending && x.q === q);
+      const rec = { q, quote: hit.quote, src: hit.src, line: hit.line, coach: hit.coach, silence: hit.silence };
+      if (i >= 0) ST.asked[i] = rec; else ST.asked.push(rec);
+      track('story_ask', { case: STORY.case_id, matched: hit.id || 'fallback', via });
+      save && save();
+      drawAsk();
+    });
+  }
+  /* 语义路由：后端 LLM 只返回命中的语料 id，答案文本永远取自冻结的 case.json。
+     无后端 / 超时 / 返回 none → 回落本地关键词匹配。 */
+  function resolveQA(q) {
+    const local = () => ({ hit: matchQA(q), via: 'local' });
+    if (!BACKEND) return Promise.resolve(local());
+    const topics = STORY.ask.qa.map(x => ({ id: x.id, desc: x.match.join('、') }));
+    const ctl = new AbortController();
+    const timer = setTimeout(() => ctl.abort(), 6000);
+    return fetch(BACKEND + '/api/v1/ask-coach', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
+      body: JSON.stringify({ device: S.device, case_id: STORY.case_id, question: q, topics })
+    }).then(r => r.json()).then(d => {
+      clearTimeout(timer);
+      const found = STORY.ask.qa.find(x => x.id === d.id);
+      if (found) return { hit: found, via: 'llm' };
+      if (d.id === 'none') {
+        const fb = STORY.ask.fallback;
+        return { hit: { quote: fb.quote, src: '—', line: '—', coach: fb.coach, silence: true }, via: 'llm-none' };
+      }
+      return local();
+    }).catch(() => { clearTimeout(timer); return local(); });
   }
   /* 检索式匹配：命中预置语料才回答。无后端时用关键词；接入 LLM 后由代理做同一件事，
      但答案仍必须是这份语料里的原档引文（LLM 只负责匹配与措辞，不负责内容）。 */
   function matchQA(q) {
     const s = q.toLowerCase();
-    let best = null, bestScore = 0;
+    // 打分：最长命中词优先；同长度时中文修饰语在前，取出现位置更靠前的那条。
+    // （这只是无后端时的兜底；接上后端由 LLM 做语义路由，效果好得多。）
+    let best = null, bestScore = -1;
     for (const item of STORY.ask.qa) {
-      let sc = 0;
-      for (const k of item.match) if (s.includes(k.toLowerCase())) sc += k.length;
+      let len = 0, pos = 1e9;
+      for (const k of item.match) {
+        const i = s.indexOf(k.toLowerCase());
+        if (i < 0) continue;
+        if (k.length > len || (k.length === len && i < pos)) { len = k.length; pos = i; }
+      }
+      if (!len) continue;
+      const sc = len * 1000 - pos;
       if (sc > bestScore) { bestScore = sc; best = item; }
     }
     if (best) return best;

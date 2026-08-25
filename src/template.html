@@ -254,6 +254,7 @@ const BANK={},BANKQ={};
   BANKQ[it.quiz.x_id]={quiz:it.quiz,pair:it.pair_id,side:it.side};
 });
 const isDeep=n=>!!n.x_level;
+const ORDER=['sunbeam-1998','lehman-2008','buffett-1993'];  // 幕序：先能查到→再查不到→最后自己算错
 function canonLabel(s){s=s||'';
   if(s.includes('Graham'))return'📖 格雷厄姆怎么说';
   if(s.includes('SEC'))return'📖 SEC 怎么认定';
@@ -336,15 +337,24 @@ function viewToday(){
   const P=plan();
   const dues=P.dues, nx=P.nx, done=lit.size, total=SITE.nodes.length;
   let h='';
-  const st=(SITE.x_stories||[])[0];
+  const all=(SITE.x_stories||[]).slice().sort((a,b)=>ORDER.indexOf(a.case_id)-ORDER.indexOf(b.case_id));
+  const st=all.find(x=>!((S.story||{})[x.case_id]))||all[all.length-1];
   if(st){
     const read=(S.story||{})[st.case_id];
+    const idx=all.indexOf(st)+1;
     h+=`<div class="sec big" style="background:linear-gradient(150deg,rgba(255,209,102,.18),rgba(134,70,184,.16))">
-      <div class="code">故事 · ${st.era}</div>
+      <div class="code">第 ${idx} 幕 / 共 ${all.length} · ${st.era}</div>
       <h3>${st.title}</h3>
       <p>${st.subtitle}<br><span style="opacity:.8">${st.hook}</span></p>
-      <button class="cta" id="go-story">${read?'再读一遍':'读这一幕 · 约 8 分钟'}</button>
+      <button class="cta" id="go-story" data-cid="${st.case_id}">${read?'再读一遍':'读这一幕 · 约 8 分钟'}</button>
       <div class="tip" style="margin-top:8px">你会先做判断，再拿到知识点。中途可以直接问这份年报——它只用自己写过的话回答。</div></div>`;
+  }
+  const doneSt=all.filter(x=>(S.story||{})[x.case_id]&&x!==st);
+  if(doneSt.length){
+    h+=`<div class="sec"><h2>读过的幕</h2>${doneSt.map(x=>
+      `<button class="rowbtn" data-story="${x.case_id}"><span class="ic">📖</span>
+        <span><span class="nm">${x.title}</span><span class="mt">${x.era} · ${x.subtitle}</span></span>
+        <span class="chipS lit">已读</span></button>`).join('')}</div>`;
   }
   const totalMins=P.items.filter(i=>i.mins).reduce((s,i)=>s+i.mins,0);
   if(totalMins)h+=`<div class="sec" style="padding:10px 14px">
@@ -455,7 +465,8 @@ function bindView(){
   const g=id=>document.getElementById(id);
   if(g('go-review'))g('go-review').onclick=startReview;
   if(g('go-lab'))g('go-lab').onclick=openLab;
-  if(g('go-story'))g('go-story').onclick=()=>openStory();
+  if(g('go-story'))g('go-story').onclick=()=>openStory(g('go-story').dataset.cid);
+  document.querySelectorAll('[data-story]').forEach(b=>b.onclick=()=>openStory(b.dataset.story));
   if(g('go-node'))g('go-node').onclick=e=>openNode(e.currentTarget.dataset.id);
   if(g('go-coach'))g('go-coach').onclick=()=>pickCoach(false);
   if(g('go-card'))g('go-card').onclick=()=>navigator.clipboard.writeText(scorecard()).then(()=>toast('成绩单已复制 📋'));

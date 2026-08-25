@@ -18,6 +18,18 @@
    "sha256": "62dd01d68dc4b5286d4ab2f45014d8ed090e9d7854feb62cc614de5a5d9d9935",
    "source": "Sunbeam FY1997 10-K/A（重述版）",
    "accession": "0000950170-98-002145"
+  },
+  {
+   "file": "evidence/brk-10k-fy1993.txt",
+   "sha256": "e136e30a811240d714d44c08d1d79963573b0866ae011eff98899d3ad0b94188",
+   "source": "老 Berkshire Hathaway FY1993 10-K",
+   "accession": "0000950150-94-000443"
+  },
+  {
+   "file": "evidence/valukas-vol3.pdf",
+   "sha256": "acc6e566f5668962b6e0ddb360b14498e3bc62831941747c0f02b728a2e51413",
+   "source": "Valukas 审查人报告 Vol.3（雷曼破产法院指定审查人，2010-03-11）",
+   "accession": "Valukas-Vol3"
   }
  ],
  "facts": [
@@ -200,6 +212,69 @@
    "basis": "MD&A 流动性与资本资源段",
    "accession": "0000950170-98-000413",
    "line": "L1469-L1481"
+  },
+  {
+   "id": "brk-dexter-deal",
+   "company": "Berkshire Hathaway",
+   "item": "Dexter Shoe 收购条款",
+   "value": "1993-11-07 完成；重新发行 25,203 股库存普通股换 Dexter 100% 股权；对价 433,012 千美元",
+   "basis": "10-K 正文 + 收购对价表",
+   "accession": "0000950150-94-000443",
+   "line": "L378-L380 / L2661"
+  },
+  {
+   "id": "brk-dexter-2007",
+   "company": "Berkshire Hathaway",
+   "item": "买方 2007 年对该交易的自我判词",
+   "value": "称其为「the worst deal that I've made」；名义对价 4.33 亿，因用股票支付使实际成本达约 35 亿美元",
+   "basis": "2007 年致股东信（逐字，短引）",
+   "accession": "BRK-2007-letter",
+   "line": "Mistakes 段"
+  },
+  {
+   "id": "lb-repo105",
+   "company": "Lehman Brothers",
+   "item": "季末 Repo 105 交易规模",
+   "value": "2007Q4 末 386 亿；2008Q1 末 491 亿；2008Q2 末 503.8 亿美元",
+   "basis": "审查人报告逐字",
+   "accession": "Valukas-Vol3",
+   "line": "Repo 105 章节"
+  },
+  {
+   "id": "lb-nodisclosure",
+   "company": "Lehman Brothers",
+   "item": "审查人关于未披露的认定",
+   "value": "雷曼从未公开披露其 Repo 105 使用、会计处理、规模上升及对公开净杠杆率的实质影响；经数位证人（含两位前全球财务总监）证实。报告明确不就是否符合 SFAS 140 作结论",
+   "basis": "审查人报告逐字",
+   "accession": "Valukas-Vol3",
+   "line": "Repo 105 章节"
+  },
+  {
+   "id": "lb-cash-2007",
+   "company": "Lehman Brothers",
+   "item": "2007-11-30 现金及等价物",
+   "value": "$7.286 billion",
+   "basis": "2007 年 10-K",
+   "accession": "LBHI-2007-10K",
+   "line": "p.86"
+  },
+  {
+   "id": "lb-cash-q1",
+   "company": "Lehman Brothers",
+   "item": "2008-02-29 现金及等价物",
+   "value": "$7.564 billion",
+   "basis": "10-Q（2008-04-09 报送）",
+   "accession": "LBHI-10Q-Apr2008",
+   "line": "p.5"
+  },
+  {
+   "id": "lb-cash-q2",
+   "company": "Lehman Brothers",
+   "item": "2008-05-31 现金及等价物",
+   "value": "$6.513 billion",
+   "basis": "10-Q（2008-07-10 报送）",
+   "accession": "LBHI-10Q-Jul2008",
+   "line": "p.5"
   }
  ],
  "approved_tokens": {
@@ -260,7 +335,7 @@
   "9.44": "dl-ocf（净利 $944M 的亿元表述）",
   "15.92": "dl-ocf（OCF $1,592M 的亿元表述）",
   "1393": "文书号 AAER 1393",
-  "11": "月份（1998-11 重述）",
+  "11": "月份",
   "30": "sb-restated-ar（原报与重述步差之差 ≈30 个点，推算）",
   "50.0": "sb-earlybuy",
   "50": "sb-earlybuy",
@@ -272,6 +347,42 @@
   "228,262": "sb-ni（1996 亏损）",
   "14,163": "sb-ocf（1996）",
   "8,249": "sb-ocf",
-  "18": "页码/泛指"
+  "18": "页码/泛指",
+  "25,203": "brk-dexter-deal",
+  "25203": "brk-dexter-deal",
+  "433,012": "brk-dexter-deal",
+  "433": "brk-dexter-deal",
+  "400": "brk-dexter-2007",
+  "3.5": "brk-dexter-2007",
+  "220": "brk-dexter-2007",
+  "1.6": "brk-dexter-2007",
+  "35": "brk-dexter-2007（亿元表述）",
+  "4.33": "brk-dexter-deal（亿元表述）",
+  "1993": "年份",
+  "2007": "年份",
+  "14": "年数",
+  "386": "lb-repo105",
+  "491": "lb-repo105",
+  "503.8": "lb-repo105",
+  "38.6": "lb-repo105",
+  "49.1": "lb-repo105",
+  "50.38": "lb-repo105",
+  "72.86": "lb-cash-2007",
+  "75.64": "lb-cash-q1",
+  "65.13": "lb-cash-q2",
+  "7.286": "lb-cash-2007",
+  "7.564": "lb-cash-q1",
+  "6.513": "lb-cash-q2",
+  "86": "页码",
+  "63": "页码",
+  "72": "页码",
+  "88": "页码",
+  "5": "页码",
+  "140": "SFAS 140",
+  "105": "Repo 105",
+  "2008": "年份",
+  "77": "门店数",
+  "1994": "年份",
+  "7": "日期"
  }
 }
