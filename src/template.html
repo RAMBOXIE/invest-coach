@@ -13,6 +13,7 @@
   判分永远是本文件内的规则引擎；LLM 不判分、不读用户自由文本（v3 §2.6 + 裁决 5）。
 -->
 <style>
+/*__TOKENS__*/
   :root{
     --bg1:#141b36; --bg2:#232e52; --card:#fdf9f0; --ink:#37304d; --soft:#6f688a;
     --gold:#ffd166; --good:#4fbf85; --bad:#e2606c; --na:#5aa9e6; --violet:#8646b8;
@@ -192,6 +193,7 @@
   .toast.show{opacity:1;transform:translateX(-50%)}
   .mapmini{width:100%;border-radius:14px;background:rgba(0,0,0,.18);display:block}
   @media(min-width:720px){ .app{max-width:680px} .cta{font-size:17px} }
+<!--#part:story.css-->
   @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}
     /* 关闭动效后：分阶段揭示的阶段与注释全部保留，只是没有补间 */}
 </style>
@@ -221,6 +223,12 @@
   </div>
   <div class="body" id="stage-body"></div>
   <div class="foot2" id="stage-foot"></div>
+</div>
+
+<div class="sty" id="sty">
+  <div class="sty-bar"><button class="x" id="sty-x">✕ 退出</button><span class="sty-dots" id="sty-dots"></span></div>
+  <div class="sty-body" id="sty-body"></div>
+  <div class="sty-foot" id="sty-foot"></div>
 </div>
 
 <div class="scrim" id="scrim"></div>
@@ -328,6 +336,16 @@ function viewToday(){
   const P=plan();
   const dues=P.dues, nx=P.nx, done=lit.size, total=SITE.nodes.length;
   let h='';
+  const st=(SITE.x_stories||[])[0];
+  if(st){
+    const read=(S.story||{})[st.case_id];
+    h+=`<div class="sec big" style="background:linear-gradient(150deg,rgba(255,209,102,.18),rgba(134,70,184,.16))">
+      <div class="code">故事 · ${st.era}</div>
+      <h3>${st.title}</h3>
+      <p>${st.subtitle}<br><span style="opacity:.8">${st.hook}</span></p>
+      <button class="cta" id="go-story">${read?'再读一遍':'读这一幕 · 约 8 分钟'}</button>
+      <div class="tip" style="margin-top:8px">你会先做判断，再拿到知识点。中途可以直接问这份年报——它只用自己写过的话回答。</div></div>`;
+  }
   const totalMins=P.items.filter(i=>i.mins).reduce((s,i)=>s+i.mins,0);
   if(totalMins)h+=`<div class="sec" style="padding:10px 14px">
     <div style="display:flex;align-items:center;gap:8px;font-size:13px">
@@ -437,6 +455,7 @@ function bindView(){
   const g=id=>document.getElementById(id);
   if(g('go-review'))g('go-review').onclick=startReview;
   if(g('go-lab'))g('go-lab').onclick=openLab;
+  if(g('go-story'))g('go-story').onclick=()=>openStory();
   if(g('go-node'))g('go-node').onclick=e=>openNode(e.currentTarget.dataset.id);
   if(g('go-coach'))g('go-coach').onclick=()=>pickCoach(false);
   if(g('go-card'))g('go-card').onclick=()=>navigator.clipboard.writeText(scorecard()).then(()=>toast('成绩单已复制 📋'));
@@ -469,6 +488,12 @@ function openSheet(dismissable){
 }
 function closeSheet(){document.getElementById('scrim').classList.remove('show');
   document.getElementById('sheet').classList.remove('show');}
+/* story.js 用：填内容并弹出；可选 keep=true 表示内容自带关闭逻辑 */
+function sheet(html,keep){
+  document.getElementById('sheet').innerHTML=html+(keep?'':`<button class="cta ghost" id="sh-x" style="margin-top:12px">关闭</button>`);
+  openSheet(true);
+  const x=document.getElementById('sh-x'); if(x)x.onclick=closeSheet;
+}
 
 /* ============ 案卷渲染（③ 手机原生材料屏） ============ */
 const FACTS={};   // 溯源徽标 → 事实条目（构建期由 facts.json 注入 SITE，运行时兜底用 srcs 文本）
@@ -959,6 +984,9 @@ if(!S.coach)pickCoach(true);
 if(/MicroMessenger/i.test(navigator.userAgent))
   setTimeout(()=>toast('微信里可能清掉进度：建议右上角「用浏览器打开」'),1200);
 window.addEventListener('beforeunload',()=>{track('session_end',{});flush();});
+</script>
+<script>
+<!--#part:story.js-->
 </script>
 </body>
 </html>

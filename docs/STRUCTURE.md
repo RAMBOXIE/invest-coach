@@ -17,3 +17,4 @@
 | `docs/CHECKLISTS/` | 开工前八问等清单 | 人 | 人 | 长期 |
 | `docs/adr/` | 架构决策记录 `NNNN-标题.md` | 人 | 人 | 永久 |
 | `dist/` | 构建产物 | build.py | 交付 | gitignore |
+| `content/stories/sunbeam-1998/` | 首个故事幕：case.json（骨架冻结，引文逐字带行号） | 人 | build.py、validate.py | 长期 |

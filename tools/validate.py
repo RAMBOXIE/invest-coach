@@ -13,7 +13,7 @@ import sys
 import pathlib
 from collections import defaultdict
 
-TOP_X = {"x_note", "x_version", "x_coaches", "x_review_bank", "x_lab", "x_facts"}
+TOP_X = {"x_note", "x_version", "x_coaches", "x_review_bank", "x_lab", "x_facts", "x_stories"}
 NODE_X = {"x_qtype", "x_level", "x_pairs", "x_coach_notes", "x_prov", "x_cards", "x_ruleout", "x_selfcheck", "x_anchors", "x_casefile"}
 QUIZ_X = {"x_pair", "x_kind", "x_id"}
 COACH_X = {"x_identity"}
