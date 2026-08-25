@@ -4,8 +4,8 @@
   "tag": "财报红旗 · 第一章",
   "about": "这一章训练一件事：从财报数字里看出「收入的水分」——先理解三张表和记账规则，再学两面互相印证的红旗，最后在真实 SEC 执法案例上做完整判断。本站只做历史案例复盘与判断习惯训练，不提供任何投资建议、不输出任何前瞻信号；「信息不足，无法判断」在这里是可以得满分的答案。 关于 AI 的角色：术语与定义来自本站所列的正典出处与官方档案（每条可溯源）；通俗解释与教练点评由 AI 起草、经人工核对后固定内置；教练是学派原型，不是真人。判分由页面内置的规则完成，AI 不参与判分。",
   "reorder": "与教科书顺序的三处刻意差异：① 案例先行——第一案（whole-task）在只学两个基础节点后立即出现，先凭直觉判断再学工具（v3 §3.2 whole-task first；§3.3.5 故事先行）；② 红旗清单后置——清单是最后一个节点，定位为验证工具而非初判工具（v3 §3.3.5，清单初判压低职业怀疑有成体系实证）；③ 元能力横插——基率与证伪思维作为 cross 节点嵌在红旗与案例之间，而非附录（v3 §3.1/§3.6）。",
-  "x_note": "扩展字段说明（登记簿见 docs/SCHEMA.md）：ageStart=图层深度 1–7；x_qtype=节点题型；x_pairs=混淆对（id/look/a/b/key）；x_level=材料难度 L1/L2；x_coaches=教练原型（人格字段不用真人名，出处字段必须真名真书）；x_review_bank=复训变体题库（pair_id × a/b 面）；x_coach_notes=案例节点三声道点评（UI 默认只显主教练）；quiz 扩展：hints=三级提示、confidence=需信心三档、opts[].na=「无法判断」选项、x_pair=挂靠混淆对、x_kind=main|pretest|decision|review。",
-  "x_version": "ch1-content-v1（2026-08-22）｜第一章 14/14 节点内容全部完成；复训库 10 对 24 题；重述版数字（10-K/A）与 Dell 现金流、bill-and-hold 披露均经原档核定入账本；Dell 2010 和解已按裁决在终局揭示屏披露。图 ch1-graph-v1 不动；人工签字（G1/G2）仍未进行——poc-trial 定版前必须补齐",
+  "x_note": "扩展字段说明（登记簿见 docs/SCHEMA.md）：ageStart=图层深度 1–7；x_qtype=节点题型；x_pairs=混淆对（id/look/a/b/key）；x_level=材料难度 L1/L2；x_coaches=教练原型（人格字段不用真人名，出处字段必须真名真书）；x_review_bank=复训变体题库（pair_id × a/b 面）；x_coach_notes=案例节点三声道点评（UI 默认只显主教练）；quiz 扩展：hints=三级提示、confidence=需信心三档、opts[].na=「无法判断」选项、x_pair=挂靠混淆对、x_kind=main|pretest|decision|review。 ｜ v2「判卷台」新增：x_cards（证据卡池，role=support/distractor/irrelevant）、x_ruleout（排除辩护词，verdict=excluded/not_excluded/insufficient）、x_selfcheck（自评清单，转自 evidence[]）、x_anchors（锚题 id，来自复训库=换公司换壳，点亮的唯一条件）。",
+  "x_version": "ch1-content-v2（2026-08-25）｜判卷台形态：6 个深层节点补齐证据卡/排除项/自评清单/锚题绑定；基础 5 节点走两拍。图 ch1-graph-v1 不动；人工签字仍未进行",
   "sources": [
     {
       "name": "SEC AAER 1393（对公司的行政程序）",
@@ -1712,7 +1712,63 @@
         "reviewed_by": "",
         "reviewed_at": "",
         "reviewed_hash": ""
-      }
+      },
+      "x_cards": [
+        {
+          "id": "c1-e1",
+          "t": "A 公司收入 +18.7%",
+          "role": "support",
+          "w": 1
+        },
+        {
+          "id": "c1-e2",
+          "t": "A 公司应收 +38.5%",
+          "role": "support",
+          "w": 2
+        },
+        {
+          "id": "c1-e3",
+          "t": "两者步差约一倍",
+          "role": "support",
+          "w": 3
+        },
+        {
+          "id": "c1-e4",
+          "t": "B 公司收入 +58.9%（涨得更猛）",
+          "role": "distractor",
+          "w": 0
+        },
+        {
+          "id": "c1-e5",
+          "t": "B 公司应收 +64.6%",
+          "role": "distractor",
+          "w": 0
+        },
+        {
+          "id": "c1-e6",
+          "t": "B 公司步差仅 1.1 倍",
+          "role": "support",
+          "w": 1
+        }
+      ],
+      "x_selfcheck": [
+        {
+          "id": "case-first-look-sc1",
+          "t": "完成一次带信心标注的整体判断"
+        },
+        {
+          "id": "case-first-look-sc2",
+          "t": "能说出自己的判断依据了哪个数字"
+        },
+        {
+          "id": "case-first-look-sc3",
+          "t": "用过一次「信息不足，无法判断」选项（知道它存在且体面）"
+        }
+      ],
+      "x_anchors": [
+        "rv-c1-p1-a",
+        "rv-c1-p1-b"
+      ]
     },
     {
       "id": "rf1",
@@ -1857,7 +1913,90 @@
         "reviewed_by": "",
         "reviewed_at": "",
         "reviewed_hash": ""
-      }
+      },
+      "x_cards": [
+        {
+          "id": "rf1-e1",
+          "t": "应收增速高于收入增速",
+          "role": "support",
+          "w": 2
+        },
+        {
+          "id": "rf1-e2",
+          "t": "这个步差持续了两年以上",
+          "role": "support",
+          "w": 3
+        },
+        {
+          "id": "rf1-e3",
+          "t": "应收/收入比值逐年爬升",
+          "role": "support",
+          "w": 2
+        },
+        {
+          "id": "rf1-e4",
+          "t": "收入本身还在增长",
+          "role": "distractor",
+          "w": 0
+        },
+        {
+          "id": "rf1-e5",
+          "t": "公司规模比同行大",
+          "role": "irrelevant",
+          "w": 0
+        },
+        {
+          "id": "rf1-e6",
+          "t": "账期披露无变化",
+          "role": "support",
+          "w": 2
+        },
+        {
+          "id": "rf1-e7",
+          "t": "无并购、口径可比",
+          "role": "support",
+          "w": 2
+        }
+      ],
+      "x_ruleout": [
+        {
+          "id": "rf1-r1",
+          "t": "账期变了：大客户压账期，欠条自然变厚",
+          "verdict": "excluded",
+          "fb": "题面说账期披露无变化——这条辩护词用不上。"
+        },
+        {
+          "id": "rf1-r2",
+          "t": "模式换了：转向分期/租赁，比值一次跳台阶",
+          "verdict": "excluded",
+          "fb": "逐年爬升不是一次跳变，模式切换解释不了这个形状。"
+        },
+        {
+          "id": "rf1-r3",
+          "t": "并表了：收购把别人的应收带进来",
+          "verdict": "excluded",
+          "fb": "题面说无并购，口径可比。"
+        }
+      ],
+      "x_selfcheck": [
+        {
+          "id": "rf1-sc1",
+          "t": "给两行增速能判定红旗成立与否"
+        },
+        {
+          "id": "rf1-sc2",
+          "t": "能解释为什么「持续」才算数（单季波动不算）"
+        },
+        {
+          "id": "rf1-sc3",
+          "t": "能不看提示说出至少两个无辜解释"
+        }
+      ],
+      "x_anchors": [
+        "rv-rf1-p1-a",
+        "rv-rf1-p2-a",
+        "rv-rf1-p3-b2"
+      ]
     },
     {
       "id": "rf2",
@@ -2030,7 +2169,83 @@
         "reviewed_by": "",
         "reviewed_at": "",
         "reviewed_hash": ""
-      }
+      },
+      "x_cards": [
+        {
+          "id": "rf2-e1",
+          "t": "净利润为正且逐年增长",
+          "role": "distractor",
+          "w": 0
+        },
+        {
+          "id": "rf2-e2",
+          "t": "经营现金流连年为负",
+          "role": "support",
+          "w": 3
+        },
+        {
+          "id": "rf2-e3",
+          "t": "缺口逐年扩大",
+          "role": "support",
+          "w": 2
+        },
+        {
+          "id": "rf2-e4",
+          "t": "缺口主要堆在应收",
+          "role": "support",
+          "w": 3
+        },
+        {
+          "id": "rf2-e5",
+          "t": "缺口主要堆在存货与预付",
+          "role": "distractor",
+          "w": 0
+        },
+        {
+          "id": "rf2-e6",
+          "t": "公司毛利率高于同行",
+          "role": "irrelevant",
+          "w": 0
+        }
+      ],
+      "x_ruleout": [
+        {
+          "id": "rf2-r1",
+          "t": "扩张备货：缺口是存货和预付吃掉的",
+          "verdict": "excluded",
+          "fb": "缺口去向题面写明是应收，不是存货。"
+        },
+        {
+          "id": "rf2-r2",
+          "t": "季节/跨期：大单发货与回款错开一年",
+          "verdict": "excluded",
+          "fb": "连续三年、缺口还在扩大——跨期解释不了持续性。"
+        },
+        {
+          "id": "rf2-r3",
+          "t": "行业惯例：这个行业本来现金流就差",
+          "verdict": "insufficient",
+          "fb": "题面没给同行对比，这条既排不掉也证不实——它该进你的求证清单。"
+        }
+      ],
+      "x_selfcheck": [
+        {
+          "id": "rf2-sc1",
+          "t": "给三年净利润与经营现金流两条线能判定是否背离"
+        },
+        {
+          "id": "rf2-sc2",
+          "t": "能说出背离的一恶一善两种成因"
+        },
+        {
+          "id": "rf2-sc3",
+          "t": "能说出「持续背离」与「一次性背离」的区别"
+        }
+      ],
+      "x_anchors": [
+        "rv-rf2-p1-a",
+        "rv-rf2-p2-a2"
+      ]
     },
     {
       "id": "dso",
@@ -2167,7 +2382,57 @@
         "reviewed_by": "",
         "reviewed_at": "",
         "reviewed_hash": ""
-      }
+      },
+      "x_cards": [
+        {
+          "id": "dso-e1",
+          "t": "回款天数逐年拉长",
+          "role": "support",
+          "w": 3
+        },
+        {
+          "id": "dso-e2",
+          "t": "累计拉长超过 20 天",
+          "role": "support",
+          "w": 2
+        },
+        {
+          "id": "dso-e3",
+          "t": "无客户结构或模式变化披露",
+          "role": "support",
+          "w": 2
+        },
+        {
+          "id": "dso-e4",
+          "t": "公司收入规模在变大",
+          "role": "distractor",
+          "w": 0
+        },
+        {
+          "id": "dso-e5",
+          "t": "两个来源的 DSO 口径不同",
+          "role": "support",
+          "w": 2
+        }
+      ],
+      "x_selfcheck": [
+        {
+          "id": "dso-sc1",
+          "t": "能用公式算出 DSO"
+        },
+        {
+          "id": "dso-sc2",
+          "t": "能解释 DSO 拉长与红旗一是同一现象的两种算法（期末口径下二者等价）"
+        },
+        {
+          "id": "dso-sc3",
+          "t": "知道 DSO 有期末/平均/赊销三种口径，跨来源数字不能直接比，且不同口径可能方向相反"
+        }
+      ],
+      "x_anchors": [
+        "rv-dso-p1-a",
+        "rv-dso-p2-b"
+      ]
     },
     {
       "id": "corroborate",
@@ -2297,7 +2562,57 @@
         "reviewed_by": "",
         "reviewed_at": "",
         "reviewed_hash": ""
-      }
+      },
+      "x_cards": [
+        {
+          "id": "cor-e1",
+          "t": "红旗一阳性（应收跑赢收入）",
+          "role": "support",
+          "w": 2
+        },
+        {
+          "id": "cor-e2",
+          "t": "经营现金流为负 / 远低于净利",
+          "role": "support",
+          "w": 3
+        },
+        {
+          "id": "cor-e3",
+          "t": "现金流量表里应收变动是最大负项",
+          "role": "support",
+          "w": 3
+        },
+        {
+          "id": "cor-e4",
+          "t": "利润连年为正",
+          "role": "distractor",
+          "w": 0
+        },
+        {
+          "id": "cor-e5",
+          "t": "经营现金流健康、缺口可被存货解释",
+          "role": "support",
+          "w": 2
+        }
+      ],
+      "x_selfcheck": [
+        {
+          "id": "corroborate-sc1",
+          "t": "见到红旗一阳性能主动说出「下一步查现金流量表」"
+        },
+        {
+          "id": "corroborate-sc2",
+          "t": "能解释两面红旗在机制上为何是同一枚硬币（NI−OCF 缺口 ≈ 应计堆积，应收是主要去向）"
+        },
+        {
+          "id": "corroborate-sc3",
+          "t": "能给组合态正确定性：双阳 = 升级深查，一阳一阴 = 无辜解释概率大增"
+        }
+      ],
+      "x_anchors": [
+        "rv-cor-p1-a",
+        "rv-cor-p1-b"
+      ]
     },
     {
       "id": "base-rate",
@@ -2692,7 +3007,95 @@
         "value": "回到方法：你的每条证据都指得回具体的表和行——两条腿、两个口袋、一行应收变动、一段附注。这就是我说的「结论长在纸上」。",
         "risk": "注意你赢在流程而不是胆子：看见、辩护、求证、组合态，一步没跳。真实世界里这套流程的对手盘，就是当年拿着同一份年报没翻附注的人。",
         "behav": "把你终局的信心档和第一案的底片摆在一起看：变化的不该是胆量，是证据。若你高信心答对了——恭喜，这次是推理不是运气。"
-      }
+      },
+      "x_cards": [
+        {
+          "id": "c2-e1",
+          "t": "A 应收 +38.5% vs 收入 +18.7%（步差一倍）",
+          "role": "support",
+          "w": 3
+        },
+        {
+          "id": "c2-e2",
+          "t": "A 净利 +1.09 亿 vs 经营现金流 −820 万",
+          "role": "support",
+          "w": 3
+        },
+        {
+          "id": "c2-e3",
+          "t": "A 的经营现金流里含卖应收 5,900 万进款",
+          "role": "support",
+          "w": 3
+        },
+        {
+          "id": "c2-e4",
+          "t": "A 附注自证期末 bill-and-hold 约占收入 3%",
+          "role": "support",
+          "w": 3
+        },
+        {
+          "id": "c2-e5",
+          "t": "B 应收 +64.6%（全场最高）",
+          "role": "distractor",
+          "w": 0
+        },
+        {
+          "id": "c2-e6",
+          "t": "B 经营现金流 +15.92 亿 > 净利 +9.44 亿",
+          "role": "support",
+          "w": 2
+        },
+        {
+          "id": "c2-e7",
+          "t": "B 回款天数自证在变快",
+          "role": "support",
+          "w": 2
+        },
+        {
+          "id": "c2-e8",
+          "t": "A 的收入绝对额比 B 小",
+          "role": "irrelevant",
+          "w": 0
+        }
+      ],
+      "x_ruleout": [
+        {
+          "id": "c2-r1",
+          "t": "账期/渠道结构变化",
+          "verdict": "insufficient",
+          "fb": "材料没给账期披露——排不掉，但它也不是主要疑点。"
+        },
+        {
+          "id": "c2-r2",
+          "t": "扩张期备货吃现金",
+          "verdict": "excluded",
+          "fb": "缺口去向是应收不是存货，且还靠卖应收垫了 5,900 万。"
+        },
+        {
+          "id": "c2-r3",
+          "t": "季节性错位，次年回正",
+          "verdict": "excluded",
+          "fb": "附注自证期末 bill-and-hold 占收入 3%——期末冲量是主动行为，不是季节。"
+        }
+      ],
+      "x_selfcheck": [
+        {
+          "id": "case-final-sc1",
+          "t": "能给出结论并援引至少 2 条相互独立的证据"
+        },
+        {
+          "id": "case-final-sc2",
+          "t": "能对无辜对照说出「为什么不可疑」"
+        },
+        {
+          "id": "case-final-sc3",
+          "t": "信心标注与判断质量大体一致（校准雏形，进入错题档案）"
+        }
+      ],
+      "x_anchors": [
+        "rv-c2-p1-a",
+        "rv-c2-p1-b"
+      ]
     },
     {
       "id": "checklist-after",

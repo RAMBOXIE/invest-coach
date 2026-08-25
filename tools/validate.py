@@ -14,7 +14,7 @@ import pathlib
 from collections import defaultdict
 
 TOP_X = {"x_note", "x_version", "x_coaches", "x_review_bank"}
-NODE_X = {"x_qtype", "x_level", "x_pairs", "x_coach_notes", "x_prov"}
+NODE_X = {"x_qtype", "x_level", "x_pairs", "x_coach_notes", "x_prov", "x_cards", "x_ruleout", "x_selfcheck", "x_anchors"}
 QUIZ_X = {"x_pair", "x_kind", "x_id"}
 COACH_X = {"x_identity"}
 REAL_MARKERS = ("Sunbeam", "Dell", "A 公司", "B 公司", "本章案主", "案主")
@@ -361,6 +361,39 @@ def validate(path, release=False):
 
     # R12/R11b 数字账本与原档指纹
     check_facts(data, pathlib.Path(path).parent / "facts.json", errors, warns)
+
+    # R24 判卷台（v2 形态）：深层节点必须齐备证据卡/排除项/自评清单/锚题
+    bank_ids = {it.get("quiz", {}).get("x_id") for it in (data.get("x_review_bank") or [])}
+    ROLES = {"support", "distractor", "irrelevant"}
+    VERDICTS = {"excluded", "not_excluded", "insufficient"}
+    for n in nodes:
+        if "x_level" not in n or not n.get("screens"):
+            continue
+        nid = n["id"]
+        cards = n.get("x_cards") or []
+        if len(cards) < 4:
+            errors.append(f"{nid}: x_cards 少于 4 张（判卷台需要可挑选的证据池）")
+        if not any(c.get("role") == "support" for c in cards):
+            errors.append(f"{nid}: x_cards 缺 support 卡")
+        if not any(c.get("role") == "distractor" for c in cards):
+            errors.append(f"{nid}: x_cards 缺 distractor 卡（无干扰位则挑证据退化为全选）")
+        for c in cards:
+            if c.get("role") not in ROLES:
+                errors.append(f"{nid}: x_cards[{c.get('id')}] role 非法")
+        for r in n.get("x_ruleout") or []:
+            if r.get("verdict") not in VERDICTS:
+                errors.append(f"{nid}: x_ruleout[{r.get('id')}] verdict 非法")
+            if not r.get("fb"):
+                errors.append(f"{nid}: x_ruleout[{r.get('id')}] 缺 fb")
+        sc = n.get("x_selfcheck") or []
+        if len(sc) != len(n.get("evidence") or []):
+            errors.append(f"{nid}: x_selfcheck 条数与 evidence 不一致")
+        anchors = n.get("x_anchors") or []
+        if len(anchors) < 2:
+            errors.append(f"{nid}: x_anchors 少于 2 个（锚题需换壳变体防背题）")
+        for a in anchors:
+            if a not in bank_ids:
+                errors.append(f"{nid}: 锚题 {a} 不在复训库中")
 
     # R21 provenance 待办标记扫描（非合规禁词扫描）
     blob = json.dumps(data, ensure_ascii=False)
