@@ -55,6 +55,15 @@
       <div class="dt">${q.text}</div></div>`;
   }
   const md = s => String(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  function readingHTML(mine) {
+    if (!mine || !mine.verdict) return '';
+    const r = choiceReading(STORY, mine, ST.conf, ST.stats || { pressed: 0, broke: 0 }, ST.prior);
+    const nm = coachName();
+    return `<div class="reading"><div class="rd-hd"><span class="rd-av">🎓</span>
+        <span class="rd-nm">${nm}读你的这一次判断</span></div>
+      <p class="rd-h">${md(r.head)}</p><p class="rd-b">${md(r.body)}</p>
+      ${r.extra.map(x => `<p class="rd-x">${md(x)}</p>`).join('')}</div>`;
+  }
   function vo(t) {
     const c = (typeof coach === 'function' && coach()) ? coach().name : '教练';
     return t ? `<div class="vo"><span class="who">${c}</span><span class="txt">${t}</span></div>` : '';
@@ -115,7 +124,7 @@
     return {
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
         <p class="ln">${b.prompt}</p>
-        ${b.ask_enabled ? `<button class="askbtn" id="sty-ask">💬 先问问这份年报（${STORY.ask.suggested.length} 个可问的方向）</button>` : ''}
+        ${b.ask_enabled && STORY.interrogation ? `<button class="askbtn" id="sty-ask">⚖️ 先质问 ${STORY.cast[0].name}（${STORY.interrogation.testimony.length} 条证词）</button>` : ''}
         ${b.options.map(o => `<button class="pick${ST.pick === o.id ? ' on' : ''}" data-p="${o.id}">
             <span class="kd">${o.kind}</span>${o.t}</button>`).join('')}
         ${picked ? `<div class="eyebrow" style="margin-top:20px">你有多大把握？</div>
@@ -125,7 +134,7 @@
         bodyEl.querySelectorAll('[data-p]').forEach(x => x.onclick = () => { ST.pick = x.dataset.p; draw(); });
         bodyEl.querySelectorAll('[data-cf]').forEach(x => x.onclick = () => { ST.conf = +x.dataset.cf; draw(); });
         const a = document.getElementById('sty-ask');
-        if (a) a.onclick = openAsk;
+        if (a) a.onclick = () => Court.open(STORY, () => draw());
       }
     };
   }
@@ -151,6 +160,10 @@
     if (!ST.logged) {
       ST.logged = true;
       track('story_decision', { case: STORY.case_id, pick: ST.pick, verdict: mine.verdict, conf: ST.conf });
+      const cs = (window.__court && window.__court.story === STORY) ? window.__court.stats : { pressed: 0, broke: 0, noRecord: 0 };
+      ST.stats = cs;
+      ST.prior = JSON.parse(JSON.stringify(profile()));   // 快照：解读用「这一次之前」的画像
+      updateProfile(STORY.case_id, mine, ST.conf, cs);
       if (typeof S !== 'undefined' && S.calib && ST.conf != null) {
         // 故事层不判对错、不进 Brier；只记录一次「我当时怎么想」供成绩单回放
         S.story = S.story || {};
@@ -169,6 +182,7 @@
           <div class="c canon"><div class="lbl">${b.columns.canon}</div>
             <div class="hd2">${b.canon.t}</div><div class="dt2">${b.canon.detail}<br><span style="opacity:.75">${b.canon.src}</span></div></div>
         </div>
+        ${readingHTML(mine)}
         <div class="kn"><h3>你该带走的</h3><ul>${b.knowhow.map(k => `<li>${md(k)}</li>`).join('')}</ul></div>
         ${vo(b.narration)}`,
       foot: `<button class="sty-cta" id="sty-next">把判据拿出来</button>`

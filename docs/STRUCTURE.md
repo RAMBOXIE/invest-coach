@@ -20,3 +20,4 @@
 | `content/stories/sunbeam-1998/` | 首个故事幕：case.json（骨架冻结，引文逐字带行号） | 人 | build.py、validate.py | 长期 |
 | `content/stories/lehman-2008/` | 第二幕：季末那五天（Valukas 审查人报告） | 人 | build.py | 长期 |
 | `content/stories/buffett-1993/` | 第三幕：用什么付钱（BRK FY1993 10-K + 2007 致股东信） | 人 | build.py | 长期 |
+| `tools/oneoff/20260825-interrogation.py` | 三幕质问结构（逆转裁判式）写入脚本 | 人 | 归档 | 永久 |

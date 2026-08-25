@@ -194,6 +194,7 @@
   .mapmini{width:100%;border-radius:14px;background:rgba(0,0,0,.18);display:block}
   @media(min-width:720px){ .app{max-width:680px} .cta{font-size:17px} }
 <!--#part:story.css-->
+<!--#part:court.css-->
   @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}
     /* 关闭动效后：分阶段揭示的阶段与注释全部保留，只是没有补间 */}
 </style>
@@ -235,6 +236,9 @@
 <div class="sheet" id="sheet"></div>
 <div class="toast" id="toast"></div>
 
+<script>
+<!--#part:court.js-->
+</script>
 <script>
 'use strict';
 const SITE = /*__DATA__*/null;
@@ -286,7 +290,8 @@ function flush(){if(!BACKEND||!S.events.length)return;
 setInterval(flush,3e4);
 
 /* ============ 教练 ============ */
-function coach(){return coachById[S.coach]||COACHES[0];}
+function coach(){return coachById[(S.profile&&S.profile.tone)||S.coach]||COACHES[0];}
+function coachName(){return '你的教练';}
 const li={};
 function line(w){const c=coach();if(!c)return null;
   const ls=(c.style_lines||[]).filter(x=>x.when===w);if(!ls.length)return null;
@@ -315,7 +320,7 @@ document.querySelectorAll('.tabbar button').forEach(b=>b.onclick=()=>{
 document.getElementById('coachbtn').onclick=()=>pickCoach(false);
 
 function render(){
-  document.getElementById('coachname').textContent=coach()?coach().name:'教练';
+  document.getElementById('coachname').textContent='教练';
   const v=document.getElementById('view');
   v.innerHTML=TAB==='today'?viewToday():TAB==='atlas'?viewAtlas():viewMe();
   bindView();
@@ -337,6 +342,12 @@ function viewToday(){
   const P=plan();
   const dues=P.dues, nx=P.nx, done=lit.size, total=SITE.nodes.length;
   let h='';
+  const pf=profile();
+  h+=`<div class="sec pf"><h2>你的教练</h2>
+    <div class="pf-t">${profileLine()}</div>
+    <div class="tip" style="margin-top:10px">你可以告诉我你希望我多讲什么——这只是偏好，随时能改。</div>
+    <div class="pf-tone">${TONES.map(x=>`<button data-tone="${x.id}" class="${pf.tone===x.id?'on':''}">${x.k}</button>`).join('')}</div>
+  </div>`;
   const all=(SITE.x_stories||[]).slice().sort((a,b)=>ORDER.indexOf(a.case_id)-ORDER.indexOf(b.case_id));
   const st=all.find(x=>!((S.story||{})[x.case_id]))||all[all.length-1];
   if(st){
@@ -448,9 +459,10 @@ function viewMe(){
       <div class="mt">下次复训：${a.due<=Date.now()?'已到期':new Date(a.due).toLocaleDateString()}（半衰期 ${a.hl} 天）</div></div>`;});
     h+='</div>';
   }
-  h+=`<div class="sec"><h2>教练</h2>
-    <button class="cta ghost" id="go-coach">🎓 切换教练（当前：${c?c.name:'—'}）</button>
-    <div class="tip" style="margin-top:8px">${c?c.x_identity||'':''}</div></div>
+  h+=`<div class="sec"><h2>你的教练</h2>
+    <div class="tip" style="line-height:1.75">${profileLine()}</div>
+    <div class="tip" style="margin-top:10px">教练不是某个人的模拟，而是一个逐步了解你的判断习惯的角色。故事里说话的是那一幕的真实当事人，他们只说留下过记录的话；教练是<b>你的</b>，一直在旁边。</div>
+    <div class="pf-tone" style="margin-top:10px">${TONES.map(x=>`<button data-tone="${x.id}" class="${(S.profile&&S.profile.tone)===x.id?'on':''}">${x.k}</button>`).join('')}</div></div>
     <div class="sec"><h2>数据</h2>
     <button class="cta ghost" id="go-card">📋 复制成绩单</button>
     <div style="height:8px"></div>
@@ -465,6 +477,8 @@ function bindView(){
   const g=id=>document.getElementById(id);
   if(g('go-review'))g('go-review').onclick=startReview;
   if(g('go-lab'))g('go-lab').onclick=openLab;
+  document.querySelectorAll('[data-tone]').forEach(b=>b.onclick=()=>{
+    const p=profile(); p.tone=(p.tone===b.dataset.tone)?null:b.dataset.tone; S.coach=p.tone||S.coach; save(); render();});
   if(g('go-story'))g('go-story').onclick=()=>openStory(g('go-story').dataset.cid);
   document.querySelectorAll('[data-story]').forEach(b=>b.onclick=()=>openStory(b.dataset.story));
   if(g('go-node'))g('go-node').onclick=e=>openNode(e.currentTarget.dataset.id);
@@ -991,7 +1005,8 @@ IC2|${btoa(unescape(encodeURIComponent(JSON.stringify(pl))))}`;
 let tt;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');
   clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),2800);}
 render();track('session_start',{});
-if(!S.coach)pickCoach(true);
+if(!S.coach)S.coach='risk';   // 默认语气；不是身份，用户可在「你的教练」里改
+save();
 if(/MicroMessenger/i.test(navigator.userAgent))
   setTimeout(()=>toast('微信里可能清掉进度：建议右上角「用浏览器打开」'),1200);
 window.addEventListener('beforeunload',()=>{track('session_end',{});flush();});
