@@ -1,6 +1,16 @@
 # 轻后端
 
-两个职责，别的一概不做（契约见 `docs/形态规格_v3_故事驱动.md` §6）：
+## 两套实现
+
+| 文件 | 定位 | 何时用 |
+|---|---|---|
+| `main.go` | **主线**，部署用 | 生产 / 隧道演示 |
+| `server.py` | 零依赖联调用，同契约 | 本机快速验证，**不做 origin 收口，禁止对公网暴露** |
+
+两者环境变量对照：`CLAUDE_API_KEY` 相同；Go 用 `DB_DSN`，Python 用 `DB_PATH`；
+`ALLOWED_ORIGINS` **只有 Go 支持**。
+
+两个职责，别的一概不做（契约见 `docs/形态规格_故事驱动.md` §6）：
 
 - `POST /api/v1/events` —— 匿名遥测，append-only
 - `POST /api/v1/ask-coach` —— 「问人物」的**语义路由**

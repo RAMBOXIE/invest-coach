@@ -5,3 +5,10 @@ server/*.exe
 __pycache__/
 .env
 .gstack/
+
+# 构建产物：内容审阅稿由 tools/render_review.py 生成，和 dist/ 同等待遇
+build/
+tools/__pycache__/
+
+# 时事管线的 staging 产物：未签字、不入构建、待法律评估（见 docs/DEBT.md D6）
+content/current/*.json

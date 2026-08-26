@@ -3,41 +3,27 @@
 > **为什么有这份文档**：owner 2026-08-25 的批评——「现在的看结果是比较随机发散的，比如手机里的可读体验就是不好的，是不是每次开发前都在开发的整体要求下，是否合理的创建了文件夹」。
 > **本规范的元规则**：**每一条都必须是可判定的数值或可执行的检查**。出现「适当」「合理」「尽量」的条款视为无效条款。凡是能被 `tools/` 里的脚本挡下来的，就不写进「注意事项」。
 > **配套**：`docs/STRUCTURE.md`（目录登记表）｜`docs/CHECKLISTS/preflight.md`（开工前八问）｜`design/tokens.json`（设计令牌单一真源）。
-> **与既有文档的关系**：`docs/工程化规范.md` 降级为「管线与后端规范」（它覆盖取数/后端/门禁/Git，零覆盖 UI 排版与目录纪律——正是本次批评落点）。
+> **与既有文档的关系**：`docs/_superseded/工程化规范.md` 降级为「管线与后端规范」（它覆盖取数/后端/门禁/Git，零覆盖 UI 排版与目录纪律——正是本次批评落点）。
 
 ---
 
 ## 1. 目录结构（唯一合法形态）
 
-```
-invest-coach/
-├── design/
-│   └── tokens.json              ★ 设计令牌单一真源；CSS 变量由构建期生成，不手写
-├── content/
-│   ├── ch1/{site.json, facts.json}
-│   ├── stories/<case_id>/{case.json, facts.json}
-│   └── current/                 时事管线产物（staging，未签字）
-├── evidence/                    原档存档 + sha256 锚定（.gitattributes 标 -text）
-├── src/
-│   ├── shell.html               骨架，含 <!--#part:xxx--> 占位
-│   └── parts/                   ★ 源码分片（css/*.css, js/*.js），构建期拼装
-├── tools/
-│   ├── build.py validate.py fetch_current.py
-│   ├── check_a11y.py check_budget.py     ★ 视觉与性能门禁
-│   └── oneoff/                  ★ 一次性脚本的唯一归宿，文件名 YYYYMMDD-用途.py
-├── docs/
-│   ├── SPEC_DEV.md STRUCTURE.md
-│   ├── CHECKLISTS/preflight.md
-│   └── adr/NNNN-标题.md         架构决策记录
-└── dist/                        构建产物（gitignore）
-```
+> **目录形态见 [STRUCTURE.md](STRUCTURE.md)，那里是唯一真源。**
+> 这里曾另有一棵树，和 STRUCTURE.md 互相冲突：登记了不存在的 `src/template.html`，
+> 遗漏了实际存在的 `server/`，还把一级目录数写成了七个（实际八个）。已删除。
 
 **三条目录纪律（违反即打回）**
-1. **新建任何目录前，先在 `docs/STRUCTURE.md` 登记一行**（路径 / 用途 / 谁写 / 谁读 / 生命周期）。未登记的目录，`validate.py` 报 ERROR。
-2. **仓库根目录不新增任何文件夹**。所有新东西必须落进上表已有的七个一级目录之一。
-3. **一次性脚本不许留在 scratchpad**。改内容的脚本一律进 `tools/oneoff/YYYYMMDD-用途.py` 并提交——因为它是内容变更的唯一可追溯记录。
+1. **新建任何目录前，先在 [STRUCTURE.md](STRUCTURE.md) 登记一行**（路径 / 用途 / 谁写 / 谁读 / 生命周期）。
+   未登记的目录，`validate.py` **R26** 报 ERROR——这道门禁已经存在，不再是一句空话。
+2. **仓库根目录不新增任何文件夹。** 所有新东西必须落进 STRUCTURE.md 已登记的一级目录之一。
+3. **一次性脚本不许留在 scratchpad。** 改内容的脚本一律进 `tools/_archive/oneoff/YYYYMMDD-用途.py`
+   并提交——它是一次性内容注入的**执行快照**，供审计查阅。
+   （权威的可追溯记录是 git 历史与 `docs/records/数据核定_第一章.md`，不是这些脚本本身：
+   它们硬编码了绝对路径，不可重跑。）
 
-> 本条直接回应「是否合理地创建了文件夹」。此前把改内容的 Python 脚本放在临时目录，等于内容变更没有版本记录，这是这次批评里最实的一条。
+> 本条直接回应「是否合理地创建了文件夹」。此前把改内容的 Python 脚本放在临时目录，
+> 等于内容变更没有版本记录，这是那次批评里最实的一条。
 
 ---
 
@@ -79,12 +65,17 @@ CSS 变量**由构建期从 tokens.json 生成**，源码里不许出现字面�
 
 | 项 | 阈值 |
 |---|---|
-| `dist/index.html` | ≤300KB |
+| `dist/index.html` | ≤320KB（`design/tokens.json` 的 `budget.dist_kb`，门禁按它执行） |
 | LCP | <2.5s |
 | INP | <200ms |
 | CLS | <0.1 |
 | 滚动帧率（中端 Android + 微信 WebView） | ≥50fps，无整页重绘 |
 | 动效时长 | ≤200ms（微交互）/ ≤400ms（转场） |
+
+> ⚠️ **300 vs 320 未裁决。** 本表原本写「≤300KB（已裁决）」，而 `design/tokens.json`
+> 一直是 320、`check_budget.py` 一直按 320 执行——**放宽是静默发生的，没走裁决**。
+> 现产物 309KB：按 320 合规，按 300 超标。是还债还是正式放宽，需 owner 决定，
+> 已登记为 [DEBT.md](DEBT.md) D4。在裁决前，门禁维持现状（320），不改行为。
 
 **禁用清单**（性能或合规陷阱，需 ADR 才能豁免）：`background-attachment:fixed`（iOS 不支持、Android 每帧整页重绘）｜全屏位图/视频｜自定义中文正文字体｜滚动劫持｜横向滑动承载主流程｜打字机逐字动画｜视差。
 
@@ -96,7 +87,7 @@ CSS 变量**由构建期从 tokens.json 生成**，源码里不许出现字面�
 
 ## 5. 源码组织
 
-- `src/shell.html` 只保留骨架与 `<!--#part:name-->` 占位；样式与逻辑分片进 `src/parts/`。
+- `src/template.html` 只保留骨架与 `<!--#part:name-->` 占位；样式与逻辑分片进 `src/parts/`。
 - 构建期由 `build.py` 拼装成单文件。**「单文件交付」是产品特性，「单文件源码」不是**——此前 900 行巨型 HTML 被多轮脚本打补丁，是发散的直接原因。
 - CSS 用 `@layer tokens, base, layout, component, utility` 组织，禁止无层级裸写。
 - 注释密度：只在算法处（调度、校准、判分、渲染节拍）写「为什么」，不写「是什么」。
@@ -129,7 +120,7 @@ CSS 变量**由构建期从 tokens.json 生成**，源码里不许出现字面�
 - [ ] `python tools/check_budget.py` 零 ERROR（体积 / 禁用清单扫描）
 - [ ] 真机或 375×812 视口手过一遍改动路径，**无横向滚动**
 - [ ] `file://` 双击可用（离线契约）
-- [ ] 一次性脚本已入 `tools/oneoff/` 并提交
+- [ ] 一次性脚本已入 `tools/_archive/oneoff/` 并提交
 - [ ] 提交信息说清「改了什么 + 为什么 + 哪条规则防止回归」，**无 AI 署名尾注**
 
 ---
@@ -138,17 +129,33 @@ CSS 变量**由构建期从 tokens.json 生成**，源码里不许出现字面�
 
 | 工具 | 管什么 |
 |---|---|
-| `validate.py` | 内容真值与结构（R1–R25 已有）+ 目录登记 + 数字必须绑 fact_id |
-| `check_a11y.py` | 字号下限、对比度对照表、触控尺寸、1.4.12 抗覆盖、reduced-motion 分支存在性 |
+| `validate.py` | 内容真值与结构（R1–R25）+ **R26 目录登记**（对差 `git ls-files`） |
+| `check_js.py` | J1 `node --check` 分片与产物；J2 被调用却从未声明的标识符。**排在最前**：跑不起来就没必要看别的 |
+| `check_a11y.py` | A1 字号下限 · A2 对比度（从令牌注记推导 + 状态色遍历所有会被画出的面 + 实扫 CSS 与内联 style）· A3 触控 · A4 禁用清单 · A5 1.4.12 抗覆盖 · A6 reduced-motion · **A7 浮层层级** · **A8 点击三态** · **A9 死样式** |
 | `check_budget.py` | 体积预算、禁用清单扫描、每幕字数上限 |
+| `check_tokens.py` | 字面色值/字号的棘轮基线，只减不增（注释里的旧值不计入） |
 | `build.py` | 令牌生成 CSS 变量、源码分片拼装、facts 注入；**任一门禁 FAIL 即拒绝构建** |
 
 ---
 
-## 10. 已知违规（本规范生效时的存量，需修）
+## 10. 存量违规台账
 
-1. `.foot` 文本 `#7b749b` on `#141b36` = **3.86:1**，不达 AA 4.5:1 → 改 `#A9B0C2`（8.8:1）
-2. `body{background-attachment:fixed}` → 删除，改固定定位背景层 + `translateZ(0)`
-3. 大量 10.5px / 11.5px / 14px 文本 → 按 §3 上调（meta ≥13px、UI ≥15px、叙事正文 17–19px）
-4. `src/template.html` 单文件 900 行 → 拆 `src/parts/`
-5. 一次性内容脚本散落在临时目录 → 迁入 `tools/oneoff/`
+照 [DESIGN.md](../DESIGN.md) §7 的形状：分「已还」与「欠账」，每条带状态。
+一张没有状态列的清单，读者无从分辨哪些还需要做。
+
+### 已还清
+
+| # | 违规 | 还清于 |
+|---|---|---|
+| 1 | `.foot` 文本 `#7b749b` on `#141b36` = 3.86:1，不达 AA | 纸面翻正，全站真实渲染对比度审计无一处低于 AA |
+| 2 | `body{background-attachment:fixed}` | 已删除；`check_a11y` A4 会挡住它回来 |
+| 3 | 大量 10.5 / 11.5 / 14px 文本 | 字号全部回到令牌阶梯（13/15/17/19/24/32/40/56），字面字号清零 |
+| 5 | 一次性内容脚本散落在临时目录 | 迁入 `tools/_archive/oneoff/`，`validate.py` R26 守住目录纪律 |
+
+### 欠账
+
+| # | 违规 | 现状 | 下一刀 |
+|---|---|---|---|
+| 4 | `src/template.html` 是单文件 | 约 1300 行（规范生效时是 900） | 先把 `<style>` 切成 `src/parts/base.css` + `app.css`；JS 再按 today / atlas / me / judge / review 切五片 |
+
+其余欠账集中在 [DEBT.md](DEBT.md)。

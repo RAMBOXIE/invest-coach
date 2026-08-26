@@ -3,12 +3,13 @@
 """invest-coach 内容门禁校验器。
 
 用法: python tools/validate.py [path/to/site.json]
-规则编号对应 docs/工程化规范.md §5。ERROR 非零退出（build.py 据此拒绝构建）。
+规则编号对应 docs/_superseded/工程化规范.md §5。ERROR 非零退出（build.py 据此拒绝构建）。
 第 2 步才生效的规则（x_covers 全覆盖、quiz 结构、review_bank 覆盖、pair id 必填）
 在对应字段尚为空时降级为 WARN 提示，字段一旦出现即全量校验。
 """
 import json
 import re
+import subprocess
 import sys
 import pathlib
 from collections import defaultdict
@@ -125,6 +126,86 @@ def check_facts(data, facts_path, errors, warns):
     for n in data.get("nodes", []):
         walk({k: n.get(k) for k in ("desc", "screens", "x_pairs", "x_coach_notes")}, n["id"])
     walk(data.get("x_review_bank", []), "bank")
+
+
+
+def check_dirs():
+    """R26：docs/STRUCTURE.md 的登记表 vs 仓库里真实存在的目录。
+
+    未登记即 ERROR（纪律有执行者），登记了却不存在即 WARN（表过期了）。
+    只看被 git 跟踪的文件所在的目录——忽略 dist/ build/ __pycache__ 这类产物。
+    """
+    root = pathlib.Path(__file__).resolve().parent.parent
+    doc = root / "docs" / "STRUCTURE.md"
+    if not doc.exists():
+        return ["R26 找不到 docs/STRUCTURE.md——目录登记表是目录的唯一真源"], []
+    registered = set()
+    for m in re.finditer(r"^\|\s*`([^`]+)`", doc.read_text(encoding="utf-8"), re.M):
+        registered.add(m.group(1).strip().rstrip("/"))
+    try:
+        # -z 才能拿到未转义的路径：默认输出会把非 ASCII 文件名整条用引号加八进制转义
+        out = subprocess.run(["git", "ls-files", "-z"], cwd=root, capture_output=True,
+                             text=True, encoding="utf-8", errors="replace")
+        if out.returncode != 0:
+            return [], ["R26 跳过：git ls-files 不可用"]
+        tracked = [f for f in out.stdout.split(chr(0)) if f.strip()]
+    except OSError:
+        return [], ["R26 跳过：找不到 git"]
+
+    IGNORE = {".claude", ".github"}
+    actual = set()
+    for f in tracked:
+        parts = f.split("/")[:-1]
+        for i in range(len(parts)):
+            d = "/".join(parts[: i + 1])
+            if parts[0] in IGNORE:
+                break
+            actual.add(d)
+
+    def covered(d):
+        # 登记 content/stories/ 即覆盖它下面的每一个 <case_id>/；
+        # 同时纯粹的父目录（content/ 之于 content/ch1/）也算覆盖——
+        # 登记的是「放什么东西的地方」，不是路径上的每一节。
+        return any(d == r or d.startswith(r + "/") or r.startswith(d + "/")
+                   for r in registered)
+
+    errs = [f"R26 目录 `{d}/` 未在 docs/STRUCTURE.md 登记——先登记再建目录"
+            for d in sorted(actual) if not covered(d)]
+    # dist/ 与 build/ 是产物目录，登记了但不进 git、本地也可能还没生成——不算过期
+    PRODUCED = {"dist", "build"}
+    wrns = [f"R26 登记表里的 `{r}/` 在仓库里不存在——表过期了"
+            for r in sorted(registered)
+            if "." not in r.split("/")[-1] and r not in PRODUCED
+            and not (root / r).exists()]
+    if not errs and not wrns:
+        print(f"INFO : R26 目录登记 {len(actual)} 个实际目录全部已登记 ✓")
+    return errs, wrns
+
+
+
+def check_doclinks():
+    """R27：文档之间的相对链接必须解析得到。
+
+    文档刚从 14 份平摊重组成四层（契约 / adr / records / _superseded），
+    重组正是最容易把交叉引用改断的动作——而断链没人会当场发现。
+    """
+    root = pathlib.Path(__file__).resolve().parent.parent
+    SKIP = {".git", "dist", "build", "node_modules", "__pycache__", "evidence"}
+    bad = []
+    n = 0
+    for md in root.rglob("*.md"):
+        if any(part in SKIP for part in md.relative_to(root).parts):
+            continue
+        for m in re.finditer(r"\[[^\]]*\]\(([^)]+)\)", md.read_text(encoding="utf-8")):
+            target = m.group(1).split("#")[0].strip()
+            if not target or target.startswith(("http://", "https://", "mailto:")):
+                continue
+            n += 1
+            if not (md.parent / target).resolve().exists():
+                bad.append(f"R27 断链 {md.relative_to(root).as_posix()} -> {target}")
+    if not bad:
+        print(f"INFO : R27 文档链接 {n} 条全部可解析 ✓")
+    return bad
 
 
 def validate(path, release=False):
@@ -426,7 +507,7 @@ def validate(path, release=False):
         if mk in blob:
             errors.append(f"内容中出现待办标记「{mk}」——未核定内容不得进入内容源")
 
-    # R22 「无法判断」为正确答案的占比锚（目标 20–30%，见 知识可靠性与LLM边界_v1.md §6）
+    # R22 「无法判断」为正确答案的占比锚（目标 20–30%，见 知识可靠性与LLM边界.md §6）
     if na_stats:
         ratio = sum(na_stats) / len(na_stats)
         line = f"「无法判断」为正确答案占比 {ratio:.0%}（{sum(na_stats)}/{len(na_stats)} 道信心题，目标 20–30%）"
@@ -439,6 +520,14 @@ def validate(path, release=False):
 
     if screens_pending:
         warns.append(f"{screens_pending} 个节点 screens 为空（第 2 步待填）")
+
+    # ---- R26 目录登记 ----
+    # docs/STRUCTURE.md 里写了很久「未登记的目录 validate.py 报 ERROR」，
+    # 而这道门禁并不存在——纪律没有执行者。本仓库的原则是不写没做的事。
+    errors_dir, warns_dir = check_dirs()
+    errors += errors_dir
+    warns += warns_dir
+    errors += check_doclinks()
 
     print(f"nodes={len(nodes)} edges={len(edges)}(hard={len(hard)}) roots={sorted(roots)}")
     for w in warns:

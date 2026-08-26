@@ -3,7 +3,7 @@
 """审阅稿生成器：把 site.json 里已填的内容（教练、屏、题、混淆对、复训库）
 渲染成可读 Markdown，供人工逐条审核（内容管线要求）。
 
-用法: python tools/render_review.py  → 写入 docs/review/内容审阅_当前.md
+用法: python tools/render_review.py  → 写入 build/review/内容审阅_当前.md
 """
 import json
 import pathlib
@@ -12,7 +12,7 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content" / "ch1" / "site.json"
-OUT = ROOT / "docs" / "review" / "内容审阅_当前.md"
+OUT = ROOT / "build" / "review" / "内容审阅_当前.md"
 
 
 def strip_html(s):
