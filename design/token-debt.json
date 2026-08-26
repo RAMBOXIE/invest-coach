@@ -1,0 +1,17 @@
+{
+  "_note": "令牌纪律棘轮基线。只减不增。修掉字面值后跑 --update 降低它。",
+  "counts": {
+    "src/template.html": {
+      "hex": 41,
+      "font_px": 60
+    },
+    "src/parts/court.css": {
+      "hex": 0,
+      "font_px": 2
+    },
+    "src/parts/story.css": {
+      "hex": 0,
+      "font_px": 0
+    }
+  }
+}

@@ -23,31 +23,51 @@ STORIES = ROOT / "content" / "stories"
 
 
 def css_vars():
-    """design/tokens.json → :root CSS 变量（SPEC_DEV §2：源码不许出现字面色值/字号）。"""
+    """design/tokens.json → :root CSS 变量（SPEC_DEV §2：源码不许出现字面色值/字号）。
+
+    v2 纸面翻正：shell 从 night-800 改为 paper-100，stage 保持暗（幕是唯一暗场）。
+    随之 text.ui / text.meta 的前景色一并翻到 ink 侧，focus 在纸面改用 amber-700。
+    """
     T = json.loads(TOKENS.read_text(encoding="utf-8"))
     P, S = T["primitive"], T["semantic"]
     v = {}
-    for k, val in P["color"].items():
-        v[f"--c-{k}"] = val
-    for k, val in P["size"].items():
-        v[f"--size-{k}"] = val
-    for k, val in P["lh"].items():
-        v[f"--lh-{k}"] = val
-    for k, val in P["space"].items():
-        v[f"--space-{k}"] = val
-    for k, val in P["radius"].items():
-        v[f"--radius-{k}"] = val
-    for k, val in P["dur"].items():
-        v[f"--dur-{k}"] = val
+
+    def emit(prefix, group):
+        # 跳过 _note / _retired 这类注记键与嵌套结构
+        for k, val in group.items():
+            if k.startswith("_") or not isinstance(val, str):
+                continue
+            v[f"--{prefix}-{k}"] = val
+
+    emit("font", P["font"])
+    emit("c", P["color"])
+    emit("size", P["size"])
+    emit("lh", P["lh"])
+    emit("space", P["space"])
+    emit("radius", P["radius"])
+    emit("dur", P["dur"])
+    emit("weight", P["weight"])
+    emit("track", P["track"])
+
     C = P["color"]
     v.update({
-        "--surface-stage": C["night-900"], "--surface-shell": C["night-800"],
+        # ---- 表面（v2 翻正）----
+        "--surface-shell": C["paper-100"], "--surface-shell-alt": C["paper-200"],
+        "--surface-card": C["paper-50"], "--surface-rule": C["paper-200"],
+        "--surface-stage": C["night-900"], "--surface-stage-alt": C["night-800"],
         "--surface-read": C["paper-50"], "--surface-read-alt": C["paper-100"],
+        # ---- 文字 ----
+        "--size-display": S["text"]["display"]["size"],
+        "--text-display-color": C["ink-900"], "--text-title-color": C["ink-900"],
+        "--text-body-color": C["ink-700"], "--text-ui-color": C["ink-700"],
+        "--text-meta-color": C["ink-500"], "--text-figure-color": C["ink-900"],
         "--text-narrative-color": C["paper-50"], "--size-narrative": S["text"]["narrative"]["size"],
-        "--text-body-color": C["ink-700"], "--text-meta-color": C["mist-400"],
-        "--state-flag": C["red-500"], "--state-flag-on-dark": "#FF8FA0",
-        "--state-clear": C["green-500"], "--state-unknown": C["blue-500"],
-        "--state-focus": C["gold-400"], "--brand-violet": C["violet-500"],
+        "--text-meta-on-stage": C["mist-400"],
+        # ---- 状态：同一语义，纸面与幕两个值 ----
+        "--state-flag": C["red-500"], "--state-flag-on-dark": S["state"]["flag-on-stage"],
+        "--state-clear": C["green-600"], "--state-unknown": C["blue-500"],
+        "--state-focus": C["amber-700"], "--state-focus-on-stage": C["gold-400"],
+        "--brand-violet": C["violet-500"],
         "--measure-read": S["measure"]["read"],
         "--tap-min": S["tap"]["min"], "--tap-rec": S["tap"]["rec"],
     })
@@ -118,7 +138,7 @@ def main(argv):
     print(f"构建完成: {OUT}（{OUT.stat().st_size / 1024:.1f} KB）")
 
     # SPEC_DEV.md §9：任一门禁 FAIL 即拒绝构建（产物已写出，但退出码非零，CI/DoD 会挡住）
-    for gate in ("check_a11y.py", "check_budget.py"):
+    for gate in ("check_js.py", "check_a11y.py", "check_budget.py", "check_tokens.py"):
         g = ROOT / "tools" / gate
         if g.exists():
             rc = subprocess.run([sys.executable, str(g), str(OUT)]).returncode

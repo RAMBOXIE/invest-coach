@@ -39,6 +39,11 @@ def main(path):
         print(f"找不到 {p}"); return 1
     html = p.read_text(encoding="utf-8")
     css = "\n".join(re.findall(r"<style[^>]*>(.*?)</style>", html, re.S))
+    # 内联 style 压过任何样式表规则，却不在 <style> 里。不扫它就会出现
+    # 「改了 CSS 但被内联覆盖、门禁全程 PASS」——.sec.big 的暗底就栽在这上面。
+    inline = re.findall(r'style="([^"]*)"', html)
+    if inline:
+        css += "\n" + "\n".join("._inline%d{%s}" % (i, d) for i, d in enumerate(inline))
 
     # A1 字号下限
     for m in re.finditer(r"font-size\s*:\s*([\d.]+)px", css):
@@ -47,25 +52,97 @@ def main(path):
             line = css[:m.start()].count("\n") + 1
             errors.append(f"A1 字号 {v}px < 13px（CSS 第 {line} 行）——meta 下限 13px、UI 15px、叙事正文 17–19px")
 
-    # A2 对比度（对 tokens 里声明过 _contrast 的语义对做实算复核）
+    # ---- A2 对比度 ----
+    # v1 的写法把颜色对硬编码在这里，跟页面实际画什么无关，所以 --soft #6f688a（3.24:1）
+    # 长期在页面上活着而门禁一路 PASS。v2 改为：颜色对从 tokens 的 _contrast_on_* 注记推导，
+    # 并且实算与注记必须一致——注记写错或值漂移都会被挡下。
     C = TOK["primitive"]["color"]
-    pairs = [("text.meta on shell", C["mist-400"], C["night-800"], 4.5),
-             ("text.narrative on stage", C["paper-50"], C["night-900"], 7.0),
-             ("text.body on read", C["ink-700"], C["paper-50"], 7.0),
-             ("text.ui on shell", C["paper-50"], C["night-800"], 4.5),
-             ("state.flag on read", C["red-500"], C["paper-50"], 4.5),
-             ("state.clear on read", C["green-500"], C["paper-50"], 4.5)]
-    for name, fg, bg, need in pairs:
-        r = ratio(fg, bg)
-        if r < need:
-            errors.append(f"A2 对比度 {name} = {r:.2f}:1 < {need}:1（{fg} on {bg}）")
-        else:
-            infos.append(f"A2 {name} = {r:.2f}:1 ✓（需 ≥{need}）")
+    S = TOK["semantic"]
 
-    # A2b 正文里出现的裸色值若用在 color: 上，粗查是否是已知低对比色
-    for bad in ("#7b749b", "#8c85ad", "#9a93b5", "#a49cc4"):
-        if bad in css.lower():
-            errors.append(f"A2b 出现已知低对比色 {bad}——请改用 tokens 的 text.meta（#A9B0C2, 8.8:1）")
+    def deref(v):
+        if not isinstance(v, str):
+            return None
+        m = re.fullmatch(r"\{color\.([\w-]+)\}", v)
+        return C[m.group(1)] if m else (v if v.startswith("#") else None)
+
+    surfaces = {k: deref(v) for k, v in S["surface"].items() if deref(v)}
+    NEED = {"body": 7.0, "narrative": 7.0}          # 正文级 7:1，其余 4.5:1
+
+    checked = 0
+    for role, spec in S["text"].items():
+        if not isinstance(spec, dict):
+            continue
+        fg = deref(spec.get("color"))
+        if not fg:
+            continue
+        for k, claimed in spec.items():
+            if not k.startswith("_contrast_on_"):
+                continue
+            surf = k[len("_contrast_on_"):]
+            bg = surfaces.get(surf)
+            if not bg:
+                errors.append(f"A2 text.{role} 注记了 on {surf}，但 semantic.surface 里没有这个面")
+                continue
+            actual, need = ratio(fg, bg), NEED.get(role, 4.5)
+            checked += 1
+            try:
+                claimed_v = float(str(claimed).split(":")[0])
+            except ValueError:
+                claimed_v = None
+            if claimed_v is not None and abs(actual - claimed_v) > 0.05:
+                errors.append(
+                    f"A2 text.{role} on {surf}: 注记写 {claimed_v}:1，实算 {actual:.2f}:1"
+                    "——注记与令牌值不符，改了颜色没改注记")
+            if actual < need:
+                errors.append(f"A2 text.{role} on {surf} = {actual:.2f}:1 < {need}:1（{fg} on {bg}）")
+            else:
+                infos.append(f"A2 text.{role} on {surf} = {actual:.2f}:1 ✓（需 ≥{need}）")
+
+    # 状态色：**每一个真会被画出来的面**都要过，不只 shell 与 card。
+    # 只比 shell/card 曾漏掉外壳渐变的深端 paper-200：amber-700 在它上面只有 4.03:1，
+    # 顶栏 eyebrow 实测 4.12:1，门禁却一路 PASS。场（纸/幕）由后缀决定，别混着比。
+    PAPER = ("shell", "shell-alt", "card", "rule", "read", "read-alt")
+    STAGE = ("stage", "stage-alt")
+    for st, fg in ((k, deref(v)) for k, v in S["state"].items() if not k.startswith("_")):
+        if not fg:
+            continue
+        faces = STAGE if st.endswith(("-on-stage", "-on-dark")) else PAPER
+        for surf in faces:
+            bg = surfaces.get(surf)
+            if not bg:
+                continue
+            r = ratio(fg, bg)
+            checked += 1
+            if r < 4.5:
+                errors.append(f"A2 state.{st} on {surf} = {r:.2f}:1 < 4.5:1")
+            else:
+                infos.append(f"A2 state.{st} on {surf} = {r:.2f}:1 ✓")
+
+    if checked == 0:
+        errors.append("A2 一个颜色对都没检出——tokens 的 _contrast_on_* 注记缺失，门禁形同虚设")
+
+    # ---- A2b 实扫 CSS 里的字面文字色 ----
+    # 每个用在 color: 上的字面色，至少要在某一个已定义的面上达到 4.5:1；
+    # 全都不达标就是它没有合法的落脚处。这条能抓住 #6f688a 那一类，黑名单抓不住。
+    for m in re.finditer(r"\{([^{}]*)\}", css):
+        block = m.group(1)
+        cm = re.search(r"(?<![-\w])color\s*:\s*(#[0-9a-fA-F]{3,6})\b", block)
+        if not cm:
+            continue
+        fg = cm.group(1)
+        # 同一条规则里若自带字面背景，就按它算——比拿全局面去猜准确
+        bm = re.search(r"background(?:-color)?\s*:\s*(#[0-9a-fA-F]{3,6})\b", block)
+        line = css[:m.start()].count("\n") + 1
+        if bm:
+            r = ratio(fg, bm.group(1))
+            if r < 4.5:
+                errors.append(f"A2b {fg} on {bm.group(1)}（CSS 第 {line} 行）= {r:.2f}:1 < 4.5:1")
+        else:
+            best = max(((ratio(fg, bg), n) for n, bg in surfaces.items()), default=(0, "?"))
+            if best[0] < 4.5:
+                errors.append(
+                    f"A2b 字面文字色 {fg}（CSS 第 {line} 行）在任何已定义的面上都不达 4.5:1"
+                    f"（最好的是 {best[1]} {best[0]:.2f}:1）——改用 tokens 的语义色")
 
     # A3 触控目标
     for m in re.finditer(r"min-height\s*:\s*([\d.]+)px", css):

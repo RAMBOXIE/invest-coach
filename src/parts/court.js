@@ -84,6 +84,7 @@
       const st = { story, I, i: 0, log: [], used: new Set(), unlocked: new Set(['t1']),
                    stats: { pressed: 0, broke: 0, noRecord: 0 }, onClose };
       window.__court = st;
+      window.__sheetClose = onClose || null;
       // 已解锁的证词按顺序出场
       st.visible = () => I.testimony.filter(t => !t.locked || st.unlocked.has(t.id));
       draw();
@@ -100,8 +101,9 @@
     const st = window.__court, I = st.I, w = st.story.cast[0];
     const cur = st.visible()[st.i];
     let h = `<div class="ct-head">
-        <span class="ct-av">${w.avatar}</span>
-        <div><div class="ct-nm">${w.name}</div><div class="ct-role">${w.role}</div></div>
+        <span class="ct-av">${ic('me')}</span>
+        <div class="ct-who"><div class="ct-nm">${w.name}</div><div class="ct-role">${w.role}</div></div>
+        <button class="ct-x" id="ct-x">${ic('close')} 回到决策</button>
       </div>
       <p class="ct-rule">${w.rule}</p>`;
     if (!st.log.length) h += `<p class="ct-open">${I.opening}</p><p class="ct-how">${I.howto}</p>`;
@@ -109,19 +111,19 @@
       <div class="ct-turn">
         ${entry.you ? `<div class="ct-you">${entry.you}</div>` : ''}
         <div class="ct-say${entry.broke ? ' broke' : ''}">
-          ${entry.broke ? '<div class="ct-bang">❗ 说法被戳穿</div>' : ''}
+          ${entry.broke ? `<div class="ct-bang">${ic('alert')} 说法被戳穿</div>` : ''}
           <div class="ct-txt">${entry.text}</div>
-          <div class="ct-src">📄 ${entry.src} · <span class="ct-ln">${entry.line}</span></div>
+          <div class="ct-src">${ic('doc')} ${entry.src} · <span class="ct-ln">${entry.line}</span></div>
         </div>
         ${voc(entry.coach)}
       </div>`).join('');
 
     if (cur) {
       h += `<div class="ct-turn"><div class="ct-say"><div class="ct-txt">${cur.text}</div>
-        <div class="ct-src">📄 ${cur.src} · <span class="ct-ln">${cur.line}</span></div></div></div>
+        <div class="ct-src">${ic('doc')} ${cur.src} · <span class="ct-ln">${cur.line}</span></div></div></div>
         <div class="ct-acts">
-          ${cur.press && !st.used.has(cur.id + ':press') ? `<button class="ct-btn press" data-press="${cur.id}">🔍 追问这一句</button>` : ''}
-          <button class="ct-btn evi" data-evi="${cur.id}">⚖️ 提出证据</button>
+          ${cur.press && !st.used.has(cur.id + ':press') ? `<button class="ct-btn press" data-press="${cur.id}">${ic('search')} 追问这一句</button>` : ''}
+          <button class="ct-btn evi" data-evi="${cur.id}">${ic('scale')} 提出证据</button>
           ${st.visible().length > st.i + 1 ? `<button class="ct-btn nxt" data-nx="1">下一句证词 →</button>` : ''}
         </div>`;
     } else {
@@ -143,6 +145,8 @@
     });
     box.querySelectorAll('[data-nx]').forEach(b => b.onclick = () => { st.i++; draw(); });
     box.querySelectorAll('[data-evi]').forEach(b => b.onclick = () => showCards(b.dataset.evi));
+    const x = document.getElementById('ct-x');
+    if (x) x.onclick = () => { window.__sheetClose = st.onClose || null; closeSheet(); };
     const inp = document.getElementById('ct-in');
     document.getElementById('ct-go').onclick = () => { if (inp.value.trim()) freeAsk(inp.value.trim()); };
     inp.onkeydown = e => { if (e.key === 'Enter' && inp.value.trim()) freeAsk(inp.value.trim()); };
@@ -152,7 +156,7 @@
   function showCards(tid) {
     const st = window.__court, I = st.I;
     const cur = st.visible().find(x => x.id === tid);
-    const h = `<h3 style="margin:0 0 4px;font-size:17px">⚖️ 提出证据</h3>
+    const h = `<h3 style="margin:0 0 4px;font-size:17px">${ic('scale')} 提出证据</h3>
       <p class="tip">挑一张你手上的证据，去戳他刚才那句话。选错不扣分——但选对了，他就得改口。</p>
       ${I.cards.map(c => `<button class="ct-card" data-card="${c.id}">${c.t}</button>`).join('')}
       <button class="cta ghost" id="ct-back" style="margin-top:10px">先不提</button>`;

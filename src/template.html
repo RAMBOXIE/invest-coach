@@ -15,16 +15,28 @@
 <style>
 /*__TOKENS__*/
   :root{
-    --bg1:#141b36; --bg2:#232e52; --card:#fdf9f0; --ink:#37304d; --soft:#6f688a;
-    --gold:#ffd166; --good:#4fbf85; --bad:#e2606c; --na:#5aa9e6; --violet:#8646b8;
-    --line:#e2d8c4; --tap:48px;
+    /* 简写一律是令牌别名，不再持有字面值。改配色只动 design/tokens.json。
+       门禁 tools/check_tokens.py 会挡住任何新增的字面色值/字号。 */
+    --bg1:var(--surface-shell);      /* v2 纸面翻正：曾是 #141b36（夜） */
+    --bg2:var(--surface-shell-alt);  /* 曾是 #232e52 */
+    --card:var(--surface-card);
+    --ink:var(--text-body-color);
+    --soft:var(--text-meta-color);   /* 曾是 #6f688a，对比 3.24:1，不达 AA */
+    --gold:var(--state-focus);       /* 纸面用 amber-700；幕内用 --state-focus-on-stage */
+    --on-gold:var(--surface-card);   /* 压在 gold 填充上的字：纸面 gold 是深琥珀 → 浅字 */
+    --good:var(--state-clear);
+    --bad:var(--state-flag);
+    --na:var(--state-unknown);
+    --violet:var(--brand-violet);
+    --line:var(--surface-rule);
+    --tap:var(--tap-rec);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
   body{
-    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+    font-family:var(--font-ui);
     background:radial-gradient(120% 80% at 50% 0%,var(--bg2),var(--bg1) 70%);
-    color:#f2ecdd;min-height:100svh;
+    color:var(--text-body-color);min-height:100svh;
     -webkit-font-smoothing:antialiased;overscroll-behavior-y:none;
   }
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-size:inherit}
@@ -37,44 +49,163 @@
     background:linear-gradient(180deg,var(--bg1) 70%,transparent)}
   .top .tt{font-size:13px;letter-spacing:2px;color:var(--gold)}
   .top h1{font-size:17px;margin:2px 0 0;font-weight:700}
-  .coachbtn{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);
-    border-radius:999px;padding:8px 12px;font-size:13px;min-height:44px}
+  /* 图标：描线、继承 currentColor、随字号缩放 */
+  .pop-ic{font-size:46px;line-height:1;color:var(--state-focus)}
+  .pop-ic .ic-s{stroke-width:1.2}
+  .ic-hero{font-size:22px;line-height:1;display:inline-flex;color:var(--state-focus)}
+  .ic-s{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:1.6;
+    stroke-linecap:round;stroke-linejoin:round;vertical-align:-.14em;flex:none}
+  .ic-lg{width:1.35em;height:1.35em;stroke-width:1.5}
   /* 通用卡 */
-  .sec{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);
+  .sec{background:var(--surface-card);border:1px solid var(--surface-rule);
     border-radius:16px;padding:14px;margin:10px 0}
   .sec h2{font-size:13px;margin:0 0 8px;color:var(--gold);letter-spacing:1px;font-weight:600}
-  .big{background:linear-gradient(150deg,rgba(255,209,102,.14),rgba(134,70,184,.14));
-    border:1px solid rgba(255,209,102,.3)}
-  .big .code{font-size:13px;letter-spacing:2px;color:var(--gold)}
-  .big h3{font-size:20px;margin:6px 0 4px;line-height:1.35}
-  .big p{font-size:14px;line-height:1.65;color:#A9B0C2;margin:6px 0 12px}
-  .cta{display:block;width:100%;min-height:var(--tap);background:var(--gold);color:#2a2010;
-    border-radius:14px;font-size:16px;font-weight:700}
-  .cta.ghost{background:rgba(255,255,255,.1);color:#f2ecdd}
+  /* 幕的入口：纸面上的暗岛。它长得像它要去的地方——纸→幕的转换被预告。
+     岛内把整套语义色切到「幕」的一份，后代无需逐条改写就自动跟着走。
+     漏掉这一步的话，.tip 这类用纸面 meta 色的后代会在暗底上掉到 2.46:1。 */
+  .big{background:linear-gradient(150deg,var(--surface-stage-alt),var(--surface-stage));
+    border:1px solid var(--c-rule-on-stage);padding:20px 16px 16px;
+    --ink:var(--text-narrative-color);
+    --soft:var(--text-meta-on-stage);
+    --gold:var(--state-focus-on-stage);
+    --bad:var(--state-flag-on-dark);
+    --line:var(--c-rule-on-stage);
+    --card:var(--surface-stage-alt);
+    --on-gold:var(--surface-stage);
+    color:var(--text-narrative-color)}
+  .big .code{font-size:var(--size-13);letter-spacing:2px;color:var(--state-focus-on-stage)}
+  .big h3{font-family:var(--font-display);font-size:var(--size-display);margin:10px 0 8px;
+    line-height:var(--lh-tight);letter-spacing:var(--track-display);
+    color:var(--text-narrative-color);font-weight:var(--weight-display)}
+  .big p{font-size:var(--size-15);line-height:var(--lh-read);color:var(--text-meta-on-stage);margin:8px 0 14px}
+  .big .cta{background:var(--gold);color:var(--on-gold)}
+
+  /* ================= 今日页 IA =================
+     状态条 → 唯一的下一步 → 队列预览 → 折叠。
+     调度器 plan() 早就算出了优先级队列，旧版把它摊平成 8 块平级卡片让用户挑，
+     等于把「今天该练什么」这个产品该做的决定推回给了用户。这套 CSS 服务的是
+     「一屏一个下一步」，别再往首屏加平级 CTA。 */
+
+  /* 进度：从页面底部提到顶部 */
+  .strip{padding:16px 2px 12px;border-bottom:1px solid var(--surface-rule);margin-bottom:20px}
+  .strip-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+  .strip-p{display:flex;align-items:baseline;gap:6px}
+  .strip-p .num{font-family:var(--font-mono);font-size:var(--size-24);font-weight:700;
+    color:var(--text-display-color)}
+  .strip-t{font-size:var(--size-13);color:var(--text-meta-color)}
+  .strip-due{font-size:var(--size-13);font-weight:700;color:var(--state-focus)}
+  .bar{height:3px;background:var(--surface-shell-alt);margin-top:11px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--text-display-color);
+    transition:width var(--dur-trans)}
+  .strip-m{margin-top:9px;font-size:var(--size-13);color:var(--text-meta-color);
+    font-family:var(--font-mono)}
+
+  /* 唯一的下一步：纸面上的暗岛，语义色整体切到「幕」的一份 */
+  .hero{background:linear-gradient(150deg,var(--surface-stage-alt),var(--surface-stage));
+    border:1px solid var(--c-rule-on-stage);border-radius:16px;padding:22px 18px 18px;
+    margin:0 0 22px;color:var(--text-narrative-color);
+    --ink:var(--text-narrative-color); --soft:var(--text-meta-on-stage);
+    --gold:var(--state-focus-on-stage); --bad:var(--state-flag-on-dark);
+    --line:var(--c-rule-on-stage); --card:var(--surface-stage-alt);
+    --on-gold:var(--surface-stage)}
+  .hero-eye{font-size:var(--size-13);letter-spacing:var(--track-eyebrow);
+    color:var(--state-focus-on-stage);margin-bottom:16px}
+  .hero-code{font-size:var(--size-13);letter-spacing:1px;color:var(--text-meta-on-stage)}
+  .hero-t{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);
+    letter-spacing:var(--track-display);margin:9px 0 12px;
+    font-weight:var(--weight-display);color:var(--text-narrative-color)}
+  .hero-s{font-size:var(--size-15);line-height:var(--lh-read);
+    color:var(--text-meta-on-stage);margin:0 0 17px}
+  .hero .cta{background:var(--gold);color:var(--on-gold)}
+  .hero-say{margin-top:17px;padding-top:14px;border-top:1px solid var(--c-rule-on-stage);
+    font-size:var(--size-13);line-height:var(--lh-read);color:var(--text-meta-on-stage)}
+  .hero-say .w{color:var(--state-focus-on-stage);font-weight:700}
+
+  /* 接下来：只预览，不给按钮 */
+  .upnext{margin:0 0 20px}
+  .upnext h2{font-size:var(--size-13);letter-spacing:1px;color:var(--text-meta-color);
+    font-weight:600;margin:0 0 6px}
+  .up-r{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    padding:10px 0;border-bottom:1px solid var(--surface-rule)}
+  .up-t{font-size:var(--size-15);color:var(--text-body-color)}
+  .up-m{font-size:var(--size-13);color:var(--text-meta-color);
+    font-family:var(--font-mono);flex:none}
+
+  /* 折叠区：参考，不是今天的任务 */
+  .dw{border-bottom:1px solid var(--surface-rule)}
+  .dw summary{cursor:pointer;list-style:none;padding:14px 2px;font-size:var(--size-15);
+    color:var(--text-body-color);display:flex;justify-content:space-between;align-items:center;
+    min-height:var(--tap-min)}
+  .dw summary::-webkit-details-marker{display:none}
+  .dw summary::after{content:'+';color:var(--text-meta-color);
+    font-family:var(--font-mono);font-size:var(--size-17)}
+  .dw[open] summary::after{content:'-'}
+  .dw-in{padding:0 2px 16px}
+
+  /* 内容里作者手写的 <details>（判卷台卡片里的「点一下看答案」）走的是浏览器默认样式：
+     实测 21px 高，远低于 44px 触控下限。它跟 .dw 是两套 DOM，之前只给 .dw 上了样式。 */
+  .body details{border:1px solid var(--line);border-radius:var(--radius-md);
+    margin:var(--space-3) 0;background:var(--surface-read-alt)}
+  .body details>summary{cursor:pointer;list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:var(--space-2);
+    min-height:var(--tap-rec);padding:var(--space-2) var(--space-3);
+    font-size:var(--size-15);font-weight:700;color:var(--state-focus)}
+  .body details>summary::-webkit-details-marker{display:none}
+  .body details>summary::after{content:'+';font-family:var(--font-mono);
+    font-size:var(--size-19);font-weight:400;color:var(--text-meta-color)}
+  .body details[open]>summary::after{content:'-'}
+  .body details>*:not(summary){padding:0 var(--space-3);margin:var(--space-2) 0}
+  .dw-b{font-size:var(--size-15);line-height:var(--lh-read);color:var(--text-body-color)}
+
+  /* 首次进入：选主教练 */
+  .pick{padding:30px 2px 8px}
+  .pick-eye{font-size:var(--size-13);letter-spacing:var(--track-eyebrow);color:var(--state-focus)}
+  .pick-t{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);
+    letter-spacing:var(--track-display);margin:13px 0 11px;
+    color:var(--text-display-color);font-weight:var(--weight-display)}
+  .pick-s{font-size:var(--size-15);line-height:var(--lh-read);
+    color:var(--text-meta-color);margin:0 0 26px}
+  .pick-c{display:block;width:100%;text-align:left;background:var(--surface-card);
+    border:1px solid var(--surface-rule);border-radius:14px;padding:17px;
+    margin-bottom:10px;min-height:var(--tap-rec)}
+  .pick-c:hover{border-color:var(--state-focus)}
+  .pick-c[aria-current=true]{border-color:var(--state-focus);background:var(--c-amber-wash)}
+  .pick-n{display:block;font-size:var(--size-19);font-weight:var(--weight-medium);
+    color:var(--text-display-color);margin-bottom:5px}
+  .pick-d{display:block;font-size:var(--size-13);line-height:var(--lh-ui);
+    color:var(--text-meta-color)}
+  .pick-c.slim{padding:13px 15px}
+  .pick-c.slim .pick-n{font-size:var(--size-17)}
+  .cta{display:block;width:100%;min-height:var(--tap);background:var(--text-display-color);
+    color:var(--surface-card);border-radius:14px;font-size:16px;font-weight:700}
+  .cta.ghost{background:transparent;color:var(--text-body-color);border:1px solid var(--surface-rule)}
   .cta:disabled{opacity:.4}
   .rowbtn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;
     background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
     border-radius:14px;padding:11px 13px;margin-bottom:7px;min-height:var(--tap)}
   .rowbtn .ic{font-size:20px;width:26px;text-align:center}
   .rowbtn .nm{font-weight:600;font-size:14.5px}
-  .rowbtn .mt{font-size:13px;color:#A9B0C2;margin-top:1px}
+  .rowbtn .mt{font-size:13px;color:var(--text-meta-color);margin-top:1px}
   .rowbtn[disabled]{opacity:.42}
-  .chipS{margin-left:auto;font-size:13px;border-radius:999px;padding:3px 9px;white-space:nowrap}
-  .chipS.lit{background:rgba(79,191,133,.22);color:#8fe0b4}
-  .chipS.open{background:rgba(255,209,102,.2);color:var(--gold)}
-  .chipS.locked{background:rgba(255,255,255,.08);color:#A9B0C2}
-  .chipS.due{background:rgba(226,96,108,.28);color:#ffb3ba}
+  /* 纸面上的状态芯片：淡底 + 同色系深字。v1 是暗底亮字，翻正后变成亮底亮字，
+     「已读」实测 1:1——整块芯片在纸上等于不存在。 */
+  .chipS{margin-left:auto;font-size:var(--size-13);border-radius:var(--radius-pill);
+    padding:3px 9px;white-space:nowrap;font-weight:700}
+  .chipS.lit{background:var(--c-green-wash);color:var(--state-clear)}
+  .chipS.open{background:var(--c-amber-wash);color:var(--state-focus)}
+  .chipS.locked{background:var(--surface-shell-alt);color:var(--text-meta-color)}
+  .chipS.due{background:var(--c-red-wash);color:var(--state-flag)}
   .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
   .st{background:rgba(255,255,255,.06);border-radius:12px;padding:9px;text-align:center}
   .st .v{font-size:19px;font-weight:700}
-  .st .k{font-size:13px;color:#A9B0C2;margin-top:1px}
+  .st .k{font-size:13px;color:var(--text-meta-color);margin-top:1px}
   .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:flex;
-    background:rgba(16,20,42,.97);border-top:1px solid rgba(255,255,255,.1);
+    background:var(--surface-card);border-top:1px solid var(--surface-rule);
     padding-bottom:env(safe-area-inset-bottom)}
-  .tabbar button{flex:1;padding:9px 0 8px;font-size:13px;color:#A9B0C2;min-height:var(--tap)}
+  .tabbar button{flex:1;padding:9px 0 8px;font-size:13px;color:var(--text-meta-color);min-height:var(--tap)}
   .tabbar button .i{display:block;font-size:19px;margin-bottom:1px}
   .tabbar button.on{color:var(--gold)}
-  .foot{font-size:13px;color:#A9B0C2;text-align:center;line-height:1.6;padding:14px 4px 4px}
+  .foot{font-size:13px;color:var(--text-meta-color);text-align:center;line-height:1.6;padding:14px 4px 4px}
   /* 全屏课节 */
   .stage{position:fixed;inset:0;z-index:40;background:var(--card);color:var(--ink);
     display:none;flex-direction:column}
@@ -109,9 +240,9 @@
   .cfhead{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:2px 0 8px}
   .cfcode{font-size:13px;letter-spacing:1.5px;color:var(--violet);font-weight:700}
   .cfstat{font-size:13px;border-radius:999px;padding:2px 8px}
-  .cfstat.set{background:#e8f8ef;color:#2e9c68}
-  .cfstat.ask{background:#fff2d9;color:#a5761b}
-  .cfstat.tea{background:#eee;color:#777}
+  .cfstat.set{background:var(--c-green-wash);color:var(--state-clear)}
+  .cfstat.ask{background:var(--c-amber-wash);color:var(--state-focus)}
+  .cfstat.tea{background:var(--surface-shell-alt);color:var(--text-meta-color)}
   .cfas{font-size:13px;color:var(--soft);margin-left:auto}
   .cfbrief{font-size:clamp(17px,4.6vw,19px);line-height:1.8;max-width:34em;font-weight:600;margin:2px 0 12px}
   .cfnote{font-size:15px;line-height:1.75;color:var(--soft);background:#f6f1e2;
@@ -123,9 +254,8 @@
     padding-top:8px;margin-top:12px}
   .srcrow{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
   a.src{text-decoration:none}
-  .labcard{background:linear-gradient(150deg,rgba(90,169,230,.14),rgba(255,255,255,.05));
-    border:1px solid rgba(90,169,230,.35)}
-  .labtag{font-size:13px;background:rgba(90,169,230,.25);color:#A9B0C2;
+  .labcard{background:var(--surface-card);border:1px dashed var(--state-unknown)}
+  .labtag{font-size:var(--size-13);background:var(--c-blue-wash);color:var(--state-unknown);
     border-radius:999px;padding:2px 8px;margin-left:6px}
   /* 证据 chip */
   .cards{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
@@ -133,9 +263,9 @@
     font-size:14px;line-height:1.45;text-align:left;min-height:44px;flex:1 1 100%}
   .card-c.on{border-color:var(--violet);background:#f4ecff;font-weight:600}
   .card-c .tag{float:right;font-size:13px;padding:1px 7px;border-radius:999px;margin-left:6px}
-  .card-c.rev-support .tag{background:#dff5e8;color:#2e9c68}
-  .card-c.rev-distractor .tag{background:#fde8ea;color:#c4485a}
-  .card-c.rev-irrelevant .tag{background:#eee;color:#888}
+  .card-c.rev-support .tag{background:var(--c-green-wash);color:var(--state-clear)}
+  .card-c.rev-distractor .tag{background:var(--c-red-wash);color:var(--state-flag)}
+  .card-c.rev-irrelevant .tag{background:var(--surface-shell-alt);color:var(--text-meta-color)}
   /* 排除步 */
   .ro{border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin:9px 0;background:#fff}
   .ro .t{font-size:14px;line-height:1.55;margin-bottom:9px}
@@ -188,11 +318,31 @@
   .scrim{position:fixed;inset:0;background:rgba(8,10,24,.55);z-index:49;display:none}
   .scrim.show{display:block}
   .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(16px);opacity:0;
-    background:#221c3a;color:#ffe9b0;padding:11px 18px;border-radius:999px;font-size:14px;
+    background:var(--surface-stage-alt);color:var(--state-focus-on-stage);padding:11px 18px;border-radius:999px;font-size:var(--size-15);
     transition:.25s;z-index:99;pointer-events:none;max-width:88vw;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%)}
   .mapmini{width:100%;border-radius:14px;background:rgba(0,0,0,.18);display:block}
-  @media(min-width:720px){ .app{max-width:680px} .cta{font-size:17px} }
+  @media(min-width:720px){ .app{max-width:680px} }
+
+  /* ===== 桌面 =====
+     底部固定 tab 是移动端产物，在 1440px 上横跨整屏是错的——转成左侧竖栏。
+     今日页分两栏：唯一的下一步占主栏，队列与折叠区退到侧栏。DOM 顺序不变。 */
+  @media(min-width:1024px){
+    .app{max-width:1120px;padding:0 40px 72px calc(96px + 40px)}
+    .tabbar{top:0;bottom:0;right:auto;width:96px;flex-direction:column;
+      justify-content:flex-start;gap:2px;padding:26px 10px;
+      border-top:0;border-right:1px solid var(--surface-rule)}
+    .tabbar button{flex:0 0 auto;padding:14px 0;border-radius:10px;font-size:var(--size-13)}
+    .tabbar button:hover{background:var(--surface-shell-alt)}
+    .tabbar button.on{background:var(--c-amber-wash)}
+    .top{padding-left:0}
+    .today{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);
+      column-gap:48px;align-items:start}
+    .today>.strip{grid-column:1/-1}
+    .today-side{position:sticky;top:26px}
+    .stage,.sty{left:96px}
+  }
+  @media(min-width:1440px){ .app{max-width:1280px} }
 <!--#part:story.css-->
 <!--#part:court.css-->
   @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}
@@ -203,7 +353,6 @@
 <div class="app" id="app">
   <div class="top">
     <div><div class="tt" id="tag"></div><h1 id="title"></h1></div>
-    <button class="coachbtn" id="coachbtn">🎓 <span id="coachname">教练</span></button>
   </div>
   <div id="view"></div>
   <div class="foot">仅供学习 · 历史案例复盘 · 不构成投资建议，无前瞻信号与收益承诺<br>
@@ -211,14 +360,14 @@
 </div>
 
 <div class="tabbar">
-  <button data-tab="today" class="on"><span class="i">📁</span>今日</button>
-  <button data-tab="atlas"><span class="i">🗺️</span>图谱</button>
-  <button data-tab="me"><span class="i">📇</span>我</button>
+  <button data-tab="today" class="on"><span class="i" data-ic="today"></span>今日</button>
+  <button data-tab="atlas"><span class="i" data-ic="atlas"></span>图谱</button>
+  <button data-tab="me"><span class="i" data-ic="me"></span>我</button>
 </div>
 
 <div class="stage" id="stage">
   <div class="sbar">
-    <button class="x" id="stage-x">✕ 退出</button>
+    <button class="x" id="stage-x"><span data-ic="close"></span>退出</button>
     <span class="prog"><i id="stage-prog"></i></span>
     <span class="n num" id="stage-n"></span>
   </div>
@@ -227,7 +376,7 @@
 </div>
 
 <div class="sty" id="sty">
-  <div class="sty-bar"><button class="x" id="sty-x">✕ 退出</button><span class="sty-dots" id="sty-dots"></span></div>
+  <div class="sty-bar"><button class="x" id="sty-x"><span data-ic="close"></span>退出</button><span class="sty-dots" id="sty-dots"></span></div>
   <div class="sty-body" id="sty-body"></div>
   <div class="sty-foot" id="sty-foot"></div>
 </div>
@@ -248,6 +397,44 @@ if(!SITE){document.body.innerHTML='<p style="padding:40px">数据未注入：请
 /* ============ 索引 ============ */
 const byId=Object.fromEntries(SITE.nodes.map(n=>[n.id,n]));
 const COACHES=SITE.x_coaches||[];
+/* ============ 图标 ============
+   内联 SVG，单色描线，继承 currentColor。emoji 当图标已进 tokens.banned：
+   彩色 emoji 撞单色系统，各平台字形还不一致（同一个 🗺️ 在 Win/mac/Android 长得不一样）。
+   加新图标只在这里加，不要往模板里塞 emoji。 */
+const ICON={
+ today:'<path d="M3 13h4l2 3h6l2-3h4"/><path d="M5 6h14l2 7v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5z"/>',
+ atlas:'<circle cx="6" cy="7" r="2.2"/><circle cx="18" cy="7" r="2.2"/><circle cx="12" cy="17" r="2.2"/><path d="M7.7 8.7 10.7 15M16.3 8.7 13.3 15M8.2 7h7.6"/>',
+ me:'<circle cx="12" cy="8.5" r="3.3"/><path d="M5 20a7 7 0 0 1 14 0"/>',
+ coach:'<path d="M4 5.5h16v10H9.5L4 19.5z"/><path d="M8 9.5h8M8 12.5h5"/>',
+ close:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+ book:'<path d="M4 4.5h6.2a1.8 1.8 0 0 1 1.8 1.8V20a1.8 1.8 0 0 0-1.8-1.7H4z"/><path d="M20 4.5h-6.2a1.8 1.8 0 0 0-1.8 1.8V20a1.8 1.8 0 0 1 1.8-1.7H20z"/>',
+ link:'<path d="M10.3 13.2a4 4 0 0 0 5.7.3l2.3-2.3a4 4 0 0 0-5.6-5.7l-1.3 1.3"/><path d="M13.7 10.8a4 4 0 0 0-5.7-.3l-2.3 2.3a4 4 0 0 0 5.6 5.7l1.3-1.3"/>',
+ doc:'<path d="M14 3.5H7.5a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V7z"/><path d="M13.6 3.5V7.4h3.9"/><path d="M9.5 12h5M9.5 15.5h3.5"/>',
+ bulb:'<path d="M12 3.2a5.8 5.8 0 0 1 3.5 10.4c-.4.3-.6.8-.6 1.3H9.1c0-.5-.2-1-.6-1.3A5.8 5.8 0 0 1 12 3.2z"/><path d="M9.7 17.4h4.6M10.6 20h2.8"/>',
+ spark:'<path d="M12 3.4l1.85 4.75L18.6 10l-4.75 1.85L12 16.6l-1.85-4.75L5.4 10l4.75-1.85z"/><path d="M18.5 16.4l.7 1.7 1.7.7-1.7.7-.7 1.7-.7-1.7-1.7-.7 1.7-.7z"/>',
+ repeat:'<path d="M4.5 9.5V7.8a2 2 0 0 1 2-2h10.7"/><path d="M14.6 2.9l3 2.9-3 2.9"/><path d="M19.5 14.5v1.7a2 2 0 0 1-2 2H6.8"/><path d="M9.4 21.1l-3-2.9 3-2.9"/>',
+ scale:'<path d="M12 4.2v15.6M6.5 8h11M8.5 19.8h7"/><path d="M6.5 8 4 13.2a2.5 2.5 0 0 0 5 0z"/><path d="M17.5 8 15 13.2a2.5 2.5 0 0 0 5 0z"/>',
+ search:'<circle cx="10.6" cy="10.6" r="5.9"/><path d="M14.9 14.9l4.5 4.5"/>',
+ alert:'<circle cx="12" cy="12" r="8.4"/><path d="M12 7.4v5.2"/><circle cx="12" cy="16.2" r=".9" fill="currentColor" stroke="none"/>',
+ lock:'<rect x="5" y="10" width="14" height="10" rx="2.2"/><path d="M8.2 10V7.3a3.8 3.8 0 0 1 7.6 0V10"/>',
+ clip:'<path d="M9.2 4.2H7.4a2 2 0 0 0-2 2v13.1a2 2 0 0 0 2 2h9.2a2 2 0 0 0 2-2V6.2a2 2 0 0 0-2-2h-1.8"/><rect x="9.2" y="2.6" width="5.6" height="3.2" rx="1.1"/><path d="M9 11.5h6M9 15h4"/>',
+ trash:'<path d="M4.5 6.8h15M9.8 3.8h4.4"/><path d="M6.6 6.8 7.6 20a1 1 0 0 0 1 .9h6.8a1 1 0 0 0 1-.9l1-13.2"/><path d="M10.2 10.6v6.4M13.8 10.6v6.4"/>',
+ flag:'<path d="M6.2 21V3.4M6.2 3.9h11l-2.6 4 2.6 4h-11"/>',
+ clock:'<circle cx="12" cy="12" r="8.4"/><path d="M12 6.9v5.4l3.4 2"/>',
+ drop:'<path d="M12 3.3s5.9 6.3 5.9 10a5.9 5.9 0 1 1-11.8 0c0-3.7 5.9-10 5.9-10z"/>',
+ receipt:'<path d="M6.2 3.4h11.6v17.2l-1.9-1.4-1.9 1.4-1.9-1.4-1.9 1.4-2-1.4-2 1.4z"/><path d="M9.1 8.3h5.8M9.1 12.2h5.8"/>',
+ card:'<rect x="3.2" y="6" width="17.6" height="12" rx="2.2"/><path d="M3.2 10.2h17.6"/><path d="M6.6 14.3h3.2"/>',
+ divide:'<path d="M6.2 12h11.6"/><circle cx="12" cy="7.6" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="16.4" r="1.1" fill="currentColor" stroke="none"/>',
+ dice:'<rect x="4.2" y="4.2" width="15.6" height="15.6" rx="3.2"/><circle cx="9" cy="9" r="1.15" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.15" fill="currentColor" stroke="none"/><circle cx="15" cy="15" r="1.15" fill="currentColor" stroke="none"/>',
+ swords:'<path d="M4.2 4.2 13 13M19.8 4.2 11 13"/><path d="M14.2 14.2l5.6 5.6M9.8 14.2l-5.6 5.6"/>',
+ folder:'<path d="M3.2 7.2a2 2 0 0 1 2-2h3.9l2 2h7.7a2 2 0 0 1 2 2v8.6a2 2 0 0 1-2 2H5.2a2 2 0 0 1-2-2z"/>'
+};
+function ic(n,cls){const d=ICON[n]||ICON.doc;
+  return `<svg class="ic-s${cls?' '+cls:''}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${d}</svg>`;}
+/* 内容里的节点 icon 仍是 emoji（site.json 不动，出处纪律优先）——在渲染层映射成 SVG。 */
+const NODEICON={'🗂️':'folder','➗':'divide','🧾':'receipt','💳':'card','💧':'drop','🔍':'search',
+ '🚩':'flag','⚠️':'alert','⏱️':'clock','🔗':'link','🎲':'dice','⚖️':'scale','⚔️':'swords','📋':'clip'};
+function nic(e,cls){return ic(NODEICON[(e||'').replace('\uFE0F','')+'\uFE0F']||NODEICON[e]||'folder',cls);}
 const coachById=Object.fromEntries(COACHES.map(c=>[c.id,c]));
 const CONF=[{v:.55,t:'没把握'},{v:.75,t:'比较有把握'},{v:.95,t:'很有把握'}];
 const NOSCORE=new Set(['case-first-look']);
@@ -260,12 +447,13 @@ const BANK={},BANKQ={};
 const isDeep=n=>!!n.x_level;
 const ORDER=['sunbeam-1998','lehman-2008','buffett-1993'];  // 幕序：先能查到→再查不到→最后自己算错
 function canonLabel(s){s=s||'';
-  if(s.includes('Graham'))return'📖 格雷厄姆怎么说';
-  if(s.includes('SEC'))return'📖 SEC 怎么认定';
-  if(/ASC|IAS|IFRS/.test(s))return'📖 会计准则怎么说';
-  if(s.includes('Schilit'))return'📖《财务诡计》怎么说';
-  if(s.includes('审计清单'))return'📖 审计研究怎么说';
-  return'📖 出处怎么说';}
+  const b=ic('book')+' ';
+  if(s.includes('Graham'))return b+'格雷厄姆怎么说';
+  if(s.includes('SEC'))return b+'SEC 怎么认定';
+  if(/ASC|IAS|IFRS/.test(s))return b+'会计准则怎么说';
+  if(s.includes('Schilit'))return b+'《财务诡计》怎么说';
+  if(s.includes('审计清单'))return b+'审计研究怎么说';
+  return b+'出处怎么说';}
 
 /* ============ 记忆（零自由文本，规格 §6） ============ */
 const KEY='invest-coach:ch1';
@@ -295,7 +483,7 @@ function coachName(){return '你的教练';}
 const li={};
 function line(w){const c=coach();if(!c)return null;
   const ls=(c.style_lines||[]).filter(x=>x.when===w);if(!ls.length)return null;
-  li[w]=((li[w]||0)+1)%ls.length;return{who:c.name,t:ls[li[w]].t};}
+  li[w]=((li[w]||0)+1)%ls.length;return{who:coachName(),t:ls[li[w]].t};}
 function coachHTML(w){const l=line(w);return l?`<div class="coach"><span class="w">${l.who}：</span><span>${l.t}</span></div>`:'';}
 
 /* ============ 状态与调度 ============ */
@@ -317,97 +505,142 @@ document.getElementById('title').textContent=SITE.title;
 document.querySelectorAll('.tabbar button').forEach(b=>b.onclick=()=>{
   TAB=b.dataset.tab;document.querySelectorAll('.tabbar button').forEach(x=>x.classList.toggle('on',x===b));
   render();window.scrollTo(0,0);});
-document.getElementById('coachbtn').onclick=()=>pickCoach(false);
+/* 静态外壳里的 data-ic 占位在启动时填 SVG（静态 HTML 调不了 ic()）。 */
+document.querySelectorAll('[data-ic]').forEach(e=>{e.innerHTML=ic(e.dataset.ic);});
 
 function render(){
-  document.getElementById('coachname').textContent='教练';
   const v=document.getElementById('view');
   v.innerHTML=TAB==='today'?viewToday():TAB==='atlas'?viewAtlas():viewMe();
   bindView();
 }
-/* ① 调度器：规则驱动（证据显示个性化排序相对交错无增量，工程预算不压在这里） */
+/* ① 调度器：产出一条**有序队列**。队首是「现在做这个」，其余只做预览。
+   页面不许把队列摊平成平级卡片让用户挑——「今天该练什么」是产品要替他做的决定，
+   不是要他做的决定。体验 §4 那段「第1分钟复训 / 第2-4分钟新节点 / 第5分钟点亮」
+   的时间感，全靠这一条。 */
 function plan(){
   const dues=duePairs();
-  const items=[];
-  if(dues.length)items.push({kind:'review',n:dues.length,mins:Math.max(1,Math.round(dues.length*0.5))});
+  const stories=(SITE.x_stories||[]).slice().sort((a,b)=>ORDER.indexOf(a.case_id)-ORDER.indexOf(b.case_id));
+  const nextStory=stories.find(x=>!((S.story||{})[x.case_id]));
+  const nx=nextNode();
+  const lab=(SITE.x_lab||{}).cases||[];
+  const q=[];
+  // 优先级：复训有时效 > 幕是主线（v3 故事驱动）> 节点 > 未签字的实验室
+  if(dues.length)q.push({kind:'review',mins:Math.max(1,Math.round(dues.length*0.5)),
+    eye:'复训到期',t:`${dues.length} 道混淆对`,
+    s:'闭卷。这是唯一能证明你真学会了的地方。',cta:'开始复训',id:'go-review'});
+  if(nextStory)q.push({kind:'story',mins:8,
+    eye:`第 ${stories.indexOf(nextStory)+1} 幕 / 共 ${stories.length} · ${nextStory.era}`,
+    t:nextStory.title,s:`${nextStory.subtitle}<br><span style="opacity:.82">${nextStory.hook}</span>`,
+    cta:'读这一幕',id:'go-story',attr:` data-cid="${nextStory.case_id}"`,
+    foot:'你会先做判断，再拿到知识点。中途可以直接问这份年报——它只用自己写过的话回答。'});
+  if(nx)q.push({kind:'node',mins:isDeep(nx)?6:3,
+    eye:`今日案卷 · ${nx.domain}`,t:nx.name,s:nx.desc,
+    cta:'开始判卷',id:'go-node',attr:` data-id="${nx.id}"`,
+    foot:isDeep(nx)?'七拍：读材料 → 先写 → 挑证据 → 排除辩护 → 下结论 → 自评 → 回卷，最后一道闭卷锚题才点亮。':'两拍：读材料 → 下结论。'});
+  if(lab.length)q.push({kind:'lab',mins:3,
+    eye:'时事案卷 · 实验室 · 未签字 · 不计分',t:lab[0].company,
+    s:`${lab[0].asof} 期 · 机器从 SEC 原始申报值确定性算出的形状${lab[0].letter?' · 监管已就相关科目问询':''}`,
+    cta:'读一卷（只读数，不定性）',id:'go-lab',
+    foot:'不进错题档案、不进复训、不计校准分、不能点亮任何节点。'});
   const weak=Object.entries(S.pairs).filter(([p,a])=>PAIRS[p]&&a.wrong>=2&&a.due>Date.now())
     .sort((a,b)=>b[1].wrong-a[1].wrong)[0];
-  const nx=nextNode();
-  if(nx)items.push({kind:'node',node:nx,mins:isDeep(nx)?6:3});
-  if(weak)items.push({kind:'weak',pair:weak[0],wrong:weak[1].wrong});
-  if((SITE.x_lab||{}).cases||[])items.push({kind:'lab'});
-  return {items,dues,nx,weak};
+  return {q,dues,nx,stories,weak,read:stories.filter(x=>(S.story||{})[x.case_id])};
 }
+
 function viewToday(){
-  const P=plan();
-  const dues=P.dues, nx=P.nx, done=lit.size, total=SITE.nodes.length;
-  let h='';
-  const pf=profile();
-  h+=`<div class="sec pf"><h2>你的教练</h2>
-    <div class="pf-t">${profileLine()}</div>
-    <div class="tip" style="margin-top:10px">你可以告诉我你希望我多讲什么——这只是偏好，随时能改。</div>
-    <div class="pf-tone">${TONES.map(x=>`<button data-tone="${x.id}" class="${pf.tone===x.id?'on':''}">${x.k}</button>`).join('')}</div>
+  const P=plan(), done=lit.size, total=SITE.nodes.length, pf=profile();
+  // 体验 §5：首个动作是选主教练。没选过就只给这一件事，别的都不显示。
+  if(!pf.tone) return coachPicker();
+  const head=P.q[0], rest=P.q.slice(1);
+  // 移动端是自然流；桌面用 .today 网格分栏，DOM 顺序不变（无障碍阅读顺序 = 视觉优先级）
+  let side='';
+  if(rest.length)side+=upNext(rest);
+  side+=drawers(P,pf);
+  return `<div class="today">
+    ${statusStrip(done,total,P.dues.length)}
+    <main class="today-main">${head?heroCard(head):allLit()}</main>
+    <aside class="today-side">${side}</aside>
   </div>`;
-  const all=(SITE.x_stories||[]).slice().sort((a,b)=>ORDER.indexOf(a.case_id)-ORDER.indexOf(b.case_id));
-  const st=all.find(x=>!((S.story||{})[x.case_id]))||all[all.length-1];
-  if(st){
-    const read=(S.story||{})[st.case_id];
-    const idx=all.indexOf(st)+1;
-    h+=`<div class="sec big" style="background:linear-gradient(150deg,rgba(255,209,102,.18),rgba(134,70,184,.16))">
-      <div class="code">第 ${idx} 幕 / 共 ${all.length} · ${st.era}</div>
-      <h3>${st.title}</h3>
-      <p>${st.subtitle}<br><span style="opacity:.8">${st.hook}</span></p>
-      <button class="cta" id="go-story" data-cid="${st.case_id}">${read?'再读一遍':'读这一幕 · 约 8 分钟'}</button>
-      <div class="tip" style="margin-top:8px">你会先做判断，再拿到知识点。中途可以直接问这份年报——它只用自己写过的话回答。</div></div>`;
-  }
-  const doneSt=all.filter(x=>(S.story||{})[x.case_id]&&x!==st);
-  if(doneSt.length){
-    h+=`<div class="sec"><h2>读过的幕</h2>${doneSt.map(x=>
-      `<button class="rowbtn" data-story="${x.case_id}"><span class="ic">📖</span>
-        <span><span class="nm">${x.title}</span><span class="mt">${x.era} · ${x.subtitle}</span></span>
-        <span class="chipS lit">已读</span></button>`).join('')}</div>`;
-  }
-  const totalMins=P.items.filter(i=>i.mins).reduce((s,i)=>s+i.mins,0);
-  if(totalMins)h+=`<div class="sec" style="padding:10px 14px">
-    <div style="display:flex;align-items:center;gap:8px;font-size:13px">
-      <span style="color:var(--gold);font-weight:700">今天的安排</span>
-      <span style="color:#A9B0C2">约 ${totalMins} 分钟 · ${P.items.filter(i=>i.mins).length} 项</span></div></div>`;
-  if(dues.length){
-    h+=`<div class="sec"><h2>复训到期</h2>
-      <button class="cta ghost" id="go-review">🔁 ${dues.length} 道混淆对 · 约 ${dues.length}0 秒</button>
-      <div class="tip" style="margin-top:8px">复训一律闭卷：这是唯一能证明你真学会了的地方。</div></div>`;
-  }
-  if(nx){
-    const deep=isDeep(nx), mins=deep?6:3;
-    h+=`<div class="sec big"><div class="code">今日案卷 · ${nx.domain}</div>
-      <h3>${nx.icon} ${nx.name}</h3><p>${nx.desc}</p>
-      <button class="cta" id="go-node" data-id="${nx.id}">开始判卷 · 约 ${mins} 分钟</button>
-      <div class="tip" style="margin-top:8px">${deep?'七拍流程：读材料 → 先写 → 挑证据 → 排除辩护 → 下结论 → 自评 → 回卷，最后一道闭卷锚题才点亮。':'两拍：读材料 → 下结论。'}</div></div>`;
-  }else if(done===total){
-    h+=`<div class="sec big"><div class="code">第一章</div><h3>✓ 全部点亮</h3>
-      <p>14 个节点都过了闭卷锚题。接下来靠复训维持——它比新课更能说明你学会了没有。</p>
-      <button class="cta ghost" id="go-card">📋 复制成绩单</button></div>`;
-  }
+}
+
+/* 首次进入：只给这一件事（体验 §5 / DESIGN.md §2）。
+   选的是**教练盯你哪一面**，不是选一个人物——教练自始至终是「你的教练」。 */
+function coachPicker(){
+  return `<div class="pick">
+    <div class="pick-eye">开始之前</div>
+    <h2 class="pick-t">你希望教练先盯你哪一面？</h2>
+    <p class="pick-s">教练是你的，不是某个人的模拟。他会记住你的判断习惯，在你判错时告诉你错在哪。随时能换。</p>
+    ${TONES.map(x=>`<button class="pick-c" data-tone="${x.id}">
+      <span class="pick-n">${x.k}</span>
+      <span class="pick-d">${x.d}</span></button>`).join('')}
+  </div>`;
+}
+
+/* 进度提到顶部（体验 §4「地图顶上：复训 N 题到期」）。
+   没有数据的指标不渲染——首次进入摆三个「—」是纯噪音。 */
+function statusStrip(done,total,nDue){
+  const bits=[], a=acc(), b=brier(), br=braveRate();
+  if(a!=null)bits.push(`首答 ${a}%`);
+  if(b!=null)bits.push(`校准 ${b}`);
+  if(br!=null)bits.push(`敢判 ${br}%`);
+  return `<div class="strip">
+    <div class="strip-top">
+      <span class="strip-p"><b class="num">${done}</b><span class="strip-t">/${total} 已点亮</span></span>
+      ${nDue?`<span class="strip-due">复训 ${nDue} 题到期</span>`:''}</div>
+    <div class="bar"><i style="width:${total?Math.round(done/total*100):0}%"></i></div>
+    ${bits.length?`<div class="strip-m">${bits.join(' · ')}</div>`:''}
+  </div>`;
+}
+
+/* 唯一的下一步。教练在这里说话——他是反馈的声音，不是一个设置面板。 */
+function heroCard(it){
+  const c=coach();
+  return `<div class="hero">
+    <div class="hero-eye">现在做这个</div>
+    <div class="hero-code">${it.eye}</div>
+    <h3 class="hero-t">${it.t}</h3>
+    <p class="hero-s">${it.s}</p>
+    <button class="cta" id="${it.id}"${it.attr||''}>${it.cta} · 约 ${it.mins} 分钟</button>
+    ${it.foot?`<div class="tip" style="margin-top:10px">${it.foot}</div>`:''}
+    <div class="hero-say"><span class="w">${coachName()}：</span>${profileLine()}</div>
+  </div>`;
+}
+
+function allLit(){
+  return `<div class="hero"><div class="hero-eye">第一章</div>
+    <h3 class="hero-t">全部点亮</h3>
+    <p class="hero-s">14 个节点都过了闭卷锚题。接下来靠复训维持——它比新课更能说明你学会了没有。</p>
+    <button class="cta" id="go-card">复制成绩单</button></div>`;
+}
+
+/* 接下来：只预览，不给按钮。给出时间感，但不把选择权推回用户。 */
+function upNext(rest){
+  return `<div class="upnext"><h2>接下来 · 约 ${rest.reduce((s,i)=>s+i.mins,0)} 分钟</h2>
+    ${rest.map(i=>`<div class="up-r"><span class="up-t">${i.t}</span>
+      <span class="up-m">${i.mins} 分钟</span></div>`).join('')}</div>`;
+}
+
+/* 其余全部折叠。它们是参考，不是今天的任务。 */
+function drawers(P,pf){
+  let h='';
   if(P.weak){const pm=PAIRS[P.weak[0]];
-    h+=`<div class="sec"><h2>你的雷区</h2>
-      <div style="font-size:14px;line-height:1.6">「${pm.look}」——你在这个对上站错过 <b class="num">${P.weak[1].wrong}</b> 次。</div>
+    h+=dw('你的雷区',`<div class="dw-b">「${pm.look}」——你在这个对上站错过 <b class="num">${P.weak[1].wrong}</b> 次。</div>
       <div class="tip">区分线索：${pm.key}</div>
-      <div class="tip">它还没到复训时间（${new Date(P.weak[1].due).toLocaleDateString()}）。到点会自动出现在上面。</div></div>`;}
-  const lab=(SITE.x_lab||{}).cases||[];
-  if(lab.length){const lc=lab[0];
-    h+=`<div class="sec labcard"><h2>时事案卷 · 实验室<span class="labtag">未签字 · 不计分</span></h2>
-      <div style="font-size:15px;font-weight:600;line-height:1.5">${lc.company}</div>
-      <div class="tip">${lc.asof} 期 · 机器从 SEC 原始申报值确定性算出的形状${lc.letter?' · 监管已就相关科目问询':''}</div>
-      <button class="cta ghost" id="go-lab" style="margin-top:10px">读一卷（只读数，不定性）</button>
-      <div class="tip" style="margin-top:8px">这一卷由管线自动产出、尚未经人工签字，所以：不进错题档案、不进复训、不计校准分、不能点亮任何节点。</div></div>`;}
-  h+=`<div class="sec"><h2>进度</h2><div class="stats">
-    <div class="st"><div class="v num">${done}/${total}</div><div class="k">已点亮</div></div>
-    <div class="st"><div class="v num">${acc()==null?'—':acc()+'%'}</div><div class="k">首答正确率</div></div>
-    <div class="st"><div class="v num">${brier()==null?'—':brier()}</div><div class="k">校准分</div></div>
-    <div class="st"><div class="v num">${braveRate()==null?'—':braveRate()+'%'}</div><div class="k">敢判率</div></div>
-  </div></div>`;
+      <div class="tip">还没到复训时间（${new Date(P.weak[1].due).toLocaleDateString()}）。到点会自动出现在最上面。</div>`);}
+  if(P.read.length)
+    h+=dw(`读过的幕 · ${P.read.length}`,P.read.map(x=>
+      `<button class="rowbtn" data-story="${x.case_id}">
+        <span><span class="nm">${x.title}</span><span class="mt">${x.era} · ${x.subtitle}</span></span>
+        <span class="chipS lit">已读</span></button>`).join(''));
+  h+=dw('换教练的侧重',TONES.map(x=>
+    `<button class="pick-c slim" data-tone="${x.id}"${pf.tone===x.id?' aria-current="true"':''}>
+      <span class="pick-n">${x.k}</span><span class="pick-d">${x.d}</span></button>`).join(''));
   return h;
 }
+function dw(title,body){
+  return `<details class="dw"><summary>${title}</summary><div class="dw-in">${body}</div></details>`;
+}
+
 function viewAtlas(){
   const stN={lit:'已点亮',open:'可进入',locked:'未解锁'};
   const dues=new Set(duePairs().map(p=>PAIRS[p].node.id));
@@ -419,7 +652,7 @@ function viewAtlas(){
     for(const n of SITE.nodes.filter(x=>(x.domain||'通用')===d)){
       const st=stateOf(n);
       h+=`<button class="rowbtn" data-node="${n.id}" ${st==='locked'?'disabled':''}>
-        <span class="ic">${n.icon}</span>
+        <span class="ic">${nic(n.icon,'ic-lg')}</span>
         <span><span class="nm">${n.name}</span><span class="mt">${n.age||''} · ${(n.desc||'').slice(0,26)}…</span></span>
         ${dues.has(n.id)?'<span class="chipS due">复训</span>':''}
         <span class="chipS ${st}">${stN[st]}</span></button>`;
@@ -452,7 +685,7 @@ function viewMe(){
     <div class="st"><div class="v num">${S.gap.n?Math.round(100*S.gap.hits/S.gap.n)+'%':'—'}</div><div class="k">事后诸葛率</div></div>
   </div><div class="tip">「事后诸葛率」= 你自评说想到了、但推理链里其实没有的比例。它不扣分，只提醒。</div></div>`;
   if(arch.length){
-    h+=`<div class="sec"><h2>错题档案 · ${c?c.name:'教练'}的记忆</h2>`;
+    h+=`<div class="sec"><h2>错题档案 · ${coachName()}记住的</h2>`;
     arch.forEach(([p,a])=>{h+=`<div class="rowbtn" style="display:block">
       <div class="nm">「${PAIRS[p].look}」</div>
       <div class="mt">站错 ${a.wrong} 次 · 区分线索：${PAIRS[p].key}</div>
@@ -464,13 +697,13 @@ function viewMe(){
     <div class="tip" style="margin-top:10px">教练不是某个人的模拟，而是一个逐步了解你的判断习惯的角色。故事里说话的是那一幕的真实当事人，他们只说留下过记录的话；教练是<b>你的</b>，一直在旁边。</div>
     <div class="pf-tone" style="margin-top:10px">${TONES.map(x=>`<button data-tone="${x.id}" class="${(S.profile&&S.profile.tone)===x.id?'on':''}">${x.k}</button>`).join('')}</div></div>
     <div class="sec"><h2>数据</h2>
-    <button class="cta ghost" id="go-card">📋 复制成绩单</button>
+    <button class="cta ghost" id="go-card">${ic('clip')} 复制成绩单</button>
     <div style="height:8px"></div>
-    <button class="cta ghost" id="go-clear">🧹 清除本地草稿（先写的文字）</button>
+    <button class="cta ghost" id="go-clear">${ic('trash')} 清除本地草稿（先写的文字）</button>
     <div style="height:8px"></div>
     <button class="cta ghost" id="go-reset">重置全部进度</button>
     <div class="tip" style="margin-top:8px">你在「先写」里输入的文字只存在这台设备上，从不上传、不进记忆、不进 AI 的输入。</div></div>
-    <div class="sec"><h2>出处档案</h2><div class="tip">${(SITE.sources||[]).map(s=>s.url?`· <a href="${s.url}" target="_blank" rel="noopener" style="color:#a9c8ff">${s.name}</a>`:'· '+s.name).join('<br>')}</div></div>`;
+    <div class="sec"><h2>出处档案</h2><div class="tip">${(SITE.sources||[]).map(s=>s.url?`· <a href="${s.url}" target="_blank" rel="noopener" style="color:var(--state-unknown)">${s.name}</a>`:'· '+s.name).join('<br>')}</div></div>`;
   return h;
 }
 function bindView(){
@@ -482,37 +715,23 @@ function bindView(){
   if(g('go-story'))g('go-story').onclick=()=>openStory(g('go-story').dataset.cid);
   document.querySelectorAll('[data-story]').forEach(b=>b.onclick=()=>openStory(b.dataset.story));
   if(g('go-node'))g('go-node').onclick=e=>openNode(e.currentTarget.dataset.id);
-  if(g('go-coach'))g('go-coach').onclick=()=>pickCoach(false);
-  if(g('go-card'))g('go-card').onclick=()=>navigator.clipboard.writeText(scorecard()).then(()=>toast('成绩单已复制 📋'));
+  if(g('go-card'))g('go-card').onclick=()=>navigator.clipboard.writeText(scorecard()).then(()=>toast('成绩单已复制'));
   if(g('go-clear'))g('go-clear').onclick=()=>{Object.keys(localStorage).filter(k=>k.startsWith('ic:draft:')).forEach(k=>localStorage.removeItem(k));toast('本地草稿已清除');};
   if(g('go-reset'))g('go-reset').onclick=()=>{if(!confirm('清空全部进度（含档案与校准分）？'))return;
     S=fresh();lit=new Set();save();render();toast('已重置');};
   document.querySelectorAll('[data-node]').forEach(b=>b.onclick=()=>openNode(b.dataset.node));
 }
 
-/* ============ 选教练 ============ */
-function pickCoach(force){
-  const sh=document.getElementById('sheet');
-  sh.innerHTML=`<h3 style="margin:0 0 4px;font-size:18px">🎓 谁来陪你判卷？</h3>
-    <p class="tip">教练是<b>学派原型</b>，不是真人；点评由 AI 起草、经人工核对。判分与教练无关——教练只换视角，不换对错。</p>
-    ${COACHES.map(c=>`<button class="chk ${S.coach===c.id?'on':''}" data-c="${c.id}" style="flex-direction:column;align-items:flex-start;gap:4px">
-      <span style="font-size:16px;font-weight:700">${c.name}${S.coach===c.id?' ✓':''}</span>
-      <span style="font-size:13px;color:var(--violet)">${c.school}</span>
-      <span style="font-size:13px;color:var(--soft);line-height:1.55">${c.intro}</span>
-      <span style="font-size:13px;color:var(--soft);line-height:1.5;margin-top:4px">${c.x_identity||''}</span></button>`).join('')}
-    ${force?'':'<button class="cta ghost" id="sh-x" style="margin-top:6px">关闭</button>'}`;
-  openSheet(!force);
-  sh.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{
-    S.coach=b.dataset.c;save();track('coach_pick',{coach:S.coach});closeSheet();render();toast(coach().name+' 上任了 🎓');});
-  if(!force&&document.getElementById('sh-x'))document.getElementById('sh-x').onclick=closeSheet;
-}
 function openSheet(dismissable){
   document.getElementById('scrim').classList.add('show');
   document.getElementById('sheet').classList.add('show');
   document.getElementById('scrim').onclick=dismissable?closeSheet:null;
 }
 function closeSheet(){document.getElementById('scrim').classList.remove('show');
-  document.getElementById('sheet').classList.remove('show');}
+  document.getElementById('sheet').classList.remove('show');
+  /* 点遮罩关闭时也要通知开抽屉的人——否则质问台的 onClose 是死代码，
+     退出质问后决策幕不会重画，「已质问 N 轮」这类状态就丢了。 */
+  const cb=window.__sheetClose; window.__sheetClose=null; if(cb)cb();}
 /* story.js 用：填内容并弹出；可选 keep=true 表示内容自带关闭逻辑 */
 function sheet(html,keep){
   document.getElementById('sheet').innerHTML=html+(keep?'':`<button class="cta ghost" id="sh-x" style="margin-top:12px">关闭</button>`);
@@ -554,10 +773,10 @@ function cfHTML(cf,opts){
     }
   }
   if((cf.srcs||[]).length)
-    h+=`<div class="srcrow">${cf.srcs.map(s=>`<button class="src" data-src="${s.f}">🔗 ${s.t}</button>`).join('')}</div>`;
-  if(cf.letter)h+=`<div class="srcrow"><a class="src" href="${cf.letter.url}" target="_blank" rel="noopener">📄 SEC 问询函 · ${cf.letter.filed}</a></div>`;
+    h+=`<div class="srcrow">${cf.srcs.map(s=>`<button class="src" data-src="${s.f}">${ic('link')} ${s.t}</button>`).join('')}</div>`;
+  if(cf.letter)h+=`<div class="srcrow"><a class="src" href="${cf.letter.url}" target="_blank" rel="noopener">${ic('doc')} SEC 问询函 · ${cf.letter.filed}</a></div>`;
   if(cf.disclaimer)h+=`<p class="cfdis">${cf.disclaimer}</p>`;
-  if(opts.teach)h+=`<button class="hintbtn" id="cf-teach" style="margin-top:10px">📚 补课：这一节的概念讲解</button>`;
+  if(opts.teach)h+=`<button class="hintbtn" id="cf-teach" style="margin-top:10px">${ic('book')} 补课：这一节的概念讲解</button>`;
   return h;
 }
 
@@ -606,7 +825,7 @@ document.getElementById('stage-x').onclick=()=>{stage.classList.remove('show');R
 function mat(){
   const n=R.node, cf=n.x_casefile;
   const scr=(n.screens||[]).filter(s=>!s.quiz);
-  let body=`<div class="step-t">案卷材料</div><h3>${n.icon} ${n.name}</h3>`;
+  let body=`<div class="step-t">案卷材料</div><h3>${nic(n.icon)} ${n.name}</h3>`;
   if(cf){                                   // ③ 案卷优先，讲解按需
     body+=cfHTML(cf,{teach:scr.length>0});
   }else{                                    // 基础概念节点：仍走教学屏
@@ -618,7 +837,7 @@ function mat(){
       const c=document.getElementById('st-canon');if(c)c.onclick=()=>showCanon(n);
       const tb=document.getElementById('cf-teach');
       if(tb)tb.onclick=()=>{document.getElementById('sheet').innerHTML=
-        `<h3 style="margin:0 0 6px;font-size:16px">📚 补课 · ${n.name}</h3>`+
+        `<h3 style="margin:0 0 6px;font-size:16px">${ic('book')} 补课 · ${n.name}</h3>`+
         scr.map(s=>`${s.h?`<h4 style="font-size:15px;margin:14px 0 4px">${s.h}</h4>`:''}${s.body||''}`).join('')+
         `<button class="cta ghost" id="sh-x" style="margin-top:10px">看完了</button>`;
         openSheet(true);document.getElementById('sh-x').onclick=closeSheet;};
@@ -628,7 +847,7 @@ function mat(){
 function showFact(fid){
   const f=(SITE.x_facts||{})[fid];
   document.getElementById('sheet').innerHTML=f?
-    `<h3 style="margin:0 0 6px;font-size:16px">🔗 溯源</h3>
+    `<h3 style="margin:0 0 6px;font-size:16px">${ic('link')} 溯源</h3>
      <p style="font-size:15px;line-height:1.7"><b>${f.item}</b><br>${f.value}</p>
      <p class="tip">口径：${f.basis||'—'}<br>档案：${f.accession} · ${f.line}<br>公司：${f.company}</p>
      <p class="tip">这个数字不是我们写的，是从原始申报文件里取的——行号在上面，任何人都能复核。</p>
@@ -650,7 +869,7 @@ function wr(){
   const body=`<div class="step-t">第 ${R.steps.indexOf('write')} 步 · 先写</div>
     <p class="prompt">用一两句话说：你觉得可疑吗？凭什么？</p>
     <textarea class="draft" id="st-draft" placeholder="想到什么写什么，不判分。写完这一步的收益已经拿到了——研究里它是整套流程效应最稳的一环。"></textarea>
-    <div class="tip">🔒 这段文字<b>只存在这台设备上</b>：不上传、不进记忆、不进 AI 的输入。稍后你会拿它和专家推理链自己对照。</div>`;
+    <div class="tip">${ic('lock')} 这段文字<b>只存在这台设备上</b>：不上传、不进记忆、不进 AI 的输入。稍后你会拿它和专家推理链自己对照。</div>`;
   return{body,foot:`<div style="display:flex;gap:8px">
       <button class="cta ghost" id="st-skip" style="flex:0 0 40%">想不出来</button>
       <button class="cta" id="st-next">写好了</button></div>`,
@@ -710,7 +929,7 @@ function cc(){
   if(R.fb)body+=`<div class="fb${R.fbGood?' good':''}">${R.fb}</div>`;
   if(R.cl)body+=`<div class="coach"><span class="w">${R.cl.who}：</span><span>${R.cl.t}</span></div>`;
   if(!R.done&&(q.hints||[]).length){
-    body+=`<button class="hintbtn" id="st-hint">💡 提示（${R.hint}/${q.hints.length}）</button>`;
+    body+=`<button class="hintbtn" id="st-hint">${ic('bulb')} 提示（${R.hint}/${q.hints.length}）</button>`;
     if(R.hint)body+=`<div class="hintbox">${q.hints.slice(0,R.hint).map((h,i)=>`${'①②③'[i]} ${h}`).join('<br>')}</div>`;
   }
   const more=R.quizIdx<R.mainQ.length-1;
@@ -746,7 +965,7 @@ function maybeIntervene(ctx){
   const l=line(why);
   document.getElementById('sheet').innerHTML=
     `<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-       <span style="font-size:22px">🎓</span><b style="font-size:16px">${c.name}</b>
+       <span class="ic-hero">${ic('coach')}</span><b style="font-size:16px">${c.name}</b>
        <span class="tip" style="margin:0 0 0 auto">教练主动来找你</span></div>
      ${l?`<p style="font-size:15px;line-height:1.7;font-weight:600">${l.t}</p>`:''}
      <p style="font-size:14.5px;line-height:1.75">${body}</p>
@@ -844,7 +1063,7 @@ function an(){
   if(!R.anchor){  // 基础节点（无 x_anchors）：结论即点亮
     return{body:`<div class="step-t">收尾</div><h3>这一节没有闭卷锚题</h3>
       <p>基础概念节点走两拍。判完结论就可以点亮。</p>`,
-      foot:`<button class="cta" id="st-light">✨ 点亮它</button>`,
+      foot:`<button class="cta" id="st-light">${ic('spark')} 点亮它</button>`,
       bind(){document.getElementById('st-light').onclick=()=>lightUp();}};
   }
   const q=R.anchor.quiz;
@@ -857,7 +1076,7 @@ function an(){
     let cls='';if(R.aDone&&o.ok)cls=' right';else if(R.aTried.has(i)&&!o.ok)cls=o.na?' naf':' wrong';
     return `<button class="opt${cls}" data-a="${i}" ${lock||R.aTried.has(i)?'disabled':''}>${o.t}</button>`;}).join('');
   if(R.aFb)body+=`<div class="fb${R.aPass?' good':''}">${R.aFb}</div>`;
-  return{body,foot:R.aPass?`<button class="cta" id="st-light">✨ 点亮它</button>`
+  return{body,foot:R.aPass?`<button class="cta" id="st-light">${ic('spark')} 点亮它</button>`
       :R.aDone?`<button class="cta ghost" id="st-retry">再练一遍这一节</button>`
       :`<button class="cta" disabled>先作答</button>`,
     bind(){
@@ -887,7 +1106,7 @@ function lightUp(){
   const done=lit.size===SITE.nodes.length;
   if(done&&!S.finished){S.finished=Date.now();save();track('chapter_complete',{});}
   document.getElementById('stage-body').innerHTML=
-    `<div style="text-align:center;padding:22px 4px"><div style="font-size:46px">✨${n.icon}✨</div>
+    `<div style="text-align:center;padding:22px 4px"><div class="pop-ic">${nic(n.icon)}</div>
       <h3>「${n.name}」点亮了</h3>
       <p class="tip">你是靠一道闭卷题点亮它的——不是靠看完材料。</p>
       ${unlocked.length?`<p>新的案卷解锁：${unlocked.join('、')}</p>`:''}
@@ -961,7 +1180,7 @@ function drawReview(){
   }
   const q=it.quiz,pm=PAIRS[it.pid];
   let body=`<div class="step-t">复训 · 闭卷</div>
-    <h3 style="font-size:16px">🔁 ${pm?pm.look:it.pid}</h3>
+    <h3 style="font-size:16px">${ic('repeat')} ${pm?pm.look:it.pid}</h3>
     <p class="prompt">${q.q}</p>
     <div class="seg">${CONF.map(c=>`<button data-cf="${c.v}" class="${R.conf===c.v?'on':''}" ${R.done?'disabled':''}>${c.t}</button>`).join('')}</div>`;
   const lock=R.done||R.conf==null;

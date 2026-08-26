@@ -2,17 +2,27 @@
    规范：SPEC_DEV.md §3（可读性硬指标）/ §4（禁用清单与史诗手段白名单）。 */
 
 .sty{position:fixed;inset:0;z-index:60;display:none;flex-direction:column;
-  background:var(--surface-stage);color:var(--text-narrative-color)}
+  background:var(--surface-stage);
+  /* 幕是暗场：在容器上把整套语义色切到「幕」的那一份，后代不必逐条改写。
+     漏掉这一步的后果实测过：.sty-bar .x 掉到 2.78:1、.vo .who 掉到 2.97:1。 */
+  --ink:var(--text-narrative-color);
+  --soft:var(--text-meta-on-stage);
+  --gold:var(--state-focus-on-stage);
+  --bad:var(--state-flag-on-dark);
+  --line:var(--c-rule-on-stage);
+  --card:var(--surface-stage-alt);
+  --on-gold:var(--surface-stage);
+  color:var(--ink)}
 .sty.show{display:flex}
 
 /* 顶栏：极简，只留退出与进度 */
 .sty-bar{flex:none;display:flex;align-items:center;gap:var(--space-3);
   padding:calc(var(--space-3) + env(safe-area-inset-top)) var(--space-4) var(--space-2)}
 .sty-bar .x{min-height:var(--tap-min);padding:0 var(--space-2);font-size:var(--size-15);
-  color:var(--text-meta-color);background:none;border:none}
+  color:var(--soft);background:none;border:none}
 .sty-dots{flex:1;display:flex;gap:6px;align-items:center}
 .sty-dots i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.16)}
-.sty-dots i.on{background:var(--state-focus)}
+.sty-dots i.on{background:var(--gold)}
 .sty-dots i.done{background:rgba(255,255,255,.42)}
 
 /* 幕体 */
@@ -21,77 +31,86 @@
   display:flex;flex-direction:column;justify-content:center;min-height:0}
 .sty-foot{flex:none;padding:var(--space-3) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom))}
 
-.eyebrow{font-size:var(--size-13);letter-spacing:.22em;color:var(--state-focus);
+.eyebrow{font-size:var(--size-13);letter-spacing:.22em;color:var(--gold);
   margin-bottom:var(--space-3);text-transform:none}
 .sty h2{font-size:clamp(28px,8.4vw,44px);line-height:var(--lh-tight);margin:0 0 var(--space-5);
   font-weight:800;letter-spacing:-.01em;max-width:14em}
 .sty .ln{font-size:var(--size-narrative);line-height:var(--lh-read);
-  margin:0 0 var(--space-4);max-width:var(--measure-read);color:var(--text-narrative-color)}
-.sty .ln.dim{color:var(--text-meta-color)}
+  margin:0 0 var(--space-4);max-width:var(--measure-read);color:var(--ink)}
+.sty .ln.dim{color:var(--soft)}
 
 /* 画外音：教练常驻，不打断 */
 .vo{display:flex;gap:var(--space-2);align-items:flex-start;margin-top:var(--space-5);
-  padding:var(--space-3) var(--space-3);border-left:2px solid var(--state-focus);
+  padding:var(--space-3) var(--space-3);border-left:2px solid var(--gold);
   background:rgba(255,209,102,.07);border-radius:0 var(--radius-sm) var(--radius-sm) 0}
-.vo .who{flex:none;font-size:var(--size-13);color:var(--state-focus);font-weight:700}
-.vo .txt{font-size:var(--size-15);line-height:var(--lh-ui);color:var(--text-narrative-color);max-width:var(--measure-read)}
+.vo .who{flex:none;font-size:var(--size-13);color:var(--gold);font-weight:700}
+.vo .txt{font-size:var(--size-15);line-height:var(--lh-ui);color:var(--ink);max-width:var(--measure-read)}
 
 /* 证据面板：等宽数字 + 原档质感 */
 .ev{border:1px solid rgba(255,255,255,.14);border-radius:var(--radius-md);overflow:hidden;
   margin:var(--space-4) 0;background:rgba(255,255,255,.04)}
 .ev .hd,.ev .rw{display:grid;grid-template-columns:1.45fr 1fr 1fr;align-items:center}
-.ev .hd{background:rgba(255,255,255,.07);font-size:var(--size-13);color:var(--text-meta-color);font-weight:700}
+.ev .hd{background:rgba(255,255,255,.07);font-size:var(--size-13);color:var(--soft);font-weight:700}
 .ev .hd>*,.ev .rw>*{padding:var(--space-3) var(--space-2);text-align:right}
 .ev .hd>*:first-child,.ev .rw>*:first-child{text-align:left;padding-left:var(--space-3)}
 .ev .rw{border-top:1px solid rgba(255,255,255,.1);font-size:var(--size-17)}
-.ev .rw>*:first-child{font-size:var(--size-13);color:var(--text-meta-color)}
-.ev .rw .v{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
-.ev .rw .v.flag{color:var(--state-flag-on-dark);font-weight:700}
+.ev .rw>*:first-child{font-size:var(--size-13);color:var(--soft)}
+.ev .rw .v{font-family:var(--font-mono);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+.ev .rw .v.flag{color:var(--bad);font-weight:700}
 .derv{display:flex;gap:var(--space-2);flex-wrap:wrap;margin:var(--space-3) 0}
 .derv .d{flex:1 1 44%;background:rgba(255,255,255,.06);border-radius:var(--radius-sm);
   padding:var(--space-3);text-align:center}
-.derv .d .k{font-size:var(--size-13);color:var(--text-meta-color)}
-.derv .d .v{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;margin-top:2px}
-.derv .d .v.flag{color:var(--state-flag-on-dark)}
+.derv .d .k{font-size:var(--size-13);color:var(--soft)}
+.derv .d .v{font-family:var(--font-mono);font-size:var(--size-24);font-weight:800;
+  font-variant-numeric:tabular-nums;margin-top:2px}
+.derv .d .v.flag{color:var(--bad)}
 
 /* 原档引文：等宽 + 行号，这是「档案感」的主要来源 */
 .doc{margin:var(--space-4) 0;border:1px solid rgba(255,255,255,.16);border-radius:var(--radius-md);
   background:rgba(0,0,0,.28);overflow:hidden}
 .doc .dh{display:flex;gap:var(--space-2);align-items:center;padding:var(--space-2) var(--space-3);
-  background:rgba(255,255,255,.06);font-size:var(--size-13);color:var(--text-meta-color)}
-.doc .dh .ln{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
-  margin:0;font-size:var(--size-13);color:var(--state-focus)}
+  background:rgba(255,255,255,.06);font-size:var(--size-13);color:var(--soft)}
+.doc .dh .ln{font-family:var(--font-mono);
+  margin:0;font-size:var(--size-13);color:var(--gold)}
 .doc .dt{padding:var(--space-3) var(--space-3);font-size:var(--size-17);line-height:1.95;
   max-width:var(--measure-read)}
-.doc .dt b{color:var(--state-focus);font-weight:700}
+.doc .dt b{color:var(--gold);font-weight:700}
 
 /* 决策 */
 .pick{display:block;width:100%;text-align:left;margin-bottom:var(--space-2);
   background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);
   border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);
-  font-size:var(--size-17);line-height:var(--lh-ui);color:var(--text-narrative-color);
+  font-size:var(--size-17);line-height:var(--lh-ui);color:var(--ink);
   min-height:var(--tap-rec)}
-.pick .kd{display:block;font-size:var(--size-13);color:var(--text-meta-color);margin-bottom:2px}
-.pick.on{border-color:var(--state-focus);background:rgba(255,209,102,.14)}
+.pick .kd{display:block;font-size:var(--size-13);color:var(--soft);margin-bottom:2px}
+.pick.on{border-color:var(--gold);background:rgba(255,209,102,.14)}
 .seg2{display:flex;border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-md);
   overflow:hidden;margin:var(--space-3) 0}
 .seg2 button{flex:1;min-height:var(--tap-rec);font-size:var(--size-15);
-  background:none;color:var(--text-narrative-color);border-right:1px solid rgba(255,255,255,.14)}
+  background:none;color:var(--ink);border-right:1px solid rgba(255,255,255,.14)}
 .seg2 button:last-child{border-right:none}
-.seg2 button.on{background:var(--state-focus);color:#241c05;font-weight:700}
+.seg2 button.on{background:var(--gold);color:var(--on-gold);font-weight:700}
 
 /* 三列对照（你 / 他们 / 官方认定） */
 .trio{display:flex;flex-direction:column;gap:var(--space-3);margin:var(--space-4) 0}
 .trio .c{border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);
   border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04)}
-.trio .c .lbl{font-size:var(--size-13);letter-spacing:.14em;color:var(--text-meta-color);margin-bottom:var(--space-2)}
+.trio .c .lbl{font-size:var(--size-13);letter-spacing:.14em;color:var(--soft);margin-bottom:var(--space-2)}
 .trio .c .hd2{font-size:var(--size-17);line-height:var(--lh-ui);font-weight:700}
-.trio .c .dt2{font-size:var(--size-15);line-height:var(--lh-read);color:var(--text-meta-color);margin-top:var(--space-2)}
-.trio .c.you{border-color:var(--state-focus)}
-.trio .c.canon{border-color:var(--state-flag-on-dark);background:rgba(226,96,108,.08)}
+.trio .c .dt2{font-size:var(--size-15);line-height:var(--lh-read);color:var(--soft);margin-top:var(--space-2)}
+.trio .c.you{border-color:var(--gold)}
+.trio .c.canon{border-color:var(--bad);background:rgba(226,96,108,.08)}
 
 /* knowhow：亮场读区（长文用正极性，可读性最优） */
-.kn{background:var(--surface-read);color:var(--text-body-color);
+.kn{background:var(--surface-read);
+  --ink:var(--text-body-color);
+  --soft:var(--text-meta-color);
+  --gold:var(--state-focus);
+  --bad:var(--state-flag);
+  --line:var(--surface-rule);
+  --card:var(--surface-read-alt);
+  --on-gold:var(--surface-card);
+  color:var(--ink);
   border-radius:var(--radius-lg);padding:var(--space-4) var(--space-4);margin:var(--space-4) 0}
 .kn h3{font-size:var(--size-17);margin:0 0 var(--space-3);letter-spacing:.06em}
 .kn li{font-size:var(--size-17);line-height:var(--lh-read);margin-bottom:var(--space-3);
@@ -102,35 +121,64 @@
 .fade3{display:flex;flex-direction:column;gap:var(--space-2);margin:var(--space-4) 0}
 .fade3 .f{border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);
   background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.22)}
-.fade3 .f .t{font-size:var(--size-13);color:var(--text-meta-color);margin-bottom:2px}
+.fade3 .f .t{font-size:var(--size-13);color:var(--soft);margin-bottom:2px}
 .fade3 .f .b{font-size:var(--size-17);line-height:var(--lh-ui)}
-.fade3 .f.tag{border-style:solid;border-color:var(--state-focus);background:rgba(255,209,102,.12)}
-.fade3 .f.tag .b{font-weight:800;color:var(--state-focus)}
+.fade3 .f.tag{border-style:solid;border-color:var(--gold);background:rgba(255,209,102,.12)}
+.fade3 .f.tag .b{font-weight:800;color:var(--gold)}
 
 /* 问人物 */
 .askbtn{display:flex;align-items:center;justify-content:center;gap:var(--space-2);
   width:100%;min-height:var(--tap-rec);border-radius:var(--radius-md);
-  border:1px dashed var(--state-focus);color:var(--state-focus);
+  border:1px dashed var(--gold);color:var(--gold);
   background:rgba(255,209,102,.08);font-size:var(--size-15);margin-bottom:var(--space-2)}
 .qchips{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:var(--space-3) 0}
 .qchips button{border:1px solid rgba(255,255,255,.22);border-radius:var(--radius-pill);
-  padding:10px var(--space-3);font-size:var(--size-15);color:var(--text-narrative-color);
+  padding:10px var(--space-3);font-size:var(--size-15);color:var(--ink);
   background:rgba(255,255,255,.05);min-height:var(--tap-min)}
 .askin{display:flex;gap:var(--space-2);margin-top:var(--space-3)}
 .askin input{flex:1;min-height:var(--tap-rec);border-radius:var(--radius-md);
   border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);
-  color:var(--text-narrative-color);padding:0 var(--space-3);font-size:var(--size-17);font-family:inherit}
+  color:var(--ink);padding:0 var(--space-3);font-size:var(--size-17);font-family:inherit}
 .askin button{min-height:var(--tap-rec);padding:0 var(--space-4);border-radius:var(--radius-md);
-  background:var(--state-focus);color:#241c05;font-weight:700;font-size:var(--size-15)}
+  background:var(--gold);color:var(--on-gold);font-weight:700;font-size:var(--size-15)}
 .turn{margin:var(--space-4) 0}
-.turn .me{font-size:var(--size-17);color:var(--state-focus);margin-bottom:var(--space-2)}
+.turn .me{font-size:var(--size-17);color:var(--gold);margin-bottom:var(--space-2)}
 
 .sty-cta{display:block;width:100%;min-height:var(--tap-rec);border-radius:var(--radius-md);
-  background:var(--state-focus);color:#241c05;font-size:var(--size-17);font-weight:700}
-.sty-cta.ghost{background:rgba(255,255,255,.1);color:var(--text-narrative-color)}
+  background:var(--gold);color:var(--on-gold);font-size:var(--size-17);font-weight:700}
+.sty-cta.ghost{background:rgba(255,255,255,.1);color:var(--ink)}
 .sty-cta:disabled{opacity:.4}
 
 @media(prefers-reduced-motion:no-preference){
   .sty-body>*{animation:rise var(--dur-trans) ease both}
   @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+}
+
+/* 结束屏：单个居中容器，桌面双栏时要横跨两栏 */
+.fin{text-align:center}
+.fin h2{margin:var(--space-3) auto var(--space-4)}
+.fin .ln{margin-left:auto;margin-right:auto}
+.fin .vo{display:inline-flex;text-align:left}
+
+/* ===== 幕的桌面双栏：叙事 | 原档对照 =====
+   手机是自然流：读一段，再翻一张表。桌面有横向余量，就该让「他说了什么」
+   和「档里到底写了什么」同时落在视野里——这正是这个产品要教的那个动作本身。
+   不改 DOM：叙事类子元素留在左栏，证据/原档类推到右栏，dense 让右栏回填前面的空位，
+   所以阅读顺序（也是无障碍顺序）仍旧是 story.js 生成的那个顺序。 */
+@media(min-width:1024px){
+  .sty-body{display:grid;align-content:center;grid-auto-flow:row dense;
+    grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);
+    column-gap:var(--space-5);
+    width:100%;max-width:1040px;margin:0 auto;
+    padding:var(--space-5) var(--space-5) var(--space-5)}
+  .sty-body>*{grid-column:1;min-width:0}
+  .sty-body>.ev,.sty-body>.derv,.sty-body>.doc,.sty-body>.trio{
+    grid-column:2;align-self:start;margin-top:0}
+  /* 抬头与大标题横跨两栏，否则右栏会从标题那一行就开始，读起来像两篇文章 */
+  .sty-body>.eyebrow,.sty-body>h2,.sty-body>.fin{grid-column:1/-1}
+  /* 单栏时用 measure 限宽；双栏时栏宽自己就是 measure，再限一次会把左栏挤瘦 */
+  .sty-body>.ln,.sty-body .vo .txt{max-width:none}
+  .sty-foot{width:100%;max-width:1040px;margin:0 auto;
+    padding-left:var(--space-5);padding-right:var(--space-5)}
+  .sty-bar{width:100%;max-width:1040px;margin:0 auto}
 }

@@ -4,3 +4,4 @@ server/*.exe
 *.db
 __pycache__/
 .env
+.gstack/

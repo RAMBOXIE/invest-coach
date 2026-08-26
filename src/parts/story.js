@@ -51,7 +51,7 @@
       `<div class="d"><div class="k">${d.k}</div><div class="v${d.flag ? ' flag' : ''}">${d.v}</div></div>`).join('') + `</div>`;
   }
   function docQuote(q) {
-    return `<div class="doc"><div class="dh"><span>📄 ${q.src}</span><span class="ln">${q.line}</span></div>
+    return `<div class="doc"><div class="dh"><span>${ic('doc')} ${q.src}</span><span class="ln">${q.line}</span></div>
       <div class="dt">${q.text}</div></div>`;
   }
   const md = s => String(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
@@ -59,13 +59,13 @@
     if (!mine || !mine.verdict) return '';
     const r = choiceReading(STORY, mine, ST.conf, ST.stats || { pressed: 0, broke: 0 }, ST.prior);
     const nm = coachName();
-    return `<div class="reading"><div class="rd-hd"><span class="rd-av">🎓</span>
+    return `<div class="reading"><div class="rd-hd"><span class="rd-av">${ic('coach')}</span>
         <span class="rd-nm">${nm}读你的这一次判断</span></div>
       <p class="rd-h">${md(r.head)}</p><p class="rd-b">${md(r.body)}</p>
       ${r.extra.map(x => `<p class="rd-x">${md(x)}</p>`).join('')}</div>`;
   }
   function vo(t) {
-    const c = (typeof coach === 'function' && coach()) ? coach().name : '教练';
+    const c = (typeof coachName === "function") ? coachName() : "你的教练";
     return t ? `<div class="vo"><span class="who">${c}</span><span class="txt">${t}</span></div>` : '';
   }
 
@@ -101,7 +101,7 @@
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
         ${evPanel(b.panel)}${derived(b.derived)}
         <div class="qchips">${(b.panel.rows || []).filter(r => r.fact).map(r =>
-          `<button data-f="${r.fact}">🔗 ${r.k}</button>`).join('')}</div>
+          `<button data-f="${r.fact}">${ic('link')} ${r.k}</button>`).join('')}</div>
         ${vo(b.narration)}`,
       foot: `<button class="sty-cta" id="sty-next">继续</button>`,
       bind() { bindFacts(); }
@@ -111,7 +111,7 @@
     bodyEl.querySelectorAll('[data-f]').forEach(x => x.onclick = () => {
       const f = F(x.dataset.f);
       if (!f) return;
-      sheet(`<h3 style="margin:0 0 8px;font-size:17px">🔗 溯源</h3>
+      sheet(`<h3 style="margin:0 0 8px;font-size:17px">${ic('link')} 溯源</h3>
         <p style="font-size:17px;line-height:1.8"><b>${f.item}</b><br>${f.value}</p>
         <p class="tip">口径：${f.basis || '—'}<br>档案：${f.accession} · ${f.line}<br>公司：${f.company}</p>
         <p class="tip">这个数字不是我们写的，是从原始申报文件里取的。行号在上面，任何人都能复核。</p>`);
@@ -124,7 +124,7 @@
     return {
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
         <p class="ln">${b.prompt}</p>
-        ${b.ask_enabled && STORY.interrogation ? `<button class="askbtn" id="sty-ask">⚖️ 先质问 ${STORY.cast[0].name}（${STORY.interrogation.testimony.length} 条证词）</button>` : ''}
+        ${b.ask_enabled && STORY.interrogation ? `<button class="askbtn" id="sty-ask">${ic('scale')} 先质问 ${STORY.cast[0].name}（${STORY.interrogation.testimony.length} 条证词）</button>` : ''}
         ${b.options.map(o => `<button class="pick${ST.pick === o.id ? ' on' : ''}" data-p="${o.id}">
             <span class="kd">${o.kind}</span>${o.t}</button>`).join('')}
         ${picked ? `<div class="eyebrow" style="margin-top:20px">你有多大把握？</div>
@@ -145,7 +145,7 @@
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
         ${docQuote(b.quote)}
         ${b.lines.map(l => `<p class="ln">${l}</p>`).join('')}
-        <div class="qchips"><button data-f="${b.quote.fact}">🔗 核这个数字</button></div>
+        <div class="qchips"><button data-f="${b.quote.fact}">${ic('link')} 核这个数字</button></div>
         ${vo(b.narration)}`,
       foot: `<button class="sty-cta" id="sty-next">那我的判断呢？</button>`,
       bind() { bindFacts(); }
@@ -233,11 +233,11 @@
 
   function finish() {
     const node = STORY.knowledge_node;
-    bodyEl.innerHTML = `<div style="text-align:center">
-      <div style="font-size:52px">📄</div>
-      <h2 style="margin:12px auto 16px">这一幕读完了</h2>
-      <p class="ln" style="margin-left:auto;margin-right:auto">你刚才做的判断、以及那段藏在第 18 页的话，会跟着「${STORY.beats.find(x => x.kind === 'abstract').label}」这个标签进入你的复训队列。</p>
-      <p class="ln dim" style="margin-left:auto;margin-right:auto">下次它来找你的时候，会换一家公司——因为判据要能离开这个故事，才算是你的。</p>
+    bodyEl.innerHTML = `<div class="fin">
+      <div class="fin-ic">${ic('doc')}</div>
+      <h2>这一幕读完了</h2>
+      <p class="ln">你刚才做的判断、以及那段藏在第 18 页的话，会跟着「${STORY.beats.find(x => x.kind === 'abstract').label}」这个标签进入你的复训队列。</p>
+      <p class="ln dim">下次它来找你的时候，会换一家公司——因为判据要能离开这个故事，才算是你的。</p>
       ${vo('故事负责让你记住。练习负责让你带走。两样都要。')}</div>`;
     footEl.innerHTML = `<button class="sty-cta" id="sty-toprac">去练这条判据</button>
       <div style="height:8px"></div>
@@ -269,7 +269,7 @@
   function drawAsk() {
     const A = STORY.ask, c = STORY.cast[0];
     sheet(`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-        <span style="font-size:26px">${c.avatar}</span>
+        <span class="ask-av">${ic('me')}</span>
         <div><div style="font-size:17px;font-weight:700">${c.name}</div>
           <div class="tip" style="margin:0">${c.role} · ${c.rule}</div></div></div>
       <p class="tip">${A.intro}</p>

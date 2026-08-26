@@ -1,7 +1,7 @@
 /* 质问台（法庭感）+ 教练解读卡。数值取自 design/tokens.json 生成的变量。 */
 
 .ct-head{display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-2)}
-.ct-av{font-size:30px;line-height:1}
+.ct-av{line-height:1}
 .ct-nm{font-size:var(--size-17);font-weight:800;color:var(--text-body-color)}
 .ct-role{font-size:var(--size-13);color:var(--text-meta-color)}
 .ct-rule{font-size:var(--size-13);line-height:var(--lh-ui);color:var(--text-meta-color);
@@ -12,8 +12,8 @@
 .ct-turn{margin:var(--space-4) 0}
 .ct-you{font-size:var(--size-15);color:var(--brand-violet);font-weight:700;margin-bottom:var(--space-2);text-align:right}
 .ct-say{background:var(--surface-read-alt);border-radius:var(--radius-md);
-  padding:var(--space-3) var(--space-3);border-left:3px solid #b9a8d8}
-.ct-say.broke{border-left-color:var(--state-flag);background:#fdeef0}
+  padding:var(--space-3) var(--space-3);border-left:3px solid var(--c-violet-300)}
+.ct-say.broke{border-left-color:var(--state-flag);background:var(--c-red-wash)}
 .ct-bang{font-size:var(--size-13);font-weight:800;color:var(--state-flag);
   letter-spacing:.1em;margin-bottom:var(--space-2)}
 .ct-txt{font-size:var(--size-17);line-height:1.9;color:var(--text-body-color)}
@@ -24,20 +24,20 @@
 
 .ct-acts{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:var(--space-3) 0}
 .ct-btn{flex:1 1 46%;min-height:var(--tap-rec);border-radius:var(--radius-md);
-  font-size:var(--size-15);font-weight:700;border:1px solid var(--line,#e2d8c4)}
-.ct-btn.press{background:#f0e8fa;color:var(--brand-violet);border-color:#d5c2ee}
-.ct-btn.evi{background:var(--state-focus);color:#241c05;border-color:transparent}
-.ct-btn.nxt{flex:1 1 100%;background:#efe9db;color:var(--text-body-color)}
+  font-size:var(--size-15);font-weight:700;border:1px solid var(--line)}
+.ct-btn.press{background:var(--c-violet-wash);color:var(--brand-violet);border-color:var(--c-violet-300)}
+.ct-btn.evi{background:var(--gold);color:var(--on-gold);border-color:transparent}
+.ct-btn.nxt{flex:1 1 100%;background:var(--surface-shell-alt);color:var(--text-body-color)}
 .ct-card{display:block;width:100%;text-align:left;min-height:var(--tap-rec);
-  background:#fff;border:2px solid #e2d8c4;border-radius:var(--radius-md);
+  background:var(--surface-card);border:2px solid var(--line);border-radius:var(--radius-md);
   padding:var(--space-3) var(--space-4);margin-bottom:var(--space-2);
   font-size:var(--size-17);line-height:var(--lh-ui);color:var(--text-body-color)}
 .ct-card:hover{border-color:var(--state-focus)}
 .ct-done{font-size:var(--size-15);color:var(--text-meta-color);text-align:center;margin:var(--space-4) 0}
 
 /* 教练对这一次选择的解读 */
-.reading{background:#eef0ff;border-radius:var(--radius-lg);
-  padding:var(--space-4);margin:var(--space-4) 0;border:1px solid #ccd2f5}
+.reading{background:var(--c-violet-wash);border-radius:var(--radius-lg);
+  padding:var(--space-4);margin:var(--space-4) 0;border:1px solid var(--c-violet-300)}
 .rd-hd{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-3)}
 .rd-av{font-size:22px}
 .rd-nm{font-size:var(--size-13);letter-spacing:.1em;color:var(--brand-violet);font-weight:700}
@@ -45,14 +45,26 @@
   color:var(--text-body-color);margin:0 0 var(--space-2)}
 .rd-b,.rd-x{font-size:var(--size-17);line-height:var(--lh-read);
   color:var(--text-body-color);margin:var(--space-2) 0;max-width:var(--measure-read)}
-.rd-x{padding-top:var(--space-2);border-top:1px dashed #ccd2f5;color:#4a4470}
+.rd-x{padding-top:var(--space-2);border-top:1px dashed var(--c-violet-300);color:var(--c-violet-700)}
 .rd-b b,.rd-x b{color:var(--brand-violet)}
 
 /* 教练画像卡（今日页） */
-.pf{background:rgba(134,70,184,.14);border:1px solid rgba(134,70,184,.34)}
-.pf .pf-t{font-size:var(--size-15);line-height:var(--lh-read);color:var(--text-narrative-color)}
+.pf{background:var(--surface-card);border:1px solid var(--surface-rule)}
+.pf .pf-t{font-size:var(--size-17);line-height:var(--lh-read);color:var(--text-body-color)}
 .pf .pf-tone{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-3)}
 .pf .pf-tone button{flex:1 1 46%;min-height:var(--tap-min);border-radius:var(--radius-pill);
-  border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);
-  color:var(--text-narrative-color);font-size:var(--size-13);padding:8px 10px}
-.pf .pf-tone button.on{border-color:var(--state-focus);background:rgba(255,209,102,.16);color:var(--state-focus);font-weight:700}
+  border:1px solid var(--surface-rule);background:transparent;
+  color:var(--text-body-color);font-size:var(--size-13);padding:8px 10px}
+.pf .pf-tone button.on{border-color:var(--state-focus);background:var(--c-amber-wash);color:var(--state-focus);font-weight:700}
+
+/* 质问台的常驻出口。原来只能点上方 20dvh 的遮罩退出——手机上零提示，
+   用户进了质问就回不到决策。它跟着抽屉滚动区吸顶。 */
+.ct-head{position:sticky;top:calc(var(--space-4) * -1);z-index:1;
+  background:var(--surface-card);padding:var(--space-3) 0 var(--space-2)}
+.ct-who{flex:1;min-width:0}
+.ct-x{display:inline-flex;align-items:center;gap:6px;flex:none;
+  min-height:var(--tap-min);padding:0 var(--space-3);border-radius:var(--radius-pill);
+  border:1px solid var(--line);background:transparent;
+  color:var(--text-meta-color);font-size:var(--size-13)}
+.ask-av,.ct-av{display:inline-flex;font-size:var(--size-24);color:var(--brand-violet)}
+.fin-ic{font-size:var(--size-40);color:var(--state-focus);line-height:1}
