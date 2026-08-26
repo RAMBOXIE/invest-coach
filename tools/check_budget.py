@@ -5,6 +5,7 @@
   B1 产物体积 ≤ tokens.budget.dist_kb
   B2 判断屏叙事预算：题干 ≤180 字（防叙事挤占判断认知资源）
   B3 离线契约：运行时不得依赖外部资源（出处外链除外）
+  B4 预算一致：tokens.json 的 dist_kb 必须和 SPEC_DEV §4 表里写的数字一致
 用法: python tools/check_budget.py [dist/index.html]
 """
 import json, re, sys, pathlib
@@ -27,6 +28,21 @@ def main(path):
     cap = TOK["budget"]["dist_kb"]
     msg = f"B1 产物体积 {kb:.1f}KB / 预算 {cap}KB"
     (infos if kb <= cap else errors).append(msg)
+
+    # B4 预算一致。300 → 320 的放宽最初是**静默发生**的：文档写着「≤300KB（已裁决）」，
+    # tokens.json 是 320，门禁按 320 跑，三份文档谁都没改。裁决被一个 json 字段悄悄推翻，
+    # 而没有任何东西会喊一声。下一次要放宽必须再走一次裁决——这条负责喊那一声。
+    spec = ROOT / "docs" / "SPEC_DEV.md"
+    if spec.exists():
+        m = re.search(r"`dist/index\.html`\s*\|[^|]*?(\d+)\s*KB", spec.read_text(encoding="utf-8"))
+        if not m:
+            errors.append("B4 在 docs/SPEC_DEV.md §4 里找不到 dist/index.html 的预算数字——"
+                          "文档与令牌无法对账")
+        elif int(m.group(1)) != cap:
+            errors.append(f"B4 tokens.json 的 dist_kb={cap}，而 SPEC_DEV §4 写的是 "
+                          f"{m.group(1)}KB——预算是 owner 裁决，不许靠改 json 悄悄放宽")
+        else:
+            infos.append(f"B4 预算 {cap}KB：令牌与 SPEC_DEV §4 一致 ✓")
 
     html = p.read_text(encoding="utf-8")
 

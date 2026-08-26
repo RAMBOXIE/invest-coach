@@ -65,17 +65,21 @@ CSS 变量**由构建期从 tokens.json 生成**，源码里不许出现字面�
 
 | 项 | 阈值 |
 |---|---|
-| `dist/index.html` | ≤320KB（`design/tokens.json` 的 `budget.dist_kb`，门禁按它执行） |
+| `dist/index.html` | **≤320KB**（owner 裁决 2026-08-26 放宽；真源是 `design/tokens.json` 的 `budget.dist_kb`） |
 | LCP | <2.5s |
 | INP | <200ms |
 | CLS | <0.1 |
 | 滚动帧率（中端 Android + 微信 WebView） | ≥50fps，无整页重绘 |
 | 动效时长 | ≤200ms（微交互）/ ≤400ms（转场） |
 
-> ⚠️ **300 vs 320 未裁决。** 本表原本写「≤300KB（已裁决）」，而 `design/tokens.json`
-> 一直是 320、`check_budget.py` 一直按 320 执行——**放宽是静默发生的，没走裁决**。
-> 现产物 309KB：按 320 合规，按 300 超标。是还债还是正式放宽，需 owner 决定，
-> 已登记为 [DEBT.md](DEBT.md) D4。在裁决前，门禁维持现状（320），不改行为。
+> **300 → 320 的来龙去脉**：本表原本写「≤300KB（已裁决）」，而 `design/tokens.json`
+> 一直是 320、`check_budget.py` 一直按 320 执行——放宽最初是**静默发生**的。
+> 2026-08-26 owner 明确裁决：**正式放宽到 320KB**。三幕的 `case.json` 是主要体积来源，
+> 而幕是现在的主体验，为了守 300 去砍它不划算。
+>
+> 单文件是这个产品的交付形态（`file://` 双击可用、可离线、可塞进隧道演示），
+> 所以体积仍然是硬约束，只是线挪了。**下一次要放宽必须再走一次裁决**，
+> 不许再靠改 `tokens.json` 悄悄发生——`check_budget.py` 现在会核对文档与令牌是否一致。
 
 **禁用清单**（性能或合规陷阱，需 ADR 才能豁免）：`background-attachment:fixed`（iOS 不支持、Android 每帧整页重绘）｜全屏位图/视频｜自定义中文正文字体｜滚动劫持｜横向滑动承载主流程｜打字机逐字动画｜视差。
 

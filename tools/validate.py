@@ -42,7 +42,9 @@ def check_quiz(q, loc, deep, errors, warns, na_stats, qids):
         if k.startswith("x_") and k not in QUIZ_X:
             errors.append(f"{loc}: quiz 未登记字段 {k}")
     if "llm" in json.dumps(q).lower() or "judge" in json.dumps(q).lower():
-        errors.append(f"{loc}: 题内出现 llm/judge 相关键或值（v3 §2.6 判分只能是规则引擎）")
+        errors.append(f"{loc}: 题内出现 llm/judge 相关键或值——"
+                      "判分当前由确定性规则完成，这把锁挡的是「悄悄把判分接进 LLM」。"
+                      "LLM 判分已不是永久禁区（docs/adr/0001），真要做时连同本锁一起改")
     qid = q.get("x_id")
     if not qid:
         errors.append(f"{loc}: quiz 缺稳定 x_id（遥测/档案/勘误的主键）")
