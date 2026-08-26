@@ -22,7 +22,12 @@
     draw();
   };
   function close() {
+    // 抽屉和遮罩要跟着一起收：z-index 79/80 高于主界面，留着就是一块卡住的浮层。
+    // 先关抽屉再清回调——反过来的话 closeSheet 会触发那个悬空的 onClose。
+    window.__sheetClose = null;
+    if (typeof closeSheet === 'function') closeSheet();
     el.classList.remove('show'); ST = null;
+    window.__court = null;
     if (typeof render === 'function') render();
     if (typeof flush === 'function') flush();
   }
@@ -70,6 +75,7 @@
   }
 
   function draw() {
+    if (!ST) return;   // 悬空的跨层回调兜底：幕已关，ST 是 null
     const b = STORY.beats[ST.i];
     ST.seen.add(b.id);
     dots();
@@ -124,8 +130,15 @@
     return {
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
         <p class="ln">${b.prompt}</p>
-        ${b.ask_enabled && STORY.interrogation ? `<button class="askbtn" id="sty-ask">${ic('scale')} 先质问 ${STORY.cast[0].name}（${STORY.interrogation.testimony.length} 条证词）</button>` : ''}
-        ${b.options.map(o => `<button class="pick${ST.pick === o.id ? ' on' : ''}" data-p="${o.id}">
+        ${b.ask_enabled && STORY.interrogation ? (() => {
+          const c = window.__court && window.__court.story === STORY ? window.__court.stats : null;
+          const acted = c ? (c.pressed || 0) + (c.broke || 0) : 0;
+          const label = !acted
+            ? `先质问 ${STORY.cast[0].name}（${STORY.interrogation.testimony.length} 条证词）`
+            : `继续质问 ${STORY.cast[0].name}（已追问 ${c.pressed} 次${c.broke ? ` · 戳穿 ${c.broke} 处` : ''}）`;
+          return `<button class="askbtn${acted ? ' done' : ''}" id="sty-ask">${ic('scale')} ${label}</button>`;
+        })() : ''}
+        ${b.options.map(o => `<button class="choice${ST.pick === o.id ? ' on' : ''}" data-p="${o.id}">
             <span class="kd">${o.kind}</span>${o.t}</button>`).join('')}
         ${picked ? `<div class="eyebrow" style="margin-top:20px">你有多大把握？</div>
           <div class="seg2">${CONF.map(c => `<button data-cf="${c.v}" class="${ST.conf === c.v ? 'on' : ''}">${c.t}</button>`).join('')}</div>` : ''}`,
@@ -163,13 +176,19 @@
       const cs = (window.__court && window.__court.story === STORY) ? window.__court.stats : { pressed: 0, broke: 0, noRecord: 0 };
       ST.stats = cs;
       ST.prior = JSON.parse(JSON.stringify(profile()));   // 快照：解读用「这一次之前」的画像
-      updateProfile(STORY.case_id, mine, ST.conf, cs);
-      if (typeof S !== 'undefined' && S.calib && ST.conf != null) {
-        // 故事层不判对错、不进 Brier；只记录一次「我当时怎么想」供成绩单回放
-        S.story = S.story || {};
-        S.story[STORY.case_id] = { pick: ST.pick, verdict: mine.verdict, conf: ST.conf, at: Date.now() };
-        save();
+      // 画像只在这一幕**第一次**被读到 contrast 时更新一次。守卫必须落在 S 上：
+      // ST 每次 openStory 都新建，挂在 ST 上的话「读过的幕」里重读一遍就二次计入，
+      // 画像里的次数会大于幕的总数。
+      S.storySeen = S.storySeen || {};
+      if (!S.storySeen[STORY.case_id]) {
+        S.storySeen[STORY.case_id] = true;
+        updateProfile(STORY.case_id, mine, ST.conf, cs);
       }
+      // 决策本身记下来（成绩单回放要用），但**不代表这一幕读完了**——
+      // 「读完」由 finish() 写 S.story[cid]，见那里的说明。
+      S.storyPick = S.storyPick || {};
+      S.storyPick[STORY.case_id] = { pick: ST.pick, verdict: mine.verdict, conf: ST.conf, at: Date.now() };
+      save();
     }
     return {
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
@@ -212,7 +231,7 @@
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
         ${evPanel(b.panel)}
         <p class="ln">${b.question}</p>
-        ${b.options.map((o, i) => `<button class="pick${ST.twinPick === i ? ' on' : ''}" data-t="${i}" ${answered ? 'disabled' : ''}>${o.t}</button>`).join('')}
+        ${b.options.map((o, i) => `<button class="choice${ST.twinPick === i ? ' on' : ''}" data-t="${i}" ${answered ? 'disabled' : ''}>${o.t}</button>`).join('')}
         ${answered ? `<div class="kn"><p style="font-size:17px;line-height:1.85;margin:0">${b.fb}</p></div>` : ''}
         ${answered ? vo(b.narration) : ''}`,
       foot: answered
@@ -256,97 +275,26 @@
       if (!pairs.length) console.warn('故事', STORY.case_id, '的判据节点', node, '无可挂的混淆对');
       save();
     }
+    // 「读完」的唯一定义点：和复训挂载同一时刻。contrast 拍写这个字段的话，
+    // 用户在 abstract / twin 两拍之前退出，今日页就再也不会把这一幕排回来，
+    // 而这一幕的判据一个都没进复训队列——幕的整个价值主张正是「判据要能离开这个故事」。
+    S.story = S.story || {};
+    S.story[STORY.case_id] = Object.assign(
+      { at: Date.now() }, (S.storyPick || {})[STORY.case_id], { done: 1 });
+    save();
     track('story_finish', { case: STORY.case_id });
-    document.getElementById('sty-toprac').onclick = () => { close(); if (typeof openNode === 'function') openNode(node); };
+    document.getElementById('sty-toprac').onclick = () => {
+      close();
+      // 「去练这条判据」曾直接 openNode，绕过图谱的硬边锁——第一幕读完就能被丢进
+      // 未解锁的深层节点，那里的材料建立在还没学的前置上。锁由 openNode 自己守。
+      if (typeof openNode === 'function') openNode(node);
+    };
     document.getElementById('sty-back').onclick = close;
   }
 
   /* ===== 问人物：答案只能是原档逐字 ===== */
-  function openAsk() {
-    ST.asked = ST.asked || [];
-    drawAsk();
-  }
-  function drawAsk() {
-    const A = STORY.ask, c = STORY.cast[0];
-    sheet(`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-        <span class="ask-av">${ic('me')}</span>
-        <div><div style="font-size:17px;font-weight:700">${c.name}</div>
-          <div class="tip" style="margin:0">${c.role} · ${c.rule}</div></div></div>
-      <p class="tip">${A.intro}</p>
-      <div id="ask-log">${ST.asked.map(t => turnHTML(t)).join('')}</div>
-      <div class="qchips">${A.suggested.map((q, i) => `<button data-q="${i}">${q}</button>`).join('')}</div>
-      <div class="askin"><input id="ask-in" placeholder="或者，问你自己想问的……" autocomplete="off">
-        <button id="ask-go">问</button></div>`, true);
-    const box = document.getElementById('sheet');
-    box.querySelectorAll('[data-q]').forEach(b => b.onclick = () => ask(A.suggested[+b.dataset.q]));
-    const inp = document.getElementById('ask-in');
-    document.getElementById('ask-go').onclick = () => { if (inp.value.trim()) ask(inp.value.trim()); };
-    inp.onkeydown = e => { if (e.key === 'Enter' && inp.value.trim()) ask(inp.value.trim()); };
-    const log = document.getElementById('ask-log');
-    if (log) log.scrollIntoView({ block: 'end' });
-  }
-  function turnHTML(t) {
-    if (t.pending) return `<div class="turn"><div class="me">你：${t.q}</div>
-      <p class="ln dim" style="font-size:17px">……正在从原档里找</p></div>`;
-    return `<div class="turn"><div class="me">你：${t.q}</div>
-      ${t.silence ? `<p class="ln dim" style="font-size:17px">${t.quote}</p>`
-                  : docQuote({ text: t.quote, src: t.src, line: t.line })}
-      ${vo(t.coach)}</div>`;
-  }
-  function ask(q) {
-    ST.asked.push({ q, pending: true });
-    drawAsk();
-    resolveQA(q).then(({ hit, via }) => {
-      const i = ST.asked.findIndex(x => x.pending && x.q === q);
-      const rec = { q, quote: hit.quote, src: hit.src, line: hit.line, coach: hit.coach, silence: hit.silence };
-      if (i >= 0) ST.asked[i] = rec; else ST.asked.push(rec);
-      track('story_ask', { case: STORY.case_id, matched: hit.id || 'fallback', via });
-      save && save();
-      drawAsk();
-    });
-  }
-  /* 语义路由：后端 LLM 只返回命中的语料 id，答案文本永远取自冻结的 case.json。
-     无后端 / 超时 / 返回 none → 回落本地关键词匹配。 */
-  function resolveQA(q) {
-    const local = () => ({ hit: matchQA(q), via: 'local' });
-    if (!BACKEND) return Promise.resolve(local());
-    const topics = STORY.ask.qa.map(x => ({ id: x.id, desc: x.match.join('、') }));
-    const ctl = new AbortController();
-    const timer = setTimeout(() => ctl.abort(), 6000);
-    return fetch(BACKEND + '/api/v1/ask-coach', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
-      body: JSON.stringify({ device: S.device, case_id: STORY.case_id, question: q, topics })
-    }).then(r => r.json()).then(d => {
-      clearTimeout(timer);
-      const found = STORY.ask.qa.find(x => x.id === d.id);
-      if (found) return { hit: found, via: 'llm' };
-      if (d.id === 'none') {
-        const fb = STORY.ask.fallback;
-        return { hit: { quote: fb.quote, src: '—', line: '—', coach: fb.coach, silence: true }, via: 'llm-none' };
-      }
-      return local();
-    }).catch(() => { clearTimeout(timer); return local(); });
-  }
-  /* 检索式匹配：命中预置语料才回答。无后端时用关键词；接入 LLM 后由代理做同一件事，
-     但答案仍必须是这份语料里的原档引文（LLM 只负责匹配与措辞，不负责内容）。 */
-  function matchQA(q) {
-    const s = q.toLowerCase();
-    // 打分：最长命中词优先；同长度时中文修饰语在前，取出现位置更靠前的那条。
-    // （这只是无后端时的兜底；接上后端由 LLM 做语义路由，效果好得多。）
-    let best = null, bestScore = -1;
-    for (const item of STORY.ask.qa) {
-      let len = 0, pos = 1e9;
-      for (const k of item.match) {
-        const i = s.indexOf(k.toLowerCase());
-        if (i < 0) continue;
-        if (k.length > len || (k.length === len && i < pos)) { len = k.length; pos = i; }
-      }
-      if (!len) continue;
-      const sc = len * 1000 - pos;
-      if (sc > bestScore) { bestScore = sc; best = item; }
-    }
-    if (best) return best;
-    const fb = STORY.ask.fallback;
-    return { quote: fb.quote, src: '—', line: '—', coach: fb.coach, silence: true };
-  }
+  /* 「问人物」子系统（openAsk / drawAsk / turnHTML / ask / resolveQA / matchQA）已删除。
+     它没有任何调用入口，case.json 的 ask 语料从不上屏；它想做的事已经由质问台
+     （court.js，逆转裁判式的证词—追问—出证）完整实现，两者共用同一个后端语义路由端点。
+     留着一整块死代码，下一个人会以为它还在跑。删除日期 2026-08-26。 */
 })();

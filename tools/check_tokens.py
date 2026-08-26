@@ -28,6 +28,19 @@ HEX = re.compile(r"#[0-9a-fA-F]{3,8}\b")
 FONT_PX = re.compile(r"font-size\s*:\s*[0-9.]+px")
 
 
+def strip_comments(s):
+    """注释里提到旧值不是债。
+
+    「--soft 曾是 #6f688a，对比 3.24:1，不达 AA」这种注释是**为什么这样改**的
+    唯一记录，把它算进棘轮，等于逼着后来的人删掉解释去凑数字——正好反了。
+    只数真正会被浏览器读到的那些。
+    """
+    s = re.sub(r"/\*.*?\*/", "", s, flags=re.S)      # CSS / JS 块注释
+    s = re.sub(r"(?m)^\s*//[^\n]*", "", s)             # JS 整行注释
+    s = re.sub(r"<!--.*?-->", "", s, flags=re.S)       # HTML 注释
+    return s
+
+
 def scan():
     """返回 {文件: {"hex": n, "font_px": n}}，并附带明细供报错时展示。"""
     counts, detail = {}, {}
@@ -35,7 +48,7 @@ def scan():
         p = ROOT / rel
         if not p.exists():
             continue
-        s = p.read_text(encoding="utf-8")
+        s = strip_comments(p.read_text(encoding="utf-8"))
         hexes = HEX.findall(s)
         fonts = FONT_PX.findall(s)
         counts[rel] = {"hex": len(hexes), "font_px": len(fonts)}

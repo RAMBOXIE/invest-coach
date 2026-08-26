@@ -9,6 +9,9 @@
   A4 禁用清单        tokens.banned 里的手段一律扫描
   A5 1.4.12 抗覆盖    禁止写死高度的全屏容器（height:100vh/100dvh 用于 .stage/.scene）
   A6 reduced-motion   必须存在 prefers-reduced-motion 分支
+  A7 浮层层级         抽屉/遮罩必须高于每一个不透明全屏层，否则「渲染了但看不见」
+  A8 点击反馈         按下 / 焦点 / 禁用三态必须存在，且不许关掉默认高亮又不补
+  A9 死样式           定义了却没有任何元素会用到的类
 用法: python tools/check_a11y.py [dist/index.html]
 """
 import json, re, sys, pathlib
@@ -39,6 +42,7 @@ def main(path):
         print(f"找不到 {p}"); return 1
     html = p.read_text(encoding="utf-8")
     css = "\n".join(re.findall(r"<style[^>]*>(.*?)</style>", html, re.S))
+    css_style_only = css   # A9 要的是真样式表；下面会往 css 里塞合成的 ._inlineN
     # 内联 style 压过任何样式表规则，却不在 <style> 里。不扫它就会出现
     # 「改了 CSS 但被内联覆盖、门禁全程 PASS」——.sec.big 的暗底就栽在这上面。
     inline = re.findall(r'style="([^"]*)"', html)
@@ -169,6 +173,109 @@ def main(path):
     # A6 reduced-motion
     if re.search(r"transition|animation", css) and "prefers-reduced-motion" not in css:
         errors.append("A6 存在动效但缺 prefers-reduced-motion 分支")
+
+    # ---- A7 浮层层级 ----
+    # 这一条补的是第五次「只查形状不查真值」：.sheet 的 z-index 是 50，
+    # 而幕 .sty 是 60、底不透明且 inset:0。从幕里唤起的抽屉（质问台、每个溯源）
+    # DOM 正常、样式正常、事件绑定正常、四道门禁全绿——用户看到的是屏幕纹丝不动。
+    # 谁都没查「它到底盖在谁上面」。
+    # 选择器可能在多条规则里出现（.sty 既有本体，也有 `.stage,.sty{left:96px}` 这种），
+    # 只看第一条就会漏掉真正那条——A7 第一版就是这么把 .sty 静默跳过的，
+    # 而 .sty 正是它要抓的那一个。所以扫全部规则再合并。
+    # 注释会被当成选择器的一部分吞进去（`/* … */ .sheet{` 变成一个 60 字的"选择器"），
+    # 于是匹配失败、门禁静默放行。先剥注释再解析。
+    css_nc = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+
+    def blocks_for(cls):
+        out = []
+        for m in re.finditer(r"([^{}]+)\{([^{}]*)\}", css_nc):
+            sels = [x.strip() for x in m.group(1).split(",")]
+            if any(re.fullmatch(re.escape(cls) + r"(::?[\w-]+(\([^)]*\))?)*", x) for x in sels):
+                out.append(re.sub(r"\s+", "", m.group(2)))
+        return out
+
+    def zof(cls):
+        zs = [int(z) for b in blocks_for(cls) for z in re.findall(r"z-index:(\d+)", b)]
+        return max(zs) if zs else None
+
+    def opaque_fullscreen(cls):
+        bs = blocks_for(cls)
+        return (any("position:fixed" in b for b in bs)
+                and any("inset:0" in b for b in bs)
+                and any(re.search(r"background(-color)?:(?!transparent|none)", b) for b in bs))
+
+    z_sheet, z_scrim = zof(".sheet"), zof(".scrim")
+    if z_sheet is None:
+        errors.append("A7 找不到 .sheet 的 z-index——浮层层级无法校验")
+    else:
+        checked_layers = 0
+        for sel in (".stage", ".sty"):
+            z = zof(sel)
+            if z is None or not opaque_fullscreen(sel):
+                continue
+            checked_layers += 1
+            if z >= z_sheet:
+                errors.append(
+                    f"A7 {sel} 的 z-index {z} ≥ .sheet 的 {z_sheet}，而 {sel} 是不透明全屏层"
+                    "——从它里面唤起的抽屉会被整块盖住：渲染正常、点不到、看不见")
+            elif z_scrim is not None and z >= z_scrim:
+                errors.append(
+                    f"A7 {sel} 的 z-index {z} ≥ .scrim 的 {z_scrim}——遮罩盖不住它，点遮罩关闭失效")
+            else:
+                infos.append(f"A7 .sheet({z_sheet}) / .scrim({z_scrim}) 高于 {sel}({z}) ✓")
+        if checked_layers < 2:
+            errors.append(
+                f"A7 只校验到 {checked_layers} 个全屏层，预期 2（.stage / .sty）"
+                "——选择器匹配没命中，等于这道门禁没生效")
+
+    # ---- A8 点击反馈 ----
+    # 产品铁律：每个点击都要有反馈。* 里关掉了 -webkit-tap-highlight-color，
+    # 不自己补 :active 的话手机上点任何东西都是零反应——这是实测过的。
+    has_tap_off = re.search(r"-webkit-tap-highlight-color\s*:\s*transparent", css_nc)
+    act = re.findall(r"([^{}]*:active[^{}]*)\{", css_nc)
+    if has_tap_off and not act:
+        errors.append("A8 关掉了 -webkit-tap-highlight-color 却没有任何 :active 规则"
+                      "——手机上点任何东西都没有按下反馈")
+    elif not act:
+        warns.append("A8 全站没有 :active 规则")
+    else:
+        covered = " ".join(act)
+        for el in ("button", "summary", "a[href]"):
+            if el not in covered:
+                errors.append(f"A8 {el} 没有按下态（:active）——它是可点元素，点了必须有反馈")
+        infos.append(f"A8 按下态覆盖 {len(act)} 组选择器 ✓")
+    foc = " ".join(re.findall(r"([^{}]*:focus-visible[^{}]*)\{", css_nc))
+    for el in ("button", "summary", "input"):
+        if el not in foc:
+            errors.append(f"A8 {el} 没有 :focus-visible——键盘用户看不到自己在哪")
+    if not re.search(r"(?:button|\[disabled\]|:disabled)[^{}]*\{[^{}]*cursor\s*:\s*not-allowed", css_nc):
+        errors.append("A8 禁用元素没有 cursor:not-allowed——看起来还能点")
+
+    # ---- A9 死样式 ----
+    # 「定义了但没有元素会用到」的类。翻正之后这种最多：一整块 CSS 还活着，
+    # 它服务的那个 DOM 已经不存在了，于是改了没反应、删了没影响。
+    defined = set()
+    for m in re.finditer(r"([^{}]+)\{[^{}]*\}", re.sub(r"/\*.*?\*/", "", css_style_only, flags=re.S)):
+        for sel in m.group(1).split(","):
+            defined |= set(re.findall(r"\.([\w-]+)", sel))
+    used = set()
+    for m in re.finditer(r'class="([^"]*)"', html):
+        for tok in re.split(r"[\s${}?:'`+()]+", m.group(1)):
+            if tok and re.fullmatch(r"[\w-]+", tok):
+                used.add(tok)
+    for m in re.finditer(r"classList\.(?:add|remove|toggle)\(\s*['\"]([\w-]+)", html):
+        used.add(m.group(1))
+    for m in re.finditer(r"className\s*=\s*['\"]([\w -]+)", html):
+        used |= set(m.group(1).split())
+    # 状态类由 JS 动态拼接（`chipS ${st}`、ic(name,'ic-lg')），列进白名单
+    DYNAMIC = {"on", "show", "done", "open", "lit", "locked", "due", "right", "wrong",
+               "naf", "good", "slim", "ghost", "dim", "off", "tag", "ic-lg", "ic-s"}
+    dead = sorted(defined - used - DYNAMIC)
+    if dead:
+        errors.append("A9 死样式：这些类在产物里没有任何元素会用到——"
+                      "改了不会有反应，删了不会有影响：" + "、".join("." + d for d in dead))
+    else:
+        infos.append(f"A9 {len(defined)} 个类全部有使用点 ✓")
 
     for i in infos: print("INFO :", i)
     for w in warns: print("WARN :", w)

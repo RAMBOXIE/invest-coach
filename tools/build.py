@@ -67,6 +67,7 @@ def css_vars():
         "--state-flag": C["red-500"], "--state-flag-on-dark": S["state"]["flag-on-stage"],
         "--state-clear": C["green-600"], "--state-unknown": C["blue-500"],
         "--state-focus": C["amber-700"], "--state-focus-on-stage": C["gold-400"],
+        "--state-press": S["state"]["press"], "--state-press-on-stage": S["state"]["press-on-stage"],
         "--brand-violet": C["violet-500"],
         "--measure-read": S["measure"]["read"],
         "--tap-min": S["tap"]["min"], "--tap-rec": S["tap"]["rec"],

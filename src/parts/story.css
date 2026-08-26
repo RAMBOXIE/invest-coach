@@ -33,7 +33,7 @@
 
 .eyebrow{font-size:var(--size-13);letter-spacing:.22em;color:var(--gold);
   margin-bottom:var(--space-3);text-transform:none}
-.sty h2{font-size:clamp(28px,8.4vw,44px);line-height:var(--lh-tight);margin:0 0 var(--space-5);
+.sty h2{font-size:var(--size-display);line-height:var(--lh-tight);margin:0 0 var(--space-5);
   font-weight:800;letter-spacing:-.01em;max-width:14em}
 .sty .ln{font-size:var(--size-narrative);line-height:var(--lh-read);
   margin:0 0 var(--space-4);max-width:var(--measure-read);color:var(--ink)}
@@ -76,14 +76,15 @@
   max-width:var(--measure-read)}
 .doc .dt b{color:var(--gold);font-weight:700}
 
-/* 决策 */
-.pick{display:block;width:100%;text-align:left;margin-bottom:var(--space-2);
+/* 决策选项。曾叫 .pick，和 template.html 里「选侧重」首屏的容器 .pick 裸类同名，
+   story.css 在后，把那个不可点的容器画成了一个看起来可点的 48px 卡片。 */
+.choice{display:block;width:100%;text-align:left;margin-bottom:var(--space-2);
   background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);
   border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);
   font-size:var(--size-17);line-height:var(--lh-ui);color:var(--ink);
   min-height:var(--tap-rec)}
-.pick .kd{display:block;font-size:var(--size-13);color:var(--soft);margin-bottom:2px}
-.pick.on{border-color:var(--gold);background:rgba(255,209,102,.14)}
+.choice .kd{display:block;font-size:var(--size-13);color:var(--soft);margin-bottom:2px}
+.choice.on{border-color:var(--gold);background:rgba(255,209,102,.14)}
 .seg2{display:flex;border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-md);
   overflow:hidden;margin:var(--space-3) 0}
 .seg2 button{flex:1;min-height:var(--tap-rec);font-size:var(--size-15);
@@ -131,18 +132,13 @@
   width:100%;min-height:var(--tap-rec);border-radius:var(--radius-md);
   border:1px dashed var(--gold);color:var(--gold);
   background:rgba(255,209,102,.08);font-size:var(--size-15);margin-bottom:var(--space-2)}
+.askbtn.done{border-style:solid;background:rgba(255,209,102,.14)}
 .qchips{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:var(--space-3) 0}
 .qchips button{border:1px solid rgba(255,255,255,.22);border-radius:var(--radius-pill);
   padding:10px var(--space-3);font-size:var(--size-15);color:var(--ink);
   background:rgba(255,255,255,.05);min-height:var(--tap-min)}
-.askin{display:flex;gap:var(--space-2);margin-top:var(--space-3)}
-.askin input{flex:1;min-height:var(--tap-rec);border-radius:var(--radius-md);
-  border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);
-  color:var(--ink);padding:0 var(--space-3);font-size:var(--size-17);font-family:inherit}
-.askin button{min-height:var(--tap-rec);padding:0 var(--space-4);border-radius:var(--radius-md);
-  background:var(--gold);color:var(--on-gold);font-weight:700;font-size:var(--size-15)}
-.turn{margin:var(--space-4) 0}
-.turn .me{font-size:var(--size-17);color:var(--gold);margin-bottom:var(--space-2)}
+/* .askin 搬去了 court.css：它现在只被质问台用，而质问台渲染在**纸面**抽屉里。
+   留在这里的那份是幕（暗场）的写法——白色 24% 边框 + 白色 6% 底，在纸上等于没有边界。 */
 
 .sty-cta{display:block;width:100%;min-height:var(--tap-rec);border-radius:var(--radius-md);
   background:var(--gold);color:var(--on-gold);font-size:var(--size-17);font-weight:700}

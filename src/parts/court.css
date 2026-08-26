@@ -20,7 +20,7 @@
 .ct-txt b{color:var(--brand-violet)}
 .ct-say.broke .ct-txt b{color:var(--state-flag)}
 .ct-src{font-size:var(--size-13);color:var(--text-meta-color);margin-top:var(--space-2)}
-.ct-ln{font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace}
+.ct-ln{font-family:var(--font-mono)}
 
 .ct-acts{display:flex;flex-wrap:wrap;gap:var(--space-2);margin:var(--space-3) 0}
 .ct-btn{flex:1 1 46%;min-height:var(--tap-rec);border-radius:var(--radius-md);
@@ -39,7 +39,7 @@
 .reading{background:var(--c-violet-wash);border-radius:var(--radius-lg);
   padding:var(--space-4);margin:var(--space-4) 0;border:1px solid var(--c-violet-300)}
 .rd-hd{display:flex;align-items:center;gap:var(--space-2);margin-bottom:var(--space-3)}
-.rd-av{font-size:22px}
+.rd-av{font-size:var(--size-24)}
 .rd-nm{font-size:var(--size-13);letter-spacing:.1em;color:var(--brand-violet);font-weight:700}
 .rd-h{font-size:var(--size-17);font-weight:800;line-height:var(--lh-ui);
   color:var(--text-body-color);margin:0 0 var(--space-2)}
@@ -48,14 +48,14 @@
 .rd-x{padding-top:var(--space-2);border-top:1px dashed var(--c-violet-300);color:var(--c-violet-700)}
 .rd-b b,.rd-x b{color:var(--brand-violet)}
 
-/* 教练画像卡（今日页） */
-.pf{background:var(--surface-card);border:1px solid var(--surface-rule)}
-.pf .pf-t{font-size:var(--size-17);line-height:var(--lh-read);color:var(--text-body-color)}
-.pf .pf-tone{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-3)}
-.pf .pf-tone button{flex:1 1 46%;min-height:var(--tap-min);border-radius:var(--radius-pill);
+/* 换侧重（「我」页）。曾整组挂在 .pf 这个作用域根下，而全仓库没有任何元素带 .pf——
+   四条规则全是死规则，按钮裸奔：没有 44px 触控下限，也看不出当前选的是哪个。 */
+.pf-tone{display:flex;flex-wrap:wrap;gap:var(--space-2);margin-top:var(--space-3)}
+.pf-tone button{flex:1 1 46%;min-height:var(--tap-min);border-radius:var(--radius-pill);
   border:1px solid var(--surface-rule);background:transparent;
   color:var(--text-body-color);font-size:var(--size-13);padding:8px 10px}
-.pf .pf-tone button.on{border-color:var(--state-focus);background:var(--c-amber-wash);color:var(--state-focus);font-weight:700}
+.pf-tone button.on{border-color:var(--state-focus);background:var(--c-amber-wash);
+  color:var(--state-focus);font-weight:700}
 
 /* 质问台的常驻出口。原来只能点上方 20dvh 的遮罩退出——手机上零提示，
    用户进了质问就回不到决策。它跟着抽屉滚动区吸顶。 */
@@ -66,5 +66,18 @@
   min-height:var(--tap-min);padding:0 var(--space-3);border-radius:var(--radius-pill);
   border:1px solid var(--line);background:transparent;
   color:var(--text-meta-color);font-size:var(--size-13)}
-.ask-av,.ct-av{display:inline-flex;font-size:var(--size-24);color:var(--brand-violet)}
+.ct-av{display:inline-flex;font-size:var(--size-24);color:var(--brand-violet)}
 .fin-ic{font-size:var(--size-40);color:var(--state-focus);line-height:1}
+
+/* 自由提问行。从 story.css 搬来：它只在质问台用，而质问台是**纸面**抽屉。
+   原来那份是幕的写法（rgba(255,255,255,.24) 边框 + .06 底），
+   渲染在纸上等于一个没有边界的输入框——用户看不出那里能打字。 */
+.askin{display:flex;gap:var(--space-2);margin-top:var(--space-3)}
+.askin input{flex:1;min-height:var(--tap-rec);border-radius:var(--radius-md);
+  border:1px solid var(--surface-rule);background:var(--surface-card);
+  color:var(--text-body-color);padding:0 var(--space-3);
+  font-size:var(--size-17);font-family:inherit}
+.askin input::placeholder{color:var(--text-meta-color)}
+.askin button{min-height:var(--tap-rec);padding:0 var(--space-4);border-radius:var(--radius-md);
+  background:var(--gold);color:var(--on-gold);font-weight:700;font-size:var(--size-15)}
+.askin button:disabled{opacity:.42}

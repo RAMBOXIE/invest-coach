@@ -81,8 +81,14 @@
     open(story, onClose) {
       const I = story.interrogation;
       if (!I) return;
-      const st = { story, I, i: 0, log: [], used: new Set(), unlocked: new Set(['t1']),
-                   stats: { pressed: 0, broke: 0, noRecord: 0 }, onClose };
+      // 关掉抽屉再点一次「先质问」不是重新开庭——原来这里无条件新建 st，
+      // 把已经戳穿的证词、追问记录、stats 全部抹掉，还没有任何提示。
+      // 而 stats 正是后面教练解读要读的东西（story.js 在揭示拍读 __court.stats）。
+      const prev = window.__court;
+      const st = (prev && prev.story === story) ? prev
+        : { story, I, i: 0, log: [], used: new Set(), unlocked: new Set(['t1']),
+            stats: { pressed: 0, broke: 0, noRecord: 0 } };
+      st.onClose = onClose;
       window.__court = st;
       window.__sheetClose = onClose || null;
       // 已解锁的证词按顺序出场
@@ -147,9 +153,10 @@
     box.querySelectorAll('[data-evi]').forEach(b => b.onclick = () => showCards(b.dataset.evi));
     const x = document.getElementById('ct-x');
     if (x) x.onclick = () => { window.__sheetClose = st.onClose || null; closeSheet(); };
-    const inp = document.getElementById('ct-in');
-    document.getElementById('ct-go').onclick = () => { if (inp.value.trim()) freeAsk(inp.value.trim()); };
-    inp.onkeydown = e => { if (e.key === 'Enter' && inp.value.trim()) freeAsk(inp.value.trim()); };
+    const inp = document.getElementById('ct-in'), go = document.getElementById('ct-go');
+    if (st.asking) { inp.disabled = true; go.disabled = true; go.textContent = '问…'; }
+    go.onclick = () => { if (!st.asking && inp.value.trim()) freeAsk(inp.value.trim()); };
+    inp.onkeydown = e => { if (e.key === 'Enter' && !st.asking && inp.value.trim()) freeAsk(inp.value.trim()); };
     box.scrollTop = box.scrollHeight;
   }
 
@@ -189,9 +196,12 @@
   /* 自由提问：有后端走 LLM 语义路由（只返回 id），否则本地关键词 */
   function freeAsk(q) {
     const st = window.__court;
+    if (st.asking) return;          // 在飞行中：接了后端时这个窗口有 6 秒
+    st.asking = true;
     st.log.push({ you: q, text: '……', src: '—', line: '—', coach: '' });
     draw();
     routeFree(q).then(r => {
+      st.asking = false;
       st.log.pop();
       if (r.kind === 'press') {
         const t = st.visible().find(x => x.id === r.tid) || st.visible()[st.i] || st.I.testimony[0];
@@ -203,6 +213,12 @@
       }
       track && track('court_free', { case: st.story.case_id, kind: r.kind, via: r.via });
       save && save();
+      draw();
+    }).catch(() => {
+      // 复位是必须的：漏掉的话一次异常就把输入框永久锁死，
+      // 用户看到一个灰掉的「问…」，没有任何办法让它回来。
+      st.asking = false;
+      if (st.log.length && st.log[st.log.length - 1].text === '……') st.log.pop();
       draw();
     });
   }
