@@ -36,6 +36,12 @@
    "sha256": "50cc4c5304b38cdacfa004f3fba2cf895663b86a572b6e0d859d6e295cdc3544",
    "source": "Nikola FY2020 10-K",
    "accession": "0001731289-21-000006"
+  },
+  {
+   "file": "evidence/moderna-10k-fy2019.txt",
+   "sha256": "1388734fe763d368b11cc1dea4f06684662e1866d2b9c925669045f037a362de",
+   "source": "Moderna FY2019 10-K",
+   "accession": "0001682852-20-000006"
   }
  ],
  "facts": [
@@ -362,6 +368,60 @@
    "basis": "Cash and cash equivalents 840,913（千美元）",
    "accession": "0001731289-21-000006",
    "line": "L1418"
+  },
+  {
+   "id": "md-float",
+   "company": "Moderna",
+   "item": "公众持股市值 2019-06-30",
+   "value": "约 33.8 亿美元",
+   "basis": "10-K 封面页",
+   "accession": "0001682852-20-000006",
+   "line": "L81"
+  },
+  {
+   "id": "md-rev-19",
+   "company": "Moderna",
+   "item": "FY2019 收入",
+   "value": "6021 万美元",
+   "basis": "Revenue 60,209（千美元）·合作与授权收入",
+   "accession": "0001682852-20-000006",
+   "line": "L5345/L5683"
+  },
+  {
+   "id": "md-rd-19",
+   "company": "Moderna",
+   "item": "FY2019 研发费用",
+   "value": "4.963 亿美元",
+   "basis": "Research and development 496,309（千美元）",
+   "accession": "0001682852-20-000006",
+   "line": "L5356/L6117"
+  },
+  {
+   "id": "md-ni-19",
+   "company": "Moderna",
+   "item": "FY2019 净亏损",
+   "value": "5.140 亿美元",
+   "basis": "Net loss (514,021)（千美元）",
+   "accession": "0001682852-20-000006",
+   "line": "L5441/L5489"
+  },
+  {
+   "id": "md-ocf-19",
+   "company": "Moderna",
+   "item": "FY2019 经营活动现金流",
+   "value": "−4.590 亿美元",
+   "basis": "Net cash used in operating activities (458,968)（千美元）",
+   "accession": "0001682852-20-000006",
+   "line": "L6566/L8220"
+  },
+  {
+   "id": "md-cash-19",
+   "company": "Moderna",
+   "item": "2019 年末现金",
+   "value": "2.359 亿美元",
+   "basis": "Cash and cash equivalents 235,876（千美元）",
+   "accession": "0001682852-20-000006",
+   "line": "L6903"
   }
  ],
  "approved_tokens": {
@@ -487,6 +547,17 @@
   "8.409": "nk-cash-20",
   "131,578": "nk-float+nk-rev-20",
   "1,954": "nk-rd-20+nk-rev-20",
-  "4,045": "nk-ni-20+nk-rev-20"
+  "4,045": "nk-ni-20+nk-rev-20",
+  "33.8": "md-float",
+  "6021": "md-rev-19",
+  "60,209": "md-rev-19",
+  "4.963": "md-rd-19",
+  "496,309": "md-rd-19",
+  "5.140": "md-ni-19",
+  "514,021": "md-ni-19",
+  "4.590": "md-ocf-19",
+  "2.359": "md-cash-19",
+  "56": "md-float+md-rev-19",
+  "634": "md-rev-19+nk-rev-20"
  }
 }
