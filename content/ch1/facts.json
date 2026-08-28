@@ -30,6 +30,12 @@
    "sha256": "acc6e566f5668962b6e0ddb360b14498e3bc62831941747c0f02b728a2e51413",
    "source": "Valukas 审查人报告 Vol.3（雷曼破产法院指定审查人，2010-03-11）",
    "accession": "Valukas-Vol3"
+  },
+  {
+   "file": "evidence/nikola-10k-fy2020.txt",
+   "sha256": "50cc4c5304b38cdacfa004f3fba2cf895663b86a572b6e0d859d6e295cdc3544",
+   "source": "Nikola FY2020 10-K",
+   "accession": "0001731289-21-000006"
   }
  ],
  "facts": [
@@ -275,6 +281,87 @@
    "basis": "10-Q（2008-07-10 报送）",
    "accession": "LBHI-10Q-Jul2008",
    "line": "p.5"
+  },
+  {
+   "id": "nk-float",
+   "company": "Nikola",
+   "item": "公众持股市值 2020-06-30",
+   "value": "约 125 亿美元",
+   "basis": "10-K 封面页原文 was approximately $12.5 billion，按收盘价 $67.53 计",
+   "accession": "0001731289-21-000006",
+   "line": "L63"
+  },
+  {
+   "id": "nk-rev-20",
+   "company": "Nikola",
+   "item": "FY2020 收入",
+   "value": "9.5 万美元",
+   "basis": "Solar revenues $ 95（千美元）——全部收入来自遗留的太阳能装机，不是卡车",
+   "accession": "0001731289-21-000006",
+   "line": "L1552/L1399"
+  },
+  {
+   "id": "nk-rev-19",
+   "company": "Nikola",
+   "item": "FY2019 收入",
+   "value": "48.2 万美元",
+   "basis": "Solar revenues $ 482（千美元）",
+   "accession": "0001731289-21-000006",
+   "line": "L1552/L1610"
+  },
+  {
+   "id": "nk-rd-20",
+   "company": "Nikola",
+   "item": "FY2020 研发费用",
+   "value": "1.856 亿美元",
+   "basis": "Research and development 185,619（千美元）",
+   "accession": "0001731289-21-000006",
+   "line": "L1556"
+  },
+  {
+   "id": "nk-sga-20",
+   "company": "Nikola",
+   "item": "FY2020 销售管理费用",
+   "value": "1.827 亿美元",
+   "basis": "Selling, general, and administrative 182,724（千美元）",
+   "accession": "0001731289-21-000006",
+   "line": "L1557"
+  },
+  {
+   "id": "nk-ni-20",
+   "company": "Nikola",
+   "item": "FY2020 净亏损",
+   "value": "3.843 亿美元",
+   "basis": "Net loss (384,314)（千美元）",
+   "accession": "0001731289-21-000006",
+   "line": "L1410/L1570"
+  },
+  {
+   "id": "nk-ocf-20",
+   "company": "Nikola",
+   "item": "FY2020 经营活动现金流",
+   "value": "−1.505 亿美元",
+   "basis": "Net cash used in operating activities (150,533)（千美元）",
+   "accession": "0001731289-21-000006",
+   "line": "L1432/L2133"
+  },
+  {
+   "id": "nk-ar-20",
+   "company": "Nikola",
+   "item": "2020 年末应收账款",
+   "value": "0",
+   "basis": "资产负债表 应收账款 — （上年 658 千美元）",
+   "accession": "0001731289-21-000006",
+   "line": "L1917"
+  },
+  {
+   "id": "nk-cash-20",
+   "company": "Nikola",
+   "item": "2020 年末现金",
+   "value": "8.409 亿美元",
+   "basis": "Cash and cash equivalents 840,913（千美元）",
+   "accession": "0001731289-21-000006",
+   "line": "L1418"
   }
  ],
  "approved_tokens": {
@@ -383,6 +470,23 @@
   "2008": "年份",
   "77": "门店数",
   "1994": "年份",
-  "7": "日期"
+  "7": "日期",
+  "12.5": "nk-float",
+  "125": "nk-float",
+  "9.5": "nk-rev-20",
+  "95": "nk-rev-20",
+  "48.2": "nk-rev-19",
+  "482": "nk-rev-19",
+  "1.856": "nk-rd-20",
+  "185,619": "nk-rd-20",
+  "1.827": "nk-sga-20",
+  "3.843": "nk-ni-20",
+  "384,314": "nk-ni-20",
+  "1.505": "nk-ocf-20",
+  "150,533": "nk-ocf-20",
+  "8.409": "nk-cash-20",
+  "131,578": "nk-float+nk-rev-20",
+  "1,954": "nk-rd-20+nk-rev-20",
+  "4,045": "nk-ni-20+nk-rev-20"
  }
 }
