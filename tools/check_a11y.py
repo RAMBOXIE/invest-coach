@@ -11,7 +11,7 @@
   A6 reduced-motion   必须存在 prefers-reduced-motion 分支
   A7 浮层层级         抽屉/遮罩必须高于每一个不透明全屏层，否则「渲染了但看不见」
   A8 点击反馈         按下 / 焦点 / 禁用三态必须存在，且不许关掉默认高亮又不补
-  A9 死样式           定义了却没有任何元素会用到的类
+  A9 类名对账         定义了没人用（死代码）+ 用了却没定义（静默失效）
 用法: python tools/check_a11y.py [dist/index.html]
 """
 import json, re, sys, pathlib
@@ -257,8 +257,19 @@ def main(path):
             defined |= set(re.findall(r"\.([\w-]+)", sel))
     used = set()
     for m in re.finditer(r'class="([^"]*)"', html):
-        for tok in re.split(r"[\s${}?:'`+()]+", m.group(1)):
-            if tok and re.fullmatch(r"[\w-]+", tok):
+        # ${...} 里是 JS 表达式，不能整段当类名——否则
+        # class="v ${consist==='匹配'?'g':'b'}" 会产出「匹配」这种假类名。
+        # 但表达式里的**字符串字面量**恰恰就是动态拼上去的类名
+        # （' broke' / 'g' / 'b'），所以挖掉表达式的同时把里面的字面量捞出来。
+        # 这比维护一份白名单可靠：新加的动态类自动被认出来。
+        seg = m.group(1)
+        toks = []
+        for expr in re.findall(r"\$\{([^}]*)\}", seg):
+            for lit in re.findall(r"'([^']*)'|\"([^\"]*)\"", expr):
+                toks += (lit[0] or lit[1]).split()
+        toks += re.sub(r"\$\{[^}]*\}", " ", seg).split()
+        for tok in toks:
+            if re.fullmatch(r"[A-Za-z][\w-]*", tok):
                 used.add(tok)
     for m in re.finditer(r"classList\.(?:add|remove|toggle)\(\s*['\"]([\w-]+)", html):
         used.add(m.group(1))
@@ -271,8 +282,15 @@ def main(path):
     if dead:
         errors.append("A9 死样式：这些类在产物里没有任何元素会用到——"
                       "改了不会有反应，删了不会有影响：" + "、".join("." + d for d in dead))
-    else:
-        infos.append(f"A9 {len(defined)} 个类全部有使用点 ✓")
+    # 反向：用了却没定义。这一类是**静默失效**——元素长得不对，而没有任何东西会报错。
+    # 比死代码更危险，因为死代码至少不影响用户看到的东西。
+    UNSTYLED = {"num", "i", "v", "k", "t", "b", "w"}   # 纯语义标记，本就无样式
+    ghost = sorted(used - defined - UNSTYLED - DYNAMIC)
+    if ghost:
+        errors.append("A9 用了却没定义的类——元素会静默地长得不对，没有任何东西会报错："
+                      + "、".join("." + g for g in ghost))
+    if not dead and not ghost:
+        infos.append(f"A9 {len(defined)} 个类双向对账通过 ✓")
 
     for i in infos: print("INFO :", i)
     for w in warns: print("WARN :", w)

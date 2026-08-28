@@ -99,6 +99,8 @@
      「一屏一个下一步」，别再往首屏加平级 CTA。 */
 
   /* 进度：从页面底部提到顶部 */
+  /* 网格项必须 min-width:0，否则长内容（原档引文、长标题）会撑破栏宽 */
+  .today-main{min-width:0}
   .strip{padding:16px 2px 12px;border-bottom:1px solid var(--surface-rule);margin-bottom:20px}
   .strip-top{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
   .strip-p{display:flex;align-items:baseline;gap:6px}
@@ -161,6 +163,11 @@
     width:38px;height:4px;border-radius:2px;background:var(--line)}
   .sh-grab:active::before{background:var(--soft)}
   .sh-h{font-size:var(--size-17);font-weight:700;margin:0 0 8px;color:var(--ink)}
+  .sh-h4{font-size:var(--size-15);font-weight:700;margin:14px 0 4px;color:var(--ink)}
+  .sh-p{font-size:var(--size-15);line-height:var(--lh-read);color:var(--ink);margin:8px 0}
+  .sh-p.lead{font-weight:600}
+  .rowbtn.arch{align-items:flex-start}
+  .rowbtn.arch .mt{display:block}
   .endpad{text-align:center;padding:22px 4px}
   .copyout{min-height:150px;font-family:var(--font-mono);font-size:var(--size-13)}
 
@@ -198,6 +205,9 @@
     color:var(--text-display-color);font-weight:var(--weight-display)}
   .pick-s{font-size:var(--size-15);line-height:var(--lh-read);
     color:var(--text-meta-color);margin:0 0 26px}
+  .pick-why{font-size:var(--size-13);line-height:var(--lh-read);color:var(--text-meta-color);
+    background:var(--surface-card);border:1px solid var(--surface-rule);
+    border-radius:var(--radius-md);padding:12px 14px;margin:0 0 22px}
   .pick-c{display:block;width:100%;text-align:left;background:var(--surface-card);
     border:1px solid var(--surface-rule);border-radius:14px;padding:17px;
     margin-bottom:10px;min-height:var(--tap-rec)}
@@ -240,6 +250,7 @@
   .tabbar button .i{display:block;font-size:var(--size-19);margin-bottom:1px}
   .tabbar button.on{color:var(--gold)}
   .foot{font-size:var(--size-13);color:var(--text-meta-color);text-align:center;line-height:1.6;padding:14px 4px 4px}
+  .foot-fine{opacity:.82}
   /* 全屏课节 */
   .stage{position:fixed;inset:0;z-index:40;background:var(--card);color:var(--ink);
     display:none;flex-direction:column}
@@ -396,8 +407,9 @@
     <div><div class="tt" id="tag"></div><h1 id="title"></h1></div>
   </div>
   <div id="view"></div>
-  <div class="foot">仅供学习 · 历史案例复盘 · 不构成投资建议，无前瞻信号与收益承诺<br>
-    术语与定义来自所列正典出处；通俗解释与教练点评由 AI 起草、经人工核对；判分由页面内置规则完成，AI 不参与判分</div>
+  <div class="foot"><b>AI 替你读，我们考你。</b>每道题都是闭卷的——换一家公司、没见过的材料、不给提示。<br>
+    仅供学习 · 历史案例复盘 · 不构成投资建议，无前瞻信号与收益承诺<br>
+    <span class="foot-fine">真实公司的数字绑定 SEC EDGAR 申报号与行号，可点开核对；通俗解释与教练点评由 AI 起草、经人工核对；判分由页面内置规则完成</span></div>
 </div>
 
 <div class="tabbar">
@@ -611,6 +623,8 @@ function coachPicker(){
     <div class="pick-eye">开始之前</div>
     <h2 class="pick-t">你希望教练先盯你哪一面？</h2>
     <p class="pick-s">教练是你的，不是某个人的模拟。他会记住你的判断习惯，在你判错时告诉你错在哪。随时能换。</p>
+    <p class="pick-why"><b>为什么不直接问 AI？</b>AI 能替你读完一份 10-K，但它不会训练你的判断——
+      下一份年报摆在面前，做判断的还是你。这里每道题都是闭卷的：换一家公司、没见过的材料、不给提示。</p>
     ${TONES.map(x=>`<button class="pick-c" data-tone="${x.id}">
       <span class="pick-n">${x.k}</span>
       <span class="pick-d">${x.d}</span></button>`).join('')}
@@ -749,6 +763,7 @@ function viewMe(){
     <div style="height:8px"></div>
     <button class="cta ghost" id="go-reset">重置全部进度</button>
     <div class="tip" style="margin-top:8px">你在「先写」里输入的文字只存在这台设备上，从不上传、不进记忆、不进 AI 的输入。</div></div>
+    <div class="sec"><h2>关于这一章</h2><div class="tip" style="line-height:1.8">${SITE.about||''}</div></div>
     <div class="sec"><h2>出处档案</h2>
     <div class="srclist">${(SITE.sources||[]).map(x=>x.url
       ? `<a class="srcrow" href="${x.url}" target="_blank" rel="noopener">
@@ -1333,11 +1348,11 @@ function drawReview(){
 function scorecard(){
   const dur=Math.round(((S.finished||Date.now())-S.started)/6e4);
   const pl={v:2,site:SITE.id,cv:SITE.x_version||'',lit:lit.size,total:SITE.nodes.length,acc:acc(),
-    brier:brier(),brave:braveRate(),hints:S.hints,reviews:S.reviews,best:S.calib.best,
+    brier:brier(),brave:braveRate(),hints:S.hints,reviews:S.reviews,
     over:S.calib.over,gap:S.gap.n?Math.round(100*S.gap.hits/S.gap.n):null,min:dur,done:S.finished?1:0};
   return `投资教练 · ${SITE.tag}成绩单
 进度 ${lit.size}/${SITE.nodes.length}${S.finished?'（已完成）':''} ｜ 首答正确率 ${acc()==null?'—':acc()+'%'} ｜ 校准分 ${brier()==null?'—':brier()+'/100'} ｜ 敢判率 ${braveRate()==null?'—':braveRate()+'%'}
-提示 ${S.hints} 次 ｜ 复训 ${S.reviews} 轮 ｜ 校准连胜最高 ${S.calib.best} ｜ 过度自信 ${S.calib.over} 次 ｜ 用时约 ${dur} 分钟
+提示 ${S.hints} 次 ｜ 复训 ${S.reviews} 轮 ｜ 过度自信 ${S.calib.over} 次 ｜ 用时约 ${dur} 分钟
 （教学复盘，非投资建议）
 IC2|${btoa(unescape(encodeURIComponent(JSON.stringify(pl))))}`;
 }
