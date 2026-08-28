@@ -44,7 +44,7 @@ def main(path):
     css = "\n".join(re.findall(r"<style[^>]*>(.*?)</style>", html, re.S))
     css_style_only = css   # A9 要的是真样式表；下面会往 css 里塞合成的 ._inlineN
     # 内联 style 压过任何样式表规则，却不在 <style> 里。不扫它就会出现
-    # 「改了 CSS 但被内联覆盖、门禁全程 PASS」——.sec.big 的暗底就栽在这上面。
+    # 「改了 CSS 但被内联覆盖、门禁全程 PASS」。
     inline = re.findall(r'style="([^"]*)"', html)
     if inline:
         css += "\n" + "\n".join("._inline%d{%s}" % (i, d) for i, d in enumerate(inline))
@@ -57,9 +57,8 @@ def main(path):
             errors.append(f"A1 字号 {v}px < 13px（CSS 第 {line} 行）——meta 下限 13px、UI 15px、叙事正文 17–19px")
 
     # ---- A2 对比度 ----
-    # v1 的写法把颜色对硬编码在这里，跟页面实际画什么无关，所以 --soft #6f688a（3.24:1）
-    # 长期在页面上活着而门禁一路 PASS。v2 改为：颜色对从 tokens 的 _contrast_on_* 注记推导，
-    # 并且实算与注记必须一致——注记写错或值漂移都会被挡下。
+    # 颜色对从 tokens 的 _contrast_on_* 注记推导，实算必须与注记一致——
+    # 注记写错或值漂移都会被挡下。硬编码颜色对等于门禁跟页面实际画什么无关。
     C = TOK["primitive"]["color"]
     S = TOK["semantic"]
 
@@ -102,9 +101,9 @@ def main(path):
             else:
                 infos.append(f"A2 text.{role} on {surf} = {actual:.2f}:1 ✓（需 ≥{need}）")
 
-    # 状态色：**每一个真会被画出来的面**都要过，不只 shell 与 card。
-    # 只比 shell/card 曾漏掉外壳渐变的深端 paper-200：amber-700 在它上面只有 4.03:1，
-    # 顶栏 eyebrow 实测 4.12:1，门禁却一路 PASS。场（纸/幕）由后缀决定，别混着比。
+    # 状态色：**每一个真会被画出来的面**都要过，不只 shell 与 card——
+    # 外壳渐变的深端是 paper-200，只比 shell/card 会漏掉它。
+    # 场（纸/幕）由后缀决定，别混着比。
     PAPER = ("shell", "shell-alt", "card", "rule", "read", "read-alt")
     STAGE = ("stage", "stage-alt")
     for st, fg in ((k, deref(v)) for k, v in S["state"].items() if not k.startswith("_")):
@@ -127,7 +126,7 @@ def main(path):
 
     # ---- A2b 实扫 CSS 里的字面文字色 ----
     # 每个用在 color: 上的字面色，至少要在某一个已定义的面上达到 4.5:1；
-    # 全都不达标就是它没有合法的落脚处。这条能抓住 #6f688a 那一类，黑名单抓不住。
+    # 全都不达标就是它没有合法的落脚处。这条抓的是黑名单抓不住的那一类。
     for m in re.finditer(r"\{([^{}]*)\}", css):
         block = m.group(1)
         cm = re.search(r"(?<![-\w])color\s*:\s*(#[0-9a-fA-F]{3,6})\b", block)
@@ -160,7 +159,7 @@ def main(path):
         if key.startswith("background-attachment") and re.search(r"background-attachment\s*:\s*fixed", css):
             errors.append("A4 命中禁用清单：background-attachment:fixed（iOS 不支持、Android 每帧整页重绘）")
     if re.search(r"@font-face", css):
-        errors.append("A4 命中禁用清单：@font-face（中文正文字体子集会撑破 300KB 预算；标题子集需 ADR 豁免）")
+        errors.append("A4 命中禁用清单：@font-face（中文正文字体子集会撑破体积预算；标题子集需 ADR 豁免）")
     if re.search(r"\bparallax\b|scroll-snap-type\s*:\s*[^;]*mandatory", css):
         warns.append("A4 疑似视差/滚动劫持——需 ADR 豁免")
 
@@ -175,15 +174,13 @@ def main(path):
         errors.append("A6 存在动效但缺 prefers-reduced-motion 分支")
 
     # ---- A7 浮层层级 ----
-    # 这一条补的是第五次「只查形状不查真值」：.sheet 的 z-index 是 50，
-    # 而幕 .sty 是 60、底不透明且 inset:0。从幕里唤起的抽屉（质问台、每个溯源）
-    # DOM 正常、样式正常、事件绑定正常、四道门禁全绿——用户看到的是屏幕纹丝不动。
-    # 谁都没查「它到底盖在谁上面」。
-    # 选择器可能在多条规则里出现（.sty 既有本体，也有 `.stage,.sty{left:96px}` 这种），
-    # 只看第一条就会漏掉真正那条——A7 第一版就是这么把 .sty 静默跳过的，
-    # 而 .sty 正是它要抓的那一个。所以扫全部规则再合并。
-    # 注释会被当成选择器的一部分吞进去（`/* … */ .sheet{` 变成一个 60 字的"选择器"），
-    # 于是匹配失败、门禁静默放行。先剥注释再解析。
+    # 不透明的全屏层若盖在抽屉之上，从它里面唤起的抽屉会「渲染正常但看不见、点不到」，
+    # 而颜色/体积/字面值三类门禁全都查不出来。
+    #
+    # 两个实现要点：
+    #   1. 同一个选择器可能出现在多条规则里（.sty 既有本体，也有 `.stage,.sty{left:96px}`）。
+    #      只看第一条匹配会漏掉真正那条，所以扫全部规则再合并。
+    #   2. 先剥注释——注释会被当成选择器的一部分吞进去，导致匹配失败、静默放行。
     css_nc = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
 
     def blocks_for(cls):

@@ -3,7 +3,7 @@
 """invest-coach 内容门禁校验器。
 
 用法: python tools/validate.py [path/to/site.json]
-规则编号对应 docs/_superseded/工程化规范.md §5。ERROR 非零退出（build.py 据此拒绝构建）。
+ERROR 非零退出（build.py 据此拒绝构建）。
 第 2 步才生效的规则（x_covers 全覆盖、quiz 结构、review_bank 覆盖、pair id 必填）
 在对应字段尚为空时降级为 WARN 提示，字段一旦出现即全量校验。
 """
@@ -188,8 +188,7 @@ def check_dirs():
 def check_doclinks():
     """R27：文档之间的相对链接必须解析得到。
 
-    文档刚从 14 份平摊重组成四层（契约 / adr / records / _superseded），
-    重组正是最容易把交叉引用改断的动作——而断链没人会当场发现。
+    重组文档最容易把交叉引用改断，而断链没人会当场发现。
     """
     root = pathlib.Path(__file__).resolve().parent.parent
     SKIP = {".git", "dist", "build", "node_modules", "__pycache__", "evidence"}
@@ -524,8 +523,7 @@ def validate(path, release=False):
         warns.append(f"{screens_pending} 个节点 screens 为空（第 2 步待填）")
 
     # ---- R26 目录登记 ----
-    # docs/STRUCTURE.md 里写了很久「未登记的目录 validate.py 报 ERROR」，
-    # 而这道门禁并不存在——纪律没有执行者。本仓库的原则是不写没做的事。
+    # docs/STRUCTURE.md 的登记表是目录的唯一真源；这一条是它的执行者。
     errors_dir, warns_dir = check_dirs()
     errors += errors_dir
     warns += warns_dir

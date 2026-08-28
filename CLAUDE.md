@@ -10,6 +10,7 @@
 
 | 文档 | 什么时候读 |
 |---|---|
+| [docs/ROADMAP.md](docs/ROADMAP.md) | **决定做什么之前。** 开发重心、优先级、降级项、发布阻断项 |
 | [DESIGN.md](DESIGN.md) | **任何视觉/样式改动之前。** 纸面翻正、双场系统、字体分工、令牌纪律 |
 | [docs/SCHEMA.md](docs/SCHEMA.md) | **新增或改动任何 `x_` 内容字段之前**——未登记即构建失败 |
 | [docs/STRUCTURE.md](docs/STRUCTURE.md) | **新建任何目录之前**——未登记即 `validate.py` R26 报 ERROR |
@@ -56,31 +57,21 @@ python tools/build.py          # 内部先跑 validate，再跑四道门禁
 
 修掉字面值之后跑 `python tools/check_tokens.py --update` 把基线降下来。
 
-## 门禁的已知教训
+## 加门禁之前先问两句
 
-写门禁的时候记住这条，它在这个仓库里犯过三次：
+1. **它检查的是产物，还是检查的是描述产物的那份文件？**
+2. **它自己会不会静默放行？**（选择器没匹配上、比较集不全、只查形状不查真值——
+   这三种在输出上都长得像「通过」。覆盖数要自查：校验到的目标少于预期即 ERROR。）
 
-> **机器门禁只查形状不查真值。**
+新增门禁必须做变异测试：把代码改坏 N 种，确认 N 种都被挡住。
 
-- 内容层：LLM 写的 canon 与出处必须逐条实证核验，一次全量审计查出 34 条出处问题
-- 设计层：`check_a11y` 曾把颜色对硬编码在 Python 里读令牌，于是页面实际用 `#6f688a`（3.24:1）
-  而门禁一路 `PASS`。现在颜色对从令牌注记推导，并实扫产物
-- 可执行性：一处非法嵌套引号让 court.js 整个 IIFE 抛异常、今日页渲染成空白，
-  而 a11y / budget / tokens 三道**全部 PASS**——它们只查形状，不查跑不跑得起来。
-  补了 `check_js.py`
-- 可解析 ≠ 能运行：批量替换把 `return 📖 …` 弄成 `returnic('book')+' …'`，语法完全合法，
-  `node --check` 一路 PASS，一调用就 `ReferenceError`。补了 J2（未声明标识符扫描）
-- 比较集不全：`check_a11y` 只拿 shell / card 比状态色，而外壳渐变的深端是 `paper-200`，
-  四个状态色在那一端全部不达 AA。**一个面只要会被真的画出来，就得进比较集**
-
-新增门禁时先问：**它检查的是产物，还是检查的是描述产物的那份文件？**
-再问一遍：**它检查的是形状，还是检查的是能不能用？**
+**不写没做的事。** 文档里不许出现尚不存在的门禁——要么做出来，要么改措辞。
 
 ## 视觉改动的工作方式
 
 `~/.claude/skills/minimalist-ui`（编辑式极简）是这个项目对口的设计技能。
 **排版规则在 `~/.claude/skills/design-taste-frontend/references/directives-foundation.md` §4.1**——
-那条 SERIF DISCIPLINE 值得先读，本项目在它上面栽过一次（见 DESIGN.md §4）。
+那条 SERIF DISCIPLINE 值得先读（对应 DESIGN.md §4 的排版纪律）。
 但**技能不知道本项目的裁决**——纸面翻正、双场语义色、字体分工都在 `DESIGN.md`，先读那份。
 
 改完必须实测，不能只看门禁：起个本地服务把 `dist/index.html` 跑起来，
@@ -101,7 +92,7 @@ src/         template.html + parts/*.{css,js}（构建期按 <!--#part:--> 拼�
 tools/       build / validate + 四道门禁 + fetch_current / render_review
              _archive/oneoff/ 是已执行完毕的一次性内容脚本，不可重跑
 server/      轻后端：main.go 主线 · server.py 零依赖联调
-docs/        四层：契约 / adr 裁决 / records 记录 / _superseded 已取代（索引 docs/README.md）
+docs/        三层：契约 / adr 裁决 / records 记录（索引 docs/README.md）
 dist/ build/ 产物，都在 gitignore
 ```
 

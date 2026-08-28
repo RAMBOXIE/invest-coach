@@ -40,12 +40,13 @@ dist/                   构建产物（gitignore）
 
 ## 文档从哪读
 
-**[docs/README.md](docs/README.md)** 是索引。四层：
+**[docs/ROADMAP.md](docs/ROADMAP.md) 是开发重心** —— 接下来做什么、按什么顺序、什么不做。
+
+**[docs/README.md](docs/README.md)** 是文档索引。三层：
 
 - **契约层** —— 改代码之前要读的，[DESIGN.md](DESIGN.md) / SPEC_DEV / STRUCTURE / SCHEMA / LLM 登记簿 / 知识可靠性 / 形态规格
-- **裁决层** —— `docs/adr/`，被重新争论过的问题只在这里定案
+- **裁决层** —— `docs/adr/`，已定案的问题只在这里写，别处只许引用
 - **记录层** —— `docs/records/`，审计留档
-- **已被取代** —— `docs/_superseded/`，只作历史，不要照着做
 
 用 Claude Code 开发看 [CLAUDE.md](CLAUDE.md)。
 
