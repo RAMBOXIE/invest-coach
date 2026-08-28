@@ -3,6 +3,8 @@
    判分仍是规则引擎；教练画外音用预置文案，LLM 接入后只改措辞不改结论。 */
 (function () {
   'use strict';
+
+  const md = s => String(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
   const STORIES = SITE.x_stories || [];
   if (!STORIES.length) return;
   let STORY = STORIES[0];
@@ -59,7 +61,6 @@
     return `<div class="doc"><div class="dh"><span>${ic('doc')} ${q.src}</span><span class="ln">${q.line}</span></div>
       <div class="dt">${q.text}</div></div>`;
   }
-  const md = s => String(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
   function readingHTML(mine) {
     if (!mine || !mine.verdict) return '';
     const r = choiceReading(STORY, mine, ST.conf, ST.stats || { pressed: 0, broke: 0 }, ST.prior);
@@ -95,7 +96,7 @@
   function bCold(b) {
     return {
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
-        ${b.lines.map((l, i) => `<p class="ln${i === b.lines.length - 1 ? '' : ' dim'}">${l}</p>`).join('')}
+        ${b.lines.map((l, i) => `<p class="ln${i === b.lines.length - 1 ? '' : ' dim'}">${md(l)}</p>`).join('')}
         ${vo(b.narration)}`,
       foot: `<button class="sty-cta" id="sty-next">翻开年报</button>`
     };
@@ -157,7 +158,7 @@
     return {
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
         ${docQuote(b.quote)}
-        ${b.lines.map(l => `<p class="ln">${l}</p>`).join('')}
+        ${b.lines.map(l => `<p class="ln">${md(l)}</p>`).join('')}
         <div class="qchips"><button data-f="${b.quote.fact}">${ic('link')} 核这个数字</button></div>
         ${vo(b.narration)}`,
       foot: `<button class="sty-cta" id="sty-next">那我的判断呢？</button>`,

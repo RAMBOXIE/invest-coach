@@ -11,8 +11,8 @@
 
 | # | 欠账 | 现状 | 谁能解 |
 |---|---|---|---|
-| D1 | **14 个节点全部未经人工签字** | `x_prov.reviewed_by` 全空，`validate.py --release` 会拒绝 | 人工逐条过 G1/G2 |
-| D2 | **三幕从未过任何内容门禁** | `build.py` 只对 `content/ch1/site.json` 跑 validate；`content/stories/*/case.json`（含真人姓名与逐字原档引文）不在校验范围内 | 给 validate 加 `--stories` 模式 |
+| D1 | **14 个节点 + 4 个幕全部未经人工签字** | `x_prov.reviewed_by` 全空，`validate.py --release` 会拒绝 | 人工逐条过 G1/G2 |
+| ~~D2~~ | ~~幕从未过任何内容门禁~~ | **✅ 已完成 2026-08-26。** `validate --stories` 七条规则（结构 / verdict 齐全 / 引文带出处 / fact 存在 / **数字必须有出处** / **引文锚定到原档行**），已接进 build.py 的阻断链。四幕全部通过 |
 | D3 | **隐私条款整条未落地** | 已裁决：提问入库前对金额/证券代码/联系方式打码、90 天定时清理、输入框常驻提示。三条都没做 | server 两侧各加打码函数 + 定时清理；`.askin` 加提示 |
 
 ## 已裁决但未执行

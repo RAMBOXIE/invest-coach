@@ -498,7 +498,10 @@ const BANK={},BANKQ={};
   BANKQ[it.quiz.x_id]={quiz:it.quiz,pair:it.pair_id,side:it.side};
 });
 const isDeep=n=>!!n.x_level;
-const ORDER=['sunbeam-1998','lehman-2008','buffett-1993'];  // 幕序：先能查到→再查不到→最后自己算错
+/* 幕序：先能查到（原档里写着）→ 再查不到（原档里没写）→ 自己算错（机会成本）
+   → 最后是根本没有数字（分母趋零）。不在这张表里的幕会被 indexOf 排到最前，
+   所以新增幕必须在这里登记。 */
+const ORDER=['sunbeam-1998','lehman-2008','buffett-1993','nikola-2021'];
 function canonLabel(s){s=s||'';
   const b=ic('book')+' ';
   if(s.includes('Graham'))return b+'格雷厄姆怎么说';
@@ -577,16 +580,25 @@ function plan(){
   const nx=nextNode();
   const lab=(SITE.x_lab||{}).cases||[];
   const q=[];
-  // 优先级：复训有时效 > 幕是主线（v3 故事驱动）> 节点 > 未签字的实验室
+  /* 前三次会话压到 5 分钟以内（硬约束，不是目标）。产品的认知负荷本来就比
+     一句翻译高得多，第一屏若显得比看 10-K 还费劲就会当场流失。
+     所以头三次把队首让给最短的那一件：两拍的基础节点（约 3 分钟）。
+     幕是主线，但它 8 分钟——留到用户已经走完一遍完整回路之后。 */
+  const warmup = lit.size < 3 && nx && !isDeep(nx);
+  // 优先级：复训有时效 > （前三次：短节点）> 幕是主线 > 节点 > 未签字的实验室
   if(dues.length)q.push({kind:'review',mins:Math.max(1,Math.round(dues.length*0.5)),
     eye:'复训到期',t:`${dues.length} 道混淆对`,
     s:'闭卷。这是唯一能证明你真学会了的地方。',cta:'开始复训',id:'go-review'});
+  if(warmup)q.push({kind:'node',mins:3,
+    eye:`第 ${lit.size+1} 步 · 约 3 分钟`,t:nx.name,s:nx.desc,
+    cta:'开始判卷',id:'go-node',attr:` data-id="${nx.id}"`,
+    foot:'两拍：读材料 → 下结论。走完一遍你就知道这里是怎么运转的。'});
   if(nextStory)q.push({kind:'story',mins:8,
     eye:`第 ${stories.indexOf(nextStory)+1} 幕 / 共 ${stories.length} · ${nextStory.era}`,
     t:nextStory.title,s:`${nextStory.subtitle}<br><span style="opacity:.82">${nextStory.hook}</span>`,
     cta:'读这一幕',id:'go-story',attr:` data-cid="${nextStory.case_id}"`,
     foot:'你会先做判断，再拿到知识点。中途可以直接问这份年报——它只用自己写过的话回答。'});
-  if(nx)q.push({kind:'node',mins:isDeep(nx)?6:3,
+  if(nx&&!warmup)q.push({kind:'node',mins:isDeep(nx)?6:3,
     eye:`今日案卷 · ${nx.domain}`,t:nx.name,s:nx.desc,
     cta:'开始判卷',id:'go-node',attr:` data-id="${nx.id}"`,
     foot:isDeep(nx)?'七拍：读材料 → 先写 → 挑证据 → 排除辩护 → 下结论 → 自评 → 回卷，最后一道闭卷锚题才点亮。':'两拍：读材料 → 下结论。'});
