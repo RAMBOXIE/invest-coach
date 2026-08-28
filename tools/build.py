@@ -99,6 +99,24 @@ def load_stories():
 BACKEND_MARKER = "/*__BACKEND__*/null"  # 模板改造时引入；原始上游模板没有它
 
 
+
+# 只在开发期有意义、运行时从不渲染的字段。它们随内容一起被打进单文件产物，
+# 白白占体积——而体积是 owner 裁决的硬约束。
+#   x_prov  —— 人工签字与内容哈希，只给 validate --release 用
+#   _note   —— 下划线前缀按约定就是开发注释
+#   note    —— sources[].note 的出处批注、cast[].note 的用真名理由：
+#              留在源码里有价值（审计要看），但页面从不渲染它
+DEV_ONLY = ("x_prov", "_note", "note")
+
+
+def strip_dev(o):
+    if isinstance(o, dict):
+        return {k: strip_dev(v) for k, v in o.items() if k not in DEV_ONLY}
+    if isinstance(o, list):
+        return [strip_dev(v) for v in o]
+    return o
+
+
 def main(argv):
     backend = None
     if "--backend" in argv:
@@ -108,6 +126,12 @@ def main(argv):
     if r.returncode != 0:
         print("校验 FAIL —— 拒绝构建")
         return 1
+    # 幕（content/stories/*/case.json）是现在的主体验，含真人姓名与逐字原档引文，
+    # 必须和 site.json 一样过内容门禁。
+    r = subprocess.run([sys.executable, str(ROOT / "tools" / "validate.py"), "--stories"])
+    if r.returncode != 0:
+        print("幕校验 FAIL —— 拒绝构建")
+        return 1
 
     tpl = TPL.read_text(encoding="utf-8")
     tpl = tpl.replace("/*__TOKENS__*/", css_vars())
@@ -116,12 +140,12 @@ def main(argv):
         print(f"模板中占位符 {DATA_MARKER} 不是恰好一次")
         return 1
 
-    data = json.loads(CONTENT.read_text(encoding="utf-8"))
+    data = strip_dev(json.loads(CONTENT.read_text(encoding="utf-8")))
     # 溯源徽标需要事实条目：把 facts.json 的 facts 按 id 注入 SITE.x_facts（只读展示用）
     fp = CONTENT.parent / "facts.json"
     if fp.exists():
         data["x_facts"] = {f["id"]: f for f in json.loads(fp.read_text(encoding="utf-8")).get("facts", [])}
-    st = load_stories()
+    st = [strip_dev(x) for x in load_stories()]
     if st:
         data["x_stories"] = st
         print(f"故事幕: {len(st)} 个（{', '.join(s['case_id'] for s in st)}）")

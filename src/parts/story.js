@@ -255,7 +255,7 @@
     bodyEl.innerHTML = `<div class="fin">
       <div class="fin-ic">${ic('doc')}</div>
       <h2>这一幕读完了</h2>
-      <p class="ln">你刚才做的判断、以及那段藏在第 18 页的话，会跟着「${STORY.beats.find(x => x.kind === 'abstract').label}」这个标签进入你的复训队列。</p>
+      <p class="ln">你刚才做的判断、以及这一幕里那份原档，会跟着「${STORY.beats.find(x => x.kind === 'abstract').label}」这个标签进入你的复训队列。</p>
       <p class="ln dim">下次它来找你的时候，会换一家公司——因为判据要能离开这个故事，才算是你的。</p>
       ${vo('故事负责让你记住。练习负责让你带走。两样都要。')}</div>`;
     footEl.innerHTML = `<button class="sty-cta" id="sty-toprac">去练这条判据</button>

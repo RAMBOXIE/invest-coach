@@ -209,6 +209,221 @@ def check_doclinks():
     return bad
 
 
+
+# ---------- 幕的校验（--stories） ----------
+BEAT_KINDS = ["cold_open", "evidence", "evidence", "decision", "reveal",
+              "contrast", "abstract", "twin"]
+BEAT_REQ = {
+    "cold_open": ["eyebrow", "title", "lines"],
+    "evidence":  ["eyebrow", "title", "panel"],
+    "decision":  ["eyebrow", "title", "prompt", "options"],
+    "reveal":    ["eyebrow", "title", "quote", "lines"],
+    "contrast":  ["eyebrow", "title", "columns", "them", "canon", "knowhow"],
+    "abstract":  ["eyebrow", "title", "rule", "label", "boundary", "formula"],
+    "twin":      ["eyebrow", "title", "panel", "question", "options", "fb"],
+}
+# 这些数字是叙事里正常出现的年份/序号，不要求绑 fact
+NUM_OK = re.compile(r"^(19|20)\d\d$|^[1-9]$|^1[0-2]$")
+
+
+
+def sig(tok):
+    """数字 → 有效数字串。1,073.1 → 10731；10.73 → 1073；50.0 → 5"""
+    d = str(tok).replace(",", "").replace(".", "").lstrip("0")
+    return d.rstrip("0") or ("0" if str(tok).strip("0.,") == "" else "")
+
+
+def sig_match(tok, pool, minlen=3):
+    """内容里的数字与已核定事实互为前缀即算有出处（容许单位换算与取整）。"""
+    a = sig(tok)
+    if len(a) < minlen:
+        return False
+    return any(a.startswith(b) or b.startswith(a) for b in pool if len(b) >= minlen)
+
+
+def validate_stories(release=False):
+    """S1–S6：幕的结构、出处与数字纪律。
+
+    以前 build.py 只对 content/ch1/site.json 跑校验，三幕（现在的主体验，
+    含真人姓名与逐字原档引文）从未过任何内容门禁。
+    """
+    root = pathlib.Path(__file__).resolve().parent.parent
+    facts_p = root / "content" / "ch1" / "facts.json"
+    F = json.loads(facts_p.read_text(encoding="utf-8"))
+    fact_ids = {f["id"] for f in F["facts"]}
+    approved = set(F.get("approved_tokens", {}))
+    # 已核定事实里出现过的所有数字串，都算「有出处」
+    for f in F["facts"]:
+        for tok in re.findall(r"[\d][\d,\.]*", f.get("value", "") + " " + f.get("basis", "")):
+            approved.add(tok.strip(".,"))
+    # 事实用 $M / $K 登记，文案用「亿 / 万」写——同一个数字两种单位，
+    # 字符串相等比不出来。改按**有效数字**比：把逗号、小数点、末尾零去掉，
+    # 只要内容里的数字与某条已核定事实的有效数字互为前缀（≥3 位），就算有出处。
+    # 这允许换算与合理取整，但编造的数字仍然对不上任何一条。
+    approved_sig = {sig(x) for x in approved if sig(x)}
+    ev_files = {e["file"] for e in F["evidence_files"]}
+    accs = {e["accession"] for e in F["evidence_files"]}
+
+    errors, warns = [], []
+    cases = sorted((root / "content" / "stories").glob("*/case.json"))
+    if not cases:
+        return ["S0 找不到任何 content/stories/*/case.json"], []
+
+    for cp in cases:
+        cid = cp.parent.name
+        try:
+            c = json.loads(cp.read_text(encoding="utf-8"))
+        except Exception as e:
+            errors.append(f"S0 {cid}: case.json 解析失败 —— {e}")
+            continue
+
+        # S1 顶层字段
+        for k in ("case_id", "title", "subtitle", "era", "hook", "knowledge_node", "cast", "beats"):
+            if not c.get(k):
+                errors.append(f"S1 {cid}: 缺顶层字段 {k}")
+        if c.get("case_id") != cid:
+            errors.append(f"S1 {cid}: case_id「{c.get('case_id')}」与目录名不一致")
+
+        # S2 拍的种类与顺序
+        kinds = [b.get("kind") for b in c.get("beats", [])]
+        if kinds[:1] != ["cold_open"]:
+            errors.append(f"S2 {cid}: 第一拍必须是 cold_open，实际 {kinds[:1]}")
+        for need in ("decision", "reveal", "contrast", "abstract", "twin"):
+            if need not in kinds:
+                errors.append(f"S2 {cid}: 缺 {need} 拍")
+        for b in c.get("beats", []):
+            for k in BEAT_REQ.get(b.get("kind"), []):
+                if not b.get(k):
+                    errors.append(f"S2 {cid}/{b.get('id')}({b.get('kind')}): 缺字段 {k}")
+
+        # S3 决策拍的三种 verdict 必须齐
+        for b in c.get("beats", []):
+            if b.get("kind") == "decision":
+                vs = {o.get("verdict") for o in b.get("options", [])}
+                if vs != {"prudent", "risky", "hasty"}:
+                    errors.append(f"S3 {cid}: decision 的 verdict 必须恰好是 prudent/risky/hasty，实际 {sorted(vs)}")
+            if b.get("kind") == "twin":
+                oks = [o for o in b.get("options", []) if o.get("ok")]
+                if len(oks) != 1:
+                    errors.append(f"S3 {cid}: twin 必须恰好一个正确选项，实际 {len(oks)} 个")
+
+        # S4 引文必须带出处与行号
+        for b in c.get("beats", []):
+            q = b.get("quote")
+            if q and not (q.get("src") and q.get("line")):
+                errors.append(f"S4 {cid}/{b.get('id')}: quote 缺 src 或 line")
+
+        # S7 引文锚定：引文必须能在归档原档的引用行附近找到。
+        # 没有这一条，把 quote.text 换成一句编造的话，其余所有检查都会放行——
+        # 而这个产品的核心承诺就是「他说的每一句都逐字来自原档」。
+        #
+        # 中文引文是英文原档的翻译，字符串比不了，所以比**数字**：
+        # 引文里出现的每个数字，都必须出现在被引的那几行里。
+        # 英文引文则直接比文本本身。
+        acc2file = {e["accession"]: e["file"] for e in F["evidence_files"]}
+        def check_quote(q, where):
+            src_line = str(q.get("line") or "")
+            fid = q.get("fact")
+            acc = None
+            if fid:
+                acc = next((x.get("accession") for x in F["facts"] if x["id"] == fid), None)
+            fpath = acc2file.get(acc)
+            if not fpath:
+                warns.append(f"S7 {cid}/{where}: 引文无法定位原档（fact={fid}）——无法核对逐字性")
+                return
+            ep = root / fpath
+            if not ep.exists():
+                errors.append(f"S7 {cid}/{where}: 原档缺失 {fpath}")
+                return
+            EL = ep.read_text(encoding="utf-8", errors="replace").splitlines()
+            nums = re.findall(r"L(\d+)", src_line)
+            if not nums:
+                warns.append(f"S7 {cid}/{where}: line 字段没有 L 行号，无法核对")
+                return
+            lo, hi = int(nums[0]), int(nums[-1])
+            win = chr(10).join(EL[max(0, lo - 6):min(len(EL), hi + 6)])
+            txt = re.sub(r"<[^>]+>", "", q.get("text") or q.get("quote") or "")
+            ascii_ratio = sum(c.isascii() for c in txt) / max(1, len(txt))
+            if ascii_ratio > 0.85:
+                probe = re.sub(r"\s+", " ", txt).strip()[:60]
+                if re.sub(r"\s+", " ", win).find(probe) < 0:
+                    errors.append(f"S7 {cid}/{where}: 英文引文在原档 {src_line} 附近找不到 —— "
+                                  f"「{probe[:50]}」。逐字引文不许改写")
+            else:
+                qn = [t for t in re.findall(r"[\d][\d,]*(?:\.\d+)?", txt) if len(sig(t)) >= 2]
+                miss = [t for t in qn if t.replace(",", "") not in win.replace(",", "")]
+                if miss:
+                    errors.append(f"S7 {cid}/{where}: 译文引文里这些数字在原档 {src_line} 附近找不到 —— "
+                                  + "、".join(miss[:6]) + "。译文可以，编造不行")
+
+        for b in c.get("beats", []):
+            if b.get("quote"): check_quote(b["quote"], f"{b.get('id')}/quote")
+        for i, t in enumerate((c.get("interrogation") or {}).get("testimony", [])):
+            if t.get("src") and t.get("line"): check_quote(t, f"testimony[{i}]")
+
+        # S5 每个 fact 引用都要在 facts.json 里存在
+        for m in re.finditer(r'"fact"\s*:\s*"([^"]+)"', cp.read_text(encoding="utf-8")):
+            if m.group(1) not in fact_ids:
+                errors.append(f"S5 {cid}: 引用了不存在的 fact「{m.group(1)}」")
+
+        # S6 数字纪律：正文里出现的数字必须能在已核定事实里找到
+        # 这是幕层的 R12。少了它，一幕里可以出现任何编造的数字而无人察觉。
+        txt = []
+        def walk(o, in_quote=False):
+            if isinstance(o, str):
+                if not in_quote: txt.append(o)
+            elif isinstance(o, dict):
+                # **逐字引文豁免**：quote / testimony 里的数字由引文自己的 src + line 背书，
+                # 那才是它们的出处。再要求它们单独绑一条 fact，等于要求把原档拆成事实条目
+                # 才准引用——反而会逼人去改写原文。改写原文是这个产品最不能容忍的事。
+                q = o.get("src") and (o.get("line") or o.get("accession"))
+                for k, v in o.items():
+                    if k in ("line", "accession", "_note", "note"): continue
+                    walk(v, in_quote or (bool(q) and k in ("text", "quote")))
+            elif isinstance(o, list):
+                for v in o: walk(v, in_quote)
+        walk(c)
+        blob = " ".join(txt)
+        # 这些不是「教学数字」，是出处标识，不该要求绑 fact：
+        #   申报号 0000950170-98-000413 / 日期 2001-05-15 / 行号 L1192–L1198
+        #   条例号 AAER 1393、Rule 12b-2、10-K/A、Repo 105、第 18 页
+        for pat in (r"\d{10}-\d\d-\d{6}", r"\d{4}-\d\d-\d\d", r"L\d+(?:[–-]L?\d+)?",
+                    r"[a-z]{2}-[a-z\-]+-\d+",           # fact id：nk-rd-20 / md-ni-19
+                    r"\d+\s*月\s*\d+\s*日", r"\d+\s*年",  # 中文日期
+                    r"第\s*[一二三四五六七八九十\d]+\s*[季幕拍]",
+                    r"AAER\s*\d+", r"LR-\d+", r"10-[KQ](?:405|/A)?", r"8-K", r"S-1",
+                    r"Repo\s*105", r"Rule\s*[\d\w.-]+", r"第\s*\d+\s*[页章节]",
+                    r"§\s*[\d.]+", r"SFAS\s*\d+", r"ASC\s*[\d-]+"):
+            blob = re.sub(pat, " ", blob)
+        bad = []
+        for tok in re.findall(r"(?<![\w.])[\d][\d,]*(?:\.\d+)?", blob):
+            t = tok.strip(".,")
+            if not t or NUM_OK.match(t) or t in approved:
+                continue
+            if sig_match(t, approved_sig):
+                continue
+            bad.append(t)
+        if bad:
+            errors.append(f"S6 {cid}: 这些数字在 facts.json 里找不到出处 —— "
+                          + "、".join(sorted(set(bad))[:14])
+                          + "。真实数字必须先入 facts.json 并绑 accession + 行号")
+
+        # 签字（同 site.json 的 --release 纪律）
+        if not (c.get("x_prov") or {}).get("reviewed_by"):
+            (errors if release else warns).append(
+                f"{cid}: 幕未经人工审核签字（x_prov.reviewed_by 为空）"
+                + ("——--release 阻断" if release else "——定版前必须补"))
+
+    # 原档登记自检
+    for e in F["evidence_files"]:
+        if not (root / e["file"]).exists():
+            errors.append(f"S0 facts.json 登记的原档不存在：{e['file']}")
+    if not errors:
+        print(f"INFO : 幕校验 {len(cases)} 个 case.json 全部通过"
+              f"（{len(fact_ids)} 条已核定事实 / {len(ev_files)} 份原档 / {len(accs)} 个 accession）")
+    return errors, warns
+
+
 def validate(path, release=False):
     errors, warns = [], []
     na_stats = []
@@ -543,7 +758,16 @@ if __name__ == "__main__":
         sys.stdout.reconfigure(encoding="utf-8")
     except AttributeError:
         pass
-    args = [a for a in sys.argv[1:] if a != "--release"]
-    release = "--release" in sys.argv[1:]
+    argv = sys.argv[1:]
+    release = "--release" in argv
+    if "--stories" in argv:
+        errs, wrns = validate_stories(release)
+        for w in wrns:
+            print("WARN :", w)
+        for e in errs:
+            print("ERROR:", e)
+        print("STORIES:", "FAIL" if errs else "PASS")
+        sys.exit(1 if errs else 0)
+    args = [a for a in argv if a not in ("--release", "--stories")]
     default = pathlib.Path(__file__).resolve().parent.parent / "content" / "ch1" / "site.json"
     sys.exit(validate(args[0] if args else default, release=release))

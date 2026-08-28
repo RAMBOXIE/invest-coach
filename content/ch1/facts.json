@@ -422,6 +422,24 @@
    "basis": "Cash and cash equivalents 235,876（千美元）",
    "accession": "0001682852-20-000006",
    "line": "L6903"
+  },
+  {
+   "id": "nk-rd-19",
+   "company": "Nikola",
+   "item": "FY2019 研发费用",
+   "value": "6,751 万美元",
+   "basis": "Research and development 67,514（千美元）·2020 年 10-K 的对照列",
+   "accession": "0001731289-21-000006",
+   "line": "L1556/L1614"
+  },
+  {
+   "id": "nk-sga-19",
+   "company": "Nikola",
+   "item": "FY2019 销售管理费用",
+   "value": "2,069 万美元",
+   "basis": "Selling, general, and administrative 20,692（千美元）·同上",
+   "accession": "0001731289-21-000006",
+   "line": "L1557"
   }
  ],
  "approved_tokens": {
@@ -558,6 +576,9 @@
   "4.590": "md-ocf-19",
   "2.359": "md-cash-19",
   "56": "md-float+md-rev-19",
-  "634": "md-rev-19+nk-rev-20"
+  "634": "md-rev-19+nk-rev-20",
+  "13": "nk-float÷nk-rev-20 = 131,579 ≈ 13 万倍",
+  "2.1": "sb-ar-g÷sb-rev-g = 38.5/18.7 = 2.06 ≈ 2.1 倍（步差）",
+  "5,000": "sb-earlybuy 约 $50.0M = 5,000 万美元"
  }
 }
