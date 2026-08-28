@@ -15,12 +15,12 @@
 | `evidence/` | 原档存档 + sha256 锚定 | 取数管线 | validate.py | 永久，只增不改 |
 | `src/` | `template.html`（单文件骨架，含 `<!--#part:xxx-->` 占位） | 人 | build.py | 长期 |
 | `src/parts/` | 源码分片，扁平 `<模块>.{css,js}`，构建期按占位符拼装 | 人 | build.py | 长期 |
-| `tools/` | 常驻工具：build / validate / check_a11y / check_budget / check_js / check_tokens / fetch_current / render_review | 人 | 人、CI | 长期 |
+| `tools/` | 常驻工具：build / validate / 四道 check_* / fetch_current / fetch_reddit / render_review | 人 | 人、CI | 长期 |
 | `tools/_archive/oneoff/` | 已执行完毕的一次性内容注入脚本，命名 `YYYYMMDD-用途.py` | — | 归档查阅 | 永久保留，不可重跑 |
 | `server/` | 轻后端。`main.go` 是主线，`server.py` 是零依赖联调用 | 人 | 部署 | 长期 |
 | `docs/` | 文档，三层：契约 / 裁决 / 记录。索引见 `docs/README.md` | 人 | 人 | 长期 |
 | `docs/adr/` | 架构决策记录 `NNNN-标题.md`。被重新争论过的问题只在这里定案 | 人 | 人 | 永久 |
-| `docs/records/` | 审计留档（勘误 / 数据核定 / 审图），不管代码 | 人 | 人 | 永久 |
+| `docs/records/` | 审计留档（勘误 / 数据核定 / 审图 / 需求调研），不管代码 | 人 | 人 | 永久 |
 | `docs/CHECKLISTS/` | 开工前八问等清单 | 人 | 人 | 长期 |
 | `dist/` | 构建产物（单文件 index.html） | build.py | 交付 | gitignore |
 | `build/` | 其它生成物（如 `build/review/` 的内容审阅稿） | render_review.py | 人 | gitignore |
