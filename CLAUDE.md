@@ -57,6 +57,14 @@ python tools/build.py          # 内部先跑 validate，再跑四道门禁
 
 修掉字面值之后跑 `python tools/check_tokens.py --update` 把基线降下来。
 
+人工签字（`--release` 的前置）走签字台：
+
+```bash
+python tools/sign.py                       # 总览
+python tools/sign.py --show <节点或幕的 id>  # 待审内容 + 清单
+python tools/sign.py --sign <id> --by 名字  # 记录签字
+```
+
 ## 加门禁之前先问两句
 
 1. **它检查的是产物，还是检查的是描述产物的那份文件？**
