@@ -707,7 +707,21 @@ function commitPrescription(rx){
 function plan(){
   const dues=duePairs();
   const stories=(SITE.x_stories||[]).slice().sort((a,b)=>ORDER.indexOf(a.case_id)-ORDER.indexOf(b.case_id));
-  const nextStory=stories.find(x=>!((S.story||{})[x.case_id]));
+  /* 案例必须等它教的那个知识点解锁之后才排队。
+
+     原先是 stories.find(没读过的第一个)，完全不看图。后果：ORDER 的播放顺序
+     对应的节点层数是 4 → 3 → 5 → 1，新用户的第一个 8 分钟大体验（Sunbeam）
+     教的是第 4 层的「应收增速跑赢收入增速」，而他还没学过增速（第 1 层）、
+     应收账款（第 3 层）、权责发生制（第 2 层）。
+
+     ORDER 本身是按**认知类型**排的（能查到 → 查不到 → 自己算错 → 根本没有数字），
+     那个顺序有它的道理，所以不推翻它：保留 ORDER 作为偏好，只加一道解锁门。
+     两者一起作用的结果是先修顺序正确，同时尽量维持原有的认知递进。 */
+  const nextStory=stories.find(x=>{
+    if((S.story||{})[x.case_id])return false;
+    const kn=x.knowledge_node;
+    return !kn||!byId[kn]||stateOf(byId[kn])==='lit';
+  });
   const nx=nextNode();
   const lab=(SITE.x_lab||{}).cases||[];
   const q=[];
@@ -728,7 +742,10 @@ function plan(){
     cta:'开始判卷',id:'go-node',attr:` data-id="${nx.id}"`,
     foot:'两拍：读材料 → 下结论。走完一遍你就知道这里是怎么运转的。'});
   if(nextStory)q.push({kind:'story',mins:8,
-    eye:`第 ${stories.indexOf(nextStory)+1} 幕 / 共 ${stories.length} · ${nextStory.era}`,
+    /* 序号按**读过几个**算，不按它在 ORDER 里的下标。
+       加了解锁门之后，播放顺序不再等于 ORDER 顺序——Nikola 在 ORDER 里排第 4，
+       却是最先解锁的那一个，用下标会显示「第 4 例 / 共 4」而它其实是第一个。 */
+    eye:`第 ${Object.keys(S.story||{}).length+1} 例 / 共 ${stories.length} · ${nextStory.era}`,
     t:nextStory.title,s:`${nextStory.subtitle}<br><span style="opacity:.82">${nextStory.hook}</span>`,
     cta:'读这一幕',id:'go-story',attr:` data-cid="${nextStory.case_id}"`,
     foot:'你会先做判断，再拿到知识点。中途可以直接问这份年报——它只用自己写过的话回答。'});
