@@ -22,15 +22,15 @@
   /* 画像 → 一句针对这个人的话（离线由规则合成；接后端后由 LLM 改写措辞，事实不变） */
   window.profileLine = function () {
     const p = profile();
-    if (!p.n) return '我还不了解你。读一幕，我就开始认识你的判断习惯了。';
+    if (!p.n) return '我还不了解你。做一个案例，我就开始认识你的判断习惯了。';
     const bits = [];
-    if (p.risky >= 2 && p.risky > p.prudent) bits.push('你倾向于顺着叙事走——三幕里有 ' + p.risky + ' 次选了跟随');
+    if (p.risky >= 2 && p.risky > p.prudent) bits.push('你倾向于顺着叙事走：前面的案例里有 ' + p.risky + ' 次选了跟随');
     if (p.hasty >= 2) bits.push('你有 ' + p.hasty + ' 次在证据还不够时就下了定性结论');
     if (p.prudent >= 2) bits.push('你多数时候会先求证再下结论，这是好习惯');
     if (p.over >= 1) bits.push('有 ' + p.over + ' 次你标了「很有把握」却判错——这是校准要治的病');
-    if (p.broke >= 2) bits.push('你已经在质问里戳穿了 ' + p.broke + ' 处说法，说明你会用证据');
+    if (p.broke >= 2) bits.push('你已经在追问中找出了 ' + p.broke + ' 处说法，说明你会用证据');
     if (p.noRecord >= 1) bits.push('你问出过「档里没有」，这比问出答案更难');
-    return bits.length ? bits.join('；') + '。' : '目前看不出稳定的模式——再读一幕。';
+    return bits.length ? bits.join('；') + '。' : '目前看不出稳定的模式。再做一个案例。';
   };
 
   /* 教练对「这一次选择」的解读：离线规则合成，接后端后由 LLM 基于同样的结构化信号改写 */
@@ -47,7 +47,7 @@
     } else if (v === 'risky') {
       head = '你顺着叙事走了。';
       body = conf >= .95
-        ? '而且是「很有把握」。这正是这一幕想给你的那一下——<b>叙事的说服力和证据的强度，是两回事。</b>刚才那些数字里，有一条你没有追下去。'
+        ? '而且是「很有把握」。这正是这个案例想给你的那一下——<b>叙事的说服力和证据的强度，是两回事。</b>刚才那些数字里，有一条你没有追下去。'
         : '你标的是「' + confT + '」，说明你心里其实有点犹豫。<b>那点犹豫就是信号</b>——下次让它变成一个具体的求证动作，而不是一个折扣。';
     } else {
       head = '你直接下了定性结论。';
@@ -55,9 +55,9 @@
     }
     const extra = [];
     const acted = stats ? (stats.pressed || 0) + (stats.broke || 0) : 0;
-    if (!acted) extra.push('你没有质问他一句就下了判断——<b>下一幕试着先押他几轮</b>，你会发现证词里有裂缝。');
-    else if (stats.broke > 0) extra.push('你在质问里戳穿了 ' + stats.broke + ' 处说法——<b>你的判断是建立在自己挖出来的证据上的</b>，这比选对选项值钱。');
-    else extra.push('你追问了 ' + stats.pressed + ' 次但没戳穿任何一句——<b>试试「提出证据」</b>，用你手上的数字去顶他的说法。');
+    if (!acted) extra.push('你没有追问他一句就下了判断——<b>下一个案例先多追问几轮</b>，你会发现他的说法之间对不上。');
+    else if (stats.broke > 0) extra.push('你在追问中找出了 ' + stats.broke + ' 处说法——<b>你的判断是建立在自己挖出来的证据上的</b>，这比选对选项更有价值。');
+    else extra.push('你追问了 ' + stats.pressed + ' 次但没找出任何矛盾——<b>试试「提出证据」</b>，用你手上的数字去顶他的说法。');
     if (stats && stats.noRecord > 0) extra.push('你还问出过 ' + stats.noRecord + ' 次「档里没有」——<b>这比问出答案更难</b>，它是在划材料的边界。');
     if (p.n >= 1 && v === 'risky' && p.risky >= 1) extra.push('这已经是你第 ' + (p.risky + 1) + ' 次选择跟随叙事了。<b>我会记住这一点。</b>');
     return { head, body, extra };
@@ -117,7 +117,7 @@
       <div class="ct-turn">
         ${entry.you ? `<div class="ct-you">${entry.you}</div>` : ''}
         <div class="ct-say${entry.broke ? ' broke' : ''}">
-          ${entry.broke ? `<div class="ct-bang">${ic('alert')} 说法被戳穿</div>` : ''}
+          ${entry.broke ? `<div class="ct-bang">${ic('alert')} 该说法与材料矛盾</div>` : ''}
           <div class="ct-txt">${entry.text}</div>
           <div class="ct-src">${ic('doc')} ${entry.src} · <span class="ct-ln">${entry.line}</span></div>
         </div>
@@ -130,10 +130,10 @@
         <div class="ct-acts">
           ${cur.press && !st.used.has(cur.id + ':press') ? `<button class="ct-btn press" data-press="${cur.id}">${ic('search')} 追问这一句</button>` : ''}
           <button class="ct-btn evi" data-evi="${cur.id}">${ic('scale')} 提出证据</button>
-          ${st.visible().length > st.i + 1 ? `<button class="ct-btn nxt" data-nx="1">下一句证词 →</button>` : ''}
+          ${st.visible().length > st.i + 1 ? `<button class="ct-btn nxt" data-nx="1">下一条陈述 →</button>` : ''}
         </div>`;
     } else {
-      h += `<p class="ct-done">质问结束。</p>`;
+      h += `<p class="ct-done">追问结束。</p>`;
     }
     h += `<div class="askin"><input id="ct-in" placeholder="或者直接问他……" autocomplete="off"><button id="ct-go">问</button></div>`;
     sheet(h, true);

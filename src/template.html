@@ -652,7 +652,7 @@ function prescribe(){
     .filter(([p,a])=>PAIRS[p]&&BANK[p]&&a.wrong>=2&&a.due>Date.now())
     .sort((a,b)=>b[1].wrong-a[1].wrong)[0];
   if(lp){
-    return {kind:'review',mins:1,eye:'教练点名 · 雷区',pid:lp[0],
+    return {kind:'review',mins:1,eye:'教练标注 · 你最常判错的地方',pid:lp[0],
       t:`「${PAIRS[lp[0]].look}」`,
       reason:`这个对你站错过 ${lp[1].wrong} 次，不等它自然到期了`,
       s:`区分线索：${PAIRS[lp[0]].key}`,cta:'现在就练',id:'go-review'};
@@ -735,29 +735,29 @@ function plan(){
   const warmup = lit.size < 3 && nx && !isDeep(nx);
   // 优先级：复训有时效 > （前三次：短节点）> 幕是主线 > 节点 > 未签字的实验室
   if(dues.length)q.push({kind:'review',mins:Math.max(1,Math.round(dues.length*0.5)),
-    eye:'复训到期',t:`${dues.length} 道混淆对`,
-    s:'闭卷。这是唯一能证明你真学会了的地方。',cta:'开始复训',id:'go-review'});
+    eye:'复习到期',t:`${dues.length} 道易混题`,
+    s:'闭卷。这是唯一能证明你真学会了的地方。',cta:'开始复习',id:'go-review'});
   if(warmup)q.push({kind:'node',mins:3,
     eye:`第 ${lit.size+1} 步 · 约 3 分钟`,t:nx.name,s:nx.desc,
-    cta:'开始判卷',id:'go-node',attr:` data-id="${nx.id}"`,
-    foot:'两拍：读材料 → 下结论。走完一遍你就知道这里是怎么运转的。'});
+    cta:'开始分析',id:'go-node',attr:` data-id="${nx.id}"`,
+    foot:'两步：读材料 → 下结论。走完一遍你就知道这里是怎么运转的。'});
   if(nextStory)q.push({kind:'story',mins:8,
     /* 序号按**读过几个**算，不按它在 ORDER 里的下标。
        加了解锁门之后，播放顺序不再等于 ORDER 顺序——Nikola 在 ORDER 里排第 4，
        却是最先解锁的那一个，用下标会显示「第 4 例 / 共 4」而它其实是第一个。 */
     eye:`第 ${Object.keys(S.story||{}).length+1} 例 / 共 ${stories.length} · ${nextStory.era}`,
     t:nextStory.title,s:`${nextStory.subtitle}<br><span style="opacity:.82">${nextStory.hook}</span>`,
-    cta:'读这一幕',id:'go-story',attr:` data-cid="${nextStory.case_id}"`,
+    cta:'读这个案例',id:'go-story',attr:` data-cid="${nextStory.case_id}"`,
     foot:'你会先做判断，再拿到知识点。中途可以直接问这份年报——它只用自己写过的话回答。'});
   if(nx&&!warmup)q.push({kind:'node',mins:isDeep(nx)?6:3,
-    eye:`今日案卷 · ${nx.domain}`,t:nx.name,s:nx.desc,
-    cta:'开始判卷',id:'go-node',attr:` data-id="${nx.id}"`,
-    foot:isDeep(nx)?'七拍：读材料 → 先写 → 挑证据 → 排除辩护 → 下结论 → 自评 → 回卷，最后一道闭卷锚题才点亮。':'两拍：读材料 → 下结论。'});
+    eye:`今日材料 · ${nx.domain}`,t:nx.name,s:nx.desc,
+    cta:'开始分析',id:'go-node',attr:` data-id="${nx.id}"`,
+    foot:isDeep(nx)?'七步：读材料 → 先写 → 挑证据 → 排除正常解释 → 下结论 → 自评 → 回顾，最后一道闭卷题才算通过。':'两步：读材料 → 下结论。'});
   if(lab.length&&!((S.lab||{})[lab[0].id]))q.push({kind:'lab',mins:3,
-    eye:'时事案卷 · 实验室 · 未签字 · 不计分',t:lab[0].company,
+    eye:'近期财报 · 实验区 · 未经人工复核 · 不计分',t:lab[0].company,
     s:`${lab[0].asof} 期 · 机器从 SEC 原始申报值确定性算出的形状${lab[0].letter?' · 监管已就相关科目问询':''}`,
     cta:'读一卷（只读数，不定性）',id:'go-lab',
-    foot:'不进错题档案、不进复训、不计校准分、不能点亮任何节点。'});
+    foot:'不进错题档案、不进复习、不计校准分、不能让任何一节算通过。'});
   const weak=Object.entries(S.pairs).filter(([p,a])=>PAIRS[p]&&a.wrong>=2&&a.due>Date.now())
     .sort((a,b)=>b[1].wrong-a[1].wrong)[0];
   return {q,dues,nx,stories,weak,read:stories.filter(x=>(S.story||{})[x.case_id])};
@@ -800,11 +800,11 @@ function statusStrip(done,total,nDue){
   const bits=[], a=acc(), b=brier(), br=braveRate();
   if(a!=null)bits.push(`首答 ${a}%`);
   if(b!=null)bits.push(`校准 ${b}`);
-  if(br!=null)bits.push(`敢判 ${br}%`);
+  if(br!=null)bits.push(`下结论 ${br}%`);
   return `<div class="strip">
     <div class="strip-top">
-      <span class="strip-p"><b class="num">${done}</b><span class="strip-t">/${total} 已点亮</span></span>
-      ${nDue?`<span class="strip-due">复训 ${nDue} 题到期</span>`:''}</div>
+      <span class="strip-p"><b class="num">${done}</b><span class="strip-t">/${total} 已通过</span></span>
+      ${nDue?`<span class="strip-due">${nDue} 道题该复习了</span>`:''}</div>
     <div class="bar"><i style="width:${total?Math.round(done/total*100):0}%"></i></div>
     ${bits.length?`<div class="strip-m">${bits.join(' · ')}</div>`:''}
   </div>`;
@@ -827,8 +827,8 @@ function heroCard(it){
 
 function allLit(){
   return `<div class="hero"><div class="hero-eye">第一章</div>
-    <h3 class="hero-t">全部点亮</h3>
-    <p class="hero-s">${SITE.nodes.length} 个节点都过了闭卷锚题。接下来靠复训维持——它比新课更能说明你学会了没有。</p>
+    <h3 class="hero-t">全部通过</h3>
+    <p class="hero-s">${SITE.nodes.length} 个节点都过了闭卷题。接下来靠复习维持——它比新课更能说明你学会了没有。</p>
     <button class="cta" id="go-card">复制成绩单</button></div>`;
 }
 
@@ -843,16 +843,16 @@ function upNext(rest){
 function drawers(P,pf){
   let h='';
   if(P.weak){const pm=PAIRS[P.weak[0]];
-    h+=dw('你的雷区',`<div class="dw-b">「${pm.look}」——你在这个对上站错过 <b class="num">${P.weak[1].wrong}</b> 次。</div>
+    h+=dw('你最常判错的地方',`<div class="dw-b">「${pm.look}」——这组易混概念你判错过 <b class="num">${P.weak[1].wrong}</b> 次。</div>
       <div class="tip">区分线索：${pm.key}</div>
-      <div class="tip">还没到复训时间（${new Date(P.weak[1].due).toLocaleDateString()}）。到点会自动出现在最上面。</div>`);}
+      <div class="tip">还没到复习时间（${new Date(P.weak[1].due).toLocaleDateString()}）。到点会自动出现在最上面。</div>`);}
   if(P.read.length)
-    h+=dw(`读过的幕 · ${P.read.length}`,P.read.map(x=>
+    h+=dw(`读过的案例 · ${P.read.length}`,P.read.map(x=>
       `<button class="rowbtn" data-story="${x.case_id}">
         <span><span class="nm">${x.title}</span><span class="mt">${x.era} · ${x.subtitle}</span></span>
         <span class="chipS lit">已读</span></button>`).join(''));
   if(Object.keys(S.lab||{}).length)
-    h+=dw('读过的实验室卷',`<div class="tip">这些是时事卷：不进错题档案、不进复训、不计校准分。
+    h+=dw('读过的实验区材料',`<div class="tip">这些是时事卷：不进错题档案、不进复习、不计校准分。
       读过就不再排进今日队列。</div>
       <button class="cta ghost" id="go-lab">再读一卷</button>`);
   h+=dw('换教练的侧重',TONES.map(x=>
@@ -865,7 +865,7 @@ function dw(title,body){
 }
 
 function viewAtlas(){
-  const stN={lit:'已点亮',open:'可进入',locked:'未解锁'};
+  const stN={lit:'已通过',open:'可进入',locked:'未解锁'};
   const dues=new Set(duePairs().map(p=>PAIRS[p].node.id));
   let h=`<div class="sec"><h2>全景</h2>${miniMap()}
     <div class="tip">手机上图谱只作全景参考；导航请用「今日」。</div></div>`;
@@ -877,7 +877,7 @@ function viewAtlas(){
       h+=`<button class="rowbtn" data-node="${n.id}" ${st==='locked'?'disabled':''}>
         <span class="ic">${nic(n.icon,'ic-lg')}</span>
         <span><span class="nm">${n.name}</span><span class="mt">${n.age||''} · ${(n.desc||'').slice(0,26)}…</span></span>
-        ${dues.has(n.id)?'<span class="chipS due">复训</span>':''}
+        ${dues.has(n.id)?'<span class="chipS due">复习</span>':''}
         <span class="chipS ${st}">${stN[st]}</span></button>`;
     }
     h+='</div>';
@@ -895,7 +895,7 @@ function miniMap(){
     const both=lit.has(e.from)&&lit.has(e.to);
     lines+=`<line class="e${both?' on':''}" x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"${e.type!=='hard'?' stroke-dasharray="3 3"':''}/>`;});
   SITE.nodes.forEach(n=>{const p=pos[n.id],st=stateOf(n);
-    dots+=`<circle class="n ${st}" cx="${p.x}" cy="${p.y}" r="${st==='lit'?5:4}"><title>${n.name}（${st==='lit'?'已点亮':st==='open'?'可进入':'未解锁'}）</title></circle>`;});
+    dots+=`<circle class="n ${st}" cx="${p.x}" cy="${p.y}" r="${st==='lit'?5:4}"><title>${n.name}（${st==='lit'?'已通过':st==='open'?'可进入':'未解锁'}）</title></circle>`;});
   return `<svg class="mapmini" viewBox="0 0 ${W} ${H}">${lines}${dots}</svg>`;
 }
 function viewMe(){
@@ -904,7 +904,7 @@ function viewMe(){
   let h=`<div class="sec"><h2>能力体检</h2><div class="stats">
     <div class="st"><div class="v num">${acc()==null?'—':acc()+'%'}</div><div class="k">首答正确率</div></div>
     <div class="st"><div class="v num">${brier()==null?'—':brier()}</div><div class="k">校准分（0-100）</div></div>
-    <div class="st"><div class="v num">${braveRate()==null?'—':braveRate()+'%'}</div><div class="k">敢判率（并读防怂）</div></div>
+    <div class="st"><div class="v num">${braveRate()==null?'—':braveRate()+'%'}</div><div class="k">下结论率（并读防怂）</div></div>
     <div class="st"><div class="v num">${S.gap.n?Math.round(100*S.gap.hits/S.gap.n)+'%':'—'}</div><div class="k">事后诸葛率</div></div>
   </div><div class="tip">「事后诸葛率」= 你自评说想到了、但推理链里其实没有的比例。它不扣分，只提醒。</div></div>`;
   if(arch.length){
@@ -912,13 +912,13 @@ function viewMe(){
     arch.forEach(([p,a])=>{h+=`<button class="rowbtn arch" data-pair="${p}">
       <span><span class="nm">「${PAIRS[p].look}」</span>
       <span class="mt">站错 ${a.wrong} 次 · 区分线索：${PAIRS[p].key}</span>
-      <span class="mt">下次复训：${a.due<=Date.now()?'已到期':new Date(a.due).toLocaleDateString()}（半衰期 ${a.hl} 天）</span></span>
+      <span class="mt">下次复习：${a.due<=Date.now()?'已到期':new Date(a.due).toLocaleDateString()}（半衰期 ${a.hl} 天）</span></span>
       <span class="chipS ${a.due<=Date.now()?'due':'locked'}">${a.due<=Date.now()?'练一遍':'提前练'}</span></button>`;});
     h+='</div>';
   }
   h+=`<div class="sec"><h2>你的教练</h2>
     <div class="tip" style="line-height:1.75">${profileLine()}</div>
-    <div class="tip" style="margin-top:10px">教练不是某个人的模拟，而是一个逐步了解你的判断习惯的角色。故事里说话的是那一幕的真实当事人，他们只说留下过记录的话；教练是<b>你的</b>，一直在旁边。</div>
+    <div class="tip" style="margin-top:10px">教练不是某个人的模拟，而是一个逐步了解你的判断习惯的角色。案例里说话的是当年的真实当事人，他们只说留下过记录的话；教练是<b>你的</b>，一直在旁边。</div>
     <div class="pf-tone" style="margin-top:10px">${TONES.map(x=>`<button data-tone="${x.id}" class="${(S.profile&&S.profile.tone)===x.id?'on':''}">${x.k}</button>`).join('')}</div></div>
     <div class="sec"><h2>数据</h2>
     <button class="cta ghost" id="go-card">${ic('clip')} 复制成绩单</button>
@@ -967,7 +967,7 @@ function bindView(){
      看起来可点、点了什么都不发生。现在点它就把这一对提前排进复训。 */
   document.querySelectorAll('[data-pair]').forEach(b=>b.onclick=()=>{
     const a=ensurePair(b.dataset.pair);
-    if(a.due>Date.now()){a.due=Date.now();save();toast('已排进复训队列');}
+    if(a.due>Date.now()){a.due=Date.now();save();toast('已排进复习队列');}
     startReview();});
 }
 
@@ -1022,7 +1022,7 @@ function sheet(html,keep){
 const FACTS={};   // 溯源徽标 → 事实条目（构建期由 facts.json 注入 SITE，运行时兜底用 srcs 文本）
 function cfHTML(cf,opts){
   opts=opts||{};
-  let h=`<div class="cfhead"><span class="cfcode">${cf.code||'案卷'}</span>`;
+  let h=`<div class="cfhead"><span class="cfcode">${cf.code||'材料'}</span>`;
   if(cf.status==='regulator_asked')h+=`<span class="cfstat ask">监管已问询</span>`;
   else if(cf.status==='settled')h+=`<span class="cfstat set">已认定</span>`;
   else h+=`<span class="cfstat tea">教学构造</span>`;
@@ -1119,14 +1119,14 @@ document.getElementById('stage-x').onclick=()=>{stage.classList.remove('show');R
 function mat(){
   const n=R.node, cf=n.x_casefile;
   const scr=(n.screens||[]).filter(s=>!s.quiz);
-  let body=`<div class="step-t">案卷材料</div><h3>${nic(n.icon)} ${n.name}</h3>`;
-  if(cf){                                   // ③ 案卷优先，讲解按需
+  let body=`<div class="step-t">财报材料</div><h3>${nic(n.icon)} ${n.name}</h3>`;
+  if(cf){                                   // ③ 材料优先，讲解按需
     body+=cfHTML(cf,{teach:scr.length>0});
   }else{                                    // 基础概念节点：仍走教学屏
     body+=scr.map(s=>`${s.h?`<h3 class="sh-h" style="margin-top:16px">${s.h}</h3>`:''}${s.body||''}`).join('');
   }
   if(n.canon)body+=`<div class="srcrow"><button class="src" id="st-canon">${canonLabel(n.canon.source)}</button></div>`;
-  return{body,foot:`<button class="cta" id="st-next">${cf?'看完了，开始判卷':'读完了，开始判'}</button>`,
+  return{body,foot:`<button class="cta" id="st-next">${cf?'看完了，开始分析':'读完了，开始分析'}</button>`,
     bind(){
       const c=document.getElementById('st-canon');if(c)c.onclick=()=>showCanon(n);
       const tb=document.getElementById('cf-teach');
@@ -1227,7 +1227,7 @@ function cc(){
     if(R.hint)body+=`<div class="hintbox">${q.hints.slice(0,R.hint).map((h,i)=>`${'①②③'[i]} ${h}`).join('<br>')}</div>`;
   }
   const more=R.quizIdx<R.mainQ.length-1;
-  return{body,foot:`<button class="cta" id="${more?'st-nextq':'st-next'}" ${R.done?'':'disabled'}>${more?'下一题':(R.deep?'继续':'去锚题')}</button>`,
+  return{body,foot:`<button class="cta" id="${more?'st-nextq':'st-next'}" ${R.done?'':'disabled'}>${more?'下一题':(R.deep?'继续':'去闭卷题')}</button>`,
     bind(){
       SB().querySelectorAll('[data-cf]').forEach(b=>b.onclick=()=>{R.conf=+b.dataset.cf;drawStage(1);});
       const hb=document.getElementById('st-hint');
@@ -1264,9 +1264,9 @@ function maybeIntervene(ctx){
       下次遇到同类题，先问自己一句：我手上有几条相互独立的证据？只有一条的时候，「比较有把握」就够了。`;}
   else if(ctx.pairRepeat){const pm=PAIRS[ctx.pair];why='pair_repeat';
     body=`你在「${pm.look}」这个对上已经站错 <b>${ctx.wrong}</b> 次了。<br><br>
-      区分线索就一句：<b>${pm.key}</b><br><br>这个对会被排到你复训队列的最前面。`;}
+      区分线索就一句：<b>${pm.key}</b><br><br>这组易混概念会被排到你复习队列的最前面。`;}
   else if(ctx.anchorFail){why='wrong';
-    body=`锚题没过——这一节不点亮。<br><br>这不是惩罚：锚题换了公司，考的是你能不能把方法搬到新材料上。回去把案卷和证据链再走一遍，换一道锚题再来。`;}
+    body=`闭卷题没过——这一节不算通过。<br><br>这不是惩罚：闭卷题换了公司，考的是你能不能把方法搬到新材料上。回去把材料和证据链再走一遍，换一道闭卷题再来。`;}
   if(!why)return;
   const l=line(why);
   document.getElementById('sheet').innerHTML=
@@ -1306,7 +1306,7 @@ function recordFirst(q,rec){
 function sf(){
   const sc=R.node.x_selfcheck||[];
   const body=`<div class="step-t">第 ${R.steps.indexOf('self')} 步 · 自评</div>
-    <p class="prompt">诚实勾选：刚才判卷时，你真的想到了哪几条？</p>
+    <p class="prompt">诚实勾选：刚才分析时，你真的想到了哪几条？</p>
     ${sc.map(s=>`<button class="chk${R.self.has(s.id)?' on':''}" data-s="${s.id}">
       <span class="bx">${R.self.has(s.id)?'☑':'☐'}</span><span>${s.t}</span></button>`).join('')}
     <div class="tip">这一步不判分。它和你上一步实际挑的证据一对撞，就得到「事后诸葛率」——想到了但没写进链子的比例。</div>`;
@@ -1332,8 +1332,8 @@ function rv(){
     const st=S.steps[n.id]=S.steps[n.id]||{ev:{n:0,hit:0,bad:0},ro:{n:0,ok:0}};
     st.ev.n++;st.ev.hit+=hit;st.ev.bad+=bad;st.ro.n+=roN;st.ro.ok+=roOK;
     R.logged=true;track('step_review',{node:n.id,cover,bad,ro_ok:roOK,gap:gapN});save();}
-  const body=`<div class="step-t">第 ${R.steps.indexOf('review')} 步 · 回卷</div>
-    <p class="prompt">这不是分数，是关于你这份判卷的四个事实。</p>
+  const body=`<div class="step-t">第 ${R.steps.indexOf('review')} 步 · 回顾</div>
+    <p class="prompt">这不是分数，是关于你这次分析的四个事实。</p>
     <div class="attrs">
       <div class="attr"><div class="k">覆盖</div><div class="v num ${cover>=60?'g':'b'}">${cover}%</div></div>
       <div class="attr"><div class="k">干扰位</div><div class="v num ${bad?'b':'g'}">${bad} 条</div></div>
@@ -1345,7 +1345,7 @@ function rv(){
     <div class="fb good"><b>专家链（后置对照）</b><br>${sup.map((c,i)=>`${i+1}. ${c.t}`).join('<br>')}</div>
     <div class="tip">现在回头看看你在第 1 步写的那段话——你自己的推理和这条链差在哪？（那段话没有离开过你的手机）</div>
     ${coachHTML(cover>=60?'correct':'wrong')}`;
-  return{body,foot:`<button class="cta" id="st-next">去闭卷锚题</button>`};
+  return{body,foot:`<button class="cta" id="st-next">去做闭卷题</button>`};
 }
 
 /* — 锚题：唯一的点亮条件 — */
@@ -1359,22 +1359,22 @@ function an(){
     R.anchor=pick?{...BANKQ[pick]}:null;
     R.aTried=new Set();R.aDone=false;R.aPass=false;R.aConf=null;R.aFb=null;
   }
-  if(!R.anchor&&(R.node.x_anchors||[]).length){            // 深层节点锚题池异常：绝不放行点亮
-    return{body:`<div class="step-t">闭卷锚题</div><h3>锚题暂不可用</h3>
-      <p>这一节的锚题库有问题，节点不会被点亮——这是刻意的：<b>点亮只认闭卷锚题</b>。请把这条报给我们。</p>`,
+  if(!R.anchor&&(R.node.x_anchors||[]).length){            // 深层节点闭卷题池异常：绝不放行通过
+    return{body:`<div class="step-t">闭卷题</div><h3>闭卷题暂不可用</h3>
+      <p>这一节的闭卷题库有问题，这一节不会算通过——这是刻意的：<b>只有闭卷题能算通过</b>。请把这条报给我们。</p>`,
       foot:`<button class="cta ghost" id="st-retry">回去再练一遍</button>`,
       bind(){document.getElementById('st-retry').onclick=()=>{
         R.step=0;R.anchor=null;R.perm={};R.cards=new Set();R.ruleout={};R.self=new Set();R.logged=false;drawStage();};}};
   }
-  if(!R.anchor){  // 基础节点（无 x_anchors）：结论即点亮
-    return{body:`<div class="step-t">收尾</div><h3>这一节没有闭卷锚题</h3>
-      <p>基础概念节点走两拍。判完结论就可以点亮。</p>`,
-      foot:`<button class="cta" id="st-light">${ic('spark')} 点亮它</button>`,
+  if(!R.anchor){  // 基础节点（无 x_anchors）：结论即通过
+    return{body:`<div class="step-t">收尾</div><h3>这一节没有闭卷题</h3>
+      <p>基础概念节点走两拍。判完结论即可通过。</p>`,
+      foot:`<button class="cta" id="st-light">${ic('spark')} 标记为已掌握</button>`,
       bind(){document.getElementById('st-light').onclick=()=>lightUp();}};
   }
   const q=R.anchor.quiz;
-  let body=`<div class="step-t">闭卷锚题 · 换了一家公司</div>
-    <p class="tip">这道题在刚才的判卷里没出现过，也不给提示——<b>它是唯一能点亮节点的一步</b>。答错不惩罚，回去再练就是。</p>
+  let body=`<div class="step-t">闭卷题 · 换了一家公司</div>
+    <p class="tip">这道题在刚才的分析里没出现过，也不给提示——<b>它是唯一能通过节点的一步</b>。答错不惩罚，回去再练就是。</p>
     <p class="prompt">${q.q}</p>
     <div class="seg">${CONF.map(c=>`<button data-af="${c.v}" class="${R.aConf===c.v?'on':''}" ${R.aDone?'disabled':''}>${c.t}</button>`).join('')}</div>`;
   const lock=R.aDone||R.aConf==null;
@@ -1382,7 +1382,7 @@ function an(){
     let cls='';if(R.aDone&&o.ok)cls=' right';else if(R.aTried.has(i)&&!o.ok)cls=o.na?' naf':' wrong';
     return `<button class="opt${cls}" data-a="${i}" ${lock||R.aTried.has(i)?'disabled':''}>${o.t}</button>`;}).join('');
   if(R.aFb)body+=`<div class="fb${R.aPass?' good':''}">${R.aFb}</div>`;
-  return{body,foot:R.aPass?`<button class="cta" id="st-light">${ic('spark')} 点亮它</button>`
+  return{body,foot:R.aPass?`<button class="cta" id="st-light">${ic('spark')} 标记为已掌握</button>`
       :R.aDone?`<button class="cta ghost" id="st-retry">再练一遍这一节</button>`
       :`<button class="cta" disabled>先作答</button>`,
     bind(){
@@ -1392,7 +1392,7 @@ function an(){
         const a=S.anchors[R.node.id]=S.anchors[R.node.id]||{attempts:0,seen:[]};
         a.attempts++;if(!a.seen.includes(R.anchor.quiz.x_id))a.seen.push(R.anchor.quiz.x_id);
         if(o.ok){R.aDone=true;R.aPass=true;R.aFb='✓ '+q.fb;a.passed_at=Date.now();}
-        else{R.aDone=true;R.aPass=false;R.aFb=q.fb+'<br><br><b>这一节还没点亮</b>——不扣分，回去把材料和证据链再走一遍，换一道锚题再来。';
+        else{R.aDone=true;R.aPass=false;R.aFb=q.fb+'<br><br><b>这一节还没通过</b>——不扣分，回去把材料和证据链再走一遍，换一道闭卷题再来。';
           setTimeout(()=>maybeIntervene({anchorFail:1}),650);}
         if(R.anchor.pair){const p=ensurePair(R.anchor.pair);p.seen++;p.lastSide=R.anchor.side;
           if(o.ok)p.hl=Math.min(64,p.hl*2);else{p.hl=Math.max(.5,p.hl/2);p.wrong++;p.lastWrong=R.anchor.side;}
@@ -1413,12 +1413,12 @@ function lightUp(){
   if(done&&!S.finished){S.finished=Date.now();save();track('chapter_complete',{});}
   document.getElementById('stage-body').innerHTML=
     `<div class="endpad"><div class="pop-ic">${nic(n.icon)}</div>
-      <h3>「${n.name}」点亮了</h3>
+      <h3>「${n.name}」已通过</h3>
       <p class="tip">${R.aPass
-        ? '你是靠一道闭卷题点亮它的——不是靠看完材料。'
-        : '这一节是基础概念，没有闭卷锚题；判完结论即可点亮。<b>后面的节点要过锚题才算。</b>'}</p>
-      ${unlocked.length?`<p>新的案卷解锁：${unlocked.join('、')}</p>`:''}
-      ${done?`<div class="fb good">第一章全部点亮。接下来靠复训维持——它比新课更能说明你学会了没有。</div>`:''}
+        ? '你是靠一道闭卷题通过的的——不是靠看完材料。'
+        : '这一节是基础概念，没有闭卷题；判完结论即可通过。<b>后面的节点要过闭卷题才算。</b>'}</p>
+      ${unlocked.length?`<p>新的材料已开放：${unlocked.join('、')}</p>`:''}
+      ${done?`<div class="fb good">第一章全部通过。接下来靠复习维持——它比新课更能说明你学会了没有。</div>`:''}
       ${coachHTML(done?'complete':'streak')}</div>`;
   document.getElementById('stage-foot').innerHTML=`<button class="cta" id="st-done">回到今日</button>`;
   document.getElementById('stage-prog').style.width='100%';
@@ -1437,7 +1437,7 @@ function drawLab(){
   document.getElementById('stage-n').textContent=(R.step+1)+'/2';
   const b=SB(),f=document.getElementById('stage-foot');
   if(R.step===0){
-    b.innerHTML=`<div class="step-t">时事案卷 · 实验室</div>${cfHTML(lc,{})}
+    b.innerHTML=`<div class="step-t">近期财报 · 实验区</div>${cfHTML(lc,{})}
       <p class="cfnote">这一卷的边界：<b>只读数字的形状，不对这家公司下任何定性判断</b>。监管问了什么、公司怎么答，才是要读的东西。</p>`;
     f.innerHTML=`<button class="cta" id="lab-next">看完了</button>`;
     b.querySelectorAll('[data-src]').forEach(x=>x.onclick=()=>showFact(x.dataset.src));
@@ -1470,7 +1470,7 @@ function drawLab(){
 
 /* ============ 复训 ============ */
 function startReview(){
-  const dues=duePairs();if(!dues.length)return toast('没有到期的复训 ✓');
+  const dues=duePairs();if(!dues.length)return toast('没有到期的复习 ✓');
   R={mode:'review',queue:dues.map(p=>{const a=ensurePair(p);
       let side=a.lastWrong==='a'||a.lastWrong==='b'?a.lastWrong:(a.lastSide==='a'?'b':'a');
       if(!BANK[p][side]||!BANK[p][side].length)side=side==='a'?'b':'a';
@@ -1503,7 +1503,7 @@ function drawReview(){
     return;
   }
   const q=it.quiz,pm=PAIRS[it.pid];
-  let body=`<div class="step-t">复训 · 闭卷</div>
+  let body=`<div class="step-t">复习 · 闭卷</div>
     <h3 class="sh-h">${ic('repeat')} ${pm?pm.look:it.pid}</h3>
     <p class="prompt">${q.q}</p>
     <div class="seg">${CONF.map(c=>`<button data-cf="${c.v}" class="${R.conf===c.v?'on':''}" ${R.done?'disabled':''}>${c.t}</button>`).join('')}</div>`;
@@ -1538,8 +1538,8 @@ function scorecard(){
     brier:brier(),brave:braveRate(),hints:S.hints,reviews:S.reviews,
     over:S.calib.over,gap:S.gap.n?Math.round(100*S.gap.hits/S.gap.n):null,min:dur,done:S.finished?1:0};
   return `投资教练 · ${SITE.tag}成绩单
-进度 ${lit.size}/${SITE.nodes.length}${S.finished?'（已完成）':''} ｜ 首答正确率 ${acc()==null?'—':acc()+'%'} ｜ 校准分 ${brier()==null?'—':brier()+'/100'} ｜ 敢判率 ${braveRate()==null?'—':braveRate()+'%'}
-提示 ${S.hints} 次 ｜ 复训 ${S.reviews} 轮 ｜ 过度自信 ${S.calib.over} 次 ｜ 用时约 ${dur} 分钟
+进度 ${lit.size}/${SITE.nodes.length}${S.finished?'（已完成）':''} ｜ 首答正确率 ${acc()==null?'—':acc()+'%'} ｜ 校准分 ${brier()==null?'—':brier()+'/100'} ｜ 下结论率 ${braveRate()==null?'—':braveRate()+'%'}
+提示 ${S.hints} 次 ｜ 复习 ${S.reviews} 轮 ｜ 过度自信 ${S.calib.over} 次 ｜ 用时约 ${dur} 分钟
 （教学复盘，非投资建议）
 IC2|${btoa(unescape(encodeURIComponent(JSON.stringify(pl))))}`;
 }

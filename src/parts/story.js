@@ -135,8 +135,8 @@
           const c = window.__court && window.__court.story === STORY ? window.__court.stats : null;
           const acted = c ? (c.pressed || 0) + (c.broke || 0) : 0;
           const label = !acted
-            ? `先质问 ${STORY.cast[0].name}（${STORY.interrogation.testimony.length} 条证词）`
-            : `继续质问 ${STORY.cast[0].name}（已追问 ${c.pressed} 次${c.broke ? ` · 戳穿 ${c.broke} 处` : ''}）`;
+            ? `先追问 ${STORY.cast[0].name}（${STORY.interrogation.testimony.length} 条陈述）`
+            : `继续追问 ${STORY.cast[0].name}（已追问 ${c.pressed} 次${c.broke ? ` · 找出矛盾 ${c.broke} 处` : ''}）`;
           return `<button class="askbtn${acted ? ' done' : ''}" id="sty-ask">${ic('scale')} ${label}</button>`;
         })() : ''}
         ${b.options.map(o => `<button class="choice${ST.pick === o.id ? ' on' : ''}" data-p="${o.id}">
@@ -205,7 +205,7 @@
         ${readingHTML(mine)}
         <div class="kn"><h3>你该带走的</h3><ul>${b.knowhow.map(k => `<li>${md(k)}</li>`).join('')}</ul></div>
         ${vo(b.narration)}`,
-      foot: `<button class="sty-cta" id="sty-next">把判据拿出来</button>`
+      foot: `<button class="sty-cta" id="sty-next">看这条判断依据</button>`
     };
   }
 
@@ -215,9 +215,9 @@
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
         <div class="fade3">
           <div class="f"><div class="t">故事版</div><div class="b">${b.story_form}</div></div>
-          <div class="f"><div class="t">判据</div><div class="b">${b.rule}</div></div>
+          <div class="f"><div class="t">判断依据</div><div class="b">${b.rule}</div></div>
           <div class="f"><div class="t">公式版</div><div class="b">${b.formula}</div></div>
-          <div class="f tag"><div class="t">标签（复训用这个找你）</div><div class="b">${b.label}</div></div>
+          <div class="f tag"><div class="t">标签（复习用这个找你）</div><div class="b">${b.label}</div></div>
         </div>
         <p class="ln dim">边界：${b.boundary}</p>
         ${vo(b.narration)}`,
@@ -236,7 +236,7 @@
         ${answered ? `<div class="kn"><p style="font-size:17px;line-height:1.85;margin:0">${b.fb}</p></div>` : ''}
         ${answered ? vo(b.narration) : ''}`,
       foot: answered
-        ? `<button class="sty-cta" id="sty-done">读完这一幕</button>`
+        ? `<button class="sty-cta" id="sty-done">读完这个案例</button>`
         : `<button class="sty-cta" disabled>先回答</button>`,
       bind() {
         bodyEl.querySelectorAll('[data-t]').forEach(x => x.onclick = () => {
@@ -255,8 +255,8 @@
     const node = STORY.knowledge_node;
     bodyEl.innerHTML = `<div class="fin">
       <div class="fin-ic">${ic('doc')}</div>
-      <h2>这一幕读完了</h2>
-      <p class="ln">你刚才做的判断、以及这一幕里那份原档，会跟着「${STORY.beats.find(x => x.kind === 'abstract').label}」这个标签进入你的复训队列。</p>
+      <h2>这个案例读完了</h2>
+      <p class="ln">你刚才做的判断、以及这个案例里那份原档，会跟着「${STORY.beats.find(x => x.kind === 'abstract').label}」这个标签进入你的复习队列。</p>
       <p class="ln dim">下次它来找你的时候，会换一家公司——因为判据要能离开这个故事，才算是你的。</p>
       ${vo('故事负责让你记住。练习负责让你带走。两样都要。')}</div>`;
     footEl.innerHTML = `<button class="sty-cta" id="sty-toprac">去练这条判据</button>
@@ -273,7 +273,7 @@
         pairs = down.flatMap(d => (d.x_pairs || []).filter(p => p.id)).slice(0, 2);
       }
       pairs.forEach(p => ensurePair(p.id));
-      if (!pairs.length) console.warn('故事', STORY.case_id, '的判据节点', node, '无可挂的混淆对');
+      if (!pairs.length) console.warn('故事', STORY.case_id, '的判断依据节点', node, '无可挂的易混题');
       save();
     }
     // 「读完」的唯一定义点：和复训挂载同一时刻。contrast 拍写这个字段的话，
