@@ -508,6 +508,18 @@ const BANK={},BANKQ={};
   (BANK[it.pair_id]=BANK[it.pair_id]||{a:[],b:[]})[it.side].push(it.quiz);
   BANKQ[it.quiz.x_id]={quiz:it.quiz,pair:it.pair_id,side:it.side};
 });
+/* 误解索引：误解 id → 出现过这个误解的题（含它在哪个节点）。
+   用途是「换一个情境再考同一个坑」——同一个误解连着踩两次，说明不是手滑，
+   而是一个稳定的毛病，这时该给的不是同一道题，是另一道题里的同一个坑。 */
+const MIS={};
+(function(){
+  const add=(q,nid)=>(q.opts||[]).forEach(o=>{
+    if(o.mis)(MIS[o.mis]=MIS[o.mis]||[]).push({quiz:q,node:nid});});
+  SITE.nodes.forEach(n=>{
+    (n.screens||[]).forEach(sc=>{if(sc.quiz)add(sc.quiz,n.id);});
+  });
+  (SITE.x_review_bank||[]).forEach(it=>add(it.quiz,(PAIRS[it.pair_id]||{}).node&&PAIRS[it.pair_id].node.id));
+})();
 const isDeep=n=>!!n.x_level;
 /* 幕序：先能查到（原档里写着）→ 再查不到（原档里没写）→ 自己算错（机会成本）
    → 最后是根本没有数字（分母趋零）。不在这张表里的幕会被 indexOf 排到最前，
@@ -528,7 +540,7 @@ const DRAFT=q=>'ic:draft:'+q;               // 先写原文：独立键，不进
 const DAY=864e5;
 function fresh(){return{v:2,coach:null,device:'d'+Math.random().toString(36).slice(2)+Date.now().toString(36),
   lit:[],pairs:{},steps:{},anchors:{},answers:{},
-  calib:{n:0,sum:0,streak:0,best:0,over:0,under:0,settled:0},brave:{n:0,dared:0},
+  calib:{n:0,sum:0,streak:0,best:0,over:0,under:0,settled:0},brave:{n:0,dared:0},mis:{},
   hints:0,reviews:0,gap:{n:0,hits:0},events:[],started:Date.now(),finished:0};}
 let S=fresh();
 try{const r=JSON.parse(localStorage.getItem(KEY)||'null');if(r&&r.v===2)S=Object.assign(fresh(),r);}catch(e){}
@@ -645,7 +657,38 @@ function prescribe(){
       reason:`这个对你站错过 ${lp[1].wrong} 次，不等它自然到期了`,
       s:`区分线索：${PAIRS[lp[0]].key}`,cta:'现在就练',id:'go-review'};
   }
+  /* ③ 同一个误解反复出现。
+     这不是「你忘了」（那是间隔重复管的事），是「你有一个稳定的错误心智模型」。
+     该给的不是同一道题——那只会让人记住答案；该给的是**另一道题里的同一个坑**。 */
+  const mis=Object.entries(S.mis||{}).filter(function(e){return e[1]>=2&&(MIS[e[0]]||[]).length>1;})
+    .sort(function(a,b){return b[1]-a[1];})[0];
+  if(mis){
+    const nid=(MIS[mis[0]].find(function(x){return x.node&&stateOf(byId[x.node])!=='locked';})||{}).node;
+    if(nid&&byId[nid])return {kind:'node',mins:2,eye:'教练标注 · 同一个坑',
+      t:byId[nid].name,pid:null,mis:mis[0],
+      reason:'同一类判断你连着错了 '+mis[1]+' 次，换个情境再考一次',
+      s:'不是同一道题。换一家公司、换一组数字，考的是同一个地方。',
+      cta:'再判一次',id:'go-node',attr:' data-id="'+nid+'"'};
+  }
   return null;
+}
+
+/* 自愿加练：用户练完一轮还想练时给哪一道。
+
+   挑法和处方同源——先给他错得最多的那一组，其次给还没练过的。
+   不进调度、不改到期时间：这是他自己要的，不是系统安排的，
+   所以也不该因此提前消耗掉间隔重复的排期。 */
+function extraDrill(){
+  const inRound=new Set((R&&R.queue||[]).map(x=>x.pid));
+  const cand=Object.keys(BANK).filter(p=>PAIRS[p]&&!inRound.has(p));
+  if(!cand.length)return null;
+  const worst=cand.map(p=>[p,(S.pairs[p]||{}).wrong||0]).sort((a,b)=>b[1]-a[1])[0];
+  const pid=worst[0],a=S.pairs[pid]||{seen:0,lastSide:null};
+  let side=a.lastSide==='a'?'b':'a';
+  if(!BANK[pid][side]||!BANK[pid][side].length)side=side==='a'?'b':'a';
+  const list=BANK[pid][side];if(!list||!list.length)return null;
+  return {item:{pid,side,quiz:list[(a.seen||0)%list.length]},
+    why:worst[1]>0?`你在「${PAIRS[pid].look}」上错过 ${worst[1]} 次`:`还没练过的：「${PAIRS[pid].look}」`};
 }
 
 /* 处方的落地：把「该练这个」变成「现在就到期」。**只在用户真的开始做的时候调用**——
@@ -1177,7 +1220,19 @@ function cc(){
         R.tried.add(i);
         if(o.ok){R.done=true;R.fb=q.fb;R.fbGood=true;R.concl=i;}
         else if(q.x_kind==='pretest'){R.done=true;R.fb=q.fb;R.fbGood=false;R.concl=i;}
-        else{R.fb=o.na?'这题的证据其实够了——回头看看材料，够在哪？':'不对——要不要点一级提示？';R.fbGood=false;}
+        else{
+          /* 答错时给的必须是**针对这个错误选项**的话。
+             这里原先是全站同一句「不对——要不要点一级提示？」，而作者写的 q.fb
+             只在答对时出现——最需要解释的人在那一刻什么也没拿到。
+
+             o.why 说的是「你踩的是哪个误解」，**不给答案**：命名错误，然后让他再判一次。
+             这比直接揭晓有用，也比一句通用话有用。没有 o.why 时退回原来的话。 */
+          R.fb=o.why||(o.na?'这题的证据其实够了。回头看看材料，够在哪？':'不对。要不要看一级提示？');
+          R.fbGood=false;
+          /* 误解要能跨题聚合：同一个 mis 反复出现，说明不是手滑，是一个稳定的毛病。
+             处方（prescribe）读它。 */
+          if(o.mis){S.mis[o.mis]=(S.mis[o.mis]||0)+1;save();}
+        }
         R.cl=line(o.na&&o.ok?'na_honest':o.na?'na_dodge':!o.ok&&R.conf===.95?'overconfident':!o.ok?'wrong':R.hint?'hint_used':'correct');
         if(first)recordFirst(q,{c:o.ok?1:0,na:o.na?1:0,naok:(o.na&&o.ok)?1:0,conf:R.conf,h:R.hint,
           k:q.x_kind||'main',ms:Date.now()-R.t0,noscore:NOSCORE.has(R.node.id)?1:0});
@@ -1413,11 +1468,21 @@ function drawReview(){
   document.getElementById('stage-prog').style.width=((R.qi+(R.done?1:0))/R.queue.length*100)+'%';
   document.getElementById('stage-n').textContent=(R.qi+1)+'/'+R.queue.length;
   if(!it){
+    /* 做完一轮之后，把「还练不练」交回给用户。
+       DESIGN.md §2 说的是「不要把队列摊平成菜单让他挑」——那是讲**默认**该由产品编排。
+       它不等于练完一轮还不许他自己要下一道。想多练一道的人是这个产品最该留住的人。 */
+    const more=extraDrill();
     b.innerHTML=`<div class="endpad"><div class="pop-ic">${ic('repeat')}</div>
-      <h3>复训完成 ${R.ok}/${R.queue.length}</h3>
-      <p class="tip">答对的对下次来得更晚，答错的对很快再见。</p></div>`;
-    f.innerHTML=`<button class="cta" id="rv-x">回到今日</button>`;
+      <h3>复习完成 ${R.ok}/${R.queue.length}</h3>
+      <p class="tip">答对的下次来得更晚，答错的很快再见。</p>
+      ${more?`<p class="tip">还想练的话，这里有一道${more.why}。</p>`:''}</div>`;
+    f.innerHTML=(more?`<button class="cta" id="rv-more">再来一道</button>`:'')
+      +`<button class="cta${more?' ghost':''}" id="rv-x">${more?'今天到此':'回到今日'}</button>`;
     document.getElementById('rv-x').onclick=()=>{stage.classList.remove('show');R=null;render();flush();};
+    if(more)document.getElementById('rv-more').onclick=()=>{
+      R.queue.push(more.item);R.qi=R.queue.length-1;
+      R.tried=new Set();R.done=false;R.conf=null;R.fb=null;R.cl=null;R.perm={};
+      track('extra_drill',{pair_id:more.item.pid});drawReview();};
     return;
   }
   const q=it.quiz,pm=PAIRS[it.pid];
@@ -1437,7 +1502,8 @@ function drawReview(){
   SB().querySelectorAll('[data-o]:not([disabled])').forEach(x=>x.onclick=()=>{
     const i=+x.dataset.o,o=shownOpts(q)[i];R.tried.add(i);
     if(o.ok){R.done=true;R.fb=q.fb;R.fbGood=true;R.ok++;}
-    else{R.done=true;R.fb=q.fb;R.fbGood=false;}
+    else{R.done=true;R.fb=(o.why?o.why+'<br><br>':'')+q.fb;R.fbGood=false;
+      if(o.mis){S.mis[o.mis]=(S.mis[o.mis]||0)+1;}}
     R.cl=line(o.na&&o.ok?'na_honest':!o.ok?'pair_repeat':'correct');
     const a=ensurePair(it.pid);a.seen++;a.lastSide=it.side;
     if(o.ok)a.hl=Math.min(64,a.hl*2);else{a.hl=Math.max(.5,a.hl/2);a.wrong++;a.lastWrong=it.side;}
