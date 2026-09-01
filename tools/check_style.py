@@ -224,6 +224,7 @@ def main():
     ap.add_argument("--update", action="store_true")
     ap.add_argument("--list", metavar="项")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("_ignored", nargs="*", help="build.py 会把产物路径传进来，本门禁读源不读产物")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
