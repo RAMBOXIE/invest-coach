@@ -204,6 +204,43 @@ def c5_transfer(src, site):
     ok("C5", f"迁移证明 点亮唯一入口是闭卷锚题；{len(deep)} 个深层节点锚题池 ≥2 ✓")
 
 
+def c9_no_position_tell(src, site):
+    """C9 答案位置不能泄题 —— 这条规则是一个真实漏洞的形状。
+
+    C5 只验了「点亮的唯一入口是闭卷锚题」，**没验这道锚题只有会做的人能做对**。
+    审计发现：52 道题的正确答案全部排在第 1 位，而四个渲染点都按 q.opts 原序输出。
+    闭着眼睛点第一项 → 100% 首答正确率、满分 Brier、点亮全部 14 个节点。
+    首答正确率、校准分、迁移证明三样测量同时失效，而 C5 当时是绿的。
+
+    形状对了不等于真值对了：一道选择题只有在**位置不携带答案信息**时才是测量。
+    """
+    qs = quizzes(site)
+    if not qs:
+        return err("C9", "站点里一道题都没有")
+    # 渲染必须打乱，否则内容里的位置就是答案
+    for fn in ("shownOpts",):
+        if body_of(src, fn) is None:
+            return err("C9", f"没有 {fn}() —— 选项按内容原序渲染，位置即答案")
+    # shownOpts 自己要读 q.opts 来构造排列，那是正当用法；把它的函数体挖掉再数。
+    helper = body_of(src, "shownOpts")
+    outside = src.replace(helper, "") if helper else src
+    raw = len(re.findall(r"q\.opts\.map\s*\(", outside))
+    if raw:
+        return err("C9", f"还有 {raw} 处直接渲染 q.opts（未经打乱）—— 那几道题的位置仍然泄题")
+    idx = len(re.findall(r"q\.opts\[\s*i\s*\]", outside))
+    if idx:
+        return err("C9", f"还有 {idx} 处用显示下标直接索引 q.opts —— "
+                         "打乱之后这会取到**另一个选项**，判分就错了")
+    # 内容侧也报出来：打乱之后位置不再泄题，但答案全压在一个位置说明出题时没注意
+    first = sum(1 for _, _, q in qs
+                if q.get("opts") and q["opts"][0].get("ok"))
+    if first == len(qs):
+        warn("C9", f"{len(qs)}/{len(qs)} 道题的正确答案写在第 1 位。"
+                   "渲染已打乱所以不泄题，但出题时应当自然分散")
+    ok("C9", f"位置不泄题 选项渲染经 shownOpts() 打乱，"
+             f"无残留的原序渲染或原序索引 ✓（内容侧首位占比 {first}/{len(qs)}）")
+
+
 def c6_calibration(src):
     """C6 校准闭环：过度自信必须有**行为后果**，不能只加一个计数器。"""
     if not re.search(r"S\.calib", src):
@@ -281,6 +318,7 @@ def run():
     c6_calibration(src)
     c7_boundary(src, site)
     c8_pure(src)
+    c9_no_position_tell(src, site)
     for i in INFOS:
         print("INFO :", i)
     for w in WARNS:
@@ -304,6 +342,8 @@ MUTATIONS = [
     ("C7", "加一句荐股", "site", None, None),
     ("C8", "把落地动作搬回处方里（副作用回归）", "src",
      r"function prescribe\(\)\{", "function prescribe(){S.calib.settled=1;save();"),
+    ("C9", "把一处渲染改回按原序输出选项", "src",
+     r"body\+=shownOpts\(q\)\.map", "body+=q.opts.map"),
 ]
 
 

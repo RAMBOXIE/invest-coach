@@ -580,6 +580,31 @@ function render(){
   v.innerHTML=TAB==='today'?viewToday():TAB==='atlas'?viewAtlas():viewMe();
   bindView();
 }
+/* 选项顺序必须打乱。
+
+   审计发现：52 道题的正确答案**全部**排在第 1 位，而四个渲染点都按 q.opts
+   原序输出。也就是说闭着眼睛永远点第一项，就能拿到 100% 首答正确率、
+   满分校准、并点亮全部 14 个节点。首答正确率、Brier 校准分、
+   「闭卷锚题是唯一迁移证明」这三样测量，全部被一个点击位置击穿。
+
+   打乱必须**在一次作答内稳定**：标把握、看提示、答错重画都会重绘，
+   选项这时跳位的话，用户点到的是另一个东西。所以按题 id 缓存在 R 上，
+   一次作答一份；下一次作答（复训再遇到、锚题重试）重新洗。
+
+   「无法判断」也一起洗：全站 36 道带它的题里只有 28 道排在末位，
+   本来就不一致，而它有 8 次是正确答案——把它固定在末位等于留下另一条位置线索。 */
+function shownOpts(q){
+  R.perm=R.perm||{};
+  const k=q.x_id||q.q;
+  if(!R.perm[k]){
+    const idx=q.opts.map((_,i)=>i);
+    for(let i=idx.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));
+      const t=idx[i];idx[i]=idx[j];idx[j]=t;}
+    R.perm[k]=idx;
+  }
+  return R.perm[k].map(i=>q.opts[i]);
+}
+
 /* ⓪ 处方：把「你哪儿不行」变成「所以现在做这个」。
 
    **这是教练和课程的分水岭。** 画像、混淆对错次、校准分这些诊断信号，
@@ -1131,7 +1156,7 @@ function cc(){
       <div class="seg">${CONF.map(c=>`<button data-cf="${c.v}" class="${R.conf===c.v?'on':''}" ${R.done?'disabled':''}>${c.t}</button>`).join('')}</div>`;
   }
   const lock=R.done||(needConf&&!picked);
-  body+=q.opts.map((o,i)=>{
+  body+=shownOpts(q).map((o,i)=>{
     let cls='';
     if(R.done&&o.ok)cls=' right';else if(R.tried.has(i)&&!o.ok)cls=o.na?' naf':' wrong';
     return `<button class="opt${cls}" data-o="${i}" ${lock||R.tried.has(i)?'disabled':''}>${o.t}</button>`;}).join('');
@@ -1148,7 +1173,7 @@ function cc(){
       const hb=document.getElementById('st-hint');
       if(hb)hb.onclick=()=>{if(R.hint<(q.hints||[]).length){R.hint++;S.hints++;save();}drawStage(1);};
       SB().querySelectorAll('[data-o]:not([disabled])').forEach(b=>b.onclick=()=>{
-        const i=+b.dataset.o,o=q.opts[i],first=!R.tried.size&&!S.answers[q.x_id];
+        const i=+b.dataset.o,o=shownOpts(q)[i],first=!R.tried.size&&!S.answers[q.x_id];
         R.tried.add(i);
         if(o.ok){R.done=true;R.fb=q.fb;R.fbGood=true;R.concl=i;}
         else if(q.x_kind==='pretest'){R.done=true;R.fb=q.fb;R.fbGood=false;R.concl=i;}
@@ -1267,7 +1292,7 @@ function an(){
       <p>这一节的锚题库有问题，节点不会被点亮——这是刻意的：<b>点亮只认闭卷锚题</b>。请把这条报给我们。</p>`,
       foot:`<button class="cta ghost" id="st-retry">回去再练一遍</button>`,
       bind(){document.getElementById('st-retry').onclick=()=>{
-        R.step=0;R.anchor=null;R.cards=new Set();R.ruleout={};R.self=new Set();R.logged=false;drawStage();};}};
+        R.step=0;R.anchor=null;R.perm={};R.cards=new Set();R.ruleout={};R.self=new Set();R.logged=false;drawStage();};}};
   }
   if(!R.anchor){  // 基础节点（无 x_anchors）：结论即点亮
     return{body:`<div class="step-t">收尾</div><h3>这一节没有闭卷锚题</h3>
@@ -1281,7 +1306,7 @@ function an(){
     <p class="prompt">${q.q}</p>
     <div class="seg">${CONF.map(c=>`<button data-af="${c.v}" class="${R.aConf===c.v?'on':''}" ${R.aDone?'disabled':''}>${c.t}</button>`).join('')}</div>`;
   const lock=R.aDone||R.aConf==null;
-  body+=q.opts.map((o,i)=>{
+  body+=shownOpts(q).map((o,i)=>{
     let cls='';if(R.aDone&&o.ok)cls=' right';else if(R.aTried.has(i)&&!o.ok)cls=o.na?' naf':' wrong';
     return `<button class="opt${cls}" data-a="${i}" ${lock||R.aTried.has(i)?'disabled':''}>${o.t}</button>`;}).join('');
   if(R.aFb)body+=`<div class="fb${R.aPass?' good':''}">${R.aFb}</div>`;
@@ -1291,7 +1316,7 @@ function an(){
     bind(){
       SB().querySelectorAll('[data-af]').forEach(b=>b.onclick=()=>{R.aConf=+b.dataset.af;drawStage(1);});
       SB().querySelectorAll('[data-a]:not([disabled])').forEach(b=>b.onclick=()=>{
-        const i=+b.dataset.a,o=q.opts[i];R.aTried.add(i);
+        const i=+b.dataset.a,o=shownOpts(q)[i];R.aTried.add(i);
         const a=S.anchors[R.node.id]=S.anchors[R.node.id]||{attempts:0,seen:[]};
         a.attempts++;if(!a.seen.includes(R.anchor.quiz.x_id))a.seen.push(R.anchor.quiz.x_id);
         if(o.ok){R.aDone=true;R.aPass=true;R.aFb='✓ '+q.fb;a.passed_at=Date.now();}
@@ -1349,7 +1374,7 @@ function drawLab(){
   }
   const q=lc.quiz;
   let h=`<div class="step-t">读数题 · 不计分</div><p class="prompt">${q.q}</p>`;
-  h+=q.opts.map((o,i)=>{let c='';
+  h+=shownOpts(q).map((o,i)=>{let c='';
     if(R.done&&o.ok)c=' right';else if(R.tried.has(i)&&!o.ok)c=' wrong';
     return `<button class="opt${c}" data-l="${i}" ${R.done||R.tried.has(i)?'disabled':''}>${o.t}</button>`;}).join('');
   if(R.fb)h+=`<div class="fb${R.done?' good':''}">${R.fb}</div>`;
@@ -1360,7 +1385,7 @@ function drawLab(){
      却用答没答对去锁一个写着「回到今日」的按钮，是自相矛盾的状态标注。 */
   f.innerHTML=`<button class="cta${R.done?'':' ghost'}" id="lab-x">${R.done?'回到今日':'先不做，回到今日'}</button>`;
   b.querySelectorAll('[data-l]:not([disabled])').forEach(x=>x.onclick=()=>{
-    const i=+x.dataset.l,o=q.opts[i];R.tried.add(i);
+    const i=+x.dataset.l,o=shownOpts(q)[i];R.tried.add(i);
     if(o.ok){R.done=true;R.fb=q.fb;}else{R.fb='再看一眼两行数字的相对关系。';}
     track('lab_answer',{case:lc.id,correct:o.ok?1:0});drawLab();});
   const bx=document.getElementById('lab-x');
@@ -1401,7 +1426,7 @@ function drawReview(){
     <p class="prompt">${q.q}</p>
     <div class="seg">${CONF.map(c=>`<button data-cf="${c.v}" class="${R.conf===c.v?'on':''}" ${R.done?'disabled':''}>${c.t}</button>`).join('')}</div>`;
   const lock=R.done||R.conf==null;
-  body+=q.opts.map((o,i)=>{let cls='';
+  body+=shownOpts(q).map((o,i)=>{let cls='';
     if(R.done&&o.ok)cls=' right';else if(R.tried.has(i)&&!o.ok)cls=o.na?' naf':' wrong';
     return `<button class="opt${cls}" data-o="${i}" ${lock||R.tried.has(i)?'disabled':''}>${o.t}</button>`;}).join('');
   if(R.fb)body+=`<div class="fb${R.fbGood?' good':''}">${R.fb}</div>`;
@@ -1410,7 +1435,7 @@ function drawReview(){
   f.innerHTML=`<button class="cta" id="rv-next" ${R.done?'':'disabled'}>${R.qi+1===R.queue.length?'完成':'下一道'}</button>`;
   SB().querySelectorAll('[data-cf]').forEach(x=>x.onclick=()=>{R.conf=+x.dataset.cf;drawReview();});
   SB().querySelectorAll('[data-o]:not([disabled])').forEach(x=>x.onclick=()=>{
-    const i=+x.dataset.o,o=q.opts[i];R.tried.add(i);
+    const i=+x.dataset.o,o=shownOpts(q)[i];R.tried.add(i);
     if(o.ok){R.done=true;R.fb=q.fb;R.fbGood=true;R.ok++;}
     else{R.done=true;R.fb=q.fb;R.fbGood=false;}
     R.cl=line(o.na&&o.ok?'na_honest':!o.ok?'pair_repeat':'correct');
