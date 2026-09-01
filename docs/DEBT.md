@@ -34,6 +34,16 @@
 
 ## 怎么签字（D1）
 
+两条路，同一批内容、同一套判据（判据在 `sign.py` 里定义，两处共用一份）。
+
+**读文档**（推荐）：一次读完 18 条，每条末尾写「过」或写下问题。
+
+```bash
+python tools/render_review.py     # → build/review/签字审阅稿.md（约 108 KB）
+```
+
+**命令行**：一条一条来。
+
 ```bash
 python tools/sign.py                       # 总览：谁签了 / 没签 / 过期
 python tools/sign.py --show <id>           # 一条的全部待审内容 + 清单
