@@ -7,6 +7,7 @@ ERROR 非零退出（build.py 据此拒绝构建）。
 第 2 步才生效的规则（x_covers 全覆盖、quiz 结构、review_bank 覆盖、pair id 必填）
 在对应字段尚为空时降级为 WARN 提示，字段一旦出现即全量校验。
 """
+import hashlib
 import json
 import re
 import subprocess
@@ -378,7 +379,10 @@ def validate_stories(release=False):
                 # 才准引用——反而会逼人去改写原文。改写原文是这个产品最不能容忍的事。
                 q = o.get("src") and (o.get("line") or o.get("accession"))
                 for k, v in o.items():
-                    if k in ("line", "accession", "_note", "note"): continue
+                    # x_prov 是签字记录，不是正文。reviewed_hash 是 16 位十六进制，
+                    # 里面必然夹着数字串——签完字 S6 就会把它当成「没有出处的真实数字」
+                    # 而报错。第一次给幕签字时当场撞上了。
+                    if k in ("line", "accession", "_note", "note", "x_prov"): continue
                     walk(v, in_quote or (bool(q) and k in ("text", "quote")))
             elif isinstance(o, list):
                 for v in o: walk(v, in_quote)
@@ -409,10 +413,26 @@ def validate_stories(release=False):
                           + "。真实数字必须先入 facts.json 并绑 accession + 行号")
 
         # 签字（同 site.json 的 --release 纪律）
-        if not (c.get("x_prov") or {}).get("reviewed_by"):
+        pv = c.get("x_prov") or {}
+        if not pv.get("reviewed_by"):
             (errors if release else warns).append(
                 f"{cid}: 幕未经人工审核签字（x_prov.reviewed_by 为空）"
                 + ("——--release 阻断" if release else "——定版前必须补"))
+        # 内容改了签字必须失效。这条一度只在节点侧（R23）有，幕这边只查了
+        # reviewed_by 非空——结果是给幕签完字之后正文随便改，签字永远有效，
+        # 而「签字绑内容指纹」正是这套机制唯一的意义所在。
+        # 指纹算法与 tools/sign.py 的 case_hash 必须一致，改一处要改两处。
+        elif pv.get("reviewed_hash"):
+            core = {k: c.get(k) for k in
+                    ("title", "subtitle", "hook", "cast", "beats", "knowledge_node")}
+            h = hashlib.sha256(json.dumps(core, ensure_ascii=False,
+                                          sort_keys=True).encode()).hexdigest()[:16]
+            if h != pv["reviewed_hash"]:
+                errors.append(f"{cid}: 幕的审核已过期——内容 hash 与 x_prov.reviewed_hash "
+                              f"不符，改动后必须重审（现 {h}，签字时 {pv['reviewed_hash']}）")
+        else:
+            errors.append(f"{cid}: 幕有 reviewed_by 却没有 reviewed_hash —— "
+                          "没有指纹的签字无法判断是否过期，等于没签")
 
     # 原档登记自检
     for e in F["evidence_files"]:

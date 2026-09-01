@@ -339,5 +339,13 @@
    "text": "「关于这一点，我没有留下公开的说法。」",
    "coach": "他只说他写过的话。这个案例最值得学的是这个动作本身：<b>他把自己的错误写下来、量化、公开</b>。你的错题档案和校准分，做的是同一件事。"
   }
+ },
+ "x_prov": {
+  "drafted_by": "llm",
+  "model": "claude-opus-5",
+  "drafted_at": "2026-08-26",
+  "reviewed_by": "Rambo",
+  "reviewed_at": "2026-09-01",
+  "reviewed_hash": "f406d73742debb0e"
  }
 }

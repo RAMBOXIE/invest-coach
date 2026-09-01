@@ -365,5 +365,13 @@
    "text": "「这份季报里没有回答这个问题。」",
    "coach": "在这个案例里，问到「没有」比问到答案更重要，它在帮你划出这份材料的边界。<b>边界之外，唯一诚实的判断是「信息不足」。</b>"
   }
+ },
+ "x_prov": {
+  "drafted_by": "llm",
+  "model": "claude-opus-5",
+  "drafted_at": "2026-08-26",
+  "reviewed_by": "Rambo",
+  "reviewed_at": "2026-09-01",
+  "reviewed_hash": "be6f9ecf597ae469"
  }
 }
