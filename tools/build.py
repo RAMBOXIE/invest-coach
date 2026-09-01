@@ -163,7 +163,8 @@ def main(argv):
     print(f"构建完成: {OUT}（{OUT.stat().st_size / 1024:.1f} KB）")
 
     # SPEC_DEV.md §9：任一门禁 FAIL 即拒绝构建（产物已写出，但退出码非零，CI/DoD 会挡住）
-    for gate in ("check_js.py", "check_a11y.py", "check_budget.py", "check_tokens.py"):
+    for gate in ("check_js.py", "check_a11y.py", "check_budget.py", "check_tokens.py",
+                 "check_coach.py"):
         g = ROOT / "tools" / gate
         if g.exists():
             rc = subprocess.run([sys.executable, str(g), str(OUT)]).returncode

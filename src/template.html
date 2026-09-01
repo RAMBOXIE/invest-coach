@@ -125,6 +125,7 @@
   .hero-eye{font-size:var(--size-13);letter-spacing:var(--track-eyebrow);
     color:var(--state-focus-on-stage);margin-bottom:16px}
   .hero-code{font-size:var(--size-13);letter-spacing:1px;color:var(--text-meta-on-stage)}
+  .hero-why{margin:6px 0 0;font-size:var(--size-13);color:var(--text-meta-on-stage)}
   .hero-t{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);
     letter-spacing:var(--track-display);margin:9px 0 12px;
     font-weight:var(--weight-display);color:var(--text-narrative-color)}
@@ -517,7 +518,7 @@ const DRAFT=q=>'ic:draft:'+q;               // 先写原文：独立键，不进
 const DAY=864e5;
 function fresh(){return{v:2,coach:null,device:'d'+Math.random().toString(36).slice(2)+Date.now().toString(36),
   lit:[],pairs:{},steps:{},anchors:{},answers:{},
-  calib:{n:0,sum:0,streak:0,best:0,over:0,under:0},brave:{n:0,dared:0},
+  calib:{n:0,sum:0,streak:0,best:0,over:0,under:0,settled:0},brave:{n:0,dared:0},
   hints:0,reviews:0,gap:{n:0,hits:0},events:[],started:Date.now(),finished:0};}
 let S=fresh();
 try{const r=JSON.parse(localStorage.getItem(KEY)||'null');if(r&&r.v===2)S=Object.assign(fresh(),r);}catch(e){}
@@ -569,6 +570,58 @@ function render(){
   v.innerHTML=TAB==='today'?viewToday():TAB==='atlas'?viewAtlas():viewMe();
   bindView();
 }
+/* ⓪ 处方：把「你哪儿不行」变成「所以现在做这个」。
+
+   **这是教练和课程的分水岭。** 画像、混淆对错次、校准分这些诊断信号，
+   如果只显示在仪表盘上，产品就只是一门会观察你的课程；只有当它们能改变
+   队首是什么，它才是教练。守这条的是 tools/check_coach.py 的 C2 与 C6。
+
+   纪律：**没有真处方就返回 null。** 宁可走课程顺序，也不发一张
+   「反思一下你的判断习惯」的空卡——那是假动作，比没有更伤信任。 */
+function prescribe(){
+  const pf=profile();
+  /* **这个函数必须是纯的。** plan() 每次 render 会被调用多次（队首 + 预览 + 抽屉），
+     副作用写在这里的话，处方在第一次调用时就把自己烧掉了：over 被清算、
+     混淆对被挪到到期，等第二次调用时触发条件已不成立，屏幕上出现的是
+     普通复训卡——机制全对，用户永远看不见。落地动作在 commitPrescription()，
+     由点击处理器在用户真的开始做的时候调用。 */
+  /* ① 过度自信未清算：标了「很有把握」却判错了。
+     这不能等 HLR 的自然到期——记忆模型算的是「你会不会忘」，
+     而这里的病是「你太信自己」，两回事。立刻召回一道闭卷题重标把握。 */
+  if(pf.over>(S.calib.settled||0)){
+    const c=Object.entries(S.pairs).filter(([p])=>PAIRS[p]&&BANK[p])
+      .sort((a,b)=>(b[1].wrong-a[1].wrong)||(a[1].due-b[1].due))[0];
+    if(c){
+      return {kind:'review',mins:1,eye:'教练点名 · 校准',pid:c[0],settle:pf.over,
+        t:'一道闭卷题，重新标一次把握',
+        reason:`你有 ${pf.over} 次标了「很有把握」却判错了`,
+        s:'把握感和证据强度脱钩，是这里唯一治得了的病。这道闭卷，答完重新标把握。',
+        cta:'开始',id:'go-review'};
+    }
+  }
+  /* ② 连错两次的混淆对：HLR 的间隔是按「答对」的记忆曲线算的。
+     连错两次说明这个模型对这一项已经失效，不该再按它等下去。 */
+  const lp=Object.entries(S.pairs)
+    .filter(([p,a])=>PAIRS[p]&&BANK[p]&&a.wrong>=2&&a.due>Date.now())
+    .sort((a,b)=>b[1].wrong-a[1].wrong)[0];
+  if(lp){
+    return {kind:'review',mins:1,eye:'教练点名 · 雷区',pid:lp[0],
+      t:`「${PAIRS[lp[0]].look}」`,
+      reason:`这个对你站错过 ${lp[1].wrong} 次，不等它自然到期了`,
+      s:`区分线索：${PAIRS[lp[0]].key}`,cta:'现在就练',id:'go-review'};
+  }
+  return null;
+}
+
+/* 处方的落地：把「该练这个」变成「现在就到期」。**只在用户真的开始做的时候调用**——
+   渲染一张卡不该清掉他的校准欠账，做完那道题才该。 */
+function commitPrescription(rx){
+  if(!rx||!rx.pid)return;
+  const a=ensurePair(rx.pid);if(a.due>Date.now())a.due=Date.now();
+  if(rx.settle)S.calib.settled=rx.settle;
+  save();
+}
+
 /* ① 调度器：产出一条**有序队列**。队首是「现在做这个」，其余只做预览。
    页面不许把队列摊平成平级卡片让用户挑——「今天该练什么」是产品要替他做的决定，
    不是要他做的决定。体验 §4 那段「第1分钟复训 / 第2-4分钟新节点 / 第5分钟点亮」
@@ -580,6 +633,9 @@ function plan(){
   const nx=nextNode();
   const lab=(SITE.x_lab||{}).cases||[];
   const q=[];
+  /* 处方优先于一切固定顺序——它是唯一「因为你」而不是「因为进度」的一件事 */
+  const rx=prescribe();
+  if(rx)q.push(rx);
   /* 前三次会话压到 5 分钟以内（硬约束，不是目标）。产品的认知负荷本来就比
      一句翻译高得多，第一屏若显得比看 10-K 还费劲就会当场流失。
      所以头三次把队首让给最短的那一件：两拍的基础节点（约 3 分钟）。
@@ -665,6 +721,7 @@ function heroCard(it){
   return `<div class="hero">
     <div class="hero-eye">现在做这个</div>
     <div class="hero-code">${it.eye}</div>
+    ${it.reason?`<p class="hero-why">${it.reason}——所以先做这个。</p>`:''}
     <h3 class="hero-t">${it.t}</h3>
     <p class="hero-s">${it.s}</p>
     <button class="cta" id="${it.id}"${it.attr||''}>${it.cta} · 约 ${it.mins} 分钟</button>
@@ -786,7 +843,7 @@ function viewMe(){
 }
 function bindView(){
   const g=id=>document.getElementById(id);
-  if(g('go-review'))g('go-review').onclick=startReview;
+  if(g('go-review'))g('go-review').onclick=()=>{commitPrescription(plan().q[0]);startReview();};
   if(g('go-lab'))g('go-lab').onclick=openLab;
   document.querySelectorAll('[data-tone]').forEach(b=>b.onclick=()=>{
     /* 选侧重只能「设置」，不能「取消」。原来这里是 toggle：在「换教练的侧重」
