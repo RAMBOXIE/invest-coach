@@ -117,6 +117,28 @@ def strip_dev(o):
     return o
 
 
+# 注释留在源码里，不进交付物。
+#
+# 这个仓库的注释密度是刻意的——决策的理由写在它旁边，下一个人才不会把它改回去。
+# 但注释会被原样打进单文件产物，白白占体积，而体积是 owner 裁决的硬约束（320KB）。
+# 实测源码里 9.2KB 是注释。
+#
+# 只剥三类，且都取保守规则：
+#   - HTML 注释（此时 <!--#part:--> 占位符早已被替换掉）
+#   - /* … */ 块注释
+#   - **整行** // 注释（行首只有空白）。不碰行尾的 //，那会吃掉 https:// 这类字符串
+def strip_comments(html):
+    import re
+    head, sep, tail = html.partition(DATA_MARKER)   # 内容负载里可能含 // 与 /*，绝不能碰
+    def clean(s):
+        s = re.sub(r"<!--.*?-->", "", s, flags=re.S)
+        s = re.sub(r"/\*.*?\*/", "", s, flags=re.S)
+        s = re.sub(r"(?m)^[ \t]*//[^\n]*\n", "", s)
+        s = re.sub(r"\n{3,}", "\n\n", s)
+        return s
+    return clean(head) + sep + clean(tail) if sep else clean(html)
+
+
 def main(argv):
     backend = None
     if "--backend" in argv:
@@ -152,6 +174,11 @@ def main(argv):
     # </ 转义防止 JSON 字符串意外闭合 <script>
     payload = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     html = tpl.replace(DATA_MARKER, payload)
+
+    before = len(html.encode("utf-8"))
+    html = strip_comments(html)
+    saved = (before - len(html.encode("utf-8"))) / 1024
+    print(f"剥离源码注释: 省下 {saved:.1f} KB（注释留在 src/，不进交付物）")
 
     if BACKEND_MARKER in html:
         html = html.replace(BACKEND_MARKER, json.dumps(backend) if backend else "null")

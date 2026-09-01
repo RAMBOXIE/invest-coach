@@ -88,9 +88,14 @@
   .sec{background:var(--surface-card);border:1px solid var(--surface-rule);
     border-radius:16px;padding:14px;margin:10px 0}
   .sec h2{font-size:var(--size-13);margin:0 0 8px;color:var(--gold);letter-spacing:1px;font-weight:600}
-  /* 幕的入口暗岛：唯一的实现是今日页的 .hero（见「今日页 IA」一节）。
-     这里曾另有一份 .big，是 IA 重写前的旧入口，页面上已无任何元素使用——
-     两份同义实现活着，改一份不改另一份，下一个人一定会挑错那一份。删除 2026-08-26。 */
+  /* 今日页的「现在做这个」卡。
+     它一度是整块暗色（night-800→night-900 渐变），注释写着「幕的入口暗岛」。
+     但队首**不一定是幕**——是复训、处方或节点时，那块暗色就在传递一个假信号，
+     而 DESIGN.md §1 的表格明确规定外壳与卡片用纸面，暗色只留给幕。
+     结果是一块占手机首屏 37% 的深色区，既违反契约又与四周不协调。
+
+     现在：默认纸面卡，别名全部继承根上的纸面一套；**只有 .hero.story
+     （队首确实是一幕）才切到暗场**。这样「离开纸 = 进入叙事」才是真信号。 */
 
   /* ================= 今日页 IA =================
      状态条 → 唯一的下一步 → 队列预览 → 折叠。
@@ -115,26 +120,31 @@
     font-family:var(--font-mono)}
 
   /* 唯一的下一步：纸面上的暗岛，语义色整体切到「幕」的一份 */
-  .hero{background:linear-gradient(150deg,var(--surface-stage-alt),var(--surface-stage));
-    border:1px solid var(--c-rule-on-stage);border-radius:16px;padding:22px 18px 18px;
-    margin:0 0 22px;color:var(--text-narrative-color);
+  .hero{background:var(--surface-card);
+    border:1px solid var(--line);border-radius:16px;padding:22px 18px 18px;
+    margin:0 0 22px;color:var(--ink);box-shadow:0 1px 2px rgb(43 37 64 / 6%)}
+  /* 队首是一幕时才进暗场。别名整套切换，.hero-* 因此不必各自写死颜色。 */
+  .hero.story{background:linear-gradient(150deg,var(--surface-stage-alt),var(--surface-stage));
+    border-color:var(--c-rule-on-stage);color:var(--text-narrative-color);box-shadow:none;
     --ink:var(--text-narrative-color); --soft:var(--text-meta-on-stage);
     --gold:var(--state-focus-on-stage); --bad:var(--state-flag-on-dark);
     --line:var(--c-rule-on-stage); --card:var(--surface-stage-alt);
     --on-gold:var(--surface-stage); --press:var(--state-press-on-stage)}
   .hero-eye{font-size:var(--size-13);letter-spacing:var(--track-eyebrow);
-    color:var(--state-focus-on-stage);margin-bottom:16px}
-  .hero-code{font-size:var(--size-13);letter-spacing:1px;color:var(--text-meta-on-stage)}
-  .hero-why{margin:6px 0 0;font-size:var(--size-13);color:var(--text-meta-on-stage)}
+    color:var(--gold);margin-bottom:16px}
+  .hero-code{font-size:var(--size-13);letter-spacing:1px;color:var(--soft)}
+  .hero-why{margin:6px 0 0;font-size:var(--size-13);color:var(--soft)}
   .hero-t{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);
     letter-spacing:var(--track-display);margin:9px 0 12px;
-    font-weight:var(--weight-display);color:var(--text-narrative-color)}
+    font-weight:var(--weight-display);color:var(--ink)}
   .hero-s{font-size:var(--size-15);line-height:var(--lh-read);
-    color:var(--text-meta-on-stage);margin:0 0 17px}
-  .hero .cta{background:var(--gold);color:var(--on-gold)}
-  .hero-say{margin-top:17px;padding-top:14px;border-top:1px solid var(--c-rule-on-stage);
-    font-size:var(--size-13);line-height:var(--lh-read);color:var(--text-meta-on-stage)}
-  .hero-say .w{color:var(--state-focus-on-stage);font-weight:700}
+    color:var(--soft);margin:0 0 17px}
+  /* 纸面主按钮沿用基础 .cta（ink-900 底 + 浅字），和判卷台一致。
+     纸面的 --gold 是深琥珀 amber-700，做实心按钮发浑，只在幕里用。 */
+  .hero.story .cta{background:var(--gold);color:var(--on-gold)}
+  .hero-say{margin-top:17px;padding-top:14px;border-top:1px solid var(--line);
+    font-size:var(--size-13);line-height:var(--lh-read);color:var(--soft)}
+  .hero-say .w{color:var(--gold);font-weight:700}
 
   /* 接下来：只预览，不给按钮 */
   .upnext{margin:0 0 20px}
@@ -718,7 +728,7 @@ function statusStrip(done,total,nDue){
 /* 唯一的下一步。教练在这里说话——他是反馈的声音，不是一个设置面板。 */
 function heroCard(it){
   const c=coach();
-  return `<div class="hero">
+  return `<div class="hero${it.kind === 'story' ? ' story' : ''}">
     <div class="hero-eye">现在做这个</div>
     <div class="hero-code">${it.eye}</div>
     ${it.reason?`<p class="hero-why">${it.reason}——所以先做这个。</p>`:''}
