@@ -143,19 +143,61 @@ def metrics(cik):
         if nk:
             k = nk[-1]
             out["ni"], out["ocf"], out["ni_ocf_period"] = ni[k]["val"], ocf[k]["val"], k
-    # 红旗规则（确定性）
-    flags = []
-    if g_rev > 0 and g_ar > g_rev * 1.8:
-        flags.append("应收增速为收入的 1.8 倍以上")
+    # 异常信号规则（确定性）。
+    #
+    # flags 是给人看的句子，signals 是给前端用的 id。
+    # **两个都要有**：前端要按 signals 推出「这份材料能回答哪些问题」，
+    # 而那张信号→动作表必须跟代码一起版本化，不能藏在字符串匹配里。
+    flags, signals = [], []
+    # 1.8 倍这个比值单独用会出噪音：HP 是收入 +3.2% / 应收 +11.2%，
+    # 比值 3.5 倍，可 8 个百分点的差距建立在两个都很小的增速上，那不是信号。
+    # **这正是本产品自己教的 small-base 坑**（基数过小时增速失真），
+    # 管线不能自己踩。所以比值之外再要两个绝对下限：
+    # 差距 ≥10 个百分点，且应收增速本身 ≥15%。
+    # 对照：HILL +2.4/+21.7（差 19.3pt）过；HMS +7.5/+18.9（差 11.4pt）过；
+    #       HP +3.2/+11.2（差 8.0pt）不过。
+    if (g_rev > 0 and g_ar > g_rev * 1.8
+            and (g_ar - g_rev) >= 0.10 and g_ar >= 0.15):
+        flags.append("应收增速为收入的 1.8 倍以上，且差距超过 10 个百分点")
+        signals.append("ar-outpaces-rev")
     if dso1 > dso0 * 1.15:
         flags.append(f"回款天数拉长 {round(dso1-dso0,1)} 天")
+        signals.append("dso-lengthening")
     if out.get("ni", 0) > 0 and out.get("ocf", 1) < 0:
         flags.append("净利为正而经营现金流为负")
-    out["flags"] = flags
+        signals.append("ni-positive-ocf-negative")
+    out["flags"], out["signals"] = flags, signals
     return out
 
 
 # ---------- L3：候选案卷 ----------
+#
+# **问询函必须与数据同期。** 第一轮跑出来的四卷全都有问询函，但日期是：
+#   HILL 2016-09 对 2021-12 的数（差 5 年）｜ILLUMINA 2011-04（差 13 年）
+#   HMS 2014-05（差 10 年）｜HP 2010-01（差 15 年）
+# 而卡上写着「监管**刚**就相关科目向它发过问询函」。一封 2010 年给 HP 的
+# 例行问询函和它今天的应收比率毫无关系，把两者并置就是在暗示一个不存在的联系。
+#
+# 这不主要是法律问题，是真实性问题：一个教人「不要过度解读证据」的产品，
+# 自己不能把两个不相关的事实摆在一起让人去连线。
+#
+# 规则：问询函申报日与报告期末相差超过 18 个月，就**不带这封信**——
+# 那一卷退化成「机器算出的形状」，一样能用来练过程，只是不再声称监管问过。
+LETTER_WINDOW_DAYS = 548
+
+
+def letter_is_current(letter, period_end):
+    if not letter or not letter.get("filed"):
+        return False
+    try:
+        import datetime as _dt
+        a = _dt.date.fromisoformat(letter["filed"])
+        b = _dt.date.fromisoformat(period_end[:10])
+        return abs((b - a).days) <= LETTER_WINDOW_DAYS
+    except Exception:
+        return False
+
+
 def build(cands):
     OUT.mkdir(parents=True, exist_ok=True)
     cases = []
@@ -170,19 +212,36 @@ def build(cands):
             rows.append({"k": "净利 / 经营现金流",
                          "a": f"{m['ni']/1e6:,.0f}M / {m['ocf']/1e6:,.0f}M", "b": "",
                          "flagA": 1 if m["ni"] > 0 > m["ocf"] else 0})
+        cur = letter_is_current(m.get("letter"), m["periods"][1])
         cases.append({
             "id": f"cur-{m['cik']}-{m['periods'][1]}",
             "company": m["name"], "cik": m["cik"],
-            "status": "regulator_asked" if m.get("letter") else "none",
+            "status": "regulator_asked" if cur else "shape_only",
             "asof": m["periods"][1],
-            "brief": "监管刚就这个科目向这家公司提过问。读数字，看监管在问什么——不做定性判断。",
+            "brief": ("监管在同一期前后就这个科目向这家公司提过问。读数字，看监管在问什么，不做定性判断。"
+                      if cur else
+                      "机器从这家公司的原始申报值里算出的形状。没有同期的监管问询，"
+                      "这一卷只用来练一件事：接下来你会去查什么。"),
             "panels": [{"kind": "cmp", "title": f"{m['periods'][0]} → {m['periods'][1]}",
                         "cols": [m["name"][:14], ""], "rows": rows},
                        {"kind": "note", "t": "机器算出的形状：" + "；".join(m["flags"])}],
-            "letter": m.get("letter"),
+            "signals": m.get("signals") or [],
+            # 不同期就不带这封信：留着它，读者一定会去连那条不存在的线
+            "letter": m.get("letter") if cur else None,
             "provenance": {"source": "SEC XBRL companyfacts（原始申报值）",
                            "tags": {"revenue": m["tag_rev"], "receivables": m["tag_ar"]},
                            "computed_by": "tools/fetch_current.py（确定性，无 LLM）"},
+            # 声明必须和这一卷的实际情况对得上：有同期问询函才引 SEC 那段，
+            # 没有就不能引——引了等于暗示有监管介入。
+            "disclaimer": (
+                "本材料引自 SEC 公开文件。SEC 明示：工作人员函件仅针对特定文件，"
+                "不构成委员会意见，不应被解读为确认存在或不存在任何调查。"
+                "本站不主张该公司存在任何违规。"
+                if cur else
+                "本卷的数字由脚本从该公司向 SEC 提交的 XBRL 原始申报值确定性算出，"
+                "口径与期间已标注在下方，任何人都能复核。"
+                "<b>没有任何监管机构就此提出过问询</b>，本站也不主张该公司存在任何违规。"
+                "这一卷只用来练「接下来查什么」。"),
             "gate": {"signed_off": False,
                      "blockers": ["需人工签字", "需三件套同框（官方提问原文 + 公司回复 + 原档数字）",
                                   "题干只能问机制不能问定性"]}})
@@ -200,6 +259,8 @@ if __name__ == "__main__":
     ap.add_argument("--scan", action="store_true")
     ap.add_argument("--cik", action="append", default=[])
     ap.add_argument("--build", action="store_true")
+    ap.add_argument("--limit", type=int, default=8,
+                    help="扫多少个 CIK（SEC 限速 5 req/s，每个 CIK 一次 companyfacts）")
     a = ap.parse_args()
     letters = []
     if a.scan or a.build:
@@ -208,7 +269,9 @@ if __name__ == "__main__":
         OUT.mkdir(parents=True, exist_ok=True)
         (OUT / "letters.json").write_text(json.dumps(letters, ensure_ascii=False, indent=1), encoding="utf-8")
         print(f"  共 {len(letters)} 条 → {OUT/'letters.json'}")
-    ciks = a.cik or [l["cik"] for l in letters if l.get("cik")][:8]
+    # 8 个 CIK 里通常只有 1 个能过五道防呆（多数是规模不够或序列不足两期），
+    # 一轮跑下来只产出一卷。--limit 让它扫得深一些。
+    ciks = a.cik or [l["cik"] for l in letters if l.get("cik")][:a.limit]
     res = []
     if ciks:
         print("\nL1 指标 · 确定性重算（五道防呆，零 LLM）")

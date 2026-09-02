@@ -692,6 +692,22 @@ function prescribe(){
       s:'不是同一道题。换一家公司、换一组数字，考的是同一个地方。',
       cta:'再判一次',id:'go-node',attr:' data-id="'+nid+'"'};
   }
+  /* ④ 实验区里反复跳过同一个核查动作。
+     这条诊断只有实验区给得出来：已结案案例问的是「判断对不对」，
+     只有在真实材料上问「你接下来查什么」，才能看出他习惯性地不查哪一步。 */
+  const sk=Object.entries((S.labproc||{}).skipped||{})
+    .filter(function(e){return e[1]>=2;})
+    .sort(function(a,b){return b[1]-a[1];})[0];
+  if(sk){
+    const act=LAB_ACT.find(function(a){return a.id===sk[0];});
+    if(act&&act.teach&&byId[act.teach]&&stateOf(byId[act.teach])!=='locked'){
+      return {kind:'node',mins:3,eye:'教练标注 · 你总是不查这一步',
+        t:byId[act.teach].name,
+        reason:'实验区里你有 '+sk[1]+' 次没去「'+act.t+'」',
+        s:'这一步是这一节教的。回去过一遍，下次在真材料上就不会漏。',
+        cta:'去补这一步',id:'go-node',attr:' data-id="'+act.teach+'"'};
+    }
+  }
   return null;
 }
 
@@ -775,11 +791,15 @@ function plan(){
     eye:`今日材料 · ${nx.domain}`,t:nx.name,s:nx.desc,
     cta:'开始分析',id:'go-node',attr:` data-id="${nx.id}"`,
     foot:isDeep(nx)?'七步：读材料 → 先写 → 挑证据 → 排除正常解释 → 下结论 → 自评 → 回顾，最后一道闭卷题才算通过。':'两步：读材料 → 下结论。'});
-  if(lab.length&&!((S.lab||{})[lab[0].id]))q.push({kind:'lab',mins:3,
-    eye:'近期财报 · 实验区 · 未经人工复核 · 不计分',t:lab[0].company,
-    s:`${lab[0].asof} 期 · 机器从 SEC 原始申报值确定性算出的形状${lab[0].letter?' · 监管已就相关科目问询':''}`,
-    cta:'读一卷（只读数，不定性）',id:'go-lab',
-    foot:'不进错题档案、不进复习、不计校准分、不能让任何一节算通过。'});
+  /* 实验区支持多卷：原先队列与 openLab 都硬编码 cases[0]，
+     管线就算产出十卷也只会出现第一卷。 */
+  const labc=labNext();
+  if(labc)q.push({kind:'lab',mins:3,
+    eye:`近期财报 · 实验区 · 第 ${lab.indexOf(labc)+1}/${lab.length} 卷 · 未经人工复核`,
+    t:labc.company,
+    s:`${labc.asof} 期 · 机器从 SEC 原始申报值确定性算出的形状${labc.letter?' · 监管已就相关科目问询':''}`,
+    cta:'读一卷（只读数，判过程）',id:'go-lab',
+    foot:'问的不是它有没有问题，是你接下来会去查什么。不计分。'});
   const weak=Object.entries(S.pairs).filter(([p,a])=>PAIRS[p]&&a.wrong>=2&&a.due>Date.now())
     .sort((a,b)=>b[1].wrong-a[1].wrong)[0];
   return {q,dues,nx,stories,weak,read:stories.filter(x=>(S.story||{})[x.case_id])};
@@ -1545,49 +1565,134 @@ function lightUp(){
 }
 
 /* ============ ② 时事案卷（实验室，不计分） ============ */
-function openLab(){
-  const lc=((SITE.x_lab||{}).cases||[])[0];if(!lc)return;
-  R={mode:'lab',case:lc,step:0,tried:new Set(),done:false};
+/* ============ 近期财报实验区 ============
+
+   **这一区能做而已结案案例做不到的，是「在真实不确定性下判过程」。**
+
+   已结案的案例可以告诉你判对没判对：答案在档里。时事案例没人能这么告诉你，
+   所以照抄那套判分是错的——这里原先只问「这是哪种形状」，而形状就印在上一屏的
+   note 里，等于把答案送出去，考的东西已结案案例也全考过。
+
+   现在换成：读完数字，问「你接下来会去查什么」。这件事**可以确定性地判**：
+   哪些问题一份年报答得了、哪些答不了，与这家公司最后是好是坏无关。
+   而这正是 checklist-after 教的东西唯一能在真实材料上做的迁移测试。
+
+   四条边界不变：不进错题档案、不进复习队列、不计校准分、不能让任何一节算通过。
+   但**不计分不等于不观察**：反复跳过现金流验证是一条正当的诊断，它进处方。 */
+
+/* 信号 → 这份材料答得了的问题。跟代码一起版本化，不做字符串匹配。 */
+const LAB_ACT = [
+  {id:'cash-flow', t:'查现金流量表：利润有没有变成现金',
+   by:['ar-outpaces-rev','ni-positive-ocf-negative'], teach:'corroborate'},
+  {id:'terms', t:'读附注里的账期与信用政策，看条款有没有变',
+   by:['ar-outpaces-rev','dso-lengthening'], teach:'dso'},
+  {id:'concentration', t:'查客户集中度披露，是不是集中到了少数几家',
+   by:['ar-outpaces-rev'], teach:'rf1'},
+  {id:'acquisition', t:'查有没有并购并表，两期口径可不可比',
+   by:['ar-outpaces-rev','dso-lengthening'], teach:'falsification'},
+  {id:'gap-where', t:'查缺口沉在哪个科目（应收 / 存货 / 应付）',
+   by:['ni-positive-ocf-negative'], teach:'rf2'},
+  {id:'rev-policy', t:'读附注的收入确认政策，看它按什么时点确认',
+   by:['ar-outpaces-rev','dso-lengthening','ni-positive-ocf-negative'], teach:'find-filings'},
+  {id:'letter', t:'读监管的问询函原文和公司的回复', by:['@letter'], teach:null},
+  /* 越界项：**不是荒谬选项**，是散户真会选的下一步，而它们要么这份材料答不了、
+     要么根本不是判断财报的动作。这一屏最要紧的教学就在这里。 */
+  {id:'price', t:'看它最近的股价走势', out:'股价不回答「这些数字是怎么来的」'},
+  {id:'target', t:'看券商研报给的目标价', out:'别人的结论替代不了你自己读材料'},
+  {id:'call', t:'打电话问公司管理层', out:'散户拿不到这个通道，而且当事人的说法本身要被核对'},
+  {id:'wait', t:'先不管，等下一季财报再看', out:'疑点不会因为等待而消解，能查的现在就能查'},
+];
+
+function labCases(){return ((SITE.x_lab||{}).cases)||[];}
+function labNext(){return labCases().find(c=>!((S.lab||{})[c.id]));}
+
+function openLab(id){
+  const cs=labCases();
+  const lc=id?cs.find(c=>c.id===id):labNext();
+  if(!lc)return toast('实验区暂时没有新的一卷');
+  R={mode:'lab',case:lc,step:0,picked:new Set(),done:false};
   stage.classList.add('show');track('lab_open',{case:lc.id});drawLab();
 }
+
+/* 这一卷该查什么：由管线算出的 signals 决定，不是人手挑的。 */
+function labWanted(lc){
+  const sig=new Set(lc.signals||[]);
+  if(lc.letter)sig.add('@letter');
+  return LAB_ACT.filter(a=>a.by&&a.by.some(x=>sig.has(x)));
+}
+
 function drawLab(){
-  const lc=R.case;
+  const lc=R.case, cs=labCases(), idx=cs.indexOf(lc)+1;
   document.getElementById('stage-prog').style.width=(R.step?100:50)+'%';
   document.getElementById('stage-n').textContent=(R.step+1)+'/2';
   const b=SB(),f=document.getElementById('stage-foot');
   if(R.step===0){
-    b.innerHTML=`<div class="step-t">近期财报 · 实验区</div>${cfHTML(lc,{})}
-      <p class="cfnote">这一卷的边界：<b>只读数字的形状，不对这家公司下任何定性判断</b>。监管问了什么、公司怎么答，才是要读的东西。</p>`;
+    b.innerHTML=`<div class="step-t">近期财报 · 实验区 · 第 ${idx} / ${cs.length} 卷</div>${cfHTML(lc,{})}
+      <p class="cfnote">这一卷的边界：<b>只读数字的形状，不对这家公司下任何定性判断</b>。
+      下一屏问的不是「它有没有问题」，而是<b>你接下来会去查什么</b>。</p>`;
     f.innerHTML=`<button class="cta" id="lab-next">看完了</button>`;
     b.querySelectorAll('[data-src]').forEach(x=>x.onclick=()=>showFact(x.dataset.src));
     document.getElementById('lab-next').onclick=()=>{R.step=1;drawLab();};
     return;
   }
-  const q=lc.quiz;
-  let h=`<div class="step-t">读数题 · 不计分</div><p class="prompt">${q.q}</p>`;
-  h+=shownOpts(q).map((o,i)=>{let c='';
-    if(R.done&&o.ok)c=' right';else if(R.tried.has(i)&&!o.ok)c=' wrong';
-    return `<button class="opt${c}" data-l="${i}" ${R.done||R.tried.has(i)?'disabled':''}>${o.t}</button>`;}).join('');
-  if(R.fb)h+=`<div class="fb${R.done?' good':''}">${R.fb}</div>`;
-  if(R.done)h+=`<div class="cfnote">这一卷不计入你的任何成绩——它由管线自动产出、还没人签字。<br>
-    管线：${lc.provenance.computed_by}<br>取数标签：${lc.provenance.tags.revenue} / ${lc.provenance.tags.receivables}</div>`;
+  const want=labWanted(lc), wid=new Set(want.map(a=>a.id));
+  let h=`<div class="step-t">下一步查什么 · 判过程，不判这家公司</div>
+    <p class="prompt">这些数字摆在你面前。接下来你会去查什么？可以多选。</p>`;
+  h+=LAB_ACT.map(a=>{
+    let c='';
+    if(R.done)c=R.picked.has(a.id)?(wid.has(a.id)?' right':' wrong')
+                                  :(wid.has(a.id)?' naf':'');
+    else if(R.picked.has(a.id))c=' on';
+    return `<button class="card-c${c}" data-la="${a.id}" ${R.done?'disabled':''}>${a.t}</button>`;
+  }).join('');
+  if(R.done){
+    const hit=want.filter(a=>R.picked.has(a.id));
+    const miss=want.filter(a=>!R.picked.has(a.id));
+    const over=LAB_ACT.filter(a=>a.out&&R.picked.has(a.id));
+    h+=`<div class="fb${over.length?'':' good'}">
+      这份材料答得了 ${want.length} 个问题，你选中了 ${hit.length} 个。
+      ${miss.length?`没选的：${miss.map(a=>a.t).join('；')}。`:'一个没漏。'}
+      ${over.length?`<br><br>另外这几条这份材料答不了：${
+        over.map(a=>`「${a.t}」${a.out}`).join('；')}。`:''}</div>
+    <div class="cfnote">这一屏判的是**过程**，不是这家公司是好是坏。
+      它不进错题档案、不进复习队列、不计校准分、不能让任何一节算通过。<br>
+      管线：${lc.provenance.computed_by}<br>取数标签：${
+      Object.values(lc.provenance.tags||{}).join(' / ')}</div>`;
+  }
   b.innerHTML=h;
-  /* 出口不禁用。这一卷自己写着「不计分、不能点亮任何节点」，
-     却用答没答对去锁一个写着「回到今日」的按钮，是自相矛盾的状态标注。 */
-  f.innerHTML=`<button class="cta${R.done?'':' ghost'}" id="lab-x">${R.done?'回到今日':'先不做，回到今日'}</button>`;
-  b.querySelectorAll('[data-l]:not([disabled])').forEach(x=>x.onclick=()=>{
-    const i=+x.dataset.l,o=shownOpts(q)[i];R.tried.add(i);
-    if(o.ok){R.done=true;R.fb=q.fb;}else{R.fb='再看一眼两行数字的相对关系。';}
-    track('lab_answer',{case:lc.id,correct:o.ok?1:0});drawLab();});
-  const bx=document.getElementById('lab-x');
-  if(bx)bx.onclick=()=>{
-    /* 读过就记一笔，之后降到折叠区。实验室原来恒占队列，
-       于是「全部点亮」那一屏永远到不了——章节没有终点。 */
-    S.lab=S.lab||{};S.lab[R.case.id]=Date.now();save();
+  const more=labNext()&&labNext()!==lc;
+  f.innerHTML=R.done
+    ? `<div style="display:flex;gap:8px">${more?'<button class="cta" id="lab-more">下一卷</button>':''}
+       <button class="cta${more?' ghost':''}" id="lab-x">回到今日</button></div>`
+    : `<div style="display:flex;gap:8px">
+       <button class="cta ghost" id="lab-x" style="flex:0 0 40%">先不做</button>
+       <button class="cta" id="lab-go" ${R.picked.size?'':'disabled'}>就查这些</button></div>`;
+  b.querySelectorAll('[data-la]:not([disabled])').forEach(x=>x.onclick=()=>{
+    const id=x.dataset.la;
+    R.picked.has(id)?R.picked.delete(id):R.picked.add(id);
+    drawLab();});
+  const go=document.getElementById('lab-go');
+  if(go)go.onclick=()=>{
+    R.done=true;
+    S.lab=S.lab||{};S.lab[lc.id]=1;
+    /* **不计分不等于不观察。** 屏上承诺的四条是「不进错题档案、不进复习、
+       不计校准分、不能让任何一节算通过」——记一条「他跳过了现金流验证」
+       不属于这四条里的任何一条，而它是一条正当的诊断。处方会读它。 */
+    S.labproc=S.labproc||{skipped:{},over:{}};
+    labWanted(lc).forEach(a=>{if(!R.picked.has(a.id))
+      S.labproc.skipped[a.id]=(S.labproc.skipped[a.id]||0)+1;});
+    LAB_ACT.forEach(a=>{if(a.out&&R.picked.has(a.id))
+      S.labproc.over[a.id]=(S.labproc.over[a.id]||0)+1;});
+    save();track('lab_process',{case:lc.id,picked:[...R.picked].join(','),
+      want:labWanted(lc).length});
+    drawLab();};
+  const mb=document.getElementById('lab-more');
+  if(mb)mb.onclick=()=>{const n=labNext();stage.classList.remove('show');R=null;
+    if(n)openLab(n.id);else{render();}};
+  document.getElementById('lab-x').onclick=()=>{
     stage.classList.remove('show');R=null;render();flush();};
 }
 
-/* ============ 复训 ============ */
 function startReview(){
   const dues=duePairs();if(!dues.length)return toast('没有到期的复习 ✓');
   R={mode:'review',queue:dues.map(p=>{const a=ensurePair(p);

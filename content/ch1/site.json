@@ -6120,7 +6120,7 @@
   }
  ],
  "x_lab": {
-  "note": "时事案卷（B 轨）· 机器筛出、未经人工签字。只读数不定性；不进错题档案、不进复训队列、不计校准分、不作锚题。",
+  "note": "近期财报（实验区）· 机器筛出、未经人工签字。只读数不定性；不进错题档案、不进复习队列、不计校准分、不能让任何一节算通过。问的是「接下来你会去查什么」，判过程不判这家公司。",
   "pipeline": "tools/fetch_current.py（L0 EDGAR 全文检索 → L1 companyfacts 确定性重算 → L2 官方文书绑定 → L3 候选材料）",
   "cases": [
    {
@@ -6128,8 +6128,8 @@
     "company": "HILL INTERNATIONAL, INC.",
     "cik": "0001287808",
     "asof": "2021-12-31",
-    "status": "regulator_asked",
-    "brief": "这家公司的两个增速。监管刚就相关科目向它发过问询函。你的任务只有一个：读出数字的形状。",
+    "status": "shape_only",
+    "brief": "机器从这家公司的原始申报值里算出的形状。没有同期的监管问询，这一卷只用来练一件事：接下来你会去查什么。",
     "panels": [
      {
       "kind": "cmp",
@@ -6166,14 +6166,13 @@
      },
      {
       "kind": "note",
-      "t": "机器算出的形状：应收增速为收入的 1.8 倍以上；回款天数拉长 18.3 天"
+      "t": "机器算出的形状：应收增速为收入的 1.8 倍以上，且差距超过 10 个百分点；回款天数拉长 18.3 天"
      }
     ],
-    "letter": {
-     "filed": "2016-09-27",
-     "topic": "accounts receivable",
-     "url": "https://www.sec.gov/Archives/edgar/data/1287808/000000000016094736/0000000000-16-094736-index.htm"
-    },
+    "signals": [
+     "ar-outpaces-rev",
+     "dso-lengthening"
+    ],
     "provenance": {
      "source": "SEC XBRL companyfacts（原始申报值）",
      "tags": {
@@ -6182,27 +6181,125 @@
      },
      "computed_by": "tools/fetch_current.py（确定性，无 LLM）"
     },
-    "disclaimer": "本材料引自 SEC 公开文件。SEC 明示：工作人员函件仅针对特定文件，不构成委员会意见，不应被解读为确认存在或不存在任何调查。本站不主张该公司存在任何违规。",
-    "quiz": {
-     "q": "只看这两行：应收增速与收入增速的关系，属于下面哪种形状？",
-     "opts": [
-      {
-       "t": "应收增速明显高于收入增速，增速差显著",
-       "ok": true
-      },
-      {
-       "t": "两者基本同步",
-       "ok": false
-      },
-      {
-       "t": "收入增速更高",
-       "ok": false
-      }
-     ],
-     "fb": "对。这就是异常信号一的形状。但请注意本卷的边界：我们只判断<b>数字的形状</b>，不判断这家公司。监管问了什么、公司怎么答，才是这一卷要读的东西。",
-     "x_kind": "main",
-     "x_id": "lab-cur-0001287808-2021-12-31"
-    }
+    "disclaimer": "本卷的数字由脚本从该公司向 SEC 提交的 XBRL 原始申报值确定性算出，口径与期间已标注在下方，任何人都能复核。<b>没有任何监管机构就此提出过问询</b>，本站也不主张该公司存在任何违规。这一卷只用来练「接下来查什么」。"
+   },
+   {
+    "id": "cur-0001110803-2025-12-28",
+    "company": "ILLUMINA, INC.",
+    "cik": "0001110803",
+    "asof": "2025-12-28",
+    "status": "shape_only",
+    "brief": "机器从这家公司的原始申报值里算出的形状。没有同期的监管问询，这一卷只用来练一件事：接下来你会去查什么。",
+    "panels": [
+     {
+      "kind": "cmp",
+      "title": "2024-12-29 → 2025-12-28",
+      "cols": [
+       "ILLUMINA, INC.",
+       ""
+      ],
+      "rows": [
+       {
+        "k": "收入增速",
+        "a": "-0.7%",
+        "b": ""
+       },
+       {
+        "k": "应收增速",
+        "a": "+16.2%",
+        "b": "",
+        "flagA": 1
+       },
+       {
+        "k": "回款天数（期末口径）",
+        "a": "61.4 → 71.8 天",
+        "b": "",
+        "flagA": 1
+       },
+       {
+        "k": "净利 / 经营现金流",
+        "a": "850M / 1,079M",
+        "b": "",
+        "flagA": 0
+       }
+      ]
+     },
+     {
+      "kind": "note",
+      "t": "机器算出的形状：回款天数拉长 10.4 天"
+     }
+    ],
+    "signals": [
+     "dso-lengthening"
+    ],
+    "provenance": {
+     "source": "SEC XBRL companyfacts（原始申报值）",
+     "tags": {
+      "revenue": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "receivables": "AccountsReceivableNetCurrent"
+     },
+     "computed_by": "tools/fetch_current.py（确定性，无 LLM）"
+    },
+    "disclaimer": "本卷的数字由脚本从该公司向 SEC 提交的 XBRL 原始申报值确定性算出，口径与期间已标注在下方，任何人都能复核。<b>没有任何监管机构就此提出过问询</b>，本站也不主张该公司存在任何违规。这一卷只用来练「接下来查什么」。"
+   },
+   {
+    "id": "cur-0001196501-2020-12-31",
+    "company": "HMS HOLDINGS CORP.",
+    "cik": "0001196501",
+    "asof": "2020-12-31",
+    "status": "shape_only",
+    "brief": "机器从这家公司的原始申报值里算出的形状。没有同期的监管问询，这一卷只用来练一件事：接下来你会去查什么。",
+    "panels": [
+     {
+      "kind": "cmp",
+      "title": "2019-12-31 → 2020-12-31",
+      "cols": [
+       "HMS HOLDINGS C",
+       ""
+      ],
+      "rows": [
+       {
+        "k": "收入增速",
+        "a": "+7.5%",
+        "b": ""
+       },
+       {
+        "k": "应收增速",
+        "a": "+18.9%",
+        "b": "",
+        "flagA": 1
+       },
+       {
+        "k": "回款天数（期末口径）",
+        "a": "130.2 → 144.1 天",
+        "b": "",
+        "flagA": 1
+       },
+       {
+        "k": "净利 / 经营现金流",
+        "a": "70M / 99M",
+        "b": "",
+        "flagA": 0
+       }
+      ]
+     },
+     {
+      "kind": "note",
+      "t": "机器算出的形状：应收增速为收入的 1.8 倍以上，且差距超过 10 个百分点"
+     }
+    ],
+    "signals": [
+     "ar-outpaces-rev"
+    ],
+    "provenance": {
+     "source": "SEC XBRL companyfacts（原始申报值）",
+     "tags": {
+      "revenue": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "receivables": "AccountsReceivableNetCurrent"
+     },
+     "computed_by": "tools/fetch_current.py（确定性，无 LLM）"
+    },
+    "disclaimer": "本卷的数字由脚本从该公司向 SEC 提交的 XBRL 原始申报值确定性算出，口径与期间已标注在下方，任何人都能复核。<b>没有任何监管机构就此提出过问询</b>，本站也不主张该公司存在任何违规。这一卷只用来练「接下来查什么」。"
    }
   ]
  }

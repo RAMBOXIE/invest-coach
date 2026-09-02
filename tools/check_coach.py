@@ -337,6 +337,51 @@ def c11_misconceptions(src, site):
               f"其中 {len(byq) - len(lonely)} 类可跨题聚合 ✓")
 
 
+def c12_lab(src, site):
+    """C12 实验区纪律：屏上承诺的四条边界必须结构上做不到违反。
+
+    实验区是唯一碰**未结案**公司的地方，屏上写着四条：不进错题档案、
+    不进复习队列、不计校准分、不能让任何一节算通过。这四条不是文案，
+    是这一区能存在的前提——它读的是活公司的数据，一旦计分就等于
+    拿一家没有定论的公司给用户判分。
+
+    另外查：每卷必须带免责声明，且**必须有 signals**——
+    没有 signals，labWanted() 返回空，「下一步查什么」那一屏就是空的，
+    整个过程测试静默退化成一块白板。
+    """
+    lab = (site.get("x_lab") or {}).get("cases") or []
+    if not lab:
+        return warn("C12", "x_lab 没有案例，实验区不会出现在队列里")
+    # 实验区的渲染与提交路径里不许写这四样
+    for fn in ("drawLab", "openLab"):
+        b = body_of(src, fn)
+        if b is None:
+            return err("C12", f"找不到 {fn}()")
+        for bad, what in ((r"S\.calib", "校准分"), (r"lit\.add", "点亮"),
+                          (r"ensurePair|S\.pairs\[", "复习队列"),
+                          (r"recordFirst|S\.answers\[", "错题档案")):
+            if re.search(bad, b):
+                return err("C12", f"{fn}() 里出现了 {what} 的写入 —— "
+                                  "实验区屏上承诺不碰这四样，那是它能存在的前提")
+    for c in lab:
+        cid = c.get("id", "?")
+        if not c.get("disclaimer"):
+            return err("C12", f"{cid} 缺 disclaimer —— 引用监管文书必须带 SEC 的那段声明")
+        if not c.get("signals"):
+            return err("C12", f"{cid} 没有 signals —— labWanted() 会返回空，"
+                              "「下一步查什么」那一屏静默变成白板")
+        if not c.get("provenance", {}).get("computed_by"):
+            return err("C12", f"{cid} 缺 provenance.computed_by —— 机器算的东西要说清谁算的")
+        # 题干不许问定性
+        txt = json.dumps(c, ensure_ascii=False)
+        for w in ("是否造假", "有没有问题", "该不该买", "值不值得"):
+            if w in txt:
+                return err("C12", f"{cid} 里出现定性问法「{w}」 —— "
+                                  "未结案公司只能判过程，不能判它")
+    ok("C12", f"实验区纪律 {len(lab)} 卷：不碰校准分/点亮/复习/错题档案；"
+              "声明与 signals 齐备；无定性问法 ✓")
+
+
 def c10_counters(src):
     """C10 计数器只能有一个写入点 —— 这条规则是两个真实 bug 的形状。
 
@@ -435,6 +480,7 @@ def run():
     c9_no_position_tell(src, site)
     c10_counters(src)
     c11_misconceptions(src, site)
+    c12_lab(src, site)
     for i in INFOS:
         print("INFO :", i)
     for w in WARNS:
@@ -464,6 +510,8 @@ MUTATIONS = [
     ("C10", "把 wrong++ 加回第二个写入点", "src",
      r"a\.wrong\+\+;", "a.wrong++;a.wrong++;"),
     ("C11", "把一个 mis 改成分类法里没有的 id", "site", None, None),
+    ("C12", "在实验区的渲染路径里写一次校准分", "src",
+     r"function drawLab\(\)\{", "function drawLab(){S.calib.n++;"),
 ]
 
 
