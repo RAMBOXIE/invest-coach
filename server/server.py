@@ -4,11 +4,18 @@
 
 与 server/main.go 同契约。两个职责：
   POST /api/v1/events     匿名遥测
-  POST /api/v1/ask-coach  质问的语义路由
+  POST /api/v1/ask-coach   追问的语义路由
+  POST /api/v1/review-note 教练读你写的那段推理，写回一段话
 
-**关键设计：LLM 只返回命中的证词 id，绝不生成台词。**
+**ask-coach 的关键设计：LLM 只返回命中的陈述 id，绝不生成台词。**
 人物说的每一句永远来自前端已冻结的 case.json。所以模型物理上无法编造
-事实、数字与公司名——它只回答「用户想戳的是哪一条」。
+事实、数字与公司名，它只回答「用户想问的是哪一条」。
+
+**review-note 是另一回事，它必须生成散文。** 走 ADR-0001 铺好的那条路：
+只回应开放文本、不计分、只作第二意见、判分仍由前端规则完成。
+「事实不出自 LLM」这条铁律在这里不能靠提示词，靠的是出口检查——
+模型输出里出现的每一个数字都必须在我们喂给它的已核定材料里出现过，
+否则整条丢弃、回落本地反馈。见 OUT_NUM 与 check_note。
 
 跑起来：
     set CLAUDE_API_KEY=sk-ant-...          # Windows: set / PowerShell: $env:
@@ -16,7 +23,7 @@
 然后重新构建前端，把地址烧进去：
     python tools/build.py --backend http://localhost:8971
 """
-import json, os, sqlite3, sys, time, urllib.request, urllib.error
+import json, os, re, sqlite3, sys, time, urllib.request, urllib.error
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 API_KEY = os.environ.get("CLAUDE_API_KEY", "")
@@ -38,6 +45,8 @@ def db():
         _db = sqlite3.connect(DB_PATH, check_same_thread=False)
         _db.execute("CREATE TABLE IF NOT EXISTS events(id INTEGER PRIMARY KEY, payload TEXT, at INT)")
         _db.execute("CREATE TABLE IF NOT EXISTS asks(id INTEGER PRIMARY KEY, case_id TEXT, q TEXT, matched TEXT, at INT)")
+        # ADR-0001 前置条件 2：判分理由可回放。trace 里存着提示词、模型原始输出、出口检查结论。
+        _db.execute("CREATE TABLE IF NOT EXISTS notes(id INTEGER PRIMARY KEY, node TEXT, trace TEXT, at INT)")
         _db.commit()
     return _db
 
@@ -91,6 +100,72 @@ def route(question, topics):
         return "none"
 
 
+NOTE_SYS = """你是一个财报判断训练产品里的教练。学习者刚刚用自己的话写下了他对一份材料的判断。
+
+你的任务：**回应他写的这段话**，帮他看清自己的推理里有什么、缺什么。
+
+这一关的已核定材料（你只能用这里面的内容，一个字都不能超出）：
+
+{material}
+
+规则（不可违反）：
+1. **不判对错，不给分。** 判分由页面内置规则完成，不归你管。你是第二意见。
+2. **不许引入任何新的事实、数字、公司名、年份。** 上面材料里没有的，
+   你一个字都不能写。需要提到数字时，只能用材料里出现过的。
+3. **回应他真正写了什么。** 指出他抓到了哪一条、漏了哪一条、
+   哪一步推理跨过去了。不要泛泛地夸或泛泛地否定。
+4. 他可能什么也没写、写得很短、或者写的和题目无关。那就如实说，不要硬夸。
+5. **不给投资建议**，不评价任何公司现在值不值得买。
+6. 中文，**两到三句**，不用破折号，不用「不是 X 而是 Y」这种对偶句式。
+   像一个坐在旁边看他做题的人说话，不像一份评语。"""
+
+
+# 出口检查用：模型输出里出现的数字
+OUT_NUM = re.compile(r"\d+(?:[,.]\d+)*")
+
+
+def check_note(text, material):
+    """「事实不出自 LLM」是铁律，不能只写在提示词里。
+
+    出口检查：模型写出的每一个数字，都必须在我们喂给它的已核定材料里出现过。
+    不合格就整条丢弃，前端回落本地反馈——宁可没有教练回应，
+    也不能让一个编出来的数字挂上「教练」两个字。
+    """
+    if not text or len(text) > 400:
+        return None, "空或过长"
+    nums = set(OUT_NUM.findall(text))
+    allowed = set(OUT_NUM.findall(material))
+    bad = [n for n in nums if n not in allowed and n.strip(".,") not in allowed]
+    if bad:
+        return None, f"出现材料里没有的数字 {bad[:3]}"
+    for w in ("建议买入", "建议卖出", "目标价", "推荐"):
+        if w in text:
+            return None, f"出现越界措辞「{w}」"
+    return text, ""
+
+
+def review_note(note, material):
+    """返回 (教练的话, 可回放的记录)。任一环节出问题都返回 (None, 记录)。"""
+    sys_p = NOTE_SYS.format(material=material)
+    body = json.dumps({
+        "model": MODEL,
+        "max_tokens": 400,
+        "system": sys_p,
+        "messages": [{"role": "user", "content": "学习者写的：\n" + note}],
+    }).encode()
+    req = urllib.request.Request(
+        "https://api.anthropic.com/v1/messages", data=body,
+        headers={"content-type": "application/json", "x-api-key": API_KEY,
+                 "anthropic-version": "2023-06-01"})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        out = json.load(r)
+    raw = (out.get("content") or [{}])[0].get("text", "").strip()
+    text, why = check_note(raw, material)
+    # ADR-0001 前置条件 2：判分理由必须可回放。存下提示词、原始输出、检查结论。
+    trace = {"system": sys_p, "note": note, "raw": raw, "kept": bool(text), "rejected": why}
+    return text, trace
+
+
 class H(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
 
@@ -130,6 +205,9 @@ class H(BaseHTTPRequestHandler):
                 db().commit()
             return self._send({"ok": True})
 
+        if self.path == "/api/v1/review-note":
+            return self._review(raw)
+
         if self.path != "/api/v1/ask-coach":
             return self._send({"ok": False}, 404)
 
@@ -158,6 +236,31 @@ class H(BaseHTTPRequestHandler):
                          (req.get("case_id"), q, rid, int(time.time())))
             db().commit()
         self._send({"id": rid, "source": "llm"})
+
+    def _review(self, raw):
+        """教练读学习者写的那段推理。任何一环出问题都回 {"text": null}，
+        前端据此回落到本地反馈——降级路径是 ADR-0001 的前置条件 4。"""
+        try:
+            req = json.loads(raw or b"{}")
+        except Exception:
+            return self._send({"text": None, "source": "fallback"})
+        note = (req.get("note") or "").strip()
+        material = (req.get("material") or "").strip()
+        if not note or len(note) > 1200 or not material or not API_KEY                 or not allow(req.get("device")):
+            return self._send({"text": None, "source": "fallback"})
+        try:
+            text, trace = review_note(note, material)
+        except Exception as e:
+            sys.stderr.write(f"review err: {e}\n")
+            return self._send({"text": None, "source": "fallback"})
+        if not text:
+            sys.stderr.write(f"review 出口检查丢弃：{trace.get('rejected')}\n")
+        if db():
+            db().execute(
+                "INSERT INTO notes(node, trace, at) VALUES(?,?,?)",
+                (req.get("node"), json.dumps(trace, ensure_ascii=False), int(time.time())))
+            db().commit()
+        return self._send({"text": text, "source": "llm" if text else "fallback"})
 
     def log_message(self, *a):
         pass

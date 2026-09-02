@@ -357,6 +357,18 @@
     font-size:var(--size-15);line-height:1.5;color:var(--ink);min-height:var(--tap)}
   .chk.on{border-color:var(--violet);background:var(--c-violet-wash)}
   .chk .bx{font-size:var(--size-17);flex:none}
+  /* 「让教练读一读」的开关。默认关，文案随开关状态改写：
+     两种状态下说的都必须是真话，这一屏原本印着「不上传、不进 AI 的输入」，
+     打开之后那句话就不成立了，不能留着不管。 */
+  .opt-in{display:flex;gap:10px;align-items:flex-start;margin:12px 0 0;
+    padding:11px 12px;background:var(--surface-card);border:1px solid var(--line);
+    border-radius:12px;cursor:pointer;min-height:var(--tap-min)}
+  .opt-in input{margin-top:3px;width:18px;height:18px;flex:0 0 auto;accent-color:var(--brand-violet)}
+  .opt-in>span{font-size:var(--size-13);line-height:var(--lh-read);color:var(--ink)}
+  .opt-in-w{color:var(--soft)}
+  /* 教练的回应就地出现，不翻页。 */
+  .coach-back{margin-top:12px;animation:cbin var(--dur-micro) ease-out}
+  @keyframes cbin{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
   .draft{width:100%;min-height:96px;border:2px solid var(--line);border-radius:13px;padding:12px;
     font-size:var(--size-15);line-height:1.6;font-family:inherit;color:var(--ink);background:var(--surface-card);resize:vertical}
   .tip{font-size:var(--size-13);color:var(--soft);line-height:1.6;margin:6px 0}
@@ -1165,17 +1177,96 @@ function showCanon(n){
 /* — 拍 2 先写（纯本地，不上行） — */
 function wr(){
   const q=R.mainQ[0];const k=DRAFT(q?q.x_id:R.node.id);
+  const on=!!S.coachRead;
   const body=`<div class="step-t">第 ${R.steps.indexOf('write')} 步 · 先写</div>
     <p class="prompt">用一两句话说：你觉得可疑吗？凭什么？</p>
-    <textarea class="draft" id="st-draft" placeholder="想到什么写什么，不判分。写完这一步的收益已经拿到了——研究里它是整套流程效应最稳的一环。"></textarea>
-    <div class="tip">${ic('lock')} 这段文字<b>只存在这台设备上</b>：不上传、不进记忆、不进 AI 的输入。稍后你会拿它和专家推理链自己对照。</div>`;
+    <textarea class="draft" id="st-draft" placeholder="想到什么写什么，不判分。写完这一步的收益已经拿到了：研究里它是整套流程效应最稳的一环。"></textarea>
+    <label class="opt-in"><input type="checkbox" id="st-read" ${on?'checked':''}>
+      <span><b>让教练读一读，写回一段话</b><br>
+      <span class="opt-in-w">${on
+        ? `打开时，<b>这段文字会发到我们的服务器</b>交给 AI 读一遍，用来生成给你的回应。
+           它<b>不影响判分</b>（对错仍由页面内置规则给），也不进你的成绩。随时可以关掉。`
+        : `关着的时候，这段文字<b>只存在这台设备上</b>：不上传、不进记忆、不进 AI 的输入。
+           下一步你会拿它和材料自己对照。`}</span></span></label>
+    <div id="st-coachsay"></div>`;
   return{body,foot:`<div style="display:flex;gap:8px">
       <button class="cta ghost" id="st-skip" style="flex:0 0 40%">想不出来</button>
-      <button class="cta" id="st-next">写好了</button></div>`,
+      <button class="cta" id="st-wdone">写好了</button></div>`,
     bind(){const t=document.getElementById('st-draft');
       try{t.value=localStorage.getItem(k)||'';}catch(e){}
       t.oninput=()=>{try{localStorage.setItem(k,t.value);}catch(e){}};
-      document.getElementById('st-skip').onclick=()=>{R.step++;drawStage();};}};
+      document.getElementById('st-read').onchange=e=>{
+        S.coachRead=e.target.checked;save();drawStage(1);};
+      document.getElementById('st-skip').onclick=()=>{R.step++;drawStage();};
+      /* 「写好了」不再直接翻页：先在原地把回应给出来。
+         翻一页才看到反馈，那是交卷；就地看到，才像有人坐在旁边。 */
+      /* 这颗按钮**不能叫 st-next**：drawStage 会在 bind() 之后把所有 st-next
+         统一绑成「下一步」，把这里的处理器覆盖掉。同理容器不能叫 st-back，
+         那个 id 已经是「上一步」按钮。两次碰撞都不会报错，只是行为静默变成别的。 */
+      const nx=document.getElementById('st-wdone');
+      nx.onclick=()=>{
+        const txt=(t.value||'').trim();
+        if(!txt||R.reviewed){R.step++;R.reviewed=false;drawStage();return;}
+        R.reviewed=true;
+        nx.disabled=true;
+        coachRead(txt).then(()=>{
+          const b=document.getElementById('st-wdone');
+          if(b){b.disabled=false;b.textContent='继续';}
+        });
+      };}};
+}
+
+/* 教练读你写的那段推理，就地写回来。
+
+   **降级路径是这套东西的前提**（ADR-0001 前置条件 4）：没开开关、没有后端、
+   请求失败、或者服务端出口检查把回应丢了——任何一种情况都回落到本地反馈。
+   本地反馈不上传、不需要网络，靠的是把你写的和这一关的证据卡做词面比对。
+   它读不懂你写的话的含义，但它能看出你提没提某样东西，这已经比沉默强。 */
+function coachRead(txt){
+  const box=document.getElementById('st-coachsay');
+  const cards=(R.node.x_cards||[]).filter(c=>c.role==='support');
+  const local=()=>{
+    const hit=cards.filter(c=>termsOf(c.t).some(w=>txt.includes(w)));
+    const miss=cards.filter(c=>!hit.includes(c));
+    let msg;
+    if(!cards.length)msg='记下了。下一步你会看到这一关的材料，拿它对照你刚写的。';
+    else if(!hit.length)msg=`你写的里面没有出现这一关的关键数字。下一步挑证据时留意：${termsOf(cards[0].t)[0]||'材料里的那几行'}。`;
+    else if(!miss.length)msg='你把这一关的几条关键材料都提到了。下一步挑证据，看看你挑的和你写的对不对得上。';
+    else msg=`你提到了${hit.length}条关键材料，还有 ${miss.length} 条没出现在你的话里。下一步挑证据时会知道是哪几条。`;
+    return {text:msg,src:'local'};
+  };
+  const render=r=>{
+    if(!box)return;
+    box.innerHTML=`<div class="coach coach-back"><span class="w">你的教练：</span><span>${r.text}</span>
+      ${r.src==='local'?'<div class="tip">这条回应是这台设备上算出来的，没有联网。</div>':''}</div>`;
+  };
+  if(!S.coachRead||typeof BACKEND==='undefined'||!BACKEND){
+    render(local());return Promise.resolve();
+  }
+  if(box)box.innerHTML='<div class="coach coach-back"><span class="w">你的教练：</span><span>在读你写的……</span></div>';
+  /* 材料由前端给出：服务端保持无状态，且模型能引用的东西**只有我们给它的这些**。 */
+  const material=[
+    (R.node.canon||{}).formal||'',
+    ...(R.node.evidence||[]),
+    ...cards.map(c=>c.t),
+    ...(R.node.x_ruleout||[]).map(x=>x.t||'')
+  ].filter(Boolean).join('\n');
+  return fetch(BACKEND+'/api/v1/review-note',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({device:S.device,node:R.node.id,note:txt,material})})
+    .then(r=>r.json())
+    .then(d=>{render(d&&d.text?{text:d.text,src:'llm'}:local());
+      track('coach_read',{node:R.node.id,src:d&&d.text?'llm':'fallback'});})
+    .catch(()=>{render(local());});
+}
+
+/* 从一条证据卡里取出可比对的词：数字、百分比、以及中文科目名。
+   本地反馈靠它做词面比对——比不了含义，但比得了「提没提」。 */
+function termsOf(t){
+  const out=[];
+  (t.match(/[+\-−]?\d+(?:[,.]\d+)*\s*[%倍天]?/g)||[]).forEach(x=>out.push(x.trim()));
+  ['应收','收入','现金流','利润','存货','账期','毛利','净利'].forEach(w=>{if(t.includes(w))out.push(w);});
+  return out;
 }
 
 /* — 拍 3 挑证据 — */

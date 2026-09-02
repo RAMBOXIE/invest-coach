@@ -36,6 +36,40 @@ def strip_comments(s):
     return s
 
 
+def check_undefined_vars():
+    """T2：引用了却从未定义的 CSS 变量。
+
+    这类错误是**静默的**：`var(--dur-2)` 里那个变量不存在时，浏览器不会报错，
+    只是这条声明失效——动画不跑、颜色回落继承值，页面看着「差不多对」。
+    A9 查的是类名对账，查不到这个；实测中我自己就写错过一次（--dur-2，
+    实际叫 --dur-micro）。
+
+    定义有两个来源：源码里直接写的，和构建期从 design/tokens.json 生成的那批。
+    """
+    import subprocess
+    src = ""
+    for rel in TARGETS:
+        f = ROOT / rel
+        if f.exists():
+            src += strip_comments(f.read_text(encoding="utf-8"))
+    used = set(re.findall(r"var\(\s*(--[\w-]+)", src))
+    defined = set(re.findall(r"(--[\w-]+)\s*:", src))
+    # 构建期注入的令牌变量
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("_b", ROOT / "tools" / "build.py")
+        b = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(b)
+        defined |= set(re.findall(r"(--[\w-]+)\s*:", b.css_vars()))
+    except Exception as e:
+        return [], [f"T2 跳过：读不到构建期令牌（{e}）"]
+    missing = sorted(used - defined)
+    if missing:
+        return [f"T2 引用了从未定义的 CSS 变量 {missing} —— "
+                "这类失效是静默的：声明直接被丢弃，页面看着差不多对"], []
+    return [], []
+
+
 def scan():
     """返回 {文件: {"hex": n, "font_px": n}}，并附带明细供报错时展示。"""
     counts, detail = {}, {}
@@ -92,6 +126,13 @@ def main(argv):
             elif c[k] < b.get(k, 0):
                 print(f"INFO : {f} {label} {b.get(k,0)} → {c[k]}，还清 {b[k]-c[k]} 条"
                       f"（跑 --update 把基线降下来）")
+
+    errs2, warns2 = check_undefined_vars()
+    errors += errs2
+    for w in warns2:
+        print("WARN : " + w)
+    if not errs2:
+        print("INFO : T2 无引用了却从未定义的 CSS 变量 ✓")
 
     if errors:
         print("TOKENS: FAIL")

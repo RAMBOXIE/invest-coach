@@ -96,7 +96,32 @@ def main(path):
         if e:
             errors.append(e)
 
-    # 2) 产物里的每一段 <script>（拼装后才暴露的问题）
+    # 2) 源码模板里的内联 script。
+    #
+    # **这一段原本没有，是个真空白。** 门禁只查分片和 dist 产物，而
+    # src/template.html 的内联脚本两头不沾：改完源码、还没重新构建时，
+    # 查的是**上一次**的产物，于是给出一个假绿灯。实测撞上过：
+    # 模板里一个字符串被折成了真换行（语法错误），check_js 报 PASS，
+    # 直到构建才炸。源码改动必须当场能查出来。
+    tpl = ROOT / "src" / "template.html"
+    tpl_blocks = []
+    if tpl.exists():
+        raw = tpl.read_text(encoding="utf-8")
+        for i, b in enumerate(re.findall(r"<script(?![^>]*src=)[^>]*>(.*?)</script>",
+                                         raw, re.S)):
+            if not b.strip():
+                continue
+            tpl_blocks.append(b)
+            # 占位符还没被替换，替成合法字面量再交给 node
+            probe = (b.replace("/*__DATA__*/null", "null")
+                      .replace("/*__BACKEND__*/null", "null")
+                      .replace("/*__TOKENS__*/", ""))
+            probe = re.sub(r"<!--#part:[\w.\-]+-->", "", probe)
+            e = check(node, probe, f"src/template.html 第 {i + 1} 段 <script>")
+            if e:
+                errors.append(e)
+
+    # 3) 产物里的每一段 <script>（拼装后才暴露的问题）
     p = pathlib.Path(path)
     if p.exists():
         html = p.read_text(encoding="utf-8")
@@ -107,7 +132,7 @@ def main(path):
             e = check(node, b, f"{p.name} 第 {i + 1} 段 <script>")
             if e:
                 errors.append(e)
-        print(f"INFO : 检查 {len(parts)} 个分片 + {len(blocks)} 段内联 script")
+        print(f"INFO : 检查 {len(parts)} 个分片 + 模板 {len(tpl_blocks)} 段 + 产物 {len(blocks)} 段内联 script")
         # J2：整份产物合起来看，谁调用了一个谁都没声明过的名字
         unk = undeclared("\n".join(blocks))
         for u in unk:
