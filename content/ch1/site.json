@@ -119,7 +119,7 @@
    "name": "SEC Form 10-K（年报表格与总说明）",
    "type": "监管表格（SEC，公有领域）",
    "url": "https://www.sec.gov/files/form10-k.pdf",
-   "note": "年报的法定结构来源。Item 编号与各部分名称可在本仓已归档的原档中逐项核对：evidence/nikola-10k-fy2020.txt 的 L81–L147 是目录，L1834 起是 Item 8 正文，L1857 附注、L1903 资产负债表、L1982 利润表、L2211 重要会计政策。表格本身尚未归档并锚 sha256，见 DEBT D7。"
+   "note": "年报的法定结构来源。表格原档已归档：evidence/sec-form10k.pdf（sha256 5005ad5347f600262108f00ed1e0ef8121a332e4332f5cfd2570719a8c470c5b，19 页，SEC 1673 (02-25) 版）。Item 编号与各部分名称见表格第 11–12 页；附注归属由 Item 8(a) 指向的 Regulation S-X 规定，在归档的真实年报 evidence/nikola-10k-fy2020.txt 里逐项可核（L81–L147 目录、L1834 Item 8、L1857 附注、L2211 重要会计政策）。"
   }
  ],
  "x_coaches": [
@@ -3399,7 +3399,7 @@
     "formal": "Form 10-K 按 Item 编号分部分：Item 1 业务、Item 1A 风险因素、Item 7 管理层讨论与分析、Item 8 财务报表与补充数据；财务报表的附注附于 Item 8 之内，与报表本体同属该部分。",
     "source": "SEC Form 10-K（年报表格与总说明）",
     "textbook": "SEC Form 10-K · 总说明与各 Item 标题",
-    "x_cite": "结构逐项可在归档原档中核对：nikola-10k-fy2020.txt 目录 L81–L147、Item 8 正文起 L1834、附注 L1857、重要会计政策 L2211"
+    "x_cite": "SEC Form 10-K 表格原档（evidence/sec-form10k.pdf，SEC 1673 (02-25)，19 页）：Part I 第 11 页「Item 1. Business」「Item 1A. Risk Factors」；Part II 第 12 页「Item 7. Management's Discussion and Analysis of Financial Condition and Results of Operations」「Item 8. Financial Statements and Supplementary Data」；总说明 G(2)（第 3 页）把 Part I 与 Part II 界定为 Items 1 through 9A。附注属于财务报表的一部分，出自 Item 8(a) 指向的 Regulation S-X（17 CFR 210），表格本身不逐条列举——这一层在归档原档 nikola-10k-fy2020.txt 里可直接核对：目录 L81–L147、Item 8 正文起 L1834、附注 L1857、重要会计政策 L2211。"
    },
    "evidence": [
     "知道年报按 Item 编号分部分，能说出 Item 8 装的是什么",

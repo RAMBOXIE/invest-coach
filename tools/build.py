@@ -119,6 +119,10 @@ DEV_ONLY = (
     # 教练点评，x_identity/canon_sources/school 是三套语气语料各自的思想出处。
     # 这些都有档案价值，但用户下载它们没有任何用处。
     # ADR-0002 §4 裁决过「x_coaches 数据留着，名字不上屏」——留在源码，不进产物。
+    # orig 是被译引文的英文原文，S7c 拿它去归档原档里逐字核对。
+    # 全仓搜下来只有 validate 在读——对用户是纯下载体积。留在源码里，不进产物。
+    "orig",
+    "anchors",       # 同上：引文的行锚/页锚，机器核对用
     "x_qtype",
     "reorder",
     "x_coach_notes",

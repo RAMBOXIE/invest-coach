@@ -257,7 +257,18 @@
       "coach": "你问到了那个 1993 年没人问的问题。生意判断错了，代价 4.33 亿；用股票支付这个决定，把代价变成 35 亿。他同一封信里写：「To date, Dexter is the worst deal that I've made.」<b>没有人骗他。他自己算错了两次，而第二次多数人根本不会去算。</b>",
       "unlock": null
      }
-    ]
+    ],
+    "anchors": [
+     {
+      "accession": "0000950150-94-000443",
+      "line": "L378–L380"
+     },
+     {
+      "accession": "0000950150-94-000443",
+      "line": "L2661"
+     }
+    ],
+    "orig": "On November 7, 1993 Berkshire Hathaway Inc. consummated a merger with Dexter by reissuing 25,203 shares of its common stock held in treasury in exchange for 100% of the outstanding common stock of Dexter."
    }
   ],
   "no_record": {
@@ -269,8 +280,8 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "Rambo",
-  "reviewed_at": "2026-09-01",
-  "reviewed_hash": "f406d73742debb0e"
+  "reviewed_by": "",
+  "reviewed_at": "",
+  "reviewed_hash": ""
  }
 }

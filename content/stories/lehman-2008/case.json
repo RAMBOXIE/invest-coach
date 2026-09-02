@@ -104,8 +104,9 @@
    "quote": {
     "text": "鉴于雷曼在 <b>2007 年第四季度末、2008 年第一季度末、2008 年第二季度末</b>分别进行了 <b>386 亿美元、491 亿美元、503.8 亿美元</b>的 Repo 105 交易……",
     "src": "Valukas 审查人报告 Vol.3（破产法院指定，2010-03-11）",
-    "line": "Repo 105 章节",
-    "fact": "lb-repo105"
+    "line": "p.16",
+    "fact": "lb-repo105",
+    "orig": "Given that Lehman undertook $38.6 billion, $49.1 billion, and $50.38 billion of Repo 105 transactions at quarter-end fourth quarter 2007, first quarter 2008, and second quarter 2008, respectively"
    },
    "lines": [
     "做法是这样：季末前几天，把几百亿资产「卖」出去换现金，用现金还掉负债，资产和负债同时缩小，杠杆率下降。",
@@ -122,8 +123,9 @@
    "quote": {
     "text": "雷曼<b>从未公开披露</b>其对 Repo 105 交易的使用、对这些交易的会计处理、2007 年底至 2008 年间 Repo 105 使用量的大幅上升，也未披露这些交易对公司<b>公开报告的净杠杆率</b>所产生的实质影响。",
     "src": "Valukas 审查人报告 Vol.3",
-    "line": "Repo 105 章节",
-    "fact": "lb-nodisclosure"
+    "line": "p.17",
+    "fact": "lb-nodisclosure",
+    "orig": "Lehman never publicly disclosed its use of Repo 105 transactions, its accounting treatment for these transactions, the considerable escalation of its total Repo 105 usage in late 2007 and into 2008, or the material impact these transactions had on the firm's publicly reported net leverage ratio."
    },
    "lines": [
     "审查人的这个结论，被数位雷曼证人证实——包括两位曾负责编制 10-K 与 10-Q 的前全球财务总监。",
@@ -268,7 +270,22 @@
       "coach": "这个案例的突破点在这里：它没有说错什么，它只说报告日。两年后审查人查明：雷曼在 2007Q4 末、2008Q1 末、2008Q2 末分别做了 386 亿、491 亿、503.8 亿美元的 Repo 105 交易，并<b>从未公开披露</b>，包括对公开报告净杠杆率的实质影响。你手上这份材料，回答不了你要问的问题。",
       "unlock": null
      }
-    ]
+    ],
+    "anchors": [
+     {
+      "accession": "0001104659-08-005476",
+      "line": "L31627"
+     },
+     {
+      "accession": "0001104659-08-023292",
+      "line": "L1874"
+     },
+     {
+      "accession": "0001104659-08-045115",
+      "line": "L1991"
+     }
+    ],
+    "orig": "Cash and cash equivalents $ 7,564 $ 7,286"
    }
   ],
   "no_record": {
@@ -280,8 +297,8 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "Rambo",
-  "reviewed_at": "2026-09-01",
-  "reviewed_hash": "be6f9ecf597ae469"
+  "reviewed_by": "",
+  "reviewed_at": "",
+  "reviewed_hash": ""
  }
 }

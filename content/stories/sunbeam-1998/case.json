@@ -147,7 +147,8 @@
     "text": "……一整条为 1998 年季节准备的全新烧烤架与配件产品线，在 1997 年第四季度就开始发货，走的是一个新的「early buy」营销项目，该项目除其他内容外还包含<b>延长的信用期，到期日落在 1998 年第二季度</b>。本公司在 1997 年第四季度通过该项目售出约 <b>5,000 万美元</b>的户外烹饪产品。",
     "src": "Sunbeam 1997 年 10-K405 · 管理层讨论与分析",
     "line": "L1192–L1198",
-    "fact": "sb-earlybuy"
+    "fact": "sb-earlybuy",
+    "orig": "the introduction of an entirely new line of grills and accessories for the 1998 season that began to ship in the fourth quarter of 1997 under a new \"early buy\" marketing program that included among other things, extended credit terms with due dates in the second quarter of 1998."
    },
    "lines": [
     "十二月。他们卖出了五千万美元的烧烤架。",
@@ -306,7 +307,14 @@
       "coach": "他承认了「季节性账期条款」，但没说是什么条款。<b>继续追问这一点。</b>",
       "unlock": "t2"
      }
-    ]
+    ],
+    "anchors": [
+     {
+      "accession": "0000950170-98-000413",
+      "line": "L1169–L1174"
+     }
+    ],
+    "orig": "Net sales from continuing operations for 1997 were $1,168.2 million, an increase of $183.9 million or 18.7% over 1996."
    },
    {
     "id": "t2",
@@ -336,14 +344,21 @@
       "coach": "「某些季节性账期条款」指的就是这件事。冬天发出去五千万美元的烧烤架，明年第二季度才收钱：今年的收入，明年的现金。他没有撒谎，他只是用了一个不会让你追问的词。",
       "unlock": "t3"
      }
-    ]
+    ],
+    "anchors": [
+     {
+      "accession": "0000950170-98-000413",
+      "line": "L1469–L1476"
+     }
+    ],
+    "orig": "This decrease is primarily attributable to an increase in earnings before non-cash charges in 1997 and the utilization of tax benefits generated from the implementation of the Company's restructuring plan, offset by higher accounts receivable due to increased sales in 1997 and certain seasonal dating terms, increased inventory levels in 1997 necessary to support continued anticipated sales growth and the Company's initiatives to improve customer service levels and 1997 cash expenditures required to implement the restructuring plan."
    },
    {
     "id": "t3",
     "locked": true,
     "text": "「本公司主要<b>在向客户发货时</b>确认产品销售收入。」",
     "src": "10-K405 · 收入确认附注",
-    "line": "L2352–L2354",
+    "line": "L2353–L2357",
     "press": {
      "text": "「……在有限情形下，应客户要求，本公司可能以 bill and hold 方式销售季节性产品，前提是货物已完工、包装并可供发运，已被隔离存放，且所有权风险与法定所有权已转移给客户。」",
      "src": "10-K405 · 收入确认附注",
@@ -359,7 +374,14 @@
       "coach": "三句陈述都找到了矛盾。回头看这三句话：每一句都是真的，每一句都写在同一份文件里，但放在一起讲的是另一个故事：一年的业绩里，有一部分是把明年的生意提前搬进来的。<b>三年后 SEC 的认定，和你刚才自己拼出来的，是同一件事。</b>",
       "unlock": null
      }
-    ]
+    ],
+    "anchors": [
+     {
+      "accession": "0000950170-98-000413",
+      "line": "L2353–L2357"
+     }
+    ],
+    "orig": "The Company recognizes revenues from product sales principally at the time of shipment to customers."
    }
   ],
   "no_record": {

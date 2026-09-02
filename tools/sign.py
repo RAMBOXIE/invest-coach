@@ -84,10 +84,9 @@ def load_cases():
     return out
 
 
-def case_hash(c):
-    import hashlib
-    core = {k: c.get(k) for k in ("title", "subtitle", "hook", "cast", "beats", "knowledge_node")}
-    return hashlib.sha256(json.dumps(core, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
+# 幕的指纹只有一份实现，在 validate.py。两处各写一份的时候，注释里写着
+# 「改一处要改两处」——真到改的时候，靠的是有人记得读那句注释。
+case_hash = _v.case_hash
 
 
 def status(obj, h):

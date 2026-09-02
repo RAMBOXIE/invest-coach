@@ -29,6 +29,8 @@ REAL_MARKERS = ("Sunbeam", "Dell", "Nikola", "Moderna", "Berkshire", "Lehman",
 # 申报号 0000950170-98-000413 ｜ 日期 2001-05-15 ｜ 行号 L1192 ｜ 年份 1997 年
 PROV_TOKENS = re.compile(r"\d{10}-\d\d-\d{6}|\d{4}-\d\d-\d\d|L\d+(?:[–-]L?\d+)?|"
                          r"\d+\s*年|Item\s*\d+[A-C]?")
+MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")  # S7 日期归一化用，顺序即月份号
 EDGE_TYPES = {"hard", "soft", "cross"}
 PAIR_FIELDS = ("look", "a", "b", "key")
 LEVELS = {"L1", "L2"}
@@ -97,8 +99,73 @@ def node_hash(n):
     return hashlib.sha256(json.dumps(core, ensure_ascii=False, sort_keys=True).encode()).hexdigest()[:16]
 
 
+CASE_CORE = ("title", "subtitle", "hook", "cast", "beats", "knowledge_node",
+             # interrogation 一度不在指纹里——而审问屏上全是「他写过的话」，
+             # 是幕里最需要人核对的内容。不在指纹里就意味着：签完字之后
+             # 把证词整段换掉，签字仍然有效，没有任何东西会喊一声。
+             "interrogation")
+
+
+def case_hash(c):
+    """幕的内容指纹。签字绑它，内容一改签字自动过期。
+
+    只有这一份实现。以前 validate 与 sign 各写一份，注释里写着「改一处要改两处」
+    ——那是一句提醒，不是执行者。sign.py 现在直接调这个。
+    """
+    core = {k: c.get(k) for k in CASE_CORE}
+    return hashlib.sha256(json.dumps(core, ensure_ascii=False,
+                                     sort_keys=True).encode()).hexdigest()[:16]
+
+
 TAG = re.compile(r"<[^>]+>")
 NUMTOK = re.compile(r"\d+(?:,\d{3})*(?:\.\d+)?")
+
+
+# R28 允许不归档的原档，以及为什么。**空理由不算理由**，规则会拒绝。
+# 这张表是「哪些引文没有机器背书」的唯一清单——不写在这里，它就只是一句
+# 谁也不会去数的 WARN。原来六条 accession 没有归档，S7 对它们全部降级放行。
+UNARCHIVED_OK = {
+    "BRK-2007-letter":
+        "致股东信是有版权的作品（berkshirehathaway.com 公开发布，但不是公有领域）。"
+        "本仓只归档公有领域一手文件，所以它的逐字性只能靠人工核对，"
+        "S7 会为它报一条 WARN——那条 WARN 是有意留着的，不是漏网",
+}
+
+
+def check_evidence_coverage(F, errors):
+    """R28：facts.json 里每条事实引用的 accession，都必须有归档原档。
+
+    为什么单独一条：S7（引文锚定）在找不到原档时**只报 WARN 然后放行**，
+    而这正是这个仓库反复栽的那种失败——检查还在，但它什么也没查。
+    实测有六条 accession 从来没有归档：SEC 对 Sunbeam 的认定书、对 Dell 的
+    和解、雷曼三份财报。也就是说产品里最硬的几句话（「SEC 认定至少 6,200 万
+    来自舞弊」）从来没有任何东西核对过它是不是真在那份文件里。
+
+    例外必须进 UNARCHIVED_OK 并写明理由，且理由一旦失效（文件其实归档了）
+    这条规则会反过来要求删掉例外——例外表不许自己长草。
+    """
+    have = {e.get("accession") for e in F.get("evidence_files", [])}
+    used = {}
+    for f in F.get("facts", []):
+        if f.get("accession"):
+            used.setdefault(f["accession"], []).append(f["id"])
+    for acc, fids in sorted(used.items()):
+        if acc in have:
+            continue
+        why = UNARCHIVED_OK.get(acc)
+        if not why:
+            errors.append(
+                f"R28 accession「{acc}」（{len(fids)} 条事实：{'、'.join(fids[:3])}）没有归档原档 —— "
+                "S7 对它只会报 WARN 然后放行，这些引文的逐字性没有任何东西在查。"
+                "要么把原档存进 evidence/ 并登记 sha256，要么进 UNARCHIVED_OK 并写明为什么不能归档")
+    for acc, why in UNARCHIVED_OK.items():
+        if not (why or "").strip():
+            errors.append(f"R28 UNARCHIVED_OK 里「{acc}」没写理由——没有理由的豁免就是漏网")
+        if acc in have:
+            errors.append(f"R28 UNARCHIVED_OK 里的「{acc}」其实已经归档了，把这条例外删掉")
+    if not errors:
+        print(f"INFO : R28 {len(used)} 个 accession，{len(used) - len(UNARCHIVED_OK & used.keys())} 个有归档原档，"
+              f"{len(UNARCHIVED_OK & used.keys())} 个有书面豁免 ✓")
 
 
 def check_facts(data, facts_path, errors, warns):
@@ -109,6 +176,7 @@ def check_facts(data, facts_path, errors, warns):
         errors.append("缺少数字账本 content/ch1/facts.json")
         return
     facts = json.loads(fp.read_text(encoding="utf-8"))
+    check_evidence_coverage(facts, errors)
     allowed = set(facts.get("approved_tokens", {}))
     for ef in facts.get("evidence_files", []):
         f = fp.parent.parent.parent / ef["file"]
@@ -237,6 +305,19 @@ NUM_OK = re.compile(r"^(19|20)\d\d$|^[1-9]$|^1[0-2]$")
 
 
 
+def norm(s):
+    """归一化：空白压平 + 花体标点换直体。
+
+    PDF 抽出来的文本用 U+2010 连字符与弯引号（quarter‐end / Lehman’s），
+    键盘敲出来的是直体。逐字比对前不归一，正确的引文也会判成对不上。
+    """
+    s = re.sub(r"[‐‑‒–—−]", "-", s)
+    s = re.sub(r"[‘’‛]", "'", s)
+    s = re.sub(r"[“”]", '"', s)
+    s = re.sub(r"[   ]", " ", s)
+    return re.sub(r"\s+", " ", s)
+
+
 def sig(tok):
     """数字 → 有效数字串。1,073.1 → 10731；10.73 → 1073；50.0 → 5"""
     d = str(tok).replace(",", "").replace(".", "").lstrip("0")
@@ -331,45 +412,152 @@ def validate_stories(release=False):
         # 引文里出现的每个数字，都必须出现在被引的那几行里。
         # 英文引文则直接比文本本身。
         acc2file = {e["accession"]: e["file"] for e in F["evidence_files"]}
-        def check_quote(q, where):
-            src_line = str(q.get("line") or "")
-            fid = q.get("fact")
-            acc = None
-            if fid:
-                acc = next((x.get("accession") for x in F["facts"] if x["id"] == fid), None)
+
+        def window(acc, src_line, where):
+            """(accession, line) → 原档里的一段文本。取不到就返回 (None, 原因)。"""
             fpath = acc2file.get(acc)
             if not fpath:
-                warns.append(f"S7 {cid}/{where}: 引文无法定位原档（fact={fid}）——无法核对逐字性")
-                return
+                return None, f"accession「{acc}」没有归档原档"
             ep = root / fpath
             if not ep.exists():
                 errors.append(f"S7 {cid}/{where}: 原档缺失 {fpath}")
-                return
-            EL = ep.read_text(encoding="utf-8", errors="replace").splitlines()
-            nums = re.findall(r"L(\d+)", src_line)
+                return None, None
+            if ep.suffix.lower() == ".pdf":
+                # PDF 原档按页锚（line 写 "p.16"）。以前 S7 对 PDF 只能报一句
+                # 「没有 L 行号」然后放行——雷曼幕最核心的两句引文（Repo 105 的规模、
+                # 从未披露）就一直挂在这个豁免里，没有任何东西核对过。
+                pgs = [int(x) for x in re.findall(r"p\.?\s*(\d+)", str(src_line or ""))]
+                if not pgs:
+                    return None, f"line「{src_line}」里没有 p.页码（PDF 原档按页锚）"
+                try:
+                    from pypdf import PdfReader
+                except ImportError:
+                    errors.append(f"S7 {cid}/{where}: 引文锚在 PDF 上但装不到 pypdf —— "
+                                  "缺依赖时这条检查会静默跳过，那正是它要挡的事。"
+                                  "装 pypdf，或把锚改到文本原档上")
+                    return None, None
+                rd = PdfReader(str(ep))
+                out = []
+                for pg in range(min(pgs) - 1, max(pgs) + 1):   # 取到相邻页，跨页断句也能命中
+                    if 1 <= pg <= len(rd.pages):
+                        out.append(rd.pages[pg - 1].extract_text() or "")
+                return norm(chr(10).join(out)), None
+            nums = re.findall(r"L(\d+)", str(src_line or ""))
             if not nums:
-                warns.append(f"S7 {cid}/{where}: line 字段没有 L 行号，无法核对")
-                return
+                return None, f"line「{src_line}」里没有 L 行号"
+            EL = ep.read_text(encoding="utf-8", errors="replace").splitlines()
             lo, hi = int(nums[0]), int(nums[-1])
-            win = chr(10).join(EL[max(0, lo - 6):min(len(EL), hi + 6)])
+            # 原档有 .txt 也有 .html。HTML 报表里一个单元格就是一行，±6 行只看得见
+            # 光秃秃的「$ 7,286」——科目名和列头都在几十行以外。按**可见字数**扩窗，
+            # 一直扩到看得见约 800 字正文为止，行数窗口对 HTML 才有意义。
+            pad, raw, vis = 6, "", ""
+            while pad <= 150:
+                raw = chr(10).join(EL[max(0, lo - pad):min(len(EL), hi + pad)])
+                vis = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", raw.replace("&nbsp;", " ")))
+                if len(vis) >= 800:
+                    break
+                pad += 12
+            # 「2007 年 11 月 30 日」对上原档的「November 30, 2007」：月份一边是数字一边是词。
+            # 把英文月名翻成数字补进窗口，日期就能和别的数字走同一条规则——
+            # 而不是把日期整类豁免掉（豁免等于「把日期换掉也没人发现」，
+            # 而这条引文的全部意思就是哪个数字属于哪一天）。
+            months = vis
+            for i, mon in enumerate(MONTHS, 1):
+                months = re.sub(mon + r"[a-z]*\.?", f" {i} ", months, flags=re.I)
+            # 三份都留：raw 供文本原档逐字比，vis 供 HTML 逐字比，months 供日期比。
+            # 只留 months 的话，orig 里写着 November 就永远对不上。
+            return chr(10).join((raw, vis, months)), None
+
+        def check_quote(q, where):
+            """S7：引文必须能在归档原档的引用行附近找到。
+
+            锚有两种写法：
+              - 绑 fact（用这条事实的 accession + quote.line）
+              - 自带 anchors:[{accession,line}]，可以多条
+
+            为什么要 anchors：审问屏的 testimony 原本只有散文式的 src
+            （「雷曼 2007 年 10-K 第 86 页」）加 line，acc2file 永远查不到，
+            S7 于是只报一句 WARN 就放行——**「逐字原档引文」这一整类内容
+            从来没有任何东西核对过**，而它是这个产品最硬的承诺。
+            雷曼那条横跨 10-K 与两份 10-Q，所以 anchors 是列表而不是单值。
+            """
+            explicit = q.get("anchors")
+            anchors = explicit or [{"accession": next(
+                (x.get("accession") for x in F["facts"] if x["id"] == q.get("fact")), None
+            ) if q.get("fact") else None, "line": q.get("line")}]
+            wins, why = [], []
+            for a in anchors:
+                w, reason = window(a.get("accession"), a.get("line"), where)
+                if w is None:
+                    if reason:
+                        why.append(reason)
+                else:
+                    wins.append(w)
+            if explicit and why:
+                errors.append(f"S7 {cid}/{where}: anchors 里有锚点落不到原档 —— "
+                              + "；".join(why) + "。显式写了锚就必须条条都能核对")
+                return
+            if not wins:
+                warns.append(f"S7 {cid}/{where}: 无法核对逐字性 —— "
+                             + "；".join(why or ["原档缺失"]))
+                return
+            src_line = " / ".join(str(a.get("line")) for a in anchors)
             txt = re.sub(r"<[^>]+>", "", q.get("text") or q.get("quote") or "")
             ascii_ratio = sum(c.isascii() for c in txt) / max(1, len(txt))
             if ascii_ratio > 0.85:
-                probe = re.sub(r"\s+", " ", txt).strip()[:60]
-                if re.sub(r"\s+", " ", win).find(probe) < 0:
+                probe = norm(txt).strip()[:60]
+                if not any(probe in norm(w) for w in wins):
                     errors.append(f"S7 {cid}/{where}: 英文引文在原档 {src_line} 附近找不到 —— "
                                   f"「{probe[:50]}」。逐字引文不许改写")
             else:
+                # S7c 译文引文必须带 orig（被译的那句英文原文）。
+                #
+                # 只比数字挡不住改写。实测：把 sunbeam 那句「在向客户发货时确认收入」
+                # 改成「在收到货款时」——一个数字都没动，意思正好相反，S7 原样放行。
+                # 而这句正是整个第一章要教的东西（权责发生制 vs 收付实现制）。
+                #
+                # 机器能核的是「orig 逐字在原档里」；译得准不准是人的活，
+                # 在签字清单 G1 里。分工不含糊，两边都不放空。
+                orig = norm(re.sub(r"<[^>]+>", "", q.get("orig") or ""))
+                if not orig:
+                    errors.append(f"S7c {cid}/{where}: 译文引文缺 orig（被译的英文原文片段）"
+                                  " —— 只比数字的话，把引文改写成相反的意思也能过")
+                elif not any(orig[:120] in norm(w) for w in wins):
+                    errors.append(f"S7c {cid}/{where}: orig 在原档 {src_line} 附近逐字找不到 —— "
+                                  f"「{orig[:60]}」")
+                # 译文比数字。字面数字串优先；对不上再按有效数字比一次——
+                # 原档记 $7,286 million 而文案写「72.86 亿美元」，字符串永远不相等，
+                # 但 sig 都是 7286。允许换算与取整，编造的数字仍然对不上。
+                # 日期整体核对。「2008 年 2 月 29 日」里的 2 是一位数，会被下面
+                # 「有效数字 ≥2 位」的过滤扔掉——实测把 2 月改成 3 月，S7 原样放行，
+                # 而这条证词的全部意思就是哪个数字属于哪一天。
+                for y, mo, dd in re.findall(r"(\d{4})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日", txt):
+                    pats = (rf"(?<!\d){int(mo)}\D{{0,4}}{int(dd)}\D{{0,8}}{y}(?!\d)",      # Feb 29, 2008（月名已归一成数字）
+                            rf"(?<!\d){y}\D{{0,4}}0?{int(mo)}\D{{0,4}}0?{int(dd)}(?!\d)")  # 2008-02-29
+                    if not any(re.search(pt, norm(w)) for w in wins for pt in pats):
+                        errors.append(f"S7 {cid}/{where}: 日期「{y} 年 {mo} 月 {dd} 日」"
+                                      f"在原档 {src_line} 附近对不上")
                 qn = [t for t in re.findall(r"[\d][\d,]*(?:\.\d+)?", txt) if len(sig(t)) >= 2]
-                miss = [t for t in qn if t.replace(",", "") not in win.replace(",", "")]
+                pool = {sig(t) for w in wins for t in re.findall(r"[\d][\d,]*(?:\.\d+)?", w)}
+                pool.discard("")
+                miss = [t for t in qn
+                        if not any(t.replace(",", "") in norm(w).replace(",", "") for w in wins)
+                        and not sig_match(t, pool, minlen=3)]
                 if miss:
                     errors.append(f"S7 {cid}/{where}: 译文引文里这些数字在原档 {src_line} 附近找不到 —— "
                                   + "、".join(miss[:6]) + "。译文可以，编造不行")
 
         for b in c.get("beats", []):
             if b.get("quote"): check_quote(b["quote"], f"{b.get('id')}/quote")
+        # S7b 审问屏的每条 testimony 都必须可核对。
+        # 屏上它长得就是「他写过的话」，逐字引自原档；一条没有锚的 testimony
+        # 等于一句谁都没核对过的引文，而它挂着原档的名义。
         for i, t in enumerate((c.get("interrogation") or {}).get("testimony", [])):
-            if t.get("src") and t.get("line"): check_quote(t, f"testimony[{i}]")
+            if not (t.get("anchors") or t.get("fact")):
+                errors.append(f"S7b {cid}/testimony[{i}]: 既没有 anchors 也没有绑 fact —— "
+                              "屏上它是「他写过的话」，必须能锚回归档原档的行")
+                continue
+            check_quote(t, f"testimony[{i}]")
 
         # S5 每个 fact 引用都要在 facts.json 里存在
         for m in re.finditer(r'"fact"\s*:\s*"([^"]+)"', cp.read_text(encoding="utf-8")):
@@ -392,7 +580,9 @@ def validate_stories(release=False):
                     # 里面必然夹着数字串——签完字 S6 就会把它当成「没有出处的真实数字」
                     # 而报错。第一次给幕签字时当场撞上了。
                     if k in ("line", "accession", "_note", "note", "x_prov"): continue
-                    walk(v, in_quote or (bool(q) and k in ("text", "quote")))
+                    # orig 一并豁免：它就是原档里的那句英文，而 S7c 已经拿它
+                    # 去归档原档里逐字核对过——比「这个数字在账本里」更硬的背书。
+                    walk(v, in_quote or (bool(q) and k in ("text", "quote", "orig")))
             elif isinstance(o, list):
                 for v in o: walk(v, in_quote)
         walk(c)
@@ -444,12 +634,8 @@ def validate_stories(release=False):
         # 内容改了签字必须失效。这条一度只在节点侧（R23）有，幕这边只查了
         # reviewed_by 非空——结果是给幕签完字之后正文随便改，签字永远有效，
         # 而「签字绑内容指纹」正是这套机制唯一的意义所在。
-        # 指纹算法与 tools/sign.py 的 case_hash 必须一致，改一处要改两处。
         elif pv.get("reviewed_hash"):
-            core = {k: c.get(k) for k in
-                    ("title", "subtitle", "hook", "cast", "beats", "knowledge_node")}
-            h = hashlib.sha256(json.dumps(core, ensure_ascii=False,
-                                          sort_keys=True).encode()).hexdigest()[:16]
+            h = case_hash(c)
             if h != pv["reviewed_hash"]:
                 errors.append(f"{cid}: 幕的审核已过期——内容 hash 与 x_prov.reviewed_hash "
                               f"不符，改动后必须重审（现 {h}，签字时 {pv['reviewed_hash']}）")

@@ -42,6 +42,48 @@
    "sha256": "1388734fe763d368b11cc1dea4f06684662e1866d2b9c925669045f037a362de",
    "source": "Moderna FY2019 10-K",
    "accession": "0001682852-20-000006"
+  },
+  {
+   "file": "evidence/sec-form10k.pdf",
+   "sha256": "5005ad5347f600262108f00ed1e0ef8121a332e4332f5cfd2570719a8c470c5b",
+   "source": "SEC Form 10-K 表格与总说明（SEC 1673, 02-25 版；19 页）",
+   "accession": "SEC-Form10K-1673"
+  },
+  {
+   "file": "evidence/sec-aaer-1393-sunbeam.html",
+   "sha256": "b35f44dfcd2e2d2339583b95ded12b7b386ee8c3d5a5c5fdb755dd751e91ca73",
+   "source": "SEC AAER 1393 / Rel. 33-7976 · In the Matter of Sunbeam Corporation（2001-05-15）",
+   "accession": "AAER-1393"
+  },
+  {
+   "file": "evidence/sec-lr-17001-dunlap.html",
+   "sha256": "c1dadc7e064c182e093c6f4ead8bc96dc50047a8460f7f87548b348880d665d1",
+   "source": "SEC LR-17001 / AAER 1395 · SEC v. Dunlap 等六人（2001-05-15）",
+   "accession": "LR-17001"
+  },
+  {
+   "file": "evidence/sec-lr-21599-dell.html",
+   "sha256": "fc47742d77b4465184f997e79c664b2d3d06877c1bc3969d6635c11acad0e071",
+   "source": "SEC LR-21599 / AAER 3156 · Dell Inc. 等（2010-07-22）",
+   "accession": "LR-21599"
+  },
+  {
+   "file": "evidence/lbhi-10k-fy2007.html",
+   "sha256": "0e200f493b7c478b4a3d5d165e9541be72d808de62e4a3d8b3fe651f8d700da4",
+   "source": "Lehman Brothers Holdings FY2007 10-K（2008-01-29 报送）",
+   "accession": "0001104659-08-005476"
+  },
+  {
+   "file": "evidence/lbhi-10q-2008q1.html",
+   "sha256": "0c3486a2a2c6bec73974e9f773b856b215bfdc15961d489b8014d2cbd629791f",
+   "source": "Lehman Brothers Holdings 10-Q 2008-02-29 期（2008-04-09 报送）",
+   "accession": "0001104659-08-023292"
+  },
+  {
+   "file": "evidence/lbhi-10q-2008q2.html",
+   "sha256": "45c3dc6d4b57f8c93e6ae0b288ce77f8a92e13f55d4bd4c7137d03e37f8372cf",
+   "source": "Lehman Brothers Holdings 10-Q 2008-05-31 期（2008-07-10 报送）",
+   "accession": "0001104659-08-045115"
   }
  ],
  "facts": [
@@ -97,7 +139,7 @@
    "value": "报告 income 1.89 亿中至少 6,200 万来自会计舞弊",
    "basis": "AAER 1393 / Rel. 33-7976",
    "accession": "AAER-1393",
-   "line": "认定段"
+   "line": "L1289 Summary 段（原文 at least $62 million of Sunbeam's reported income of $189 million）"
   },
   {
    "id": "dl-rev-g",
@@ -151,7 +193,7 @@
    "value": "$100M；Michael Dell 个人 $4M；涉 2001–2006 披露与会计（Intel 独占性付款）",
    "basis": "SEC LR-21599（2010-07-22），已核实",
    "accession": "LR-21599",
-   "line": "—"
+   "line": "L1158 释文正文"
   },
   {
    "id": "sb-ar-change",
@@ -250,7 +292,7 @@
    "value": "2007Q4 末 386 亿；2008Q1 末 491 亿；2008Q2 末 503.8 亿美元",
    "basis": "审查人报告逐字",
    "accession": "Valukas-Vol3",
-   "line": "Repo 105 章节"
+   "line": "p.16（另见 p.22 / p.42）"
   },
   {
    "id": "lb-nodisclosure",
@@ -259,7 +301,7 @@
    "value": "雷曼从未公开披露其 Repo 105 使用、会计处理、规模上升及对公开净杠杆率的实质影响；经数位证人（含两位前全球财务总监）证实。报告明确不就是否符合 SFAS 140 作结论",
    "basis": "审查人报告逐字",
    "accession": "Valukas-Vol3",
-   "line": "Repo 105 章节"
+   "line": "p.17"
   },
   {
    "id": "lb-cash-2007",
@@ -267,8 +309,8 @@
    "item": "2007-11-30 现金及等价物",
    "value": "$7.286 billion",
    "basis": "2007 年 10-K",
-   "accession": "LBHI-2007-10K",
-   "line": "p.86"
+   "accession": "0001104659-08-005476",
+   "line": "L31627 合并资产负债表；L36202 现金流量表期末余额（MD&A L19556 自述「$7.3 billion」）"
   },
   {
    "id": "lb-cash-q1",
@@ -276,8 +318,8 @@
    "item": "2008-02-29 现金及等价物",
    "value": "$7.564 billion",
    "basis": "10-Q（2008-04-09 报送）",
-   "accession": "LBHI-10Q-Apr2008",
-   "line": "p.5"
+   "accession": "0001104659-08-023292",
+   "line": "L1874 合并资产负债表首行"
   },
   {
    "id": "lb-cash-q2",
@@ -285,8 +327,8 @@
    "item": "2008-05-31 现金及等价物",
    "value": "$6.513 billion",
    "basis": "10-Q（2008-07-10 报送）",
-   "accession": "LBHI-10Q-Jul2008",
-   "line": "p.5"
+   "accession": "0001104659-08-045115",
+   "line": "L1991 合并资产负债表首行"
   },
   {
    "id": "nk-float",
