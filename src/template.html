@@ -635,13 +635,18 @@ function prescribe(){
   /* ① 过度自信未清算：标了「很有把握」却判错了。
      这不能等 HLR 的自然到期——记忆模型算的是「你会不会忘」，
      而这里的病是「你太信自己」，两回事。立刻召回一道闭卷题重标把握。 */
-  if(pf.over>(S.calib.settled||0)){
+  /* 过度自信有**两个**写入点：答题走 S.calib.over（recordFirst），
+     案例里的判断走 profile().over（court.js）。处方原先只读后者，
+     于是「答题时标了很有把握却判错」永远触发不了校准处方——
+     而那恰恰是最常见的那一种。C6 当时是绿的：它只查了 .over 出现在比较里，
+     没查是**哪一个** .over。 */
+  if(pf.over+S.calib.over>(S.calib.settled||0)){
     const c=Object.entries(S.pairs).filter(([p])=>PAIRS[p]&&BANK[p])
       .sort((a,b)=>(b[1].wrong-a[1].wrong)||(a[1].due-b[1].due))[0];
     if(c){
-      return {kind:'review',mins:1,eye:'教练点名 · 校准',pid:c[0],settle:pf.over,
+      return {kind:'review',mins:1,eye:'教练标注 · 校准',pid:c[0],settle:pf.over+S.calib.over,
         t:'一道闭卷题，重新标一次把握',
-        reason:`你有 ${pf.over} 次标了「很有把握」却判错了`,
+        reason:`你有 ${pf.over+S.calib.over} 次标了「很有把握」却判错了`,
         s:'把握感和证据强度脱钩，是这里唯一治得了的病。这道闭卷，答完重新标把握。',
         cta:'开始',id:'go-review'};
     }
@@ -1280,6 +1285,19 @@ function maybeIntervene(ctx){
   track('coach_intervene',{why});
 }
 
+/* 记一次答错。**只有这一处累加 wrong。**
+
+   原先三个地方各自 wrong++：recordFirst 内、锚题、复习。而后两处答完
+   紧接着就调 recordFirst——同一次答错被记两次。又因为 recordFirst 开头有
+   `if(S.answers[q.x_id])return` 守卫，只有首答会双计，于是表现成：
+   第一次答错立刻显示「你已经站错 2 次」，pairRepeat 介入当场弹出。 */
+function recordMiss(pid,side){
+  if(!pid||!PAIRS[pid])return 0;
+  const a=ensurePair(pid);
+  a.wrong++;a.lastWrong=side||'node';
+  return a.wrong;
+}
+
 function recordFirst(q,rec){
   if(S.answers[q.x_id])return;
   S.answers[q.x_id]=rec;
@@ -1293,9 +1311,9 @@ function recordFirst(q,rec){
   }
   let iv=null;
   if(q.confidence&&!rec.noscore&&rec.conf===.95&&!rec.c&&!rec.na)iv={overconf:1};
-  if(q.x_pair&&PAIRS[q.x_pair]){const a=ensurePair(q.x_pair);
-    if(!rec.c&&!rec.na&&!rec.noscore){a.wrong++;a.lastWrong=rec.side||'node';
-      if(a.wrong>=2)iv={pairRepeat:1,pair:q.x_pair,wrong:a.wrong};}}
+  if(q.x_pair&&PAIRS[q.x_pair]&&!rec.c&&!rec.na&&!rec.noscore){
+    const r=recordMiss(q.x_pair,rec.side||'node');
+    if(r>=2)iv={pairRepeat:1,pair:q.x_pair,wrong:r};}
   if(iv)setTimeout(()=>maybeIntervene(iv),650);
   track('first_answer',{quiz_id:q.x_id,pair_id:q.x_pair||null,side:rec.side||null,kind:rec.k,
     correct:rec.c,na:rec.na,conf:rec.conf||null,hints:rec.h,latency:rec.ms});
@@ -1395,7 +1413,8 @@ function an(){
         else{R.aDone=true;R.aPass=false;R.aFb=q.fb+'<br><br><b>这一节还没通过</b>——不扣分，回去把材料和证据链再走一遍，换一道闭卷题再来。';
           setTimeout(()=>maybeIntervene({anchorFail:1}),650);}
         if(R.anchor.pair){const p=ensurePair(R.anchor.pair);p.seen++;p.lastSide=R.anchor.side;
-          if(o.ok)p.hl=Math.min(64,p.hl*2);else{p.hl=Math.max(.5,p.hl/2);p.wrong++;p.lastWrong=R.anchor.side;}
+          if(o.ok){p.hl=Math.min(64,p.hl*2);p.lastWrong=null;}
+          else{p.hl=Math.max(.5,p.hl/2);recordMiss(R.anchor.pair,R.anchor.side);}
           p.due=Date.now()+p.hl*DAY;}
         recordFirst(q,{c:o.ok?1:0,na:o.na?1:0,naok:(o.na&&o.ok)?1:0,conf:R.aConf,h:0,k:'anchor',
           side:R.anchor.side,ms:0,noscore:0});
@@ -1472,6 +1491,10 @@ function drawLab(){
 function startReview(){
   const dues=duePairs();if(!dues.length)return toast('没有到期的复习 ✓');
   R={mode:'review',queue:dues.map(p=>{const a=ensurePair(p);
+      /* 先补上次答错的那一面；答对之后 lastWrong 会被清空（见 recordMiss 的对侧），
+         于是转为与上次不同的一面。lastWrong 一度从不清空，结果是某一面错过一次之后
+         **永远只出这一面**——混淆对的双面训练从此再没发生过，而它的全部意义
+         就是你得能区分 a 和 b。 */
       let side=a.lastWrong==='a'||a.lastWrong==='b'?a.lastWrong:(a.lastSide==='a'?'b':'a');
       if(!BANK[p][side]||!BANK[p][side].length)side=side==='a'?'b':'a';
       const list=BANK[p][side];return{pid:p,side,quiz:list[a.seen%list.length]};}),
@@ -1523,7 +1546,8 @@ function drawReview(){
       if(o.mis){S.mis[o.mis]=(S.mis[o.mis]||0)+1;}}
     R.cl=line(o.na&&o.ok?'na_honest':!o.ok?'pair_repeat':'correct');
     const a=ensurePair(it.pid);a.seen++;a.lastSide=it.side;
-    if(o.ok)a.hl=Math.min(64,a.hl*2);else{a.hl=Math.max(.5,a.hl/2);a.wrong++;a.lastWrong=it.side;}
+    if(o.ok){a.hl=Math.min(64,a.hl*2);a.lastWrong=null;}
+    else{a.hl=Math.max(.5,a.hl/2);recordMiss(it.pid,it.side);}
     a.due=Date.now()+a.hl*DAY;
     recordFirst(q,{c:o.ok?1:0,na:o.na?1:0,naok:(o.na&&o.ok)?1:0,conf:R.conf,h:0,k:'review',side:it.side,ms:0,noscore:0});
     track('review_answer',{quiz_id:q.x_id,pair_id:it.pid,side:it.side,correct:o.ok?1:0});

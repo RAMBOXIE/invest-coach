@@ -195,7 +195,7 @@ def c5_transfer(src, site):
     if ab is None:
         return err("C5", "找不到锚题渲染函数 an() —— C5 无法验证，视为不通过")
     # 查机制不查字面：an() 正文里本来就写着「也不给提示」这句话给用户看。
-    if re.search(r"S\.hints\+\+|q\.hints|data-h(?:int)?=", ab):
+    if re.search(r"S\.hints\+\+|\bq\.hints\b|data-h(?:int)?=", ab):
         return err("C5", "锚题里接了提示机制 —— 闭卷就不该给提示")
     deep = [n for n in site["nodes"] if n.get("x_anchors")]
     bad = [n["id"] for n in deep if len(n.get("x_anchors", [])) < 2]
@@ -250,9 +250,25 @@ def c6_calibration(src):
     pb = body_of(src, "prescribe") or ""
     # 必须在**判断条件**里读它。早先只 grep "over"，而处方里
     # `S.calib.settled=pf.over` 这行清算语句也含这个词，把触发条件删掉规则照样绿。
-    if not re.search(r"\.over\s*[><]", pb):
+    if not re.search(r"\.over\s*[><]|\.over\s*\+", pb):
         return err("C6", "过度自信没有成为处方的触发条件 —— "
                          "标了「很有把握」却判错，系统对此毫无动作")
+    # 过度自信有两个写入点：答题走 S.calib.over，案例判断走 profile().over。
+    # 处方一度只读后者，于是最常见的那一种（答题时过度自信）永远触发不了处方，
+    # 而这条规则当时是绿的——它只查了「.over 出现在比较里」，没查是哪一个 .over。
+    # 查**触发条件本身**，不是查这两个名字在函数里出现过。
+    # 名字在 settle: 和 reason: 那两行也会出现——只查存在性的话，
+    # 把触发条件整个删掉规则照样绿，变异测试当场抓到过。
+    m = re.search(r"if\s*\((.+?)\)\s*\{", pb)
+    cond = m.group(1) if m else ""
+    if "settled" not in cond:
+        return err("C6", "处方的第一个判断不是「过度自信是否已清算」—— "
+                         "没有清算比较，同一张处方会无限重复")
+    if not (re.search(r"pf\.over|profile\(\)\.over", cond)
+            and "S.calib.over" in cond):
+        return err("C6", "处方的触发条件只读了一个过度自信计数器 —— 两个写入点"
+                         "（答题 S.calib.over / 案例 profile().over）必须都读，"
+                         "否则漏掉的那一半永远触发不了校准处方")
     # 真值：后果必须真的落地。处方本身是纯的（见 C8），所以落地在 commitPrescription()，
     # 而且必须**被点击处理器调用**——只定义不调用等于没有后果。
     cb = body_of(src, "commitPrescription")
@@ -266,6 +282,36 @@ def c6_calibration(src):
     if len(callers) < 2:      # 一次是定义处，至少还得有一个调用点
         return err("C6", "commitPrescription 从未被调用 —— 后果只是写在那里")
     ok("C6", "校准闭环 过度自信 → 处方 → 用户开始时提前召回并清算，后果已落地 ✓")
+
+
+def c10_counters(src):
+    """C10 计数器只能有一个写入点 —— 这条规则是两个真实 bug 的形状。
+
+    **wrong 双计**：曾有三处 `wrong++`（recordFirst 内、锚题、复习），
+    而后两处答完紧接着调 recordFirst。同一次答错记两次；又因为 recordFirst
+    开头有 `if(S.answers[q.x_id])return` 守卫，只有首答会双计——表现成
+    「第一次答错就显示你已经站错 2 次」，pairRepeat 介入当场误弹。
+
+    **lastWrong 从不清空**：答对时不清它，于是取题的
+    `side = lastWrong || 对侧` 永远解析到同一面。某一面错过一次之后
+    这一对**永远只出这一面**，而混淆对的全部意义就是你得能区分 a 和 b。
+    """
+    # 注释里提到 wrong++ 不是写入点。数它等于逼人删注释去凑数字，
+    # check_tokens 里已有同样的教训。
+    code = re.sub(r"/\*.*?\*/", "", src, flags=re.S)
+    code = re.sub(r"(?m)^\s*//[^\n]*", "", code)
+    n = len(re.findall(r"wrong\+\+", code))
+    if n != 1:
+        return err("C10", f"wrong++ 出现 {n} 次 —— 累加点必须唯一。"
+                          "多个写入点在同一条答题路径上会重复计数")
+    if body_of(src, "recordMiss") is None:
+        return err("C10", "没有 recordMiss() —— 「记一次答错」应当只有一个入口")
+    # 答对必须清 lastWrong，否则这一对永远只出同一面
+    if not re.search(r"lastWrong\s*=\s*null", src):
+        return err("C10", "没有任何地方把 lastWrong 清空 —— "
+                          "某一面错过一次之后，这组易混题永远只出这一面，"
+                          "双面训练从此不再发生")
+    ok("C10", "计数器纪律 wrong++ 唯一入口 recordMiss()；答对会清 lastWrong ✓")
 
 
 def c8_pure(src):
@@ -308,7 +354,22 @@ def c7_boundary(src, site):
     ok("C7", "不越界 无买卖建议/收益承诺；免责声明在位 ✓")
 
 
+def check_self():
+    """门禁自己的源码里不许出现字面控制符。
+
+    踩过两次：用 heredoc 写这个文件时，正则里的反斜杠 b 会被折成**字面退格符**
+    （0x08），于是 C5 的 q.hints 检查变成了永远匹配不上的东西，
+    而规则看起来仍然是绿的。这条规则守的是门禁自身的可信度。
+    """
+    me = pathlib.Path(__file__).read_text(encoding="utf-8")
+    seen = sorted({hex(ord(c)) for c in me if c in '\x07\x08\x0b\x0c'})
+    if seen:
+        err("C0", f"本门禁源码里出现字面控制符 {seen} —— "
+                  "多半是正则里的反斜杠转义被吃掉了，对应的规则永远匹配不上")
+
+
 def run():
+    check_self()
     src, site = sources(), json.loads(SITE.read_text(encoding="utf-8"))
     c1_diagnose(src)
     c2_prescribe(src)
@@ -319,6 +380,7 @@ def run():
     c7_boundary(src, site)
     c8_pure(src)
     c9_no_position_tell(src, site)
+    c10_counters(src)
     for i in INFOS:
         print("INFO :", i)
     for w in WARNS:
@@ -338,12 +400,15 @@ MUTATIONS = [
     ("C3", "多开一个点亮入口", "src", r"lit\.add\(n\.id\)", "lit.add(n.id);lit.add(n.id)"),
     ("C4", "把一道题的反馈缩成一句空话", "site", None, None),
     ("C5", "给锚题接上提示机制", "src", r"function an\(\)\{", "function an(){S.hints++;"),
-    ("C6", "删掉过度自信的触发条件", "src", r"pf\.over>\(S\.calib\.settled\|\|0\)", "false"),
+    ("C6", "删掉过度自信的触发条件", "src",
+     r"pf\.over\+S\.calib\.over>\(S\.calib\.settled\|\|0\)", "false"),
     ("C7", "加一句荐股", "site", None, None),
     ("C8", "把落地动作搬回处方里（副作用回归）", "src",
      r"function prescribe\(\)\{", "function prescribe(){S.calib.settled=1;save();"),
     ("C9", "把一处渲染改回按原序输出选项", "src",
      r"body\+=shownOpts\(q\)\.map", "body+=q.opts.map"),
+    ("C10", "把 wrong++ 加回第二个写入点", "src",
+     r"a\.wrong\+\+;", "a.wrong++;a.wrong++;"),
 ]
 
 
