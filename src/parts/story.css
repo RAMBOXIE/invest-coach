@@ -12,6 +12,11 @@
   --line:var(--c-rule-on-stage);
   --card:var(--surface-stage-alt);
   --on-gold:var(--surface-stage);
+  /* 消融实验查出来的：这个场少了 --press。
+     它只有一个消费者（那条通用的按下态 box-shadow:inset ... var(--press)），
+     缺了之后暗场里的按钮按下时用的是**纸面**的按下色，
+     A8 的三态反馈在幕里一直是错的，而没有任何东西会喊一声。 */
+  --press:var(--state-press-on-stage);
   color:var(--ink)}
 .sty.show{display:flex}
 
@@ -111,6 +116,7 @@
   --line:var(--surface-rule);
   --card:var(--surface-read-alt);
   --on-gold:var(--surface-card);
+  --press:var(--state-press);
   color:var(--ink);
   border-radius:var(--radius-lg);padding:var(--space-4) var(--space-4);margin:var(--space-4) 0}
 .kn h3{font-size:var(--size-17);margin:0 0 var(--space-3);letter-spacing:.06em}

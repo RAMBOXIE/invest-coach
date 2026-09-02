@@ -106,7 +106,26 @@ BACKEND_MARKER = "/*__BACKEND__*/null"  # 模板改造时引入；原始上游�
 #   _note   —— 下划线前缀按约定就是开发注释
 #   note    —— sources[].note 的出处批注、cast[].note 的用真名理由：
 #              留在源码里有价值（审计要看），但页面从不渲染它
-DEV_ONLY = ("x_prov", "_note", "note")
+DEV_ONLY = (
+    "x_prov",        # 人工签字与内容哈希，只给 validate --release 用
+    "_note",         # 下划线前缀按约定就是开发注释
+    "note",          # sources[].note 的出处批注、cast[].note 的用真名理由
+    # ── 消融实验找出来的：源码里有价值，产物里没有消费者 ──
+    #
+    # 判据是「谁在读它」。下面这些，全仓（前端 + tools + server）搜下来
+    # 只有 tools 在读，也就是说它们对**用户**是纯下载体积。
+    # 不删源码：x_qtype 记录了判分方式（规则判分，是 ADR 级别的承诺），
+    # reorder 记录了三处刻意偏离教科书顺序的理由，x_coach_notes 是已写好的
+    # 教练点评，x_identity/canon_sources/school 是三套语气语料各自的思想出处。
+    # 这些都有档案价值，但用户下载它们没有任何用处。
+    # ADR-0002 §4 裁决过「x_coaches 数据留着，名字不上屏」——留在源码，不进产物。
+    "x_qtype",
+    "reorder",
+    "x_coach_notes",
+    "x_identity",
+    "canon_sources",
+    "school",
+)
 
 
 def strip_dev(o):
@@ -115,6 +134,26 @@ def strip_dev(o):
     if isinstance(o, list):
         return [strip_dev(v) for v in o]
     return o
+
+
+# 教练对象里只有 id 与 style_lines 被用到。name / intro 从不渲染——
+# 而 ADR-0002 §1 写的是「全站不出现教练的人名，coachName() 恒返回『你的教练』」。
+#
+# 把人名发到用户浏览器里，等于把 ADR 禁止出现的东西放在手边：
+# 哪天有人写了 ${c.name}，页面上就冒出「账房先生」，而没有任何东西会喊一声。
+# **剥掉它，ADR 就从一条约定变成结构上做不到。**
+#
+# 不能加进 DEV_ONLY：name 在 cast[].name、sources[].name 里都是必需的，
+# 全局按键名剥会把幕里的人物名字一起剥掉。
+COACH_KEEP = ("id", "style_lines")
+
+
+def strip_coach_persona(data):
+    cs = data.get("x_coaches")
+    if not cs:
+        return data
+    data["x_coaches"] = [{k: v for k, v in c.items() if k in COACH_KEEP} for c in cs]
+    return data
 
 
 # 注释留在源码里，不进交付物。
@@ -162,7 +201,7 @@ def main(argv):
         print(f"模板中占位符 {DATA_MARKER} 不是恰好一次")
         return 1
 
-    data = strip_dev(json.loads(CONTENT.read_text(encoding="utf-8")))
+    data = strip_coach_persona(strip_dev(json.loads(CONTENT.read_text(encoding="utf-8"))))
     # 溯源徽标需要事实条目：把 facts.json 的 facts 按 id 注入 SITE.x_facts（只读展示用）
     fp = CONTENT.parent / "facts.json"
     if fp.exists():

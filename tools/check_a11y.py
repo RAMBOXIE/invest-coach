@@ -248,6 +248,30 @@ def main(path):
     if not re.search(r"(?:button|\[disabled\]|:disabled)[^{}]*\{[^{}]*cursor\s*:\s*not-allowed", css_nc):
         errors.append("A8 禁用元素没有 cursor:not-allowed——看起来还能点")
 
+    # ---- A10 双场别名必须整套切换 ----
+    #
+    # 双场系统的做法是：容器重定义整套简写别名，里面的规则一律写 var(--ink) 这种，
+    # 于是同一份规则在纸面和暗场都对。**前提是那一套是完整的。**
+    #
+    # 消融实验查出来的：.sty 与 .kn 各切了 7 个，都缺 --press。
+    # 而 --press 只有一个消费者（通用按下态 box-shadow:inset ... var(--press)），
+    # 缺了之后暗场里按钮按下用的是纸面的按下色——A8 要求的三态反馈在幕里一直是错的，
+    # 而 A9 查的是类名对账，查不到这个；缺一个变量也不会报错，只是声明静默失效。
+    ALIAS = ("--ink", "--soft", "--gold", "--bad", "--line", "--card", "--on-gold", "--press")
+    for m in re.finditer(r"([.#:][\w.\-#, :()\[\]=\"']+)\{([^}]*)\}", css_nc):
+        body = m.group(2)
+        got = [a for a in ALIAS if re.search(re.escape(a) + r"\s*:", body)]
+        if len(got) < 3:
+            continue          # 不是在切换一整个场
+        miss = [a for a in ALIAS if a not in got]
+        if miss:
+            errors.append(
+                f"A10 `{m.group(1).strip()[:40]}` 切换了 {len(got)} 个双场别名却缺 "
+                f"{' '.join(miss)} —— 里面的规则会拿到**另一个场**的值，"
+                "而缺一个 CSS 变量不会报错，只是声明被静默丢弃")
+    if not any(e.startswith("A10") for e in errors):
+        infos.append(f"A10 双场别名 每个切换整套别名的容器都齐了 {len(ALIAS)} 个 ✓")
+
     # ---- A9 死样式 ----
     # 「定义了但没有元素会用到」的类。翻正之后这种最多：一整块 CSS 还活着，
     # 它服务的那个 DOM 已经不存在了，于是改了没反应、删了没影响。

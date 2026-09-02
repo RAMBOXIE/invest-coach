@@ -142,6 +142,34 @@ def user_text():
     return out
 
 
+def coach_names_leaked():
+    """ADR-0002 §1：全站不出现教练的人名。
+
+    x_coaches 里三个学派原型有名字（账房先生 / 风控官 / 行为教授），
+    ADR-0002 裁决它们只作为 style_lines 的数据源存在，**名字不上屏**。
+    构建时会把 name/intro 剥掉，所以人名进不了产物——**除非它被写进了正文**。
+
+    实测漏过一次：一个节点的教学正文里写着「（行为教授的出处卡里有它的文献）」，
+    既点了人名，又指向一张 UI 从不展示的卡。剥离救不了这种，只能查内容。
+
+    名字从 x_coaches 动态读，不写死：改了名字规则跟着变。
+    """
+    d = json.loads(SITE.read_text(encoding="utf-8"))
+    names = [c.get("name") for c in (d.get("x_coaches") or []) if c.get("name")]
+    if not names:
+        return []
+    hits = []
+    for src, t in user_text():
+        # x_coaches 自己那几个字段不算：名字本来就存在那里，
+        # 而且它们在构建期被剥离（COACH_KEEP 只留 id 与 style_lines），进不了产物。
+        if src.split(":")[-1] in ("name", "intro", "x_identity"):
+            continue
+        for nm in names:
+            if nm in t:
+                hits.append((nm, src, t[:70]))
+    return hits
+
+
 def scan():
     items = user_text()
     counts, detail = {}, {}
@@ -180,6 +208,11 @@ def run():
             bad.append(f"{k}：{n} 处，超过基线 {b} —— {why}")
         elif n < b:
             better.append(f"{k}：{b} → {n}")
+    leak = coach_names_leaked()
+    if leak:
+        for nm, src, t in leak[:4]:
+            bad.append(f"教练人名「{nm}」出现在用户可读文案里 [{src}]：{t} —— "
+                       "ADR-0002 §1「全站不出现教练的人名」")
     dash = counts.get("破折号", 0)
     density = round(chars / dash) if dash else 0
     print(f"INFO : 用户可读文案 {chars} 字；破折号 {dash} 个"

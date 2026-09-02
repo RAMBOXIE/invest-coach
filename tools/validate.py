@@ -421,6 +421,20 @@ def validate_stories(release=False):
                           + "、".join(sorted(set(bad))[:14])
                           + "。真实数字必须先入 facts.json 并绑 accession + 行号")
 
+        # S8 断头路：屏上承诺的交互必须真的存在。
+        #
+        # 消融实验查出来的：nikola 的判断拍写着 ask_enabled: true，提示里说
+        # 「你可以先问问这份文件」，但那一幕没有 interrogation，
+        # 前端条件是 `b.ask_enabled && STORY.interrogation`，按钮永远不渲染。
+        # 屏幕让用户做一件界面不提供的事——项目明令杜绝的断头路，
+        # 而在此之前没有任何东西会喊一声。
+        for bi, b in enumerate(c.get("beats") or []):
+            if b.get("ask_enabled") and not c.get("interrogation"):
+                errors.append(
+                    f"S8 {cid}/beats[{bi}]: ask_enabled 为真但这一幕没有 interrogation ——"
+                    "前端条件是 `ask_enabled && STORY.interrogation`，按钮不会渲染，"
+                    "屏上却承诺了可以追问。要么补 interrogation，要么去掉这个承诺")
+
         # 签字（同 site.json 的 --release 纪律）
         pv = c.get("x_prov") or {}
         if not pv.get("reviewed_by"):
@@ -671,7 +685,13 @@ def validate(path, release=False):
         if not co.get("canon_sources"):
             errors.append(f"{loc}: canon_sources 为空（学派出处必填）")
         if not co.get("x_identity"):
-            errors.append(f"{loc}: x_identity 为空（AI 披露与身份自述必填，被问身份时逐字输出）")
+            errors.append(
+                f"{loc}: x_identity 为空（三套语气语料各自的思想出处，随内容归档）")
+        # 早先这条规则的说明写着「被问身份时逐字输出」。**没有任何地方输出它。**
+        # AI 披露实际由页脚常驻那句话承担（「通俗解释与教练点评由 AI 起草、经人工核对；
+        # 判分由页面内置规则完成」）。规则说明与事实不符比规则缺失更危险：
+        # 它让人以为披露这件事已经由某处代码保证了。
+        # 现在 x_identity 的定位改为归档用（build 时剥离，不进产物），说明照实写。
         for k in co:
             if k.startswith("x_") and k not in COACH_X:
                 errors.append(f"{loc}: 未登记的教练字段 {k}")

@@ -137,7 +137,7 @@
    "kind": "decision",
    "eyebrow": "明早九点",
    "title": "你在投委会上说什么？",
-   "prompt": "手上就这两页数字。你可以先问问这份文件，它只会念自己写过的话。想好了再选。",
+   "prompt": "手上就这两页数字。判断这件事不需要更多材料，只需要把大的那个数除以小的那个数。想好了再选。",
    "options": [
     {
      "id": "a",
@@ -158,8 +158,7 @@
      "kind": "认定舞弊"
     }
    ],
-   "confidence": true,
-   "ask_enabled": true
+   "confidence": true
   },
   {
    "id": "n4",
@@ -293,10 +292,6 @@
    "narration": "同样的表面形状，相反的判断。这一屏把这条判断依据从卡车上取了下来，让它可以用在别的公司上。"
   }
  ],
- "ask": {
-  "intro": "这份文件只会念自己写过的话。",
-  "topics": []
- },
  "x_prov": {
   "drafted_by": "llm",
   "model": "claude-opus-5",
