@@ -17,7 +17,7 @@
 | `src/parts/` | 源码分片，扁平 `<模块>.{css,js}`，构建期按占位符拼装 | 人 | build.py | 长期 |
 | `tools/` | 常驻工具：build / validate / sign / 五道 check_*（含 check_coach 教练闭环、check_style 文风）/ fetch_current / fetch_reddit / render_review；browser_smoke.js 与 mobile_audit.js 是浏览器里跑的验收脚本 | 人 | 人、CI | 长期 |
 | `tools/_archive/oneoff/` | 已执行完毕的一次性内容注入脚本，命名 `YYYYMMDD-用途.py` | — | 归档查阅 | 永久保留，不可重跑 |
-| `server/` | 轻后端。`main.go` 是主线，`server.py` 是零依赖联调用 | 人 | 部署 | 长期 |
+| `server/` | 轻后端。**`server.py` 是主线**（2026-09-02 起：它是实际在跑、且打码与留存都验过的那一份）；`main.go` 落后三样功能，顶部有说明，暂不部署 | 人 | 部署 | 长期 |
 | `docs/` | 文档，三层：契约 / 裁决 / 记录。索引见 `docs/README.md` | 人 | 人 | 长期 |
 | `docs/adr/` | 架构决策记录 `NNNN-标题.md`。被重新争论过的问题只在这里定案 | 人 | 人 | 永久 |
 | `docs/records/` | 审计留档（勘误 / 数据核定 / 审图 / 需求调研），不管代码 | 人 | 人 | 永久 |

@@ -37,6 +37,55 @@ def files():
                 yield f
 
 
+def endpoint_coverage():
+    """E1 前端调的每个后端端点，主线实现里必须存在。
+
+    这条挡的是一次真实的漂移：STRUCTURE.md 声明 `main.go` 是主线，
+    而我给 Python 版加了 /api/v1/review-note 与 mask_pii 之后没动 Go 版。
+    结果是**声明的主实现没有打码**——部署它，用户的持仓金额与联系方式
+    原样进第三方模型、原样入库，而 D3 裁决明确禁止这件事。
+
+    主线是谁由 docs/STRUCTURE.md 说，不写死在这里：改了主线，规则跟着变。
+    """
+    fe = ""
+    for rel in ("src/template.html", "src/parts/court.js", "src/parts/story.js"):
+        f = ROOT / rel
+        if f.exists():
+            fe += f.read_text(encoding="utf-8")
+    called = sorted(set(re.findall(r"/api/v[\d]+/[\w-]+", fe)))
+    if not called:
+        return []
+    doc = (ROOT / "docs" / "STRUCTURE.md")
+    if not doc.exists():
+        return ["E1 找不到 docs/STRUCTURE.md，无法确定哪份是主线"]
+    m = re.search(r"\*\*`(server/[\w.]+|[\w.]+)`\s*是主线\*\*", doc.read_text(encoding="utf-8"))
+    if not m:
+        return ["E1 docs/STRUCTURE.md 没有用「**`x` 是主线**」标明主线后端 —— "
+                "两份实现并存却不说哪份权威，就是下一次漂移的入口"]
+    name = m.group(1).split("/")[-1]
+    primary = ROOT / "server" / name
+    if not primary.exists():
+        return [f"E1 STRUCTURE.md 声明主线是 {name}，但 server/{name} 不存在"]
+    impl = primary.read_text(encoding="utf-8")
+    # **查路由注册，不查字符串出现。**
+    # 第一版只判 `e not in impl`，而我刚往 main.go 的头部注释里写了
+    # 「没有 /api/v1/review-note」——规则于是「找到了」这个端点，变异测试没抓住。
+    # 这正是本仓反复栽的「只查形状不查真值」，在一道专门防漂移的门禁里又犯一次。
+    impl = re.sub(r"/\*.*?\*/", "", impl, flags=re.S)
+    impl = re.sub(r"(?m)^\s*(?://|#)[^\n]*", "", impl)
+    miss = []
+    for e in called:
+        # Go: HandleFunc("/api/…"  ｜ Python: self.path == "/api/…" / startswith("/api/…"
+        if not re.search(r"(?:HandleFunc|path\s*[!=]=|startswith)\s*\(?\s*[\"']"
+                         + re.escape(e), impl):
+            miss.append(e)
+    if miss:
+        return [f"E1 前端调了 {' '.join(miss)}，主线实现 server/{name} 里没有 —— "
+                "前端会一直拿到 404 或静默回落，而没有任何东西会喊一声"]
+    print(f"INFO : E1 前端调的 {len(called)} 个端点在主线 server/{name} 里都存在 ✓")
+    return []
+
+
 def main():
     errors, n = [], 0
     for f in files():
@@ -63,6 +112,7 @@ def main():
             line = s[:m.start()].count("\n") + 1
             errors.append(f"S2 {rel}:{line} 出现 `if False:` 永假分支")
 
+    errors += endpoint_coverage()
     print(f"INFO : 扫描 {n} 个源码文件")
     for e in errors:
         print("ERROR:", e)
