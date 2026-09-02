@@ -160,20 +160,45 @@ def main():
 
 
 def selftest():
-    """变异测试：往一个源码文件里塞一个字面退格符，看规则会不会红。"""
+    """变异测试：三条规则逐个弄坏，看门禁会不会红。
+
+    E1/E2 原来只在写的时候手动验过一次，验完就没了。规矩是「每加一条规则
+    都要证明它会失灵」——而证明必须能重跑，否则半年后没人知道它还灵不灵。
+    """
     import subprocess
-    f = ROOT / "tools" / "check_src.py"
-    orig = f.read_text(encoding="utf-8")
+
+    def run():
+        return subprocess.run([sys.executable, str(ROOT / "tools" / "check_src.py")],
+                              capture_output=True, text=True,
+                              encoding="utf-8", errors="replace").stdout
+
+    me = ROOT / "tools" / "check_src.py"
+    srv = ROOT / "server" / "server.py"
+    doc = ROOT / "docs" / "STRUCTURE.md"
+    files = {f: f.read_text(encoding="utf-8") for f in (me, srv, doc)}
+    cases = [
+        ("S1", "往源码里塞一个字面退格符",
+         me, lambda t: t + "\n# " + chr(8) + "\n"),
+        ("E1", "把主线声明改回没有打码的那份实现",
+         doc, lambda t: t.replace("**`server.py` 是主线**", "**`main.go` 是主线**", 1)),
+        ("E2", "加一个没登记的模型调用",
+         srv, lambda t: t + '\n\ndef grade_with_llm(x):\n'
+                            '    return urllib.request.Request("https://api.anthropic.com/v1/messages")\n'),
+    ]
+    bad = 0
     try:
-        f.write_text(orig + "\n# " + chr(8) + "\n", encoding="utf-8")
-        r = subprocess.run([sys.executable, str(f)], capture_output=True,
-                           text=True, encoding="utf-8", errors="replace")
-        ok = "ERROR: S1" in r.stdout
-        print("  " + ("✓ 塞一个字面退格符 → 规则正确报错"
-                      if ok else "✗ 塞了却没报错 —— 这条规则是摆设"))
-        return 0 if ok else 1
+        for code, desc, f, mut in cases:
+            f.write_text(mut(files[f]), encoding="utf-8")
+            hit = f"ERROR: {code}" in run()
+            bad += not hit
+            print("  " + ("✓ " if hit else "✗ ") + f"{code} {desc} → "
+                  + ("规则正确报错" if hit else "改坏了却没报错，这条规则是摆设"))
+            f.write_text(files[f], encoding="utf-8")
     finally:
-        f.write_text(orig, encoding="utf-8")
+        for f, t in files.items():
+            f.write_text(t, encoding="utf-8")
+    print("SELFTEST:", "FAIL" if bad else f"PASS（{len(cases)} 条）")
+    return 1 if bad else 0
 
 
 if __name__ == "__main__":

@@ -15,6 +15,7 @@ import sys
 import pathlib
 from collections import defaultdict
 
+ROOT = pathlib.Path(__file__).resolve().parent.parent
 TOP_X = {"x_note", "x_version", "x_coaches", "x_review_bank", "x_lab", "x_facts", "x_stories"}
 NODE_X = {"x_qtype", "x_level", "x_pairs", "x_coach_notes", "x_prov", "x_cards", "x_ruleout", "x_selfcheck", "x_anchors", "x_casefile"}
 QUIZ_X = {"x_pair", "x_kind", "x_id"}
@@ -191,7 +192,7 @@ def check_facts(data, facts_path, errors, warns):
         visible = PROV_TOKENS.sub(" ", TAG.sub(" ", s))
         for tok in NUMTOK.findall(visible):
             if tok.replace(",", "") not in allowed:
-                errors.append(f"{loc}: 真实公司语境出现未登记数字「{tok}」——先核定进 facts.json")
+                errors.append(f"R12 {loc}: 真实公司语境出现未登记数字「{tok}」——先核定进 facts.json")
 
     def walk(o, loc):
         if isinstance(o, dict):
@@ -813,11 +814,11 @@ def validate(path, release=False):
         # 拆成两栏之后，机器能查的部分就变成确定的：formal 里不许出现我们的口吻。
         for w in ("本站", "本节点", "我们", "⚠️"):
             if w in formal:
-                errors.append(f"{nid}: canon.formal 里出现「{w}」——这是我们的口吻，"
+                errors.append(f"R31 {nid}: canon.formal 里出现「{w}」——这是我们的口吻，"
                               "不是出处的话。移到 canon.house（屏上单列「本站口径」一栏）")
         h = c.get("house")
         if h is not None and not (isinstance(h, str) and h.strip()):
-            errors.append(f"{nid}: canon.house 存在但为空——空的口径栏会在卡上留一个空标题")
+            errors.append(f"R31 {nid}: canon.house 存在但为空——空的口径栏会在卡上留一个空标题")
         if not c.get("x_cite"):
             warns.append(f"{nid}: canon.x_cite 为空——出处未精确到章节/页/条款，需查原档后补（禁止编造）")
         # R15 时代闸：canon 提到的概念不得早于其出处年份
@@ -1049,12 +1050,86 @@ def validate(path, release=False):
     return 1 if errors else 0
 
 
+def selftest():
+    """变异测试：把内容逐条改坏，看对应规则会不会红。
+
+    这个校验器有 31 条规则，此前**一条也没有可重跑的证明**。
+    本仓最贵的教训是「规则在那儿、是绿的、但它什么也没查」——
+    check_coach 与 check_style 早就有 --selftest，最大的那个门禁反而没有。
+    这里覆盖本轮新加的五条与两条最吃重的旧规则；每加新规则就往下面加一行。
+    """
+    import subprocess
+    SITE_P = ROOT / "content" / "ch1" / "site.json"
+    FACTS_P = ROOT / "content" / "ch1" / "facts.json"
+    CASE_P = ROOT / "content" / "stories" / "sunbeam-1998" / "case.json"
+    orig = {f: f.read_text(encoding="utf-8") for f in (SITE_P, FACTS_P, CASE_P)}
+
+    def run(stories):
+        args = ["--stories"] if stories else [str(SITE_P)]
+        return subprocess.run([sys.executable, str(pathlib.Path(__file__))] + args,
+                              capture_output=True, text=True,
+                              encoding="utf-8", errors="replace").stdout
+
+    def node(d, nid):
+        return next(n for n in d["nodes"] if n["id"] == nid)
+
+    def m_r12(d):
+        node(d, "rf1")["desc"] += "（Sunbeam 当年的收入是 4,321.5 百万美元）"
+
+    def m_r31(d):
+        node(d, "rf2")["canon"]["formal"] += "本站教学口径：只看两年。"
+
+    def m_r28(d):
+        d["evidence_files"] = [e for e in d["evidence_files"]
+                               if e["accession"] != "AAER-1393"]
+
+    def m_s6(d):
+        d["beats"][1]["title"] = "应收账款一年涨了 7,777 万"
+
+    def m_s7c(d):
+        d["interrogation"]["testimony"][2]["orig"] =             "The Company recognizes revenues at the time of payment from customers."
+
+    def m_s7b(d):
+        d["interrogation"]["testimony"][0].pop("anchors")
+
+    def m_s9(d):
+        d["beats"][1]["eyebrow"] = "后来 SEC 认定这一年有舞弊"
+
+    CASES = [
+        ("R12", "往真实公司语境里塞一个没入账本的数字", SITE_P, m_r12, False),
+        ("R31", "把本站口径塞回 canon.formal", SITE_P, m_r31, False),
+        ("R28", "删掉一份原档的归档登记", FACTS_P, m_r28, False),
+        ("S6", "往幕的正文里塞一个编造的数字", CASE_P, m_s6, True),
+        ("S7c", "把译文引文的英文原文改成原档里没有的一句", CASE_P, m_s7c, True),
+        ("S7b", "拿掉一条证词的行锚", CASE_P, m_s7b, True),
+        ("S9", "在 reveal 之前写出结局", CASE_P, m_s9, True),
+    ]
+    bad = 0
+    try:
+        for code, desc, f, mut, stories in CASES:
+            d = json.loads(orig[f])
+            mut(d)
+            f.write_text(json.dumps(d, ensure_ascii=False, indent=1), encoding="utf-8")
+            hit = f"ERROR: {code}" in run(stories)
+            bad += not hit
+            print("  " + ("✓ " if hit else "✗ ") + f"{code} {desc} → "
+                  + ("规则正确报错" if hit else "改坏了却没报错，这条规则是摆设"))
+            f.write_text(orig[f], encoding="utf-8")
+    finally:
+        for f, t in orig.items():
+            f.write_text(t, encoding="utf-8")
+    print("SELFTEST:", "FAIL（门禁自身不可信）" if bad else f"PASS（{len(CASES)} 条）")
+    return 1 if bad else 0
+
+
 if __name__ == "__main__":
     try:
         sys.stdout.reconfigure(encoding="utf-8")
     except AttributeError:
         pass
     argv = sys.argv[1:]
+    if "--selftest" in argv:
+        sys.exit(selftest())
     release = "--release" in argv
     if "--stories" in argv:
         errs, wrns = validate_stories(release)
