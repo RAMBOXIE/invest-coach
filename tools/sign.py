@@ -178,6 +178,43 @@ def cmd_show(ident):
     return 0
 
 
+def cmd_void(reason):
+    """把所有**已过期**的签字清空，恢复成「未签」。
+
+    内容改了之后签字自动过期，validate 会报 ERROR 挡住构建。这时有两条路：
+    重签，或者承认这份内容需要重新审。**内容实质变了就该走后者**——
+    重签等于替审阅人断言他看过他没看过的东西，而这套机制存在的全部理由
+    就是挡住这件事。
+
+    过期（[!]）与未签（[ ]）在门禁里待遇不同：过期是 ERROR（构建被挡），
+    未签是 WARN（只挡 --release）。作废之后可以继续开发，定版前必须重审。
+    """
+    d = json.loads(SITE.read_text(encoding="utf-8"))
+    n = 0
+    for node in d["nodes"]:
+        if not node.get("screens"):
+            continue
+        st, _ = status(node, _v.node_hash(node))
+        if st == "已过期":
+            pv = node["x_prov"]
+            pv["reviewed_by"] = pv["reviewed_at"] = pv["reviewed_hash"] = ""
+            n += 1
+    SITE.write_text(json.dumps(d, ensure_ascii=False, indent=1), encoding="utf-8")
+    for f, c in load_cases().items():
+        pass
+    cases = load_cases()
+    for cid, (f, c) in cases.items():
+        st, _ = status(c, case_hash(c))
+        if st == "已过期":
+            pv = c["x_prov"]
+            pv["reviewed_by"] = pv["reviewed_at"] = pv["reviewed_hash"] = ""
+            f.write_text(json.dumps(c, ensure_ascii=False, indent=1), encoding="utf-8")
+            n += 1
+    print(f"作废 {n} 条已过期的签字：{reason}")
+    print("现在它们是「未签」——构建不再被挡，但 --release 仍然拒绝定版。")
+    return 0
+
+
 def cmd_sign(ident, by):
     _, nodes = load_nodes()
     cases = load_cases()
@@ -211,7 +248,11 @@ def main():
     ap.add_argument("--show", metavar="ID")
     ap.add_argument("--sign", metavar="ID")
     ap.add_argument("--by", metavar="名字")
+    ap.add_argument("--void", metavar="理由",
+                    help="把已过期的签字清空成未签（内容实质变了，需要重新审）")
     a = ap.parse_args()
+    if a.void:
+        return cmd_void(a.void)
     if a.show:
         return cmd_show(a.show)
     if a.sign:

@@ -20,6 +20,8 @@
 | # | 欠账 | 说明 |
 |---|---|---|
 | D6 | **`content/current/` 是没有消费者的半成品** | 时事管线的产物已提交进 git，但 `build.py` 只读 `content/stories/`。「时事 B 轨」需律师意见，暂缓。当前状态：产物不入构建 |
+| D7 | **SEC Form 10-K 表格本身没归档** | 新节点 `find-filings` 的 canon 出处指向它，但目前只能靠已归档的真实年报逐项核对结构（原档行号写在 `canon.x_cite` 里）。其它出处都走了「归档 + sha256 锚定」，这一条没有。补法：把表格 PDF 取下来入 `evidence/`、进 `facts.json` 的 `evidence_files`，然后把 x_cite 精确到总说明的条目号 |
+| D8 | **5 类误解只出现在一道题里** | `wrong-statement` / `small-base` / `cash-vs-accrual` / `direction-flip` / `wrong-cf-bucket`。`prescribe()` 第三条要求「同一个坑在别的题里也有」才换情境，所以对这 5 类不触发。`check_coach` 的 C11 会把它们报成 WARN。补法：给这几个基础节点各加一道考同一误解的题 |
 
 ## 设计与实现欠账
 

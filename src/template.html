@@ -821,7 +821,7 @@ function heroCard(it){
   return `<div class="hero${it.kind === 'story' ? ' story' : ''}">
     <div class="hero-eye">现在做这个</div>
     <div class="hero-code">${it.eye}</div>
-    ${it.reason?`<p class="hero-why">${it.reason}——所以先做这个。</p>`:''}
+    ${it.reason?`<p class="hero-why">${it.reason}。先做这个。</p>`:''}
     <h3 class="hero-t">${it.t}</h3>
     <p class="hero-s">${it.s}</p>
     <button class="cta" id="${it.id}"${it.attr||''}>${it.cta} · 约 ${it.mins} 分钟</button>
