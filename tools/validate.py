@@ -19,7 +19,16 @@ TOP_X = {"x_note", "x_version", "x_coaches", "x_review_bank", "x_lab", "x_facts"
 NODE_X = {"x_qtype", "x_level", "x_pairs", "x_coach_notes", "x_prov", "x_cards", "x_ruleout", "x_selfcheck", "x_anchors", "x_casefile"}
 QUIZ_X = {"x_pair", "x_kind", "x_id"}
 COACH_X = {"x_identity"}
-REAL_MARKERS = ("Sunbeam", "Dell", "A 公司", "B 公司", "本章案主", "案主")
+# R12 触发词：出现这些词的字符串会被当作「真实公司语境」，其中的数字必须命中数字账本。
+# 只列 Sunbeam/Dell 是个潜在漏洞——语料里还有 Nikola、Moderna、伯克希尔、雷曼，
+# 往节点里放一个它们的例子，数字就完全不过账本检查。case.json 那边有更严的 S6 兜着，
+# site.json 这边没有。补齐。
+REAL_MARKERS = ("Sunbeam", "Dell", "Nikola", "Moderna", "Berkshire", "Lehman",
+                "伯克希尔", "雷曼", "A 公司", "B 公司", "本章案主", "案主")
+# 这些不是「教学数字」，是出处标识，不该要求绑 fact（与 S6 的豁免保持一致）：
+# 申报号 0000950170-98-000413 ｜ 日期 2001-05-15 ｜ 行号 L1192 ｜ 年份 1997 年
+PROV_TOKENS = re.compile(r"\d{10}-\d\d-\d{6}|\d{4}-\d\d-\d\d|L\d+(?:[–-]L?\d+)?|"
+                         r"\d+\s*年|Item\s*\d+[A-C]?")
 EDGE_TYPES = {"hard", "soft", "cross"}
 PAIR_FIELDS = ("look", "a", "b", "key")
 LEVELS = {"L1", "L2"}
@@ -111,7 +120,7 @@ def check_facts(data, facts_path, errors, warns):
     def scan(s, loc):
         if not isinstance(s, str) or not any(m in s for m in REAL_MARKERS):
             return
-        visible = TAG.sub(" ", s)
+        visible = PROV_TOKENS.sub(" ", TAG.sub(" ", s))
         for tok in NUMTOK.findall(visible):
             if tok.replace(",", "") not in allowed:
                 errors.append(f"{loc}: 真实公司语境出现未登记数字「{tok}」——先核定进 facts.json")
