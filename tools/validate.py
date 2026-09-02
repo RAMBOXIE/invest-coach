@@ -406,7 +406,7 @@ def validate_stories(release=False):
                     r"第\s*[一二三四五六七八九十\d]+\s*[季幕拍]",
                     r"AAER\s*\d+", r"LR-\d+", r"10-[KQ](?:405|/A)?", r"8-K", r"S-1",
                     r"Repo\s*105", r"Rule\s*[\d\w.-]+", r"第\s*\d+\s*[页章节]",
-                    r"§\s*[\d.]+", r"SFAS\s*\d+", r"ASC\s*[\d-]+"):
+                    r"§\s*[\d.]+", r"\bSFAS\s*\d+", r"\bASC\s*[\d-]+"):
             blob = re.sub(pat, " ", blob)
         bad = []
         for tok in re.findall(r"(?<![\w.])[\d][\d,]*(?:\.\d+)?", blob):

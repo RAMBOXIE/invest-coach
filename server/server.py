@@ -100,6 +100,67 @@ def route(question, topics):
         return "none"
 
 
+# ── D3 隐私：入库前打码 ────────────────────────────────────────────
+#
+# 裁决要求「对金额/证券代码/联系方式打码」。但**不能一刀切按数字打**：
+# 教练读你的推理，靠的就是「应收 +38.5%」这种分析数字，全打掉功能就没了。
+#
+# 所以按语境分：
+#   - 分析数字（增速、比值、天数、报表科目）→ 保留，它们是内容
+#   - 个人持仓数字（「我持仓 50 万」「买入成本 12 块」）→ 打码，那是身份信息
+#   - 证券代码（A 股 6 位 / 美股 $TICK）→ 一律打码：说出具体持仓等于自报仓位
+#   - 联系方式（手机 / 邮箱 / 微信 QQ 号）→ 一律打码
+#
+# 打码在**入库之前**，也在**发给模型之前**——两条路都不该看到这些。
+PORTFOLIO_CTX = ("持仓", "仓位", "买入", "卖出", "成本", "加仓", "减仓", "清仓",
+                 "亏了", "赚了", "本金", "投了", "套了", "补仓", "止损")
+MASKS = [
+    # 联系方式
+    (re.compile(r"[\w.+-]+@[\w-]+\.[\w.]+"), "[邮箱]"),
+    (re.compile(r"(?<!\d)1[3-9]\d{9}(?!\d)"), "[手机]"),
+    (re.compile(r"(?:微信|wechat|weixin|qq)\s*[:：]?\s*[\w-]{5,}", re.I), "[联系方式]"),
+    # 证券代码：A 股 6 位（0/3/6 开头）、港股 5 位带 HK、美股 $TICK
+    (re.compile(r"(?<![\d.])(?:[036]\d{5})(?![\d.%])"), "[代码]"),
+    (re.compile(r"\$[A-Z]{1,5}\b"), "[代码]"),
+    (re.compile(r"\b(?:HK|hk)\.?\d{4,5}\b"), "[代码]"),
+]
+AMOUNT = re.compile(r"\d[\d,.]*\s*(?:万元|亿元|万|亿|元|块|美元|港币|USD|RMB)")
+
+
+def mask_pii(text):
+    """入库与送模型之前都走这一道。返回 (打码后的文本, 打了几处)。"""
+    if not text:
+        return text, 0
+    n = 0
+    for pat, rep in MASKS:
+        text, k = pat.subn(rep, text)
+        n += k
+    # 金额只在**持仓语境**里打：句子里出现持仓类动词才算个人财务信息
+    def amt(m):
+        nonlocal n
+        lo = max(0, m.start() - 18)
+        if any(w in text[lo:m.end() + 18] for w in PORTFOLIO_CTX):
+            n += 1
+            return "[金额]"
+        return m.group(0)
+    text = AMOUNT.sub(amt, text)
+    return text, n
+
+
+# 留存期：裁决是 90 天。每次落库时顺手清一次过期的——
+# 单实例部署没有定时任务，把清理挂在写入路径上是最不容易忘的做法。
+RETAIN_DAYS = 90
+
+
+def purge_old():
+    if not db():
+        return
+    cut = int(time.time()) - RETAIN_DAYS * 86400
+    for t in ("events", "asks", "notes"):
+        db().execute(f"DELETE FROM {t} WHERE at < ?", (cut,))
+    db().commit()
+
+
 NOTE_SYS = """你是一个财报判断训练产品里的教练。学习者刚刚用自己的话写下了他对一份材料的判断。
 
 你的任务：**回应他写的这段话**，帮他看清自己的推理里有什么、缺什么。
@@ -232,9 +293,11 @@ class H(BaseHTTPRequestHandler):
             sys.stderr.write(f"unknown id {rid!r} — 丢弃\n")
             rid = "none"
         if db():
+            mq, _ = mask_pii(q)
             db().execute("INSERT INTO asks(case_id, q, matched, at) VALUES(?,?,?,?)",
-                         (req.get("case_id"), q, rid, int(time.time())))
+                         (req.get("case_id"), mq, rid, int(time.time())))
             db().commit()
+            purge_old()
         self._send({"id": rid, "source": "llm"})
 
     def _review(self, raw):
@@ -248,8 +311,13 @@ class H(BaseHTTPRequestHandler):
         material = (req.get("material") or "").strip()
         if not note or len(note) > 1200 or not material or not API_KEY                 or not allow(req.get("device")):
             return self._send({"text": None, "source": "fallback"})
+        # **打码在送模型之前**，不只是入库之前。
+        # 只在入库前打，等于用户的持仓和联系方式已经进过第三方模型了——
+        # 那时候再打码只是让我们的数据库好看，对用户没有意义。
+        note, nmask = mask_pii(note)
         try:
             text, trace = review_note(note, material)
+            trace["masked"] = nmask
         except Exception as e:
             sys.stderr.write(f"review err: {e}\n")
             return self._send({"text": None, "source": "fallback"})
@@ -260,6 +328,7 @@ class H(BaseHTTPRequestHandler):
                 "INSERT INTO notes(node, trace, at) VALUES(?,?,?)",
                 (req.get("node"), json.dumps(trace, ensure_ascii=False), int(time.time())))
             db().commit()
+            purge_old()
         return self._send({"text": text, "source": "llm" if text else "fallback"})
 
     def log_message(self, *a):

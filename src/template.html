@@ -948,7 +948,11 @@ function viewMe(){
     <button class="cta ghost" id="go-clear">${ic('trash')} 清除本地草稿（先写的文字）</button>
     <div style="height:8px"></div>
     <button class="cta ghost" id="go-reset">重置全部进度</button>
-    <div class="tip" style="margin-top:8px">你在「先写」里输入的文字只存在这台设备上，从不上传、不进记忆、不进 AI 的输入。</div></div>
+    <div class="tip" style="margin-top:8px">${S.coachRead
+      ? `你打开了「让教练读一读」。<b>「先写」里的文字会发到我们的服务器</b>交给 AI 读一遍，
+         用来生成给你的回应；上传前会把持仓金额、证券代码、联系方式打码，存 90 天后自动清理。
+         它不影响判分。想关掉就在「先写」那一屏取消勾选。`
+      : `你在「先写」里输入的文字只存在这台设备上，从不上传、不进记忆、不进 AI 的输入。`}</div></div>
     <div class="sec"><h2>关于这一章</h2><div class="tip" style="line-height:1.8">${SITE.about||''}</div></div>
     <div class="sec"><h2>出处档案</h2>
     <div class="srclist">${(SITE.sources||[]).map(x=>x.url

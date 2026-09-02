@@ -107,7 +107,7 @@ def main(path):
     tpl_blocks = []
     if tpl.exists():
         raw = tpl.read_text(encoding="utf-8")
-        for i, b in enumerate(re.findall(r"<script(?![^>]*src=)[^>]*>(.*?)</script>",
+        for i, b in enumerate(re.findall(r"<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>",
                                          raw, re.S)):
             if not b.strip():
                 continue
