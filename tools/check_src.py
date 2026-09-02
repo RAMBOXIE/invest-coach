@@ -86,6 +86,42 @@ def endpoint_coverage():
     return []
 
 
+def llm_use_registered():
+    """E2 每个调模型的函数，都必须在 LLM_USE_REGISTRY.md 里被点到名。
+
+    登记簿开头写着「任何新的 LLM 用途必须先在本表登记，未登记即违规」——
+    而上一轮我实现并上线了 review-note（运行时**散文**生成，正是 #5 被放弃的
+    那一类），没有登记。一条没有执行者的规矩，在需要它的那一次就不会生效。
+
+    判据取「调用点所在的函数名出现在登记簿里」：加一个新的模型调用，
+    要么给它登记一行，要么门禁红。
+    """
+    reg = ROOT / "docs" / "LLM_USE_REGISTRY.md"
+    if not reg.exists():
+        return ["E2 找不到 docs/LLM_USE_REGISTRY.md"]
+    doc = reg.read_text(encoding="utf-8")
+    calls, errs = [], []
+    for f in sorted((ROOT / "server").glob("*.py")):
+        lines = f.read_text(encoding="utf-8").splitlines()
+        for i, ln in enumerate(lines):
+            if "anthropic.com" not in ln or ln.lstrip().startswith("#"):
+                continue
+            for j in range(i, -1, -1):
+                m = re.match(r"\s*def\s+(\w+)", lines[j])
+                if m:
+                    calls.append((f.name, m.group(1), j + 1))
+                    break
+            else:
+                errs.append(f"E2 {f.name}:{i+1} 模型调用不在任何函数里，无法登记")
+    for fname, fn, line in calls:
+        if fn not in doc:
+            errs.append(f"E2 {fname}:{line} 的 `{fn}()` 会调模型，但 LLM_USE_REGISTRY.md "
+                        "里没有点到它的名 —— 登记簿写着「未登记即违规」，这条就是它的执行者")
+    if not errs and calls:
+        print(f"INFO : E2 {len(calls)} 个模型调用点（{'、'.join(c[1] for c in calls)}）都已登记 ✓")
+    return errs
+
+
 def main():
     errors, n = [], 0
     for f in files():
@@ -113,6 +149,7 @@ def main():
             errors.append(f"S2 {rel}:{line} 出现 `if False:` 永假分支")
 
     errors += endpoint_coverage()
+    errors += llm_use_registered()
     print(f"INFO : 扫描 {n} 个源码文件")
     for e in errors:
         print("ERROR:", e)

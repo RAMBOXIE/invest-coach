@@ -33,6 +33,27 @@ DB_PATH = os.environ.get("DB_PATH", "")           # 空则不落库
 DAILY_PER_DEVICE = 60                              # 成本控制，不是安全控制
 MAX_Q = 200
 
+# ── Origin 收口 ──────────────────────────────────────────────
+#
+# 从 main.go 搬过来的唯一一样 Python 版没有的东西。原来的分工是
+# 「Go 收口、可以对公网；Python 不收口、只准本机」——而 2026-09-02 起
+# 主线是 Python 版（Go 版没有打码）。于是「主线」既是唯一能部署的那份，
+# 又是唯一不收口的那份。两份实现，谁也不完整。
+#
+# 这不是身份认证：curl 想伪造 Origin 随时可以。它挡的是「别的网页把
+# 这台服务当成免费的模型代理」，和 DAILY_PER_DEVICE 是同一类东西。
+# 真正的边界是出口检查（check_note）与 id 白名单，那两条挡的是内容。
+ALLOWED_ORIGINS = [o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "").split(",") if o.strip()]
+
+
+def origin_ok(origin):
+    """空表 = 开发模式，全放行（启动时会喊一声）。
+
+    单文件产物是 file:// 打开的，浏览器发过来的 Origin 是字符串 "null"。
+    要放行它就在 ALLOWED_ORIGINS 里显式写 null——默认放行等于没收口。
+    """
+    return (not ALLOWED_ORIGINS) or ((origin or "null") in ALLOWED_ORIGINS)
+
 _hits, _day = {}, ""
 _db = None
 
@@ -240,24 +261,44 @@ class H(BaseHTTPRequestHandler):
         self.wfile.write(raw)
 
     def _cors(self):
-        o = self.headers.get("Origin") or "*"
-        self.send_header("Access-Control-Allow-Origin", o)
+        o = self.headers.get("Origin")
+        if not origin_ok(o):
+            return          # 不发 ACAO 头，浏览器那边就拿不到响应体
+        self.send_header("Access-Control-Allow-Origin", o or "*")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
 
+    def _blocked(self):
+        """Origin 不在白名单：403，不进业务逻辑，也不烧模型额度。"""
+        if origin_ok(self.headers.get("Origin")):
+            return False
+        raw = json.dumps({"ok": False, "why": "origin not allowed"}).encode()
+        self.send_response(403)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(raw)))
+        self.end_headers()
+        self.wfile.write(raw)
+        return True
+
     def do_OPTIONS(self):
+        if self._blocked():
+            return
         self.send_response(204)
         self._cors()
         self.send_header("Content-Length", "0")
         self.end_headers()
 
     def do_GET(self):
+        if self._blocked():
+            return
         if self.path == "/health":
             self._send({"ok": True, "llm": bool(API_KEY), "model": MODEL if API_KEY else None})
         else:
             self._send({"ok": False}, 404)
 
     def do_POST(self):
+        if self._blocked():
+            return
         n = int(self.headers.get("Content-Length") or 0)
         raw = self.rfile.read(min(n, 1 << 20))
         if self.path == "/api/v1/events":
@@ -309,7 +350,8 @@ class H(BaseHTTPRequestHandler):
             return self._send({"text": None, "source": "fallback"})
         note = (req.get("note") or "").strip()
         material = (req.get("material") or "").strip()
-        if not note or len(note) > 1200 or not material or not API_KEY                 or not allow(req.get("device")):
+        if (not note or len(note) > 1200 or not material or not API_KEY
+                or not allow(req.get("device"))):
             return self._send({"text": None, "source": "fallback"})
         # **打码在送模型之前**，不只是入库之前。
         # 只在入库前打，等于用户的持仓和联系方式已经进过第三方模型了——
@@ -338,4 +380,7 @@ class H(BaseHTTPRequestHandler):
 if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
     print(f"invest-coach server :{PORT}  LLM={'on · ' + MODEL if API_KEY else 'off（前端会静默回落本地匹配）'}")
+    print("Origin 收口：" + ("、".join(ALLOWED_ORIGINS) if ALLOWED_ORIGINS else
+          "**未设置 ALLOWED_ORIGINS——任何网页都能调这台服务，只可用于本机联调**"))
+    print(f"落库：{DB_PATH or '关（仅作代理）'}　留存 {RETAIN_DAYS} 天")
     ThreadingHTTPServer(("0.0.0.0", PORT), H).serve_forever()

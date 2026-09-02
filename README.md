@@ -31,7 +31,7 @@ evidence/               原档存档 + sha256 锚定，只增不改
 design/                 tokens.json 视觉真源 · token-debt.json 字面值棘轮基线
 src/                    template.html 骨架 + parts/*.{css,js}，构建期拼装
 tools/                  build / validate + 四道门禁 + fetch_current / render_review
-server/                 轻后端：main.go 是主线，server.py 是零依赖联调用
+server/                 轻后端：server.py，一份实现（零第三方依赖）
 docs/                   文档四层，索引见 docs/README.md
 dist/                   构建产物（gitignore）
 ```

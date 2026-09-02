@@ -233,8 +233,10 @@ def main(argv):
     print(f"构建完成: {OUT}（{OUT.stat().st_size / 1024:.1f} KB）")
 
     # SPEC_DEV.md §9：任一门禁 FAIL 即拒绝构建（产物已写出，但退出码非零，CI/DoD 会挡住）
+    # check_server 不查产物，查后端的隐私承诺（打码 / 出口检查 / 留存 / Origin 收口）。
+    # 放进同一条阻断链是因为：那三样是 D3 裁决的内容，而裁决过的东西不该靠人记得去跑。
     for gate in ("check_src.py", "check_js.py", "check_a11y.py", "check_budget.py",
-                 "check_tokens.py", "check_coach.py", "check_style.py"):
+                 "check_tokens.py", "check_coach.py", "check_style.py", "check_server.py"):
         g = ROOT / "tools" / gate
         if g.exists():
             rc = subprocess.run([sys.executable, str(g), str(OUT)]).returncode

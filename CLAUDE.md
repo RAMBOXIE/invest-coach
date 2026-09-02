@@ -99,7 +99,7 @@ design/      tokens.json 视觉真源 · token-debt.json 棘轮基线
 src/         template.html + parts/*.{css,js}（构建期按 <!--#part:--> 拼装）
 tools/       build / validate + 四道门禁 + fetch_current / render_review
              _archive/oneoff/ 是已执行完毕的一次性内容脚本，不可重跑
-server/      轻后端：main.go 主线 · server.py 零依赖联调
+server/      轻后端：server.py 一份实现（零第三方依赖），门禁 check_server 跑它的隐私承诺
 docs/        三层：契约 / adr 裁决 / records 记录（索引 docs/README.md）
 dist/ build/ 产物，都在 gitignore
 ```
