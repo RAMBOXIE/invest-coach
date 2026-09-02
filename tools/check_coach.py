@@ -284,6 +284,59 @@ def c6_calibration(src):
     ok("C6", "校准闭环 过度自信 → 处方 → 用户开始时提前召回并清算，后果已落地 ✓")
 
 
+def c11_misconceptions(src, site):
+    """C11 误解标注：错误选项必须有 why + mis，且 mis 必须在分类法里。
+
+    prescribe() 的第三条处方靠 mis 跨题聚合。一个打错字母的 mis 会静默造出
+    一个只有自己的类目——它永远聚合不到 2 次，那条处方对这个用户永远不触发，
+    而没有任何东西会报警。分类法文件在 content/ch1/misconceptions.json。
+
+    另外查 teach 指向的节点是否存在：teach 错了，处方会把用户送去练
+    另一个方向的毛病，这比不触发更糟。
+    """
+    tax_p = ROOT / "content" / "ch1" / "misconceptions.json"
+    if not tax_p.exists():
+        return err("C11", "找不到 content/ch1/misconceptions.json —— 误解分类法是 mis 的真源")
+    tax = json.loads(tax_p.read_text(encoding="utf-8"))
+    valid = {m["id"] for m in tax["items"]}
+    node_ids = {n["id"] for n in site["nodes"]}
+    bad_teach = [m["id"] for m in tax["items"] if m.get("teach") not in node_ids]
+    if bad_teach:
+        return err("C11", f"这些类目的 teach 指向不存在的节点：{', '.join(bad_teach)} —— "
+                          "处方会把用户送去一个不存在的地方")
+
+    qs = quizzes(site)
+    miss, unknown = [], []
+    for nid, _, q in qs:
+        for o in q.get("opts", []):
+            if o.get("ok"):
+                continue
+            loc = f"{nid}/{q.get('x_id')}"
+            if not o.get("why") or not o.get("mis"):
+                miss.append(loc)
+            elif o["mis"] not in valid:
+                unknown.append(f"{loc}:{o['mis']}")
+    if unknown:
+        return err("C11", f"{len(unknown)} 个选项的 mis 不在分类法里："
+                          f"{', '.join(unknown[:4])} —— 打错一个字母就会静默造出孤立类目")
+    if miss:
+        return err("C11", f"{len(miss)} 个错误选项没有 why/mis：{', '.join(miss[:5])} —— "
+                          "没有标注，答错时只能给全站通用的一句话，误解也聚合不起来")
+    # 只出现在一道题里的类目换不了情境，处方第三条对它们不触发——报出来但不阻断
+    byq = {}
+    for nid, _, q in qs:
+        for o in q.get("opts", []):
+            if o.get("mis"):
+                byq.setdefault(o["mis"], set()).add(q.get("x_id"))
+    lonely = sorted(k for k, v in byq.items() if len(v) < 2)
+    if lonely:
+        warn("C11", f"{len(lonely)} 类只出现在一道题里，换不了情境，"
+                    f"处方第三条对它们不会触发：{', '.join(lonely)}")
+    ok("C11", f"误解标注 {sum(1 for _, _, q in qs for o in q.get('opts', []) if not o.get('ok'))} "
+              f"个错误选项全部带 why+mis；{len(byq)} 类全部在分类法内，"
+              f"其中 {len(byq) - len(lonely)} 类可跨题聚合 ✓")
+
+
 def c10_counters(src):
     """C10 计数器只能有一个写入点 —— 这条规则是两个真实 bug 的形状。
 
@@ -381,6 +434,7 @@ def run():
     c8_pure(src)
     c9_no_position_tell(src, site)
     c10_counters(src)
+    c11_misconceptions(src, site)
     for i in INFOS:
         print("INFO :", i)
     for w in WARNS:
@@ -409,6 +463,7 @@ MUTATIONS = [
      r"body\+=shownOpts\(q\)\.map", "body+=q.opts.map"),
     ("C10", "把 wrong++ 加回第二个写入点", "src",
      r"a\.wrong\+\+;", "a.wrong++;a.wrong++;"),
+    ("C11", "把一个 mis 改成分类法里没有的 id", "site", None, None),
 ]
 
 
@@ -440,6 +495,19 @@ def selftest():
                             if sc.get("quiz"):
                                 sc["quiz"]["fb"] = "对。"
                                 done = True
+                                break
+                        if done:
+                            break
+                elif code == "C11":
+                    done = False
+                    for n in d["nodes"]:
+                        for sc in n.get("screens", []):
+                            for o in (sc.get("quiz") or {}).get("opts", []):
+                                if o.get("mis"):
+                                    o["mis"] = "typo-not-in-taxonomy"
+                                    done = True
+                                    break
+                            if done:
                                 break
                         if done:
                             break

@@ -2,90 +2,81 @@
 //
 // 用法：cp tools/browser_smoke.js dist/_smoke.js，然后在页面控制台里
 //   const s = await fetch('/_smoke.js').then(r=>r.text()); eval(s)
-// 不进构建（build.py 只读 src/），也不该进——它是开发期的验收工具。
+// 不进构建（build.py 只读 src/），也不该进：它是开发期的验收工具。
 (function () {
   var errs = [];
   window.onerror = function (m) { errs.push(String(m)); };
   var out = {};
   var JARGON = ['红旗', '点亮', '锚题', '复训', '案卷', '判卷', '混淆对', '雷区',
                 '双阳', '一阳一阴', '步差', '终局', '实锤', '质问', '证词', '戳穿'];
-  function jargonOnScreen() {
+  var seen = {};
+  function sweep() {
     var t = document.body.innerText;
-    return JARGON.filter(function (w) { return t.indexOf(w) >= 0; });
+    JARGON.forEach(function (w) { if (t.indexOf(w) >= 0) seen[w] = 1; });
   }
-  var seenJargon = {};
 
   localStorage.removeItem('invest-coach:ch1');
   S = fresh(); lit = new Set(); render();
-  out['1_首屏'] = document.body.innerText.slice(0, 80);
   var pick = document.querySelector('[data-tone]'); if (pick) pick.click();
+  out['1_队首'] = document.querySelector('.hero')
+    ? document.querySelector('.hero').innerText.slice(0, 90) : '(无 hero)';
+  sweep();
 
-  // ── 走完一个基础节点 ──
-  openNode('three-statements');
-  if (!R) { out.ERR = '打不开节点'; return out; }
-  var steps = [];
-  for (var g = 0; g < 16 && R; g++) {
-    steps.push(R.steps[R.step]);
-    if (R.steps[R.step] === 'conclude' && !R.done) {
-      var q = R.mainQ[R.quizIdx], shown = shownOpts(q);
-      var cf = document.querySelector('#stage-body [data-cf]'); if (cf) cf.click();
-      var i = shown.findIndex(function (o) { return o.ok; });
-      var btn = document.querySelectorAll('#stage-body [data-o]')[i];
-      if (btn) btn.click();
+  // ── 基础节点现在也要过闭卷题 ──
+  function runNode(id) {
+    openNode(id);
+    if (!R) return { err: '打不开 ' + id };
+    var steps = [], sawAnchor = false, anchorQ = null;
+    for (var g = 0; g < 20 && R; g++) {
+      var st = R.steps[R.step];
+      steps.push(st);
+      if (st === 'anchor') { sawAnchor = true; if (R.anchor) anchorQ = R.anchor.quiz.q.slice(0, 44); }
+      var body = document.getElementById('stage-body');
+      if (!body) break;
+      var cf = body.querySelector('[data-cf]:not(.on),[data-af]:not(.on)');
+      if (cf) cf.click();
+      // 一律选正确项，走到底
+      var q = (st === 'anchor' && R.anchor) ? R.anchor.quiz
+            : (st === 'conclude' && R.mainQ) ? R.mainQ[R.quizIdx] : null;
+      if (q) {
+        var shown = shownOpts(q);
+        var i = shown.findIndex(function (o) { return o.ok; });
+        var sel = '[data-' + (st === 'anchor' ? 'a' : 'o') + ']';
+        var btns = body.querySelectorAll(sel);
+        if (btns[i]) btns[i].click();
+      }
+      var nb = document.querySelector('#stage-foot .cta:not([disabled])');
+      if (!nb) break;
+      nb.click();
     }
-    var b = document.querySelector('#stage-foot .cta:not([disabled])');
-    if (!b) break;
-    b.click();
-  }
-  out['2_节点步骤'] = steps.join(' → ');
-  out['3_节点已通过'] = lit.has('three-statements');
-
-  // ── 三个页签都渲染得出来 ──
-  ['today', 'atlas', 'me'].forEach(function (t) {
-    TAB = t; render();
-    out['4_' + t] = document.getElementById('view').innerText.length + ' 字';
-    jargonOnScreen().forEach(function (w) { seenJargon[w] = (seenJargon[w] || 0) + 1; });
-  });
-  TAB = 'today'; render();
-
-  // ── 深层节点走到闭卷题 ──
-  lit = new Set(['three-statements', 'growth-rate', 'accrual-basis', 'receivables', 'ocf',
-                 'case-first-look', 'base-rate']);
-  S.lit = [].slice.call(lit); render();
-  openNode('rf1');
-  var deepSteps = [], sawAnchor = false;
-  for (var g2 = 0; g2 < 24 && R; g2++) {
-    var st = R.steps[R.step];
-    deepSteps.push(st);
-    if (st === 'anchor') sawAnchor = true;
-    var body = document.getElementById('stage-body');
-    if (!body) break;
-    var cf2 = body.querySelector('[data-cf]:not(.on),[data-af]:not(.on)'); if (cf2) cf2.click();
-    var opt = body.querySelector('[data-o]:not([disabled]),[data-a]:not([disabled])');
-    if (opt) opt.click();
-    var nb = document.querySelector('#stage-foot .cta:not([disabled])');
-    if (!nb) { // 卡住了，看看是不是要先勾选
-      var any = body.querySelector('button:not([disabled])');
-      if (any && any !== opt) { any.click(); continue; }
-      break;
-    }
-    nb.click();
-  }
-  out['5_深层节点步骤'] = deepSteps.join(' → ');
-  out['6_走到过闭卷题'] = sawAnchor;
-
-  // ── 案例（幕） ──
-  if (typeof openStory === 'function') {
-    openStory('nikola-2021');
-    var sty = document.getElementById('sty');
-    out['7_案例已打开'] = !!(sty && getComputedStyle(sty).display !== 'none');
-    out['8_案例首屏'] = (document.querySelector('#sty') || {}).innerText
-      ? document.querySelector('#sty').innerText.slice(0, 90) : '(空)';
-    jargonOnScreen().forEach(function (w) { seenJargon[w] = (seenJargon[w] || 0) + 1; });
-    sty.classList.remove('show');
+    sweep();
+    return { 步骤: steps.join(' → '), 有闭卷题: sawAnchor, 闭卷题: anchorQ, 通过: lit.has(id) };
   }
 
-  out['9_页面上的残留黑话'] = Object.keys(seenJargon);
-  out['10_报错'] = errs;
+  out['2_三张表的分工'] = runNode('three-statements');
+  out['3_去哪找年报'] = runNode('find-filings');
+
+  // ── 答错时显示的是针对这个选项的归因，不是通用串 ──
+  S = fresh(); lit = new Set();
+  S.profile = { tone: 'value', n: 0, prudent: 0, risky: 0, hasty: 0, over: 0, under: 0,
+                pressed: 0, broke: 0, noRecord: 0, seenCases: [] };
+  render(); openNode('growth-rate');
+  while (R && R.steps[R.step] !== 'conclude') {
+    var b0 = document.querySelector('#stage-foot .cta:not([disabled])');
+    if (!b0) break; b0.click();
+  }
+  if (R && R.steps[R.step] === 'conclude') {
+    var q2 = R.mainQ[R.quizIdx], sh = shownOpts(q2);
+    var wi = sh.findIndex(function (o) { return !o.ok; });
+    var cf2 = document.querySelector('#stage-body [data-cf]'); if (cf2) cf2.click();
+    document.querySelectorAll('#stage-body [data-o]')[wi].click();
+    out['4_答错显示的话'] = (document.querySelector('#stage-body .fb') || {}).textContent || '(无)';
+    out['5_该选项标注的why'] = sh[wi].why || '(没标)';
+    out['6_是否用了通用串'] = /^不对。要不要看一级提示/.test(out['4_答错显示的话']);
+    out['7_误解已记账'] = JSON.stringify(S.mis);
+  }
+
+  out['8_残留黑话'] = Object.keys(seen);
+  out['9_报错'] = errs;
   return out;
 })();
