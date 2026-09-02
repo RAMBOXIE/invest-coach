@@ -738,9 +738,16 @@ def validate(path, release=False):
                 errors.append(f"{n['id']}: 溯源徽标指向未登记事实「{s.get('f')}」")
 
     # R21 provenance 待办标记扫描（非合规禁词扫描）
+    #
+    # 这条挡的是作者留下的**占位符**（「数字待核」「出处待补」）。
+    # 但「待核」也是正常中文的词头：「待核查的疑点」「待核实的说法」都是好措辞，
+    # 而这一关教的就是「疑点要去核查」，绕开这个词等于让门禁改坏文案。
+    # 撞过两次之后改成：后面紧跟 查/实/对/算 的算正常动词短语，不算占位符。
     blob = json.dumps(data, ensure_ascii=False)
     for mk in TODO_MARKERS:
-        if mk in blob:
+        hits = [m for m in re.finditer(re.escape(mk), blob)
+                if not (mk == "待核" and blob[m.end():m.end() + 1] in "查实对算")]
+        if hits:
             errors.append(f"内容中出现待办标记「{mk}」——未核定内容不得进入内容源")
 
     # R22 「无法判断」为正确答案的占比锚（目标 20–30%，见 知识可靠性与LLM边界.md §6）
