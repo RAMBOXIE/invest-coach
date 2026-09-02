@@ -110,15 +110,19 @@ def user_text():
     """把**用户能读到的**文案摊平，返回 [(来源, 文本)]。"""
     out = []
 
-    def walk(o, src, key=None):
+    def walk(o, src, key=None, parent=None):
         if isinstance(o, dict):
             for k, v in o.items():
-                if k in SKIP_KEYS:
+                # kind 多数时候是类型标记（quiz.x_kind、panel.kind），但在案例的
+                # options[] 里装的是**屏上的分类标签**（「求证」「顺势」「定罪」）。
+                # 一刀切跳过 kind，等于让一个用户天天看见的黑话词躲过门禁——
+                # 「定罪」就是这么漏到线上的，截图里才看见。
+                if k in SKIP_KEYS and not (k == "kind" and parent == "options"):
                     continue
-                walk(v, src, k)
+                walk(v, src, k, key)
         elif isinstance(o, list):
             for v in o:
-                walk(v, src, key)
+                walk(v, src, key, key)
         elif isinstance(o, str) and o.strip():
             out.append((f"{src}:{key}", o))
 

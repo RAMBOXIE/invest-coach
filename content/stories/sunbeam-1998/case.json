@@ -120,7 +120,7 @@
      "id": "a",
      "t": "先别动，我要求先查清应收和现金流的缺口去哪了",
      "verdict": "prudent",
-     "kind": "求证"
+     "kind": "转入核查"
     },
     {
      "id": "b",
@@ -132,7 +132,7 @@
      "id": "c",
      "t": "现金流为负，直接清仓",
      "verdict": "hasty",
-     "kind": "定罪"
+     "kind": "认定舞弊"
     }
    ],
    "confidence": true,
@@ -477,8 +477,8 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "Rambo",
-  "reviewed_at": "2026-09-01",
-  "reviewed_hash": "73545bbefdb7ffd8"
+  "reviewed_by": "",
+  "reviewed_at": "",
+  "reviewed_hash": ""
  }
 }

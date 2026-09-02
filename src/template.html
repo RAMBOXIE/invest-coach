@@ -366,8 +366,13 @@
   .opt-in input{margin-top:3px;width:18px;height:18px;flex:0 0 auto;accent-color:var(--brand-violet)}
   .opt-in>span{font-size:var(--size-13);line-height:var(--lh-read);color:var(--ink)}
   .opt-in-w{color:var(--soft)}
-  /* 教练的回应就地出现，不翻页。 */
-  .coach-back{margin-top:12px;animation:cbin var(--dur-micro) ease-out}
+  /* 教练的回应就地出现，不翻页。
+
+     .coach 是 flex，所以嵌在里面的 .tip 会变成 flex 子项，被挤成一根窄竖条
+     （手机上尤其明显：三栏并排，最后一栏一行两个字）。这里改成换行的 flex，
+     让那条注记独占一行。 */
+  .coach-back{margin-top:12px;flex-wrap:wrap;animation:cbin var(--dur-micro) ease-out}
+  .coach-back .tip{flex:0 0 100%;margin:6px 0 0}
   @keyframes cbin{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
   .draft{width:100%;min-height:96px;border:2px solid var(--line);border-radius:13px;padding:12px;
     font-size:var(--size-15);line-height:1.6;font-family:inherit;color:var(--ink);background:var(--surface-card);resize:vertical}
@@ -1232,7 +1237,7 @@ function coachRead(txt){
     if(!cards.length)msg='记下了。下一步你会看到这一关的材料，拿它对照你刚写的。';
     else if(!hit.length)msg=`你写的里面没有出现这一关的关键数字。下一步挑证据时留意：${termsOf(cards[0].t)[0]||'材料里的那几行'}。`;
     else if(!miss.length)msg='你把这一关的几条关键材料都提到了。下一步挑证据，看看你挑的和你写的对不对得上。';
-    else msg=`你提到了${hit.length}条关键材料，还有 ${miss.length} 条没出现在你的话里。下一步挑证据时会知道是哪几条。`;
+    else msg=`你提到了 ${hit.length} 条关键材料，还有 ${miss.length} 条没出现在你的话里。下一步挑证据时会知道是哪几条。`;
     return {text:msg,src:'local'};
   };
   const render=r=>{
