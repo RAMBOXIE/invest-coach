@@ -481,6 +481,7 @@ def run():
     c10_counters(src)
     c11_misconceptions(src, site)
     c12_lab(src, site)
+    c13_no_length_tell(site)
     for i in INFOS:
         print("INFO :", i)
     for w in WARNS:
@@ -489,6 +490,123 @@ def run():
         print("ERROR:", e)
     print("RESULT:", "FAIL" if ERRORS else "PASS")
     return 1 if ERRORS else 0
+
+
+NA_CANON = "信息不足，无法判断"
+ITEM_BASE = ROOT / "design" / "item-debt.json"
+ABS_WORDS = re.compile("一定|必然|绝对|所有|从不|永远|肯定|必须|完全不|只要")
+
+
+def items_of(site):
+    out = []
+
+    def walk(o):
+        if isinstance(o, dict):
+            if o.get("opts") and o.get("x_kind"):
+                out.append(o)
+            for v in o.values():
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+    walk(site)
+    return out
+
+
+def item_stats(site):
+    plain = lambda t: re.sub(r"<[^>]+>", "", t or "")
+    na_bad, longest, tot, abs_ok, abs_bad = [], 0, 0, 0, 0
+    for q in items_of(site):
+        opts = q.get("opts") or []
+        for o in opts:
+            if o.get("na") and plain(o.get("t")) != NA_CANON:
+                na_bad.append((q.get("x_id"), plain(o.get("t"))[:40]))
+            n = len(ABS_WORDS.findall(plain(o.get("t"))))
+            if n:
+                if o.get("ok"):
+                    abs_ok += n
+                else:
+                    abs_bad += n
+        oks = [o for o in opts if o.get("ok")]
+        if len(opts) >= 3 and oks:
+            L = [len(plain(o.get("t"))) for o in opts]
+            tot += 1
+            if max(len(plain(o.get("t"))) for o in oks) == max(L):
+                longest += 1
+    rate = round(longest / tot, 4) if tot else 0
+    conc = round(abs_bad / (abs_bad + abs_ok), 4) if (abs_bad + abs_ok) else 0
+    return {"na_bad": na_bad, "longest_rate": rate, "longest": longest, "n": tot,
+            "abs_conc": conc, "abs_bad": abs_bad, "abs_ok": abs_ok}
+
+
+def c13_no_length_tell(site):
+    """C13 题目不许留「不学也能答对」的线索。
+
+    C9 挡的是**位置**（答案总排在第一个）。位置能靠渲染时打乱解决，
+    长度不能——它在内容里。实测建立基线时：108 道题里 98 道的正确项
+    是最长的那一项（91%，三选一随机约 32%），也就是「永远选最长的」
+    能拿 91 分，一点会计不用会。
+
+    更精确的一处：「无法判断」这个选项，它是**错的**时候 72 次全都是
+    「信息不足，无法判断」九个字；它是**对的**时候 18 次里有 17 次后面
+    还跟着一句解释。「后面带冒号就选它」可以拿满这 90 道。
+
+    **每道题单看都没问题。** 这个线索只存在于题与题之间，人一条条审
+    是看不出来的——它正好是签字清单 G2 第 4 条里机器该接手的那一半。
+
+    na 文案逐字一致是硬规则；长度与绝对化词走棘轮（只许降，不许升），
+    基线在 design/item-debt.json，剩余差距登记在 DEBT D10。
+    """
+    st = item_stats(site)
+    for qid, t in st["na_bad"][:4]:
+        err("C13", f"{qid} 的「无法判断」选项文案是「{t}…」，不是那九个字 —— "
+                   "它是正确答案时多写一句解释，等于把答案印在选项长度上")
+    if not ITEM_BASE.exists():
+        WARNS.append(f"C13 没有基线 {ITEM_BASE.name}，跑 --update-items 建立")
+        return
+    b = json.loads(ITEM_BASE.read_text(encoding="utf-8"))
+    if st["longest_rate"] > b.get("longest_rate", 1) + 0.01:
+        err("C13", f"正确项最长的比例升到 {st['longest_rate']:.0%}"
+                   f"（基线 {b['longest_rate']:.0%}）—— 新题把长度线索又加回去了。"
+                   "干扰项要把它代表的那个误解写成一句完整的话，别只留四个字")
+    # 绝对化词这一项**只报不挡**，理由要写在这里，否则下一个人会把它改成 ERROR：
+    # 数下来 17 个绝对化词都在错误项（94%），看着像第二条线索。但逐条看，
+    # 那些词正是误解本身的形状——「肯定是造假」「只要收入还在涨」「永远精确相等」
+    # 「必然故意」。把它们软化掉，干扰项就不再代表一个真实的错误心智模型，
+    # 而 G2 第 1 条要求的恰恰是「每个错误选项对应一个真实的常见误解」。
+    # 两条判据在这里冲突，服从更重要的那条：宁可留下一点可被应试者利用的偏斜，
+    # 也不把误解写成一句谁也不会真想的话。真要平衡，该做的是在**正确项**里
+    # 允许如实的绝对表述（「跨来源比较之前必须先统一口径」就是一处），不是削弱误解。
+    if st["abs_conc"] > b.get("abs_conc", 1) + 0.02:
+        WARNS.append(f"C13 绝对化词落在错误项的比例 {st['abs_conc']:.0%}"
+                     f"（基线 {b['abs_conc']:.0%}）—— 只报不挡，别用软化误解的办法去凑这个数")
+    if not st["na_bad"]:
+        ok("C13", f"长度不泄题 「无法判断」{'、'.join(['文案 90 处逐字一致'])}；"
+                  f"正确项最长 {st['longest']}/{st['n']} = {st['longest_rate']:.0%}"
+                  f"（基线 {b['longest_rate']:.0%}，目标 ≤50%，差距记 D10）；"
+                  f"绝对化词错误项集中度 {st['abs_conc']:.0%}（基线 {b['abs_conc']:.0%}）")
+
+
+def update_items():
+    """把当前计数写回基线。只允许下降——棘轮和 check_style / check_tokens 同一套。"""
+    site = json.loads(SITE.read_text(encoding="utf-8"))
+    st = item_stats(site)
+    cur = {"_note": "题目写作线索的棘轮基线。只许降不许升；改好一处跑一次 --update-items。"
+                    "longest_rate=正确项是最长选项的比例（三选一随机约 0.32，目标 ≤0.50）；"
+                    "abs_conc=绝对化词落在错误项的比例（0.5 表示两边一样多）",
+           "longest_rate": st["longest_rate"], "abs_conc": st["abs_conc"],
+           "n": st["n"], "longest": st["longest"],
+           "abs_bad": st["abs_bad"], "abs_ok": st["abs_ok"]}
+    if ITEM_BASE.exists():
+        old = json.loads(ITEM_BASE.read_text(encoding="utf-8"))
+        for k in ("longest_rate", "abs_conc"):
+            if cur[k] > old.get(k, 1):
+                print(f"拒绝写回：{k} 从 {old[k]} 升到 {cur[k]}，棘轮只许降")
+                return 1
+    ITEM_BASE.write_text(json.dumps(cur, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"基线已写回 {ITEM_BASE.name}：正确项最长 {st['longest']}/{st['n']} "
+          f"= {st['longest_rate']:.0%}；绝对化词集中度 {st['abs_conc']:.0%}")
+    return 0
 
 
 # ────────────────────────────────────────────────────────────────────
@@ -512,6 +630,7 @@ MUTATIONS = [
     ("C11", "把一个 mis 改成分类法里没有的 id", "site", None, None),
     ("C12", "在实验区的渲染路径里写一次校准分", "src",
      r"function drawLab\(\)\{", "function drawLab(){S.calib.n++;"),
+    ("C13", "给一个「无法判断」选项补一句解释（长度泄题）", "site", None, None),
 ]
 
 
@@ -559,6 +678,19 @@ def selftest():
                                 break
                         if done:
                             break
+                elif code == "C13":
+                    done = False
+                    for n in d["nodes"]:
+                        for sc in n.get("screens", []):
+                            for o in (sc.get("quiz") or {}).get("opts", []):
+                                if o.get("na"):
+                                    o["t"] = NA_CANON + "：这里还缺同期收入增速才能比较"
+                                    done = True
+                                    break
+                            if done:
+                                break
+                        if done:
+                            break
                 else:
                     d["about"] = (d.get("about") or "") + "建议买入这只股票。"
                 SITE.write_text(json.dumps(d, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -587,4 +719,6 @@ if __name__ == "__main__":
         sys.stdout.reconfigure(encoding="utf-8")
     except AttributeError:
         pass
+    if "--update-items" in sys.argv:
+        sys.exit(update_items())
     sys.exit(selftest() if "--selftest" in sys.argv else run())

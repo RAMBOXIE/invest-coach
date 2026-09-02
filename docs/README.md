@@ -43,6 +43,7 @@
 | [records/勘误_第一章.md](records/勘误_第一章.md) | 第一章内容的全量审计与修订台账（内容版本 `ch1-content-batch2r1`，已闭合） |
 | [records/数据核定_第一章.md](records/数据核定_第一章.md) | 数字逐条核定到原档行号的记录 |
 | [records/审图_第一章.md](records/审图_第一章.md) | 知识图（节点与边）的审定记录，对应冻结版 `ch1-graph-v1` |
+| [records/预审_第一章.md](records/预审_第一章.md) | 签字（D1）之前的机器预审：把 G1/G2 里机器能查的判据接走，并记下查出来的六件事（正典卡里的黑话、「无法判断」的长度线索、91% 的正确项最长…） |
 | [records/需求调研_reddit_2026-08.md](records/需求调研_reddit_2026-08.md) | 4030 条 Reddit 帖子上的需求调研，108 条经核验的证据。ROADMAP 的依据 |
 
 ## 欠账

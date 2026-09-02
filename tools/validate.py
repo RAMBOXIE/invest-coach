@@ -611,6 +611,45 @@ def validate_stories(release=False):
                           + "、".join(sorted(set(bad))[:14])
                           + "。真实数字必须先入 facts.json 并绑 accession + 行号")
 
+        # S9 剧透闸：reveal 之前不许出现结局。
+        #
+        # 一幕的全部教学价值在于「用当年拿得到的信息做判断」。任何一句
+        # 「后来 SEC 认定…」提前出现，用户就不是在判断，是在背答案——
+        # 而屏上仍然会问他「你现在怎么办」，判分照常给。
+        # 这也是签字清单 G1 第 5 条（「真实公司的表述是当年的」）里
+        # 机器能查的那一半。
+        #
+        # 只查叙事字段：decision 的选项标签里出现「认定舞弊」是**用户的选项**
+        # （一个仓促结论），不是剧透，所以 options 子树整体跳过。
+        SPOIL = re.compile(r"破产|退市|被起诉|重述|认定|舞弊|欺诈|后来|最终|事后|真相|判刑")
+        kinds = [b.get("kind") for b in c.get("beats", [])]
+        if "reveal" in kinds:
+            ri = kinds.index("reveal")
+
+            def narrative(o, out):
+                if isinstance(o, dict):
+                    for k, v2 in o.items():
+                        if k in ("options", "kind", "id", "src", "line", "fact",
+                                 "accession", "anchors", "orig", "_note"):
+                            continue
+                        narrative(v2, out)
+                elif isinstance(o, list):
+                    for v2 in o:
+                        narrative(v2, out)
+                elif isinstance(o, str):
+                    out.append(o)
+
+            for bi, b in enumerate(c.get("beats", [])[:ri]):
+                strs = []
+                narrative(b, strs)
+                for t in strs:
+                    m = SPOIL.search(t)
+                    if m:
+                        errors.append(
+                            f"S9 {cid}/beats[{bi}]({b.get('kind')}): reveal 之前出现结局词"
+                            f"「{m.group(0)}」——…{t[max(0, m.start() - 25):m.end() + 25]}…"
+                            "。用户要用当年的信息判断，提前告诉他结局，这一幕就只剩背答案")
+
         # S8 断头路：屏上承诺的交互必须真的存在。
         #
         # 消融实验查出来的：nikola 的判断拍写着 ask_enabled: true，提示里说
@@ -764,6 +803,21 @@ def validate(path, release=False):
         for k in c:
             if k.startswith("x_") and k != "x_cite":
                 errors.append(f"{nid}: canon 未登记字段 {k}")
+        # R31 正典与本站口径必须分栏。
+        #
+        # 这条是从签字清单 G1 的第 2 项（「阈值类主张标了本站口径，没有伪装成正典」）
+        # 反推出来的：那一项当时**在数据里没有任何表示**。翻下来发现六个节点的
+        # canon.formal 里混着我们自己的话（「本站教学口径…」「本节点只教…」），
+        # 而屏上那张卡的标题是「正典」，正文一整段读起来都像出处说的。
+        #
+        # 拆成两栏之后，机器能查的部分就变成确定的：formal 里不许出现我们的口吻。
+        for w in ("本站", "本节点", "我们", "⚠️"):
+            if w in formal:
+                errors.append(f"{nid}: canon.formal 里出现「{w}」——这是我们的口吻，"
+                              "不是出处的话。移到 canon.house（屏上单列「本站口径」一栏）")
+        h = c.get("house")
+        if h is not None and not (isinstance(h, str) and h.strip()):
+            errors.append(f"{nid}: canon.house 存在但为空——空的口径栏会在卡上留一个空标题")
         if not c.get("x_cite"):
             warns.append(f"{nid}: canon.x_cite 为空——出处未精确到章节/页/条款，需查原档后补（禁止编造）")
         # R15 时代闸：canon 提到的概念不得早于其出处年份

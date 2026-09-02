@@ -1198,6 +1198,7 @@ function showFact(fid){
 function showCanon(n){
   document.getElementById('sheet').innerHTML=`<h3 class="sh-h">${n.canon.term}</h3>
     <p class="sh-p">${n.canon.formal}</p>
+    ${n.canon.house?`<div class="sh-h4">本站口径（这一段不是出处的话）</div><p class="sh-p">${n.canon.house}</p>`:''}
     <p class="tip">出处：${n.canon.source}${n.canon.x_cite?'<br>定位：'+n.canon.x_cite:''}${n.canon.textbook?'<br>体系位置：'+n.canon.textbook:''}</p>
     <button class="cta ghost" id="sh-x">关闭</button>`;
   openSheet(true);document.getElementById('sh-x').onclick=closeSheet;

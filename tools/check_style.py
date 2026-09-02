@@ -38,10 +38,19 @@ SKIP_KEYS = {
     "line", "accession", "sha256", "url", "x_covers", "x_anchors", "x_pair",
     "knowledge_node", "twin_case_ref", "side", "icon", "avatar", "domain",
     "x_version", "cv", "era", "status", "verdict", "label",
-    "_note", "note", "x_note", "x_prov", "sources", "source", "textbook", "x_cite",
-    "canon",           # 正典是教材原话，不是我们的文案
+    "_note", "note", "x_note", "x_prov", "sources", "source", "x_cite",
     "match",           # 匹配用户输入的关键词，用户读不到；改了会让匹配失效
 }
+# 「canon 是教材原话，不是我们的文案」——这句话曾经让整个 canon 子树被跳过，
+# 于是门禁报「黑话 0 处」的同时，用户点开正典卡看到的是**六个「红旗」**、
+# 一个「亮旗」、两个「定罪」、一个「阳性」。owner 的第一条要求就是全文去掉这个词。
+#
+# 两件事被混在一起了：
+#   - canon.formal 确实是出处的话，但**是我们译的、我们摘的**，用词是我们的选择；
+#     文献里的 red flags 要引就写「原文 red flags」，不能自己造一个中文黑话。
+#   - canon.textbook（屏上的「体系位置」）与 canon.term 更是我们写的标签。
+# 所以现在只跳 canon.source 与 x_cite（纯引用标识），其余照数。
+# 我们自己的口径话术另有一个字段 canon.house，也照数（R31 管它们不许混）。
 
 # ── 黑话表：用户能读到的比喻/江湖气/游戏化用词 ──────────────────────
 JARGON = {

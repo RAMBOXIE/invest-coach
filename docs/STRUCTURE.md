@@ -8,7 +8,7 @@
 
 | 路径 | 用途 | 谁写 | 谁读 | 生命周期 |
 |---|---|---|---|---|
-| `design/` | 设计令牌单一真源（tokens.json）+ 字面值棘轮基线（token-debt.json） | 人 | build.py、check_a11y.py、check_tokens.py | 长期 |
+| `design/` | 设计令牌单一真源（tokens.json）+ 三份棘轮基线：字面值 token-debt.json、文风 style-debt.json、题目线索 item-debt.json | 人 | build.py、check_a11y.py、check_tokens.py | 长期 |
 | `content/ch1/` | 第一章内容与数字账本（site.json + facts.json） | 人 | build.py、validate.py | 长期 |
 | `content/stories/` | 故事幕的骨架层，每个 `<case_id>/case.json` | 人（LLM 起草后人审） | build.py | 长期 |
 | `content/current/` | 时事管线产物（staging，未签字，**产物不入构建**） | fetch_current.py | 人（签字后才入 content/stories） | ⏸ 待法律评估，见 DEBT.md D6 |
