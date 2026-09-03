@@ -218,19 +218,33 @@ def main(argv):
     payload = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     html = tpl.replace(DATA_MARKER, payload)
 
+    # **必须在 strip_comments 之前。** 占位符 /*__BACKEND__*/null 本身是个块注释，
+    # 剥注释那一步会把它吃掉，于是下面的 marker 判断永远不成立、--backend 被静默忽略，
+    # 还会打印一句「模板尚无后端占位符」把锅推给模板。这个开关从加剥注释那天起就是死的，
+    # 直到 2026-09-03 有人真的想连后端才发现。
+    if BACKEND_MARKER in html:
+        html = html.replace(BACKEND_MARKER, json.dumps(backend) if backend else "null")
+    elif backend:
+        print(f"错误: 模板里找不到占位符 {BACKEND_MARKER}，--backend 无处可烧")
+        return 1
+
     before = len(html.encode("utf-8"))
     html = strip_comments(html)
     saved = (before - len(html.encode("utf-8"))) / 1024
     print(f"剥离源码注释: 省下 {saved:.1f} KB（注释留在 src/，不进交付物）")
 
-    if BACKEND_MARKER in html:
-        html = html.replace(BACKEND_MARKER, json.dumps(backend) if backend else "null")
-    elif backend:
-        print("提示: 模板尚无后端占位符，--backend 参数被忽略（第 3 步模板改造后生效）")
-
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(html, encoding="utf-8")
     print(f"构建完成: {OUT}（{OUT.stat().st_size / 1024:.1f} KB）")
+
+    # 自查：给了 --backend 就必须在产物里找得到它。
+    # 上面那个坑的教训是「参数被接受了、什么也没发生、还打印了一句让你去查别处的话」——
+    # 只有拿产物回头验一次，才挡得住这一类。
+    if backend and backend not in OUT.read_text(encoding="utf-8"):
+        print(f"错误: --backend {backend} 没有出现在产物里，后端地址没烧进去")
+        return 1
+    if backend:
+        print(f"后端地址已烧入产物: {backend}")
 
     # SPEC_DEV.md §9：任一门禁 FAIL 即拒绝构建（产物已写出，但退出码非零，CI/DoD 会挡住）
     # check_server 不查产物，查后端的隐私承诺（打码 / 出口检查 / 留存 / Origin 收口）。

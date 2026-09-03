@@ -167,16 +167,62 @@ def p5_order(S, port, errors):
         errors.append(f"P5 分析数字在送模型前被打掉了：{got}")
 
 
+def p6_discuss_gate(S, errors):
+    """决策人那段话的出口检查：他活在当年，说不出结局；数字只能来自材料；不荐股；不出戏。"""
+    material = "1997 年净销售额 11.682 亿美元，较 1996 年增长 18.7%。应收账款 2.956 亿美元。"
+    ok_text = "增长来自五个产品类别的全线增长。1997 年应收上升，源于销售增加和某些季节性账期条款。"
+    if S.check_discuss(ok_text, material, 1998)[0] is None:
+        errors.append("P6 合格的回应被误杀")
+    for bad, why in (
+        ("后来 SEC 认定这一年有舞弊。", "后见之明"),
+        ("应收其实涨了 38.5%。", "材料里没有的数字"),
+        ("这家公司现在值得买。", "投资建议"),
+        ("作为 AI，我无法替他回答。", "出戏"),
+    ):
+        if S.check_discuss(bad, material, 1998)[0] is not None:
+            errors.append(f"P6 该丢弃的没丢（{why}）：{bad}")
+
+
+def p7_discuss_wiring(S, port, errors):
+    """端点接线 + 打码先于调模型 + 人物与材料原样到达模型层。"""
+    seen = {}
+
+    def probe(persona, era, material, history, question):
+        seen.update(persona=persona, era=era, material=material, question=question)
+        return "这份文件里写的是发货时确认收入。", {"raw": "x", "kept": True}
+
+    S.API_KEY = "test-key-not-used"
+    real, S.discuss = S.discuss, probe
+    try:
+        body = json.dumps({"case_id": "sunbeam-1998", "era": 1998,
+                           "persona": {"name": "Russell A. Kersh", "role": "首席财务官"},
+                           "material": "1997 年净销售额 11.682 亿美元",
+                           "question": "我持仓 50 万，手机 13800138000。你们为什么给经销商延长账期？"}).encode()
+        code, _, out = hit(port, "/api/v1/discuss", "null", body)
+    finally:
+        S.discuss = real
+        S.API_KEY = ""
+    if code != 200 or b'"source": "llm"' not in out:
+        errors.append(f"P7 /api/v1/discuss 没接通或没走到模型层（{code} {out[:80]}）")
+        return
+    if "13800138000" in seen.get("question", "") or "50 万" in seen.get("question", ""):
+        errors.append(f"P7 送给模型的问题里还有原始 PII：{seen.get('question')}")
+    if seen.get("persona", {}).get("name") != "Russell A. Kersh" or "11.682" not in seen.get("material", ""):
+        errors.append("P7 人物或材料没有原样到达模型层")
+
+
 def main():
     S, dbfile = load()
     errors = []
     p1_mask(S, errors)
     p2_exit_gate(S, errors)
     p3_retention(S, errors)
+    p6_discuss_gate(S, errors)
     srv, port = serve(S)
     try:
         p4_origin(S, port, errors)
         p5_order(S, port, errors)
+        p7_discuss_wiring(S, port, errors)
     finally:
         srv.shutdown()
         if S._db:
@@ -187,7 +233,7 @@ def main():
         print("ERROR:", e)
     if not errors:
         print("INFO : P1 打码分语境 ✓  P2 出口检查 ✓  P3 90 天留存 ✓  "
-              "P4 Origin 收口 ✓  P5 打码先于调模型 ✓")
+              "P4 Origin 收口 ✓  P5 打码先于调模型 ✓  P6 决策人出口检查 ✓  P7 discuss 接线 ✓")
     print("SERVER:", "FAIL" if errors else "PASS")
     return 1 if errors else 0
 
@@ -210,6 +256,8 @@ def selftest():
          "    return True", "Origin 收口永远放行"),
         ("    cut = int(time.time()) - RETAIN_DAYS * 86400", "    cut = 0", "留存清理不删任何东西"),
         ("        note, nmask = mask_pii(note)", "        nmask = 0", "打码挪到调模型之后"),
+        ("    for w in HINDSIGHT:", "    for w in ():", "决策人出口检查放过后见之明"),
+        ('        if self.path == "/api/v1/discuss":', '        if self.path == "/api/v1/discuss-x":', "discuss 路由断线"),
     ]
     ok = 0
     try:

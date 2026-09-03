@@ -13,6 +13,7 @@
 .ct-you{font-size:var(--size-15);color:var(--brand-violet);font-weight:700;margin-bottom:var(--space-2);text-align:right}
 .ct-say{background:var(--surface-read-alt);border-radius:var(--radius-md);
   padding:var(--space-3) var(--space-3);border-left:3px solid var(--c-violet-300)}
+  .ct-say.llm{border-left:3px solid var(--bad)}
 .ct-say.broke{border-left-color:var(--state-flag);background:var(--c-red-wash)}
 .ct-bang{font-size:var(--size-13);font-weight:800;color:var(--state-flag);
   letter-spacing:.1em;margin-bottom:var(--space-2)}

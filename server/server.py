@@ -248,6 +248,87 @@ def review_note(note, material):
     return text, trace
 
 
+# ── #10 决策人复盘对话 ─────────────────────────────────────────
+#
+# owner 2026-09-03 的产品定义：「LLM 会扮演当时事件中的关键决策人，和用户一起讨论
+# 为什么当时有这样的决策。」这是 #8（只返回一个证词 id）到「能讨论」的升级，
+# 也是 #5（自由散文）被放弃之后第一次把散文放回幕里。能放回来靠的是三道确定性闸：
+#
+#   1. 材料闸：模型看得见的只有前端喂进来的当年材料（reveal 之前的拍、他的陈述、
+#      追问与出证的原文、证据卡）。结局不在里面，他就说不出结局。
+#   2. 出口闸 check_discuss：数字必须出现在材料里；后见之明词、投资建议、
+#      「我是 AI」式出戏，任一命中整条丢弃，前端回落到逐字原话匹配。
+#   3. 标注闸（前端）：这段话在屏上标红为「LLM 扮演 · 某某说」，明写不是原档逐字；
+#      带行号的陈述仍然只来自 case.json。
+#
+# 他讨论的是**材料里写过的理由**，不是编出来的动机。材料里没有的，他说「文件里没有写」。
+DISCUSS_SYS = """你现在是 {name}，{role}。时间是 {era} 年。一位学习者在和你讨论你当时的决策与说法。
+
+你只知道下面这些材料里写的事，一个字都不能超出：
+
+{material}
+
+规则（不可违反）：
+1. 你不知道 {era} 年之后发生的任何事。不许说「后来」「最终」「事后」「重述」「破产」「被认定」。你活在当时。
+2. 你说的每一个数字都必须来自上面的材料。材料里没有的事，如实说「这份文件里没有写」。
+3. 用第一人称、当年的口吻，替你当时的决策说明理由；理由只能来自材料里你自己写过、或公司披露过的话。
+   可以被追问，可以承认材料里的矛盾，但不许编造动机，不许引入材料之外的事实。
+4. 不给投资建议，不评论任何股票值不值得买，不预测。
+5. 中文，两到四句，不用破折号，不用「不是 X 而是 Y」这种对偶。像一个人在回答，不像一份声明。
+6. 不要说你是 AI、模型或助手，不要说「作为 {name}」。屏上会另行标注这是 AI 推演，你只管以他的身份回答。"""
+
+# 后见之明：他活在当年，这些词一出现就是出戏
+HINDSIGHT = ("后来", "最终", "事后", "重述", "破产", "被认定", "认定为", "被起诉", "判刑",
+             "真相", "如今", "回头看", "多年以后", "历史证明", "事实证明")
+# 出戏：屏上已经标了 AI 推演，人物自己再跳出来说「我是 AI」会让用户不知道在和谁说话
+BREAK_CHAR = ("作为 AI", "作为AI", "语言模型", "我是 AI", "我是AI", "AI 助手", "人工智能", "作为一个模型")
+ADVICE = ("建议买入", "建议卖出", "建议持有", "目标价", "推荐", "值得买", "值得投资", "会涨", "会跌")
+
+
+def check_discuss(text, material, era):
+    """决策人那段话的出口检查。任一不合格整条丢弃，前端回落到逐字原话。"""
+    if not text or len(text) > 600:
+        return None, "空或过长"
+    allowed = set(OUT_NUM.findall(material)) | {str(era)}
+    bad = [n for n in set(OUT_NUM.findall(text)) if n not in allowed and n.strip(".,") not in allowed]
+    if bad:
+        return None, f"出现材料里没有的数字 {bad[:3]}"
+    for w in HINDSIGHT:
+        if w in text:
+            return None, f"出现后见之明「{w}」"
+    for w in ADVICE:
+        if w in text:
+            return None, f"出现越界措辞「{w}」"
+    for w in BREAK_CHAR:
+        if w in text:
+            return None, f"出戏「{w}」"
+    return text, ""
+
+
+def discuss(persona, era, material, history, question):
+    """LLM 以当事人身份回应一个问题。返回 (文本或 None, 可回放记录)。"""
+    sys_p = DISCUSS_SYS.format(name=persona.get("name", "当事人"), role=persona.get("role", ""),
+                               era=era, material=material)
+    msgs = []
+    for h in (history or [])[-6:]:
+        if h.get("role") in ("user", "assistant") and h.get("content"):
+            msgs.append({"role": h["role"], "content": str(h["content"])[:600]})
+    if msgs and msgs[0]["role"] != "user":
+        msgs = msgs[1:]
+    msgs.append({"role": "user", "content": question})
+    body = json.dumps({"model": MODEL, "max_tokens": 500, "system": sys_p, "messages": msgs}).encode()
+    req = urllib.request.Request(
+        "https://api.anthropic.com/v1/messages", data=body,
+        headers={"content-type": "application/json", "x-api-key": API_KEY,
+                 "anthropic-version": "2023-06-01"})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        out = json.load(r)
+    raw = (out.get("content") or [{}])[0].get("text", "").strip()
+    text, why = check_discuss(raw, material, era)
+    trace = {"system": sys_p, "history": msgs, "raw": raw, "kept": bool(text), "rejected": why}
+    return text, trace
+
+
 class H(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
 
@@ -309,6 +390,8 @@ class H(BaseHTTPRequestHandler):
 
         if self.path == "/api/v1/review-note":
             return self._review(raw)
+        if self.path == "/api/v1/discuss":
+            return self._discuss(raw)
 
         if self.path != "/api/v1/ask-coach":
             return self._send({"ok": False}, 404)
@@ -369,6 +452,35 @@ class H(BaseHTTPRequestHandler):
             db().execute(
                 "INSERT INTO notes(node, trace, at) VALUES(?,?,?)",
                 (req.get("node"), json.dumps(trace, ensure_ascii=False), int(time.time())))
+            db().commit()
+            purge_old()
+        return self._send({"text": text, "source": "llm" if text else "fallback"})
+
+    def _discuss(self, raw):
+        """决策人复盘对话。任何一环出问题都回 {"text": null}，前端回落到逐字原话匹配。"""
+        try:
+            req = json.loads(raw or b"{}")
+        except Exception:
+            return self._send({"text": None, "source": "fallback"})
+        q = (req.get("question") or "").strip()
+        material = (req.get("material") or "").strip()
+        persona = req.get("persona") or {}
+        era = req.get("era") or ""
+        if (not q or len(q) > 300 or not material or not persona.get("name") or not API_KEY
+                or not allow(req.get("device"))):
+            return self._send({"text": None, "source": "fallback"})
+        q, nmask = mask_pii(q)                      # 打码先于调模型，和 review-note 同一条纪律
+        try:
+            text, trace = discuss(persona, era, material, req.get("history") or [], q)
+            trace["masked"] = nmask
+        except Exception as e:
+            print("discuss err:", e, file=sys.stderr)
+            return self._send({"text": None, "source": "fallback"})
+        if not text:
+            print("discuss 出口检查丢弃：", trace.get("rejected"), file=sys.stderr)
+        if db():
+            db().execute("INSERT INTO notes(node, trace, at) VALUES(?,?,?)",
+                         ("discuss:" + str(req.get("case_id")), json.dumps(trace, ensure_ascii=False), int(time.time())))
             db().commit()
             purge_old()
         return self._send({"text": text, "source": "llm" if text else "fallback"})

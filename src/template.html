@@ -241,6 +241,11 @@
   .rowbtn .nm{font-weight:600;font-size:var(--size-15)}
   .rowbtn .mt{font-size:var(--size-13);color:var(--text-meta-color);margin-top:1px}
   .rowbtn[disabled]{opacity:.42}
+  /* LLM 出场的标记。owner 要求：凡是 LLM 说话（或将来会由 LLM 说话）的位置，红字标出。
+     .off = 这个位置将来是 LLM 的，现在没接上，显示的是本地占位。虚线框区分「是」和「将是」。 */
+  .llm-tag{display:inline-block;color:var(--bad);border:1px solid var(--bad);border-radius:6px;
+    padding:0 6px;font-size:var(--size-13);font-weight:700;line-height:1.6;margin-right:6px}
+  .llm-tag.off{border-style:dashed;opacity:.75}
   /* 纸面上的状态芯片：淡底 + 同色系深字。v1 是暗底亮字，翻正后变成亮底亮字，
      「已读」实测 1:1——整块芯片在纸上等于不存在。 */
   .chipS{margin-left:auto;font-size:var(--size-13);border-radius:var(--radius-pill);
@@ -260,8 +265,6 @@
   .tabbar button{flex:1;padding:9px 0 8px;font-size:var(--size-13);color:var(--text-meta-color);min-height:var(--tap)}
   .tabbar button .i{display:block;font-size:var(--size-19);margin-bottom:1px}
   .tabbar button.on{color:var(--gold)}
-  .foot{font-size:var(--size-13);color:var(--text-meta-color);text-align:center;line-height:1.6;padding:14px 4px 4px}
-  .foot-fine{opacity:.82}
   /* 全屏课节 */
   .stage{position:fixed;inset:0;z-index:40;background:var(--card);color:var(--ink);
     display:none;flex-direction:column}
@@ -435,14 +438,11 @@
     <div><div class="tt" id="tag"></div><h1 id="title"></h1></div>
   </div>
   <div id="view"></div>
-  <div class="foot"><b>AI 替你读，我们考你。</b>每道题都是闭卷的——换一家公司、没见过的材料、不给提示。<br>
-    仅供学习 · 历史案例复盘 · 不构成投资建议，无前瞻信号与收益承诺<br>
-    <span class="foot-fine">真实公司的数字绑定 SEC EDGAR 申报号与行号，可点开核对；通俗解释与教练点评由 AI 起草、经人工核对；判分由页面内置规则完成</span></div>
 </div>
 
 <div class="tabbar">
-  <button data-tab="today" class="on"><span class="i" data-ic="today"></span>今日</button>
-  <button data-tab="atlas"><span class="i" data-ic="atlas"></span>图谱</button>
+  <button data-tab="today" class="on"><span class="i" data-ic="today"></span>学习</button>
+  <button data-tab="atlas"><span class="i" data-ic="atlas"></span>目录</button>
   <button data-tab="me"><span class="i" data-ic="me"></span>我</button>
 </div>
 
@@ -907,23 +907,50 @@ function dw(title,body){
 }
 
 function viewAtlas(){
+  /* 目录：要学的东西按层排开，点一行就进。
+     全景图撤了：手机上它只是一张看不清的星图，既不能点也不解释顺序。
+     目录才回答用户真正的问题：接下来学什么、为什么锁着、案例什么时候能进。 */
   const stN={lit:'已通过',open:'可进入',locked:'未解锁'};
   const dues=new Set(duePairs().map(p=>PAIRS[p].node.id));
-  let h=`<div class="sec"><h2>全景</h2>${miniMap()}
-    <div class="tip">手机上图谱只作全景参考；导航请用「今日」。</div></div>`;
-  const doms=[...new Set(SITE.nodes.map(n=>n.domain||'通用'))];
-  for(const d of doms){
-    h+=`<div class="sec"><h2>${d}</h2>`;
-    for(const n of SITE.nodes.filter(x=>(x.domain||'通用')===d)){
+  const L={};SITE.nodes.forEach(n=>{const l=n.ageStart||1;(L[l]=L[l]||[]).push(n);});
+  let h='';
+  Object.keys(L).map(Number).sort((a,b)=>a-b).forEach(l=>{
+    const arr=L[l];
+    h+=`<div class="sec"><h2>${arr[0].age||('第 '+l+' 层')} · ${arr[0].domain||''}</h2>`;
+    for(const n of arr){
       const st=stateOf(n);
       h+=`<button class="rowbtn" data-node="${n.id}" ${st==='locked'?'disabled':''}>
         <span class="ic">${nic(n.icon,'ic-lg')}</span>
-        <span><span class="nm">${n.name}</span><span class="mt">${n.age||''} · ${(n.desc||'').slice(0,26)}…</span></span>
+        <span><span class="nm">${n.name}</span><span class="mt">${(n.desc||'').slice(0,34)}…</span></span>
         ${dues.has(n.id)?'<span class="chipS due">复习</span>':''}
         <span class="chipS ${st}">${stN[st]}</span></button>`;
     }
     h+='</div>';
+  });
+  const stories=(SITE.x_stories||[]);
+  if(stories.length){
+    h+='<div class="sec"><h2>真实案例</h2>';
+    for(const x of stories){
+      const ok=!x.knowledge_node||lit.has(x.knowledge_node);
+      const kn=x.knowledge_node?(SITE.nodes.find(n=>n.id===x.knowledge_node)||{}).name:'';
+      h+=`<button class="rowbtn" data-story="${x.case_id}" ${ok?'':'disabled'}>
+        <span class="ic">${(x.cast&&x.cast[0]&&x.cast[0].avatar)||''}</span>
+        <span><span class="nm">${x.title}</span><span class="mt">${x.era||''} · ${ok?'和当事人一起复盘':'先过「'+kn+'」'}</span></span>
+        <span class="chipS ${ok?'open':'locked'}">${ok?'可进入':'未解锁'}</span></button>`;
+    }
+    h+='</div>';
   }
+  const labs=labCases();
+  if(labs.length){
+    h+='<div class="sec"><h2>近期财报 · 实验区</h2>';
+    labs.forEach((lc,i)=>{const done=!!((S.lab||{})[lc.id]);
+      h+=`<button class="rowbtn" data-lab="${lc.id}">
+        <span class="ic">${nic('lab','ic-lg')}</span>
+        <span><span class="nm">${lc.company}</span><span class="mt">第 ${i+1} 卷 · 未经人工复核 · 只考你接下来会去查什么</span></span>
+        <span class="chipS ${done?'lit':'open'}">${done?'做过':'可进入'}</span></button>`;});
+    h+='</div>';
+  }
+  h+='<div class="tip">锁着的要先过它前面的关。顺序是刻意的：先会算、再会找、然后才在真实案例里下判断。</div>';
   return h;
 }
 function miniMap(){
@@ -1009,6 +1036,7 @@ function bindView(){
   if(g('go-reset'))g('go-reset').onclick=()=>{if(!confirm('清空全部进度（含档案与校准分）？'))return;
     S=fresh();lit=new Set();save();render();toast('已重置');};
   document.querySelectorAll('[data-node]').forEach(b=>b.onclick=()=>openNode(b.dataset.node));
+  document.querySelectorAll('[data-lab]').forEach(b=>b.onclick=()=>openLab(b.dataset.lab));
   /* 错题档案的每一行原来是长得像按钮的 div：没有 handler、没有 cursor，
      看起来可点、点了什么都不发生。现在点它就把这一对提前排进复训。 */
   document.querySelectorAll('[data-pair]').forEach(b=>b.onclick=()=>{
@@ -1267,8 +1295,11 @@ function coachRead(txt){
   };
   const render=r=>{
     if(!box)return;
-    box.innerHTML=`<div class="coach coach-back"><span class="w">你的教练：</span><span>${r.text}</span>
-      ${r.src==='local'?'<div class="tip">这条回应是这台设备上算出来的，没有联网。</div>':''}</div>`;
+    const tag=r.src==='llm'
+      ?'<span class="llm-tag">【LLM教练说】</span>'
+      :'<span class="llm-tag off">【LLM教练说 · 未连接，本地占位】</span>';
+    box.innerHTML=`<div class="coach coach-back"><span class="w">${tag}</span><span>${r.text}</span>
+      ${r.src==='local'?'<div class="tip">这条是这台设备上按规则算出来的，没有联网。接上后端并打开上面的开关，这一格才是模型读完你写的话之后写回来的。</div>':''}</div>`;
   };
   if(!S.coachRead||typeof BACKEND==='undefined'||!BACKEND){
     render(local());return Promise.resolve();

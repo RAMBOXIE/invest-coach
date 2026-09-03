@@ -111,15 +111,21 @@
         <div class="ct-who"><div class="ct-nm">${w.name}</div><div class="ct-role">${w.role}</div></div>
         <button class="ct-x" id="ct-x">${ic('close')} 回到决策</button>
       </div>
-      <p class="ct-rule">${w.rule}</p>`;
+      <p class="ct-rule">${w.rule}</p>
+      <p class="ct-rule">${(typeof BACKEND !== 'undefined' && BACKEND && st.story.x_discuss !== false)
+        ? '<span class="llm-tag">【LLM 扮演 · ' + w.name + '】</span>直接问他时，回答由 AI 用他当年的口吻、只凭这份材料推演，会标红。带行号的陈述才是他真写过的。'
+        : '<span class="llm-tag off">【LLM 扮演 · 未连接】</span>现在直接问他，只能匹配到他写过的原话。接上后端后，他会用当年的口吻和你讨论为什么这样决策。'}</p>`;
     if (!st.log.length) h += `<p class="ct-open">${I.opening}</p><p class="ct-how">${I.howto}</p>`;
     h += st.log.map(entry => `
       <div class="ct-turn">
         ${entry.you ? `<div class="ct-you">${entry.you}</div>` : ''}
-        <div class="ct-say${entry.broke ? ' broke' : ''}">
+        <div class="ct-say${entry.broke ? ' broke' : ''}${entry.llm ? ' llm' : ''}">
           ${entry.broke ? `<div class="ct-bang">${ic('alert')} 该说法与材料矛盾</div>` : ''}
+          ${entry.llm ? `<div class="llm-tag">【LLM 扮演 · ${w.name} 说】</div>` : ''}
           <div class="ct-txt">${entry.text}</div>
-          <div class="ct-src">${ic('doc')} ${entry.src} · <span class="ct-ln">${entry.line}</span></div>
+          ${entry.llm
+            ? `<div class="ct-src">AI 基于这份材料推演的口吻，不是原档逐字。要看他真写过的，用上面带行号的陈述。</div>`
+            : `<div class="ct-src">${ic('doc')} ${entry.src} · <span class="ct-ln">${entry.line}</span></div>`}
         </div>
         ${voc(entry.coach)}
       </div>`).join('');
@@ -193,14 +199,73 @@
     draw();
   }
 
-  /* 自由提问：有后端走 LLM 语义路由（只返回 id），否则本地关键词 */
+  /* 当事人能看见的材料：只有 reveal 之前的当年内容。
+     结局不喂给他，他就说不出结局。这是材料闸，出口闸在服务端（check_discuss）。 */
+  function eraMaterial() {
+    const st = window.__court, story = st.story, I = st.I;
+    const kinds = story.beats.map(b => b.kind);
+    const ri = kinds.indexOf('reveal');
+    const pre = ri < 0 ? story.beats : story.beats.slice(0, ri);
+    const SKIP = { kind: 1, id: 1, src: 1, line: 1, fact: 1, accession: 1, anchors: 1, orig: 1, options: 1, verdict: 1, canon: 1, _note: 1 };
+    const out = [];
+    const strip = t => String(t).replace(/<[^>]+>/g, '');
+    (function walk(o) {
+      if (typeof o === 'string') { if (o.trim()) out.push(strip(o)); return; }
+      if (Array.isArray(o)) { o.forEach(walk); return; }
+      if (o && typeof o === 'object') Object.keys(o).forEach(k => { if (!SKIP[k]) walk(o[k]); });
+    })(pre);
+    const w = story.cast[0] || {};
+    [w.intro, I.opening].forEach(t => { if (t) out.push(strip(t)); });
+    (I.testimony || []).forEach(t => {
+      out.push(strip(t.text));
+      if (t.press) out.push(strip(t.press.text));
+      (t.breaks || []).forEach(b => out.push(strip(b.text)));
+    });
+    (I.cards || []).forEach(c => out.push(strip(c.t)));
+    if (I.no_record) out.push(strip(I.no_record.text));
+    return out.join(String.fromCharCode(10));
+  }
+
+  /* 决策人复盘对话（登记簿 #10）：LLM 以当事人身份、当年口吻回答；任何一环失败返回 null。 */
+  function discussFree(q) {
+    const st = window.__court, story = st.story;
+    if (typeof BACKEND === 'undefined' || !BACKEND || story.x_discuss === false) return Promise.resolve(null);
+    const history = [];
+    st.log.forEach(e => { if (e.llm && e.you) { history.push({ role: 'user', content: e.you }); history.push({ role: 'assistant', content: e.text }); } });
+    const w = story.cast[0] || {};
+    const ctl = new AbortController();
+    const tm = setTimeout(() => ctl.abort(), 20000);
+    return fetch(BACKEND + '/api/v1/discuss', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
+      body: JSON.stringify({ device: S.device, case_id: story.case_id, era: story.era,
+        persona: { name: w.name, role: w.role, intro: w.intro, rule: w.rule },
+        material: eraMaterial(), history: history.slice(-6), question: q })
+    }).then(r => r.json()).then(d => { clearTimeout(tm); return (d && d.text) ? d.text : null; })
+      .catch(() => { clearTimeout(tm); return null; });
+  }
+
+  /* 自由提问：先让当事人用当年口吻回答（#10）；拿不到（没后端 / 超时 / 出口检查丢弃）
+     就回落到逐字匹配（#8）：LLM 只挑一条他真写过的原话，或本地关键词。 */
   function freeAsk(q) {
     const st = window.__court;
-    if (st.asking) return;          // 在飞行中：接了后端时这个窗口有 6 秒
+    if (st.asking) return;          // 在飞行中
     st.asking = true;
     st.log.push({ you: q, text: '……', src: '—', line: '—', coach: '' });
     draw();
-    routeFree(q).then(r => {
+    discussFree(q).then(text => {
+      if (text) {
+        st.asking = false;
+        st.log.pop();
+        st.stats.pressed++;
+        st.log.push({ you: q, text: text, src: 'AI 推演', line: '', coach: '', llm: true });
+        track && track('court_discuss', { case: st.story.case_id });
+        save && save();
+        draw();
+        return null;
+      }
+      return routeFree(q);
+    }).then(r => {
+      if (!r) return;
       st.asking = false;
       st.log.pop();
       if (r.kind === 'press') {
@@ -229,7 +294,7 @@
       let best = null, len = 0;
       for (const t of st.I.testimony) {
         const keys = [t.text, t.press && t.press.text].filter(Boolean).join('');
-        for (const k of ['应收', '现金', '收入', '第四季度', '烧烤', '杠杆', '季中', '股', '对价', '生意', 'bill', 'repo']) {
+        for (const k of ['应收', '现金', '收入', '第四季度', '烧烤', '杠杆', '季中', '股', '对价', '生意', '账期', '经销商', '渠道', '库存', 'bill', 'repo']) {
           if (s.includes(k) && keys.indexOf(k) >= 0 && k.length > len) { len = k.length; best = t; }
         }
       }

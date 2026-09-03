@@ -25,11 +25,14 @@ python tools/check_server.py            # P1 打码分语境 / P2 出口检查 /
 python tools/check_server.py --selftest # 变异测试：把这五样逐个弄坏，看门禁会不会红
 ```
 
-三个职责，别的一概不做（契约见 `docs/形态规格_故事驱动.md` §6）：
+四个职责，别的一概不做（契约见 `docs/形态规格_故事驱动.md` §6）：
 
 - `POST /api/v1/events` —— 匿名遥测，append-only
-- `POST /api/v1/ask-coach` —— 追问的**语义路由**（登记簿 #8）
+- `POST /api/v1/ask-coach` —— 追问的**语义路由**（登记簿 #8）：只返回一个证词 id，作为 #10 的回落
 - `POST /api/v1/review-note` —— 教练读你写下的推理，写回两三句（登记簿 #9）
+- `POST /api/v1/discuss` —— **决策人复盘对话**（登记簿 #10，ADR-0004）：LLM 以幕里的当事人身份、
+  当年口吻，只凭前端喂进来的 reveal 之前的材料回答；出口检查 `check_discuss` 挡材料外的数字、
+  后见之明、荐股、出戏，任一命中整条丢弃，前端回落到 #8
 
 ## 关键设计：LLM 只返回 id，不生成答案
 
