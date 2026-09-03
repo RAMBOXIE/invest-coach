@@ -203,7 +203,9 @@ def check_facts(data, facts_path, errors, warns):
             scan(o, loc)
 
     for n in data.get("nodes", []):
-        walk({k: n.get(k) for k in ("desc", "screens", "x_pairs", "x_coach_notes")}, n["id"])
+        # x_casefile 是深层节点真正上屏的材料面板（screens 在它面前只是「补课」），
+        # 里面全是真实公司数字，此前却不在 R12 的扫描范围里。补进来。
+        walk({k: n.get(k) for k in ("desc", "screens", "x_pairs", "x_coach_notes", "x_casefile")}, n["id"])
     walk(data.get("x_review_bank", []), "bank")
 
 

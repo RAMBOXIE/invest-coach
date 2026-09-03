@@ -1102,6 +1102,11 @@ function cfHTML(cf,opts){
   else h+=`<span class="cfstat tea">教学构造</span>`;
   if(cf.asof)h+=`<span class="cfas">${cf.asof}</span>`;
   h+=`</div><p class="cfbrief">${cf.brief||''}</p>`;
+  /* 「当时」时间线：真实案例都要带时间与当年背景（ADR-0005）。每条带日期与原档行号，结局不在这里。 */
+  if(cf.context&&cf.context.length){
+    h+=`<div class="ctx"><div class="ctx-h">当时</div>${cf.context.map(c=>
+      `<div class="ctx-i"><span class="ctx-d">${c.date}</span><span class="ctx-t">${c.t}</span>${c.src?`<span class="ctx-s">${c.src}</span>`:''}</div>`).join('')}</div>`;
+  }
   for(const pn of cf.panels||[]){
     if(pn.kind==='cmp'){
       const two=(pn.cols||[]).filter(Boolean).length>1;

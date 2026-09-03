@@ -3975,7 +3975,7 @@
    "screens": [
     {
      "h": "第一个案例：Sunbeam 与 Dell",
-     "body": "<p>两家真实的公司，同一个年代。<b>Sunbeam</b>，做烤箱和烧烤架，1997 年报刚刚报送，董事长兼 CEO 是华尔街叫他「链锯」的 Albert J. Dunlap，年报由 CFO Russell A. Kersh 签署。<b>Dell</b>，卖电脑，1998 财年，Michael S. Dell 任董事长兼 CEO。</p><div class=\"ctx\"><div class=\"ctx-h\">当时</div><div class=\"ctx-i\"><span class=\"ctx-d\">1996 秋</span><span class=\"ctx-t\">Albert J. Dunlap 当选 Sunbeam 董事长，宣布大规模重组：关 18 座工厂、43 个仓库、5 处总部，制造设施 26 处减到 8 处。</span><span class=\"ctx-s\">10-K405 L237–L255</span></div><div class=\"ctx-i\"><span class=\"ctx-d\">1998-01-28</span><span class=\"ctx-t\">Sunbeam 新闻稿宣布「创纪录」的 1997 年业绩，称销售增长是「战略奏效的明确信号」。</span><span class=\"ctx-s\">AAER 1393 L1396</span></div><div class=\"ctx-i\"><span class=\"ctx-d\">1998-03</span><span class=\"ctx-t\">1997 年报报送，CFO Russell A. Kersh 签署。你现在看到的两行数字就来自这份年报。</span><span class=\"ctx-s\">10-K405 L989</span></div><div class=\"ctx-i\"><span class=\"ctx-d\">1998-04</span><span class=\"ctx-t\">Dell 1998 财年年报报送，Michael S. Dell 任董事长兼 CEO。同期同业，作对照。</span><span class=\"ctx-s\">Dell 10-K L2616</span></div></div><p>先不用管还没学到的工具，花 60 秒看这两行数字，各自算算：</p><table style=\"width:100%;border-collapse:collapse;text-align:center\"><tr><th style=\"padding:6px;border-bottom:1px solid #8886\"></th><th style=\"padding:6px;border-bottom:1px solid #8886\">收入增速</th><th style=\"padding:6px;border-bottom:1px solid #8886\">应收账款增速</th></tr><tr><td style=\"padding:6px\"><b>Sunbeam</b></td><td>+18.7%</td><td><b>+38.5%</b></td></tr><tr><td style=\"padding:6px\"><b>Dell</b></td><td>+58.9%</td><td><b>+64.6%</b></td></tr></table><p>下一屏只问一个问题，答完就知道你的直觉能走多远。</p>",
+     "body": "<p>两家真实的公司，同一个年代。<b>Sunbeam</b>，做烤箱和烧烤架，1997 年报刚刚报送，董事长兼 CEO 是华尔街叫他「链锯」的 Albert J. Dunlap，年报由 CFO Russell A. Kersh 签署。<b>Dell</b>，卖电脑，1998 财年，Michael S. Dell 任董事长兼 CEO。</p><p>先不用管还没学到的工具，花 60 秒看这两行数字，各自算算：</p><table style=\"width:100%;border-collapse:collapse;text-align:center\"><tr><th style=\"padding:6px;border-bottom:1px solid #8886\"></th><th style=\"padding:6px;border-bottom:1px solid #8886\">收入增速</th><th style=\"padding:6px;border-bottom:1px solid #8886\">应收账款增速</th></tr><tr><td style=\"padding:6px\"><b>Sunbeam</b></td><td>+18.7%</td><td><b>+38.5%</b></td></tr><tr><td style=\"padding:6px\"><b>Dell</b></td><td>+58.9%</td><td><b>+64.6%</b></td></tr></table><p>下一屏只问一个问题，答完就知道你的直觉能走多远。</p>",
      "x_covers": [
       1
      ]
@@ -4183,6 +4183,28 @@
      {
       "t": "Dell 应收 +64.6%",
       "f": "dl-ar-g"
+     }
+    ],
+    "context": [
+     {
+      "date": "1996 秋",
+      "t": "Albert J. Dunlap 当选 Sunbeam 董事长，宣布大规模重组：关 18 座工厂、43 个仓库、5 处总部，制造设施 26 处减到 8 处。",
+      "src": "10-K405 L237–L255"
+     },
+     {
+      "date": "1998-01-28",
+      "t": "Sunbeam 新闻稿宣布「创纪录」的 1997 年业绩，称销售增长是「战略奏效的明确信号」。",
+      "src": "AAER 1393 L1396"
+     },
+     {
+      "date": "1998-03",
+      "t": "1997 年报报送，CFO Russell A. Kersh 签署。你现在看到的两行数字就来自这份年报。",
+      "src": "10-K405 L989"
+     },
+     {
+      "date": "1998-04",
+      "t": "Dell 1998 财年年报报送，Michael S. Dell 任董事长兼 CEO。同期同业，作对照。",
+      "src": "Dell 10-K L2616"
      }
     ]
    }
@@ -5588,7 +5610,7 @@
    "screens": [
     {
      "h": "两家公司的简化三表",
-     "body": "<div class=\"ctx\"><div class=\"ctx-h\">当时</div><div class=\"ctx-i\"><span class=\"ctx-d\">1996 秋</span><span class=\"ctx-t\">Albert J. Dunlap 当选 Sunbeam 董事长，宣布大规模重组：关 18 座工厂、43 个仓库、5 处总部，制造设施 26 处减到 8 处。</span><span class=\"ctx-s\">10-K405 L237–L255</span></div><div class=\"ctx-i\"><span class=\"ctx-d\">1998-01-28</span><span class=\"ctx-t\">Sunbeam 新闻稿宣布「创纪录」的 1997 年业绩，称销售增长是「战略奏效的明确信号」。</span><span class=\"ctx-s\">AAER 1393 L1396</span></div><div class=\"ctx-i\"><span class=\"ctx-d\">1998-03</span><span class=\"ctx-t\">Sunbeam 1997 年报（10-K405）与附注，Kersh 签署。下面这套三表就从这里简化而来。</span><span class=\"ctx-s\">10-K405</span></div><div class=\"ctx-i\"><span class=\"ctx-d\">1998-04</span><span class=\"ctx-t\">Dell 1998 财年年报报送，Michael S. Dell 任董事长兼 CEO。同期同业，作对照。</span><span class=\"ctx-s\">Dell 10-K L2616</span></div></div><p>还是第一个案例里的那两家公司。这次材料给全（全部经原档核定）：</p><table style=\"width:100%;border-collapse:collapse;font-size:.92em\"><tr><th style=\"padding:4px;border-bottom:1px solid #8886;text-align:left\"></th><th style=\"padding:4px;border-bottom:1px solid #8886\">Sunbeam</th><th style=\"padding:4px;border-bottom:1px solid #8886\">Dell</th></tr><tr><td style=\"padding:4px\">收入增速</td><td style=\"text-align:center\">+18.7%</td><td style=\"text-align:center\">+58.9%</td></tr><tr><td style=\"padding:4px\">应收增速</td><td style=\"text-align:center\"><b>+38.5%</b></td><td style=\"text-align:center\">+64.6%</td></tr><tr><td style=\"padding:4px\">净利润</td><td style=\"text-align:center\">+1.09 亿</td><td style=\"text-align:center\">+9.44 亿</td></tr><tr><td style=\"padding:4px\">经营现金流</td><td style=\"text-align:center\"><b>−820 万</b>（含卖应收 5,900 万进款）</td><td style=\"text-align:center\"><b>+15.92 亿</b></td></tr><tr><td style=\"padding:4px\">回款天数（期末口径）</td><td style=\"text-align:center\">79 → 92 天</td><td style=\"text-align:center\">42.5 → 44.0 天</td></tr><tr><td style=\"padding:4px\">附注亮点</td><td style=\"text-align:center\">期末 bill-and-hold 销售 ≈ 收入的 3%</td><td style=\"text-align:center\">回款天数自证 37→36 天（平均口径）</td></tr></table><p>单位：美元。先自己走一遍流程：两个增速 → 无辜解释 → 现金流验证 → 综合定性。</p>",
+     "body": "<p>还是第一个案例里的那两家公司。这次材料给全（全部经原档核定）：</p><table style=\"width:100%;border-collapse:collapse;font-size:.92em\"><tr><th style=\"padding:4px;border-bottom:1px solid #8886;text-align:left\"></th><th style=\"padding:4px;border-bottom:1px solid #8886\">Sunbeam</th><th style=\"padding:4px;border-bottom:1px solid #8886\">Dell</th></tr><tr><td style=\"padding:4px\">收入增速</td><td style=\"text-align:center\">+18.7%</td><td style=\"text-align:center\">+58.9%</td></tr><tr><td style=\"padding:4px\">应收增速</td><td style=\"text-align:center\"><b>+38.5%</b></td><td style=\"text-align:center\">+64.6%</td></tr><tr><td style=\"padding:4px\">净利润</td><td style=\"text-align:center\">+1.09 亿</td><td style=\"text-align:center\">+9.44 亿</td></tr><tr><td style=\"padding:4px\">经营现金流</td><td style=\"text-align:center\"><b>−820 万</b>（含卖应收 5,900 万进款）</td><td style=\"text-align:center\"><b>+15.92 亿</b></td></tr><tr><td style=\"padding:4px\">回款天数（期末口径）</td><td style=\"text-align:center\">79 → 92 天</td><td style=\"text-align:center\">42.5 → 44.0 天</td></tr><tr><td style=\"padding:4px\">附注亮点</td><td style=\"text-align:center\">期末 bill-and-hold 销售 ≈ 收入的 3%</td><td style=\"text-align:center\">回款天数自证 37→36 天（平均口径）</td></tr></table><p>单位：美元。先自己走一遍流程：两个增速 → 无辜解释 → 现金流验证 → 综合定性。</p>",
      "x_covers": [
       1
      ]
@@ -5886,6 +5908,28 @@
      {
       "t": "bill-and-hold 3%",
       "f": "sb-billhold"
+     }
+    ],
+    "context": [
+     {
+      "date": "1996 秋",
+      "t": "Albert J. Dunlap 当选 Sunbeam 董事长，宣布大规模重组：关 18 座工厂、43 个仓库、5 处总部，制造设施 26 处减到 8 处。",
+      "src": "10-K405 L237–L255"
+     },
+     {
+      "date": "1998-01-28",
+      "t": "Sunbeam 新闻稿宣布「创纪录」的 1997 年业绩，称销售增长是「战略奏效的明确信号」。",
+      "src": "AAER 1393 L1396"
+     },
+     {
+      "date": "1998-03",
+      "t": "Sunbeam 1997 年报（10-K405）与附注，Kersh 签署。下面这套三表就从这里简化而来。",
+      "src": "10-K405"
+     },
+     {
+      "date": "1998-04",
+      "t": "Dell 1998 财年年报报送，Michael S. Dell 任董事长兼 CEO。同期同业，作对照。",
+      "src": "Dell 10-K L2616"
      }
     ]
    }
