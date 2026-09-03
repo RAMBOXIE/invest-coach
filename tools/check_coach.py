@@ -565,10 +565,18 @@ def c13_no_length_tell(site):
         WARNS.append(f"C13 没有基线 {ITEM_BASE.name}，跑 --update-items 建立")
         return
     b = json.loads(ITEM_BASE.read_text(encoding="utf-8"))
+    # 双侧。上界挡「正确项总是最长」（老毛病），下界挡它的镜像——
+    # 如果干扰项总是最长，「选最短的」一样能不学就答对。2026-09-03 把 81 道改到
+    # 33 道时差点踩这个：48 道全改完就是 31%，再往下推就越过随机基线跑到反面去了。
+    # 随机基线 = 1 / 平均选项数 ≈ 32%，两侧各留一段容差。
     if st["longest_rate"] > b.get("longest_rate", 1) + 0.01:
         err("C13", f"正确项最长的比例升到 {st['longest_rate']:.0%}"
                    f"（基线 {b['longest_rate']:.0%}）—— 新题把长度线索又加回去了。"
                    "干扰项要把它代表的那个误解写成一句完整的话，别只留四个字")
+    if st["longest_rate"] < 0.20:
+        err("C13", f"正确项最长的比例掉到 {st['longest_rate']:.0%}，低于下界 20% —— "
+                   "线索被推到了反面：干扰项总是更长，「选最短的那个」就能不学而答对。"
+                   "随机基线约 32%，目标是让长度与对错不相关，不是让它反相关")
     # 绝对化词这一项**只报不挡**，理由要写在这里，否则下一个人会把它改成 ERROR：
     # 数下来 17 个绝对化词都在错误项（94%），看着像第二条线索。但逐条看，
     # 那些词正是误解本身的形状——「肯定是造假」「只要收入还在涨」「永远精确相等」
@@ -581,10 +589,11 @@ def c13_no_length_tell(site):
         WARNS.append(f"C13 绝对化词落在错误项的比例 {st['abs_conc']:.0%}"
                      f"（基线 {b['abs_conc']:.0%}）—— 只报不挡，别用软化误解的办法去凑这个数")
     if not st["na_bad"]:
-        ok("C13", f"长度不泄题 「无法判断」{'、'.join(['文案 90 处逐字一致'])}；"
+        na_n = sum(1 for q in items_of(site) for o in (q.get("opts") or []) if o.get("na"))
+        ok("C13", f"长度不泄题 「无法判断」{na_n} 处逐字一致；"
                   f"正确项最长 {st['longest']}/{st['n']} = {st['longest_rate']:.0%}"
-                  f"（基线 {b['longest_rate']:.0%}，目标 ≤50%，差距记 D10）；"
-                  f"绝对化词错误项集中度 {st['abs_conc']:.0%}（基线 {b['abs_conc']:.0%}）")
+                  f"（基线 {b['longest_rate']:.0%}，随机基线约 32%，双侧带 20%–50%）；"
+                  f"绝对化词错误项集中度 {st['abs_conc']:.0%}（基线 {b['abs_conc']:.0%}，只报不挡）")
 
 
 def update_items():
