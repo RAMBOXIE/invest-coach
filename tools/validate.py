@@ -28,8 +28,8 @@ REAL_MARKERS = ("Sunbeam", "Dell", "Nikola", "Moderna", "Berkshire", "Lehman",
                 "伯克希尔", "雷曼", "A 公司", "B 公司", "本章案主", "案主")
 # 这些不是「教学数字」，是出处标识，不该要求绑 fact（与 S6 的豁免保持一致）：
 # 申报号 0000950170-98-000413 ｜ 日期 2001-05-15 ｜ 行号 L1192 ｜ 年份 1997 年
-PROV_TOKENS = re.compile(r"\d{10}-\d\d-\d{6}|\d{4}-\d\d-\d\d|L\d+(?:[–-]L?\d+)?|"
-                         r"\d+\s*年|Item\s*\d+[A-C]?")
+PROV_TOKENS = re.compile(r"\d{10}-\d\d-\d{6}|\d{4}-\d\d-\d\d|\d{4}-\d\d(?!\d)|L\d+(?:[–-]L?\d+)?|"
+                         r"\d+\s*年|\d{1,2}\s*月(?!\s*\d)|Item\s*\d+[A-C]?|p\.\d+")
 MONTHS = ("Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")  # S7 日期归一化用，顺序即月份号
 EDGE_TYPES = {"hard", "soft", "cross"}
@@ -126,10 +126,8 @@ NUMTOK = re.compile(r"\d+(?:,\d{3})*(?:\.\d+)?")
 # 这张表是「哪些引文没有机器背书」的唯一清单——不写在这里，它就只是一句
 # 谁也不会去数的 WARN。原来六条 accession 没有归档，S7 对它们全部降级放行。
 UNARCHIVED_OK = {
-    "BRK-2007-letter":
-        "致股东信是有版权的作品（berkshirehathaway.com 公开发布，但不是公有领域）。"
-        "本仓只归档公有领域一手文件，所以它的逐字性只能靠人工核对，"
-        "S7 会为它报一条 WARN——那条 WARN 是有意留着的，不是漏网",
+    # 2026-09-03 之前这里有 BRK-2007-letter（版权）。owner 裁决要用当事人的原话，
+    # 两封信经 Wayback 取回入 evidence/，只作核对存档、不进产物，豁免撤销。
 }
 
 
@@ -506,8 +504,13 @@ def validate_stories(release=False):
             txt = re.sub(r"<[^>]+>", "", q.get("text") or q.get("quote") or "")
             ascii_ratio = sum(c.isascii() for c in txt) / max(1, len(txt))
             if ascii_ratio > 0.85:
-                probe = norm(txt).strip()[:60]
-                if not any(probe in norm(w) for w in wins):
+                # 文案习惯用「」把整句英文包起来；引号不是原文的一部分，比对前剥掉
+                probe = norm(txt).strip().strip('「」“”"' + chr(39)).strip()[:60]
+                # PDF 抽文本会在词中间插空格（实测 2007 年信把 said 抽成「sa id」）。
+                # 逐字性看的是字符顺序，不是空格：先按原样比，比不上再去掉全部空白比一次。
+                # 改一个词仍然对不上，所以这不是放水。
+                squash = lambda x: re.sub(r"\s", "", x)
+                if not any(probe in norm(w) or squash(probe) in squash(norm(w)) for w in wins):
                     errors.append(f"S7 {cid}/{where}: 英文引文在原档 {src_line} 附近找不到 —— "
                                   f"「{probe[:50]}」。逐字引文不许改写")
             else:
@@ -541,9 +544,12 @@ def validate_stories(release=False):
                 qn = [t for t in re.findall(r"[\d][\d,]*(?:\.\d+)?", txt) if len(sig(t)) >= 2]
                 pool = {sig(t) for w in wins for t in re.findall(r"[\d][\d,]*(?:\.\d+)?", w)}
                 pool.discard("")
+                # 窗口只有几行原档，有效数字放到两位就够：「5,900 万」对「$59 million」，
+                # sig 都是 59。三位下限是给全库账本（S6）用的，那边池子大、要防误配；
+                # 这里池子是引用行附近那一小段，两位不会撞。
                 miss = [t for t in qn
                         if not any(t.replace(",", "") in norm(w).replace(",", "") for w in wins)
-                        and not sig_match(t, pool, minlen=3)]
+                        and not sig_match(t, pool, minlen=2)]
                 if miss:
                     errors.append(f"S7 {cid}/{where}: 译文引文里这些数字在原档 {src_line} 附近找不到 —— "
                                   + "、".join(miss[:6]) + "。译文可以，编造不行")
@@ -559,6 +565,21 @@ def validate_stories(release=False):
                               "屏上它是「他写过的话」，必须能锚回归档原档的行")
                 continue
             check_quote(t, f"testimony[{i}]")
+            # press（追问后他的回答）与 breaks（被证据戳中后的改口）同样是屏上的逐字引文，
+            # 此前从没被核过。没有自己的锚就继承父陈述的 accession，用自己的 line。
+            parent_acc = (t.get("anchors") or [{}])[0].get("accession") or next(
+                (x.get("accession") for x in F["facts"] if x["id"] == t.get("fact")), None)
+            subs = ([("press", t["press"])] if t.get("press") else []) +                    [(f"breaks[{k}]", b) for k, b in enumerate(t.get("breaks") or [])]
+            for tag, sub in subs:
+                if not sub.get("text"):
+                    continue
+                q = dict(sub)
+                if not (q.get("anchors") or q.get("fact")):
+                    if not parent_acc:
+                        errors.append(f"S7b {cid}/testimony[{i}].{tag}: 没有锚，父陈述也给不出 accession")
+                        continue
+                    q["anchors"] = [{"accession": parent_acc, "line": sub.get("line")}]
+                check_quote(q, f"testimony[{i}].{tag}")
 
         # S5 每个 fact 引用都要在 facts.json 里存在
         for m in re.finditer(r'"fact"\s*:\s*"([^"]+)"', cp.read_text(encoding="utf-8")):
@@ -591,7 +612,7 @@ def validate_stories(release=False):
         # 这些不是「教学数字」，是出处标识，不该要求绑 fact：
         #   申报号 0000950170-98-000413 / 日期 2001-05-15 / 行号 L1192–L1198
         #   条例号 AAER 1393、Rule 12b-2、10-K/A、Repo 105、第 18 页
-        for pat in (r"\d{10}-\d\d-\d{6}", r"\d{4}-\d\d-\d\d", r"L\d+(?:[–-]L?\d+)?",
+        for pat in (r"\d{10}-\d\d-\d{6}", r"\d{4}-\d\d-\d\d", r"\d{4}-\d\d(?!\d)", r"L\d+(?:[–-]L?\d+)?", r"p\.\d+",
                     r"[a-z]{2}-[a-z\-]+-\d+",           # fact id：nk-rd-20 / md-ni-19
                     r"\d+\s*月\s*\d+\s*日", r"\d+\s*年",  # 中文日期
                     r"第\s*[一二三四五六七八九十\d]+\s*[季幕拍]",

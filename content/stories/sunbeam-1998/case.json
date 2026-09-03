@@ -16,7 +16,7 @@
    "role": "副董事长兼首席财务官 · 这份年报的签署人",
    "intro": "他在 1998 年 3 月签署了这份 10-K。他会为公司的说法辩护，但他只能说这份文件里写过的话。",
    "rule": "他说的每一句都逐字来自这份年报。文件里没有的，他会直说。",
-   "note": "此处以真名呈现，因为他的姓名与职务由该份公开文件本身记载（L989 / L1811）。他的每一句台词都是原档逐字，不含任何虚构言论。 Dunlap 的姓名与职务同样由该文件记载（L237 / L988 / L1695）。"
+   "note": "此处以真名呈现，因为他的姓名与职务由该份公开文件本身记载（L989 / L1811）。他的每一句台词都是原档逐字，不含任何虚构言论。 Dunlap 的姓名与职务同样由该文件记载（L237 / L988 / L1695）。 开场时间线里 1998-01-28 新闻稿的两处引语（\"clear indication that [Sunbeam's] strategy is working\" / \"remarkable improvement in operating margins, year over year\"）由 AAER 1393 逐字引用（sec-aaer-1393-sunbeam.html L1396）。"
   }
  ],
  "beats": [
@@ -36,7 +36,33 @@
     "edge 来自两件事：你真的读了，而且知道该往哪看。",
     "明天上午有投委会。你是这个屋子里唯一一个真的把年报读完的人。"
    ],
-   "narration": "这一次，答案就印在年报里。先看看它给了你什么。"
+   "narration": "这一次，答案就印在年报里。先看看它给了你什么。",
+   "context": [
+    {
+     "date": "1996 秋",
+     "t": "Albert J. Dunlap 当选董事长，宣布大规模重组与增长计划。",
+     "src": "10-K405 · Business",
+     "line": "L237–L239"
+    },
+    {
+     "date": "1997",
+     "t": "重组完成：关闭 18 座工厂、43 个仓库、5 处总部，制造设施从 26 处减到 8 处，预计每年节省约 2.25 亿美元。",
+     "src": "10-K405 · Business",
+     "line": "L239–L255"
+    },
+    {
+     "date": "1998-01-28",
+     "t": "公司新闻稿宣布「创纪录」的四季度与全年业绩，称销售增长是「战略奏效的明确信号」，并称经营利润率「同比显著改善」。",
+     "src": "AAER 1393 引用该新闻稿",
+     "line": "L1396"
+    },
+    {
+     "date": "1998-03",
+     "t": "1997 年报（10-K405）报送，CFO Russell A. Kersh 签署。",
+     "src": "10-K405",
+     "line": "L989 / L1811"
+    }
+   ]
   },
   {
    "id": "s1",
@@ -296,7 +322,8 @@
      "text": "「增长来自五个产品类别的全线增长：新品推出、分销改善（尤其是前十大客户）、国际扩张，以及部分产品的价格实现改善。」",
      "src": "10-K405 · MD&A",
      "line": "L1177–L1181",
-     "coach": "他说的都对。注意他反复强调「前十大客户」，这句话在下一段陈述里会变得重要。"
+     "coach": "他说的都对。注意他反复强调「前十大客户」，这句话在下一段陈述里会变得重要。",
+     "orig": "Global sales, on a normalized basis, increased during 1997 in all five of the Company's product categories primarily from new product introductions, improved distribution (particularly with the Company's top ten customers), international geographic expansion and improved price realization for certain products."
     },
     "breaks": [
      {
@@ -305,7 +332,8 @@
       "src": "10-K405 · MD&A 流动性与资本资源",
       "line": "L1469–L1476",
       "coach": "他承认了「季节性账期条款」，但没说是什么条款。<b>继续追问这一点。</b>",
-      "unlock": "t2"
+      "unlock": "t2",
+      "orig": "offset by higher accounts receivable due to increased sales in 1997 and certain seasonal dating terms"
      }
     ],
     "anchors": [
@@ -325,7 +353,8 @@
      "text": "「存货增加是为了支持预期的持续销售增长，以及公司改善客户服务水平的举措。」",
      "src": "10-K405 · MD&A",
      "line": "L1473–L1475",
-     "coach": "他把缺口归给存货和重组。但你手上有一张卡，能证明缺口还有别的去处。"
+     "coach": "他把缺口归给存货和重组。但你手上有一张卡，能证明缺口还有别的去处。",
+     "orig": "increased inventory levels in 1997 necessary to support continued anticipated sales growth and the Company's initiatives to improve customer service levels"
     },
     "breaks": [
      {
@@ -334,7 +363,8 @@
       "src": "10-K405 · MD&A + 附注 3",
       "line": "L1477–L1481 / L2661–L2668",
       "coach": "找到矛盾了。那个 −820 万，是<b>已经把 5,900 万应收卖掉之后</b>的数字。剔掉它，缺口约 −6,700 万。<b>而且你现在知道：账面上的应收余额，是卖掉一截之后的余额。</b>",
-      "unlock": "t3"
+      "unlock": "t3",
+      "orig": "operating activities reflects $59 million of proceeds from the sale of trade accounts receivable under the Company's revolving trade accounts receivable securitization program entered into in December 1997"
      },
      {
       "card": "c-grill",
@@ -342,7 +372,8 @@
       "src": "10-K405 · MD&A 经营成果",
       "line": "L1192–L1198",
       "coach": "「某些季节性账期条款」指的就是这件事。冬天发出去五千万美元的烧烤架，明年第二季度才收钱：今年的收入，明年的现金。他没有撒谎，他只是用了一个不会让你追问的词。",
-      "unlock": "t3"
+      "unlock": "t3",
+      "orig": "the introduction of an entirely new line of grills and accessories for the 1998 season that began to ship in the fourth quarter of 1997 under a new \"early buy\" marketing program that included among other things, extended credit terms with due dates in the second quarter of 1998. The Company sold approximately $50.0 million of Outdoor Cooking Products under this program in the fourth quarter of 1997."
      }
     ],
     "anchors": [
@@ -363,7 +394,8 @@
      "text": "「……在有限情形下，应客户要求，本公司可能以 bill and hold 方式销售季节性产品，前提是货物已完工、包装并可供发运，已被隔离存放，且所有权风险与法定所有权已转移给客户。」",
      "src": "10-K405 · 收入确认附注",
      "line": "L2355–L2361",
-     "coach": "他自己把例外说出来了。现在问最后一个问题：这个「有限情形」有多大？"
+     "coach": "他自己把例外说出来了。现在问最后一个问题：这个「有限情形」有多大？",
+     "orig": "In limited circumstances, at the customers request the Company may sell seasonal product on a bill and hold basis provided that the goods are completed, packaged and ready for shipment, such goods are segregated and the risks of ownership and legal title have passed to the customer."
     },
     "breaks": [
      {
@@ -372,7 +404,8 @@
       "src": "10-K405 · 收入确认附注",
       "line": "L2361–L2363",
       "coach": "三句陈述都找到了矛盾。回头看这三句话：每一句都是真的，每一句都写在同一份文件里，但放在一起讲的是另一个故事：一年的业绩里，有一部分是把明年的生意提前搬进来的。<b>三年后 SEC 的认定，和你刚才自己拼出来的，是同一件事。</b>",
-      "unlock": null
+      "unlock": null,
+      "orig": "The amount of such bill and hold sales at December 29, 1997 was approximately 3% of consolidated revenues."
      }
     ],
     "anchors": [

@@ -10,13 +10,13 @@
  "_note": "骨架冻结。数字与引文逐字来自 Valukas 审查人报告 Vol.3（破产法院指定审查人，公开）与雷曼自己的 10-K/10-Q。措辞铁律：只说审查人认定「colorable claims」，不写「有罪」。",
  "cast": [
   {
-   "id": "filing-voice",
-   "name": "这份季报",
-   "avatar": "📄",
-   "role": "雷曼 2008 年一季报的官方口径",
-   "intro": "这个案例里没有可追问的人，只有一份文件。你会发现，能问的都问不出东西来。",
-   "rule": "只说文件里写过的话。",
-   "note": "本幕刻意不设人物：审查人认定雷曼从未公开披露 Repo 105，因此不存在可供逐字引用的当事人说法。 开场提到的两位人物：Callan 的姓名与职务见该份 10-Q 签署页（lbhi-10q-2008q1.html L43436 / L43447）；Fuld 见 FY2007 10-K 签署页（lbhi-10k-fy2007.html L62777 / L62794）。两人在本幕里都不说话；说话的只有这份文件。"
+   "id": "callan",
+   "name": "Erin M. Callan",
+   "avatar": "👩‍💼",
+   "role": "首席财务官 · 这份季报的签署人",
+   "intro": "她在 2008 年 4 月 9 日签署了这份一季报，三周前刚在电话会上向分析师解释过杠杆为什么在降。她能说的，是这份季报里的数字，和她当时在电话会上说过的话。",
+   "rule": "她的陈述逐字来自这份季报，或 Valukas 审查人报告逐字引用的她 2008 年 3 月 18 日电话会原话。文件里没有的，她会直说。",
+   "note": "在世人物。姓名与职务由该份 10-Q 签署页记载（lbhi-10q-2008q1.html L43436 / L43447）。陈述全部为原档逐字或 Valukas Vol.3 逐字引用的当时公开发言，不含任何虚构言论。"
   }
  ],
  "beats": [
@@ -31,7 +31,27 @@
     "雷曼兄弟刚报送季报，CFO Erin M. Callan 签的字，董事长兼 CEO 是 Richard S. Fuld, Jr.。杠杆率在下降。现金还在。看起来它在收缩风险。",
     "你把这份季报从头读到尾，读得比上一个案例认真得多。"
    ],
-   "narration": "这一次，认真读没有用。先看看它给了你什么。"
+   "narration": "这一次，认真读没有用。先看看它给了你什么。",
+   "context": [
+    {
+     "date": "2008-03",
+     "t": "贝尔斯登濒临崩溃，市场开始逐家盘问投行的杠杆。",
+     "src": "Valukas Vol.3",
+     "line": "p.107"
+    },
+    {
+     "date": "2008-03-18",
+     "t": "雷曼一季度电话会：CFO Callan 称净杠杆已从 16.1 倍降到 15.4 倍。",
+     "src": "Valukas Vol.3 逐字引用",
+     "line": "p.129"
+    },
+    {
+     "date": "2008-04-09",
+     "t": "一季报报送，Callan 签署。现金及等价物 75.64 亿美元。",
+     "src": "10-Q 签署页",
+     "line": "L43436"
+    }
+   ]
   },
   {
    "id": "s1",
@@ -230,7 +250,7 @@
   }
  ],
  "interrogation": {
-  "opening": "「所有该披露的，都在这份文件里。」",
+  "opening": "「季报是我签的。杠杆在降，现金在账上，你可以逐行核。」",
   "howto": "这个案例里的陈述都经得起查。用手上的证据去核对，你会发现问题出在别的地方。",
   "cards": [
    {
@@ -257,18 +277,32 @@
     "line": "资产负债表",
     "press": {
      "text": "「净杠杆率的计算口径已在各期报告中说明：分母为股东权益与次级债之和，扣除可辨认无形资产与商誉。」",
-     "src": "2007 年 10-K 第 63 页 / 10-Q 第 72、88 页",
-     "line": "口径说明",
-     "coach": "口径透明，数字属实。<b>你找不出矛盾，因为它说的都是真的。</b>"
+     "src": "2008 年一季报 10-Q · 净杠杆口径说明",
+     "line": "L34880–L34930",
+     "coach": "口径透明，数字属实。<b>你找不出矛盾，因为它说的都是真的。</b>",
+     "anchors": [
+      {
+       "accession": "0001104659-08-023292",
+       "line": "L34880–L34930"
+      }
+     ],
+     "orig": "The Company calculates tangible equity capital by including stockholders&#146; equity and junior subordinated notes and excluding identifiable intangible assets and goodwill."
     },
     "breaks": [
      {
       "card": "c-none",
       "text": "「本报告披露的是报告日的财务状况。」",
-      "src": "各期报告",
-      "line": "报告基准",
+      "src": "2008 年一季报 10-Q · Consolidated Statement of Financial Condition",
+      "line": "L1874 附近（合并财务状况表表头）",
       "coach": "这个案例的突破点在这里：它没有说错什么，它只说报告日。两年后审查人查明：雷曼在 2007Q4 末、2008Q1 末、2008Q2 末分别做了 386 亿、491 亿、503.8 亿美元的 Repo 105 交易，并<b>从未公开披露</b>，包括对公开报告净杠杆率的实质影响。你手上这份材料，回答不了你要问的问题。",
-      "unlock": null
+      "unlock": null,
+      "anchors": [
+       {
+        "accession": "0001104659-08-023292",
+        "line": "L1874"
+       }
+      ],
+      "orig": "Consolidated Statement of Financial Condition (Unaudited)"
      }
     ],
     "anchors": [
@@ -286,6 +320,41 @@
      }
     ],
     "orig": "Cash and cash equivalents $ 7,564 $ 7,286"
+   },
+   {
+    "id": "t2",
+    "text": "「我们非常有意地在这个季度把杠杆降了下来。季末净杠杆 <b>15.4 倍</b>，去年年末是 <b>16.1 倍</b>。我们会继续以我们认为审慎、并且反映资产负债表流动性状况的方式在市场上配置资本。」",
+    "src": "2008-03-18 一季度电话会 · Valukas Vol.3 逐字引用",
+    "line": "p.129",
+    "anchors": [
+     {
+      "accession": "Valukas-Vol3",
+      "line": "p.129"
+     }
+    ],
+    "orig": "did, very deliberately, take leverage down for the quarter. We ended with a net leverage ratio of 15.4 times down from 16.1 at year end. And we will continue to allocate capital on the balance sheet in the market in a way that we consider prudent, and that reflects the liquidity profile of the balance sheet.",
+    "press": {
+     "text": "「我们的目标是继续把杠杆降下去。为此我们会在合适的定价环境下出售资产，达到这个结果。我看不出现在有什么理由偏离这条路。」",
+     "src": "2008-03-18 一季度电话会 · Valukas Vol.3 逐字引用",
+     "line": "p.130",
+     "coach": "她说的都是当时公开讲过的话。注意她描述的是「怎么把杠杆降下来」：卖资产。这个案例后面你会看到，季末那五天里还有另一种办法。",
+     "orig": "goal is to continue to take that leverage down . . . . In order to do so . . . we will sell assets as appropriate and within the right pricing context, to get to that outcome . . . . I don't see why there's any reason at this point to change off that course"
+    },
+    "locked": false
+   },
+   {
+    "id": "t3",
+    "text": "「自上个季度以来，我们一直在努力向各位分析师提供资产负债表的高度透明。」",
+    "src": "2008-03-18 一季度电话会 · Valukas Vol.3 逐字引用",
+    "line": "p.129",
+    "anchors": [
+     {
+      "accession": "Valukas-Vol3",
+      "line": "p.129"
+     }
+    ],
+    "orig": "trying to give the group [i.e., the analysts] a great amount of transparency on the balance sheet.",
+    "locked": false
    }
   ],
   "no_record": {

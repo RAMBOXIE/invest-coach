@@ -84,6 +84,18 @@
    "sha256": "45c3dc6d4b57f8c93e6ae0b288ce77f8a92e13f55d4bd4c7137d03e37f8372cf",
    "source": "Lehman Brothers Holdings 10-Q 2008-05-31 期（2008-07-10 报送）",
    "accession": "0001104659-08-045115"
+  },
+  {
+   "file": "evidence/brk-letter-1993.html",
+   "sha256": "c7e377a4578c4d189517bac372ddcc5166b3dc79483b037641fb2f9b78a6143a",
+   "source": "Berkshire Hathaway 1993 年致股东信（berkshirehathaway.com，经 Wayback 取回；有版权作品，仅作核对存档，不进产物）",
+   "accession": "BRK-1993-letter"
+  },
+  {
+   "file": "evidence/brk-letter-2007.pdf",
+   "sha256": "8288aa8a17b677ca1215c31ef0afb887d3f95dbb0e2241f77b54b51f0c3f7cfa",
+   "source": "Berkshire Hathaway 2007 年致股东信（同上）",
+   "accession": "BRK-2007-letter"
   }
  ],
  "facts": [
@@ -283,7 +295,7 @@
    "value": "称其为「the worst deal that I've made」；名义对价 4.33 亿，因用股票支付使实际成本达约 35 亿美元",
    "basis": "2007 年致股东信（逐字，短引）",
    "accession": "BRK-2007-letter",
-   "line": "Mistakes 段"
+   "line": "p.8 Mistakes 段"
   },
   {
    "id": "lb-repo105",
@@ -491,6 +503,33 @@
    "basis": "经营活动调节表：Receivables, net −84,576 在 L2164，Inventories −100,810 在紧接的 L2165；存货吃掉的现金比应收更多",
    "accession": "0000950170-98-000413",
    "line": "L2165"
+  },
+  {
+   "id": "sb-restructure-1996",
+   "company": "Sunbeam",
+   "item": "1996 年秋 Dunlap 上任后的重组计划（当年背景）",
+   "value": "关闭 18 座工厂、43 个仓库、5 处总部；制造设施 26 → 8；预计年节省约 2.25 亿美元",
+   "basis": "10-K405 Business · Restructuring and Growth Plan",
+   "accession": "0000950170-98-000413",
+   "line": "L237–L255"
+  },
+  {
+   "id": "nk-price-2020",
+   "company": "Nikola",
+   "item": "2020 年股价区间与 6 月 30 日收盘（当年背景）",
+   "value": "合并完成后至 2020 年底收盘价区间 $13.75–$79.73；2020-06-30 收盘 $67.53",
+   "basis": "10-K 封面 L63 与风险因素 L1299",
+   "accession": "0001731289-21-000006",
+   "line": "L63 / L1299"
+  },
+  {
+   "id": "lb-netlev-q1",
+   "company": "Lehman Brothers",
+   "item": "2008 财年一季度净杠杆（CFO 电话会口径）",
+   "value": "16.1 倍 → 15.4 倍",
+   "basis": "Valukas 报告 Vol.3 p.129 逐字引用 2008-03-18 一季度电话会上 Callan 的话",
+   "accession": "Valukas-Vol3",
+   "line": "p.129"
   }
  ],
  "approved_tokens": {
@@ -632,6 +671,15 @@
   "2.1": "sb-ar-g÷sb-rev-g = 38.5/18.7 = 2.06 ≈ 2.1 倍（步差）",
   "5,000": "sb-earlybuy 约 $50.0M = 5,000 万美元",
   "100.8": "Sunbeam 1997 调节表 Inventories −100,810 千美元（sb-inv-cf，L2165）",
-  "100810": "同上，原档千美元原值"
+  "100810": "同上，原档千美元原值",
+  "225": "sb-restructure-1996：10-K405 Business · Restructuring and Growth Plan",
+  "43": "sb-restructure-1996：10-K405 Business · Restructuring and Growth Plan",
+  "26": "sb-restructure-1996：10-K405 Business · Restructuring and Growth Plan",
+  "2.25": "sb-restructure-1996：10-K405 Business · Restructuring and Growth Plan",
+  "13.75": "nk-price-2020：10-K 封面 L63 与风险因素 L1299",
+  "79.73": "nk-price-2020：10-K 封面 L63 与风险因素 L1299",
+  "67.53": "nk-price-2020：10-K 封面 L63 与风险因素 L1299",
+  "15.4": "lb-netlev-q1：Valukas p.129 引电话会",
+  "16.1": "lb-netlev-q1：Valukas p.129 引电话会"
  }
 }

@@ -92,10 +92,19 @@
     if (n) n.onclick = () => { ST.i++; track('story_beat', { case: STORY.case_id, beat: b.id }); draw(); };
   }
 
+  /* 「当时」时间线：owner 要求每个真实案例都带时间与当年背景，让故事有临场感。
+     每条都是当年可知的事，带日期与出处（原档行号或归档文件页码）；结局不在这里。 */
+  function ctxStrip(items) {
+    if (!items || !items.length) return '';
+    return `<div class="ctx"><div class="ctx-h">当时</div>${items.map(c =>
+      `<div class="ctx-i"><span class="ctx-d">${c.date}</span><span class="ctx-t">${md(c.t)}</span>${c.src ? `<span class="ctx-s">${c.src}${c.line ? ' · ' + c.line : ''}</span>` : ''}</div>`).join('')}</div>`;
+  }
+
   /* S0 冷开场 */
   function bCold(b) {
     return {
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
+        ${ctxStrip(b.context)}
         ${b.lines.map((l, i) => `<p class="ln${i === b.lines.length - 1 ? '' : ' dim'}">${md(l)}</p>`).join('')}
         ${vo(b.narration)}`,
       foot: `<button class="sty-cta" id="sty-next">翻开年报</button>`
