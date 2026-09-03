@@ -162,9 +162,9 @@
   {
    "id": "dl-dso-avg",
    "company": "Dell",
-   "item": "DSO（公司自证，平均口径）",
+   "item": "DSO（公司年报自证，原档未载算法）",
    "value": "37→36 天",
-   "basis": "档内 Days of sales in accounts receivable 36/37/42",
+   "basis": "档内 L1191 只印了 Days of sales in accounts receivable 36/37/42 三个数，全档没有算法说明。id 里的 avg 是早期误标（曾按「平均应收口径」记），保留 id 以免断引用；本站复算三种教科书口径均对不上，详见 dso 节点 canon.x_cite",
    "accession": "0000950134-98-003218",
    "line": "L1191"
   },
@@ -482,6 +482,15 @@
    "basis": "Selling, general, and administrative 20,692（千美元）·同上",
    "accession": "0001731289-21-000006",
    "line": "L1557"
+  },
+  {
+   "id": "sb-inv-cf",
+   "company": "Sunbeam",
+   "item": "1997 存货占用的经营现金（与应收同表相邻行）",
+   "value": "−$100.8M（调节表 Inventories −100,810 千美元）",
+   "basis": "经营活动调节表：Receivables, net −84,576 在 L2164，Inventories −100,810 在紧接的 L2165；存货吃掉的现金比应收更多",
+   "accession": "0000950170-98-000413",
+   "line": "L2165"
   }
  ],
  "approved_tokens": {
@@ -621,6 +630,8 @@
   "634": "md-rev-19+nk-rev-20",
   "13": "nk-float÷nk-rev-20 = 131,579 ≈ 13 万倍",
   "2.1": "sb-ar-g÷sb-rev-g = 38.5/18.7 = 2.06 ≈ 2.1 倍（步差）",
-  "5,000": "sb-earlybuy 约 $50.0M = 5,000 万美元"
+  "5,000": "sb-earlybuy 约 $50.0M = 5,000 万美元",
+  "100.8": "Sunbeam 1997 调节表 Inventories −100,810 千美元（sb-inv-cf，L2165）",
+  "100810": "同上，原档千美元原值"
  }
 }
