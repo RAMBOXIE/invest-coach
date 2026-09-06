@@ -3233,9 +3233,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "b010138d252364a5"
    },
    "x_pairs": [
     {
@@ -3370,9 +3370,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "1a573269483ec8e7"
    },
    "x_pairs": [
     {
@@ -3507,9 +3507,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5",
     "drafted_at": "2026-09-02",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "8074d6292ea4af82"
    },
    "x_pairs": [
     {
@@ -3643,9 +3643,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "aaa06db565fb6dd6"
    },
    "x_pairs": [
     {
@@ -3780,9 +3780,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "e6c0a8bc7f531431"
    },
    "x_pairs": [
     {
@@ -3917,9 +3917,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "513c1a0f9ed9f4f4"
    },
    "x_pairs": [
     {
@@ -4069,9 +4069,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "8e3d4c64101e61b6"
    },
    "x_cards": [
     {
@@ -4358,9 +4358,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "cf204e12a0600c6a"
    },
    "x_cards": [
     {
@@ -4675,9 +4675,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "475fa1caa3b77202"
    },
    "x_cards": [
     {
@@ -4953,9 +4953,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5（图/骨架）+ claude-fable-5（屏与题）",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "2e73f0b80d28a3ea"
    },
    "x_cards": [
     {
@@ -5195,9 +5195,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5（图/骨架）+ claude-fable-5（屏与题）",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "482f6abcb378bb64"
    },
    "x_cards": [
     {
@@ -5417,9 +5417,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5（图/骨架）+ claude-fable-5（屏与题）",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "85c57b3be2c1de03"
    },
    "x_pairs": [
     {
@@ -5557,9 +5557,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5（图/骨架）+ claude-fable-5（屏与题）",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "69020d6f9bcce25d"
    },
    "x_pairs": [
     {
@@ -5740,9 +5740,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5（图/骨架）+ claude-fable-5（屏与题）",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "0da3d9983f21c2b2"
    },
    "x_coach_notes": {
     "value": "回到方法。你的每条证据都能指回具体的表和行：两个增速、两个口袋、一行应收变动、一段附注。这就是「结论长在纸上」的意思。",
@@ -6053,9 +6053,9 @@
     "drafted_by": "llm",
     "model": "claude-opus-5（图/骨架）+ claude-fable-5（屏与题）",
     "drafted_at": "2026-08-22",
-    "reviewed_by": "",
-    "reviewed_at": "",
-    "reviewed_hash": ""
+    "reviewed_by": "Rambo",
+    "reviewed_at": "2026-09-06",
+    "reviewed_hash": "1b29b61ec972f2db"
    },
    "x_pairs": [
     {

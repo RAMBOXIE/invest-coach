@@ -322,8 +322,8 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "",
-  "reviewed_at": "",
-  "reviewed_hash": ""
+  "reviewed_by": "Rambo",
+  "reviewed_at": "2026-09-06",
+  "reviewed_hash": "7263056eba2ec65d"
  }
 }
