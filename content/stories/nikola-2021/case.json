@@ -10,13 +10,13 @@
  "_note": "第四幕。前三幕教的都是「数字被操纵」；这一幕教的是「根本没有数字」——判断不需要法证会计，只需要除法。负样本 Moderna FY2019 在 twin 拍，判断是「没问题」。全部数字绑定 accn 0001731289-21-000006 与 0001682852-20-000006，见 facts.json。",
  "cast": [
   {
-   "id": "filing",
-   "name": "这份 10-K",
-   "avatar": "📄",
-   "role": "2021 年 2 月报送 · 公司的第一份完整年报",
-   "intro": "它不辩解，也不推销。你问什么，它就把自己写过的那一行念给你听。",
-   "rule": "它只念自己写过的话。档里没有的，它会直说没有。",
-   "note": "本幕的「人物」是文件本身，不是任何自然人。这是刻意的：这一幕的判断不依赖任何人的动机或后来的司法认定，只依赖文件第一行的两个数字。 开场提到的两位人物姓名与职务由该份 10-K 自己记载（Milton L1022 / L1258，Russell L1256 / L1319），不含该文件之外的任何陈述。"
+   "id": "russell",
+   "name": "Mark A. Russell",
+   "avatar": "🧑‍💼",
+   "role": "总裁兼首席执行官 · 这份年报报送时的在任 CEO",
+   "intro": "2020 年 6 月他接任 CEO；同月创始人辞去执行董事长。他会讲这一年公司做了什么、砍了什么，但他讲的每一句都只来自这份年报和同日的业绩新闻稿。",
+   "rule": "他只说这份 10-K 与 2021 年 2 月 25 日业绩新闻稿里逐字写过的话。文件里没有的，他会直说。",
+   "note": "在世人物。姓名与职务由该份 10-K 自己记载（L1256 / L1319）；引用的发言逐字来自随 8-K 报送 SEC 的 2021-02-25 业绩新闻稿（公有领域，已归档 evidence/nikola-8k-pr-2021-02-25.html）与 10-K 本身，不含任何虚构言论。 本幕原设计以「这份 10-K」为人物，理由是这一幕的判断不依赖任何人的动机；2026-09-06 按 ADR-0004 / ADR-0005 改为具名 CEO——判断依据没有变（仍然只需要把两个数相除），但让学习者听见当事人当时在谈什么，本身就是这一课的一半：他谈的全是卡车与项目，一个字没谈那个分母。"
   }
  ],
  "beats": [
@@ -184,7 +184,8 @@
      "kind": "认定舞弊"
     }
    ],
-   "confidence": true
+   "confidence": true,
+   "ask_enabled": true
   },
   {
    "id": "n4",
@@ -322,8 +323,104 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "Rambo",
-  "reviewed_at": "2026-09-06",
-  "reviewed_hash": "7263056eba2ec65d"
+  "reviewed_by": "",
+  "reviewed_at": "",
+  "reviewed_hash": ""
+ },
+ "interrogation": {
+  "opening": "「2020 年第四季度，我们做了必要的调整，让公司重新聚焦。」",
+  "howto": "听他讲这一年。觉得哪句话没有回答你手上的那个数字，就把数字摆给他看。",
+  "cards": [
+   {
+    "id": "c-rev",
+    "t": "全年收入 9.5 万美元",
+    "fact": "nk-rev-20"
+   },
+   {
+    "id": "c-float",
+    "t": "公众持股市值约 125 亿美元",
+    "fact": "nk-float"
+   },
+   {
+    "id": "c-ni",
+    "t": "全年净亏损 3.843 亿美元",
+    "fact": "nk-ni-20"
+   },
+   {
+    "id": "c-ar",
+    "t": "应收账款 0",
+    "fact": "nk-ar-20"
+   }
+  ],
+  "testimony": [
+   {
+    "id": "r1",
+    "text": "「2020 年第四季度，我们做了必要的调整，让公司重新聚焦、重新对齐。你们看到我们重新谈了与通用汽车的协议、取消了纯电动垃圾车项目、终止了动力运动项目，把公司的资源以激光般的专注重新对齐到我们的核心业务：纯电与氢燃料电池重型卡车，以及加氢基础设施。」",
+    "src": "2021-02-25 业绩新闻稿（随 8-K 报送 SEC）",
+    "line": "L10",
+    "anchors": [
+     {
+      "accession": "NKLA-8K-PR-20210225",
+      "line": "L10"
+     }
+    ],
+    "orig": "In the fourth quarter of 2020, Nikola made the necessary changes to refocus and realign the company. You have seen us restructure our agreement with GM, cancel our battery electric (BEV) refuse truck program, discontinue our Powersports program and realign the company&#8217;s resources with laser focus on our core businesses&#58; battery electric and hydrogen-fuel cell electric (FCEV) heavy-duty trucks, and hydrogen refueling infrastructure",
+    "press": {
+     "text": "「Nikola 已经完成首批五台 Nikola Tre 纯电动样车的组装。」",
+     "src": "2021-02-25 业绩新闻稿",
+     "line": "L10",
+     "coach": "注意他在讲什么：项目、样车、基础设施。这些都是真的，也都值得讲。但你手上那个数字问的是另一件事，他这段话一个字都没碰它。",
+     "orig": "Nikola has completed the assembly of the first five Nikola Tre BEV Prototypes."
+    },
+    "breaks": [
+     {
+      "card": "c-rev",
+      "text": "「本年度总收入 9.5 万美元，全部来自太阳能收入；上一年度为 48.2 万美元。」",
+      "src": "10-K · 经营成果",
+      "line": "L1552",
+      "anchors": [
+       {
+        "accession": "0001731289-21-000006",
+        "line": "L1552"
+       }
+      ],
+      "orig": "Solar revenues",
+      "coach": "他念的是年报里的原话。<b>这一行就在利润表第一行</b>，和他刚才那段话在同一份材料里，谁都能读到。到这里你已经不需要任何人的动机了。"
+     }
+    ],
+    "locked": false
+   },
+   {
+    "id": "r2",
+    "text": "「截至 2020 年 6 月 30 日，非关联方持有的表决权股票总市值约为 125 亿美元，按纳斯达克当日收盘价 67.53 美元计算。」",
+    "src": "10-K 封面页",
+    "line": "L63",
+    "anchors": [
+     {
+      "accession": "0001731289-21-000006",
+      "line": "L63"
+     }
+    ],
+    "orig": "aggregate market value of voting stock held by non-affiliates",
+    "press": {
+     "text": "「合并完成后至 2020 年底，本公司普通股在纳斯达克的收盘价区间为 13.75 美元至 79.73 美元。」",
+     "src": "10-K · 风险因素",
+     "line": "L1299",
+     "coach": "封面页那个数字和利润表第一行那个数字，印在同一份文件里，中间隔着一千五百行。<b>做这个判断不需要等任何调查结论，只需要把大的那个数除以小的那个数。</b>",
+     "orig": "The closing price of our common stock on Nasdaq varied from $13.75 to $79.73 following the closing of the Business Combination through the end of 2020.",
+     "anchors": [
+      {
+       "accession": "0001731289-21-000006",
+       "line": "L1299"
+      }
+     ]
+    },
+    "locked": false
+   }
+  ],
+  "no_record": {
+   "text": "「这一点，这份年报和那份新闻稿里都没有写。」",
+   "coach": "他不能回答文件之外的事。你能拿到的只有它写了什么、和它没写什么。「没写」本身就是下一个问题。"
+  }
  }
 }

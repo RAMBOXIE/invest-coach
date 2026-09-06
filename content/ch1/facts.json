@@ -96,6 +96,12 @@
    "sha256": "8288aa8a17b677ca1215c31ef0afb887d3f95dbb0e2241f77b54b51f0c3f7cfa",
    "source": "Berkshire Hathaway 2007 年致股东信（同上）",
    "accession": "BRK-2007-letter"
+  },
+  {
+   "file": "evidence/nikola-8k-pr-2021-02-25.html",
+   "sha256": "74a0074c945fa179426d416dba3603ecfa44718e7250b906e6a10980a922a379",
+   "source": "Nikola 2021-02-25 Q4/FY2020 业绩新闻稿（随 8-K 报送 SEC，公有领域）",
+   "accession": "NKLA-8K-PR-20210225"
   }
  ],
  "facts": [
