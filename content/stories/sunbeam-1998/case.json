@@ -39,16 +39,16 @@
    "narration": "这一次，答案就印在年报里。先看看它给了你什么。",
    "context": [
     {
-     "date": "1996-07",
-     "t": "Sunbeam 董事会任命 Albert J. Dunlap 为董事长兼 CEO。他说过去 18 个月令人失望的业绩说明公司必须发生一场大变革。",
-     "src": "8-K 新闻稿",
-     "line": "acc. 0000950170-96-000493"
+     "date": "1996-07-24",
+     "t": "Dunlap 上任第一周就公开说：公司必须大幅重组，「显然 Sunbeam 今年晚些时候需要计提一笔重组费用」。",
+     "src": "1996-07-24 新闻稿",
+     "line": "L209"
     },
     {
-     "date": "1996 秋",
-     "t": "宣布大规模重组：关 18 座工厂、43 个仓库、5 处总部，制造设施 26 处减到 8 处。",
-     "src": "10-K405 · Business",
-     "line": "L237–L255"
+     "date": "1996-11-12",
+     "t": "重组方案公布：关 18 座工厂、43 个仓库、5 处总部，制造设施 26 处减到 8 处。他说目标是 45 天内基本完成，「以一家新公司的姿态开局 1997 年」。",
+     "src": "1996-11-12 新闻稿 L237；10-K405 L237–L255",
+     "line": "L237"
     },
     {
      "date": "1997-04-23",
@@ -57,16 +57,16 @@
      "line": "L2444"
     },
     {
-     "date": "1998-01-28",
-     "t": "全年业绩新闻稿称「创纪录」，Dunlap 说三年前定的 20% 营业利润率目标，第三、四季度基本达到了。",
-     "src": "10-K405 内附新闻稿",
-     "line": "L22583"
+     "date": "1997-10-23",
+     "t": "宣布扭亏已经完成，同日聘请 Morgan Stanley 探索战略选择，包括并购或整体出售公司。",
+     "src": "三季报新闻稿",
+     "line": "acc. 0000950170-97-001278"
     },
     {
      "date": "1998-01-28",
-     "t": "同一份新闻稿里他说：并购能让股东价值实现跃升，他很急切想在 1998 年上半年做这一步。",
+     "t": "全年业绩新闻稿称「创纪录」。Dunlap 说三年前定的 20% 营业利润率目标，第三、四季度基本达到了。",
      "src": "10-K405 内附新闻稿",
-     "line": "L22629"
+     "line": "L22583"
     },
     {
      "date": "1998-03",
@@ -452,6 +452,33 @@
      ],
      "orig": "We set a three year goal to have 20% operating margins, and we were essentially at that level in the 3rd and 4th quarters this year",
      "coach": "公司一季一季这么说，市场也这么信。这些话本身不违法，也不一定假。你要做的不是判断谁在撒谎。把这些话和年报里的应收那一行放在一起看就够了。"
+    },
+    "locked": false
+   },
+   {
+    "id": "t5",
+    "text": "「公司必须大幅重组。重点在压低成本结构、剥离非核心低毛利产品、并制定一套稳健的增长战略。成本结构的每一个方面都会被审视。显然，Sunbeam 今年晚些时候需要计提一笔重组费用。」",
+    "src": "1996-07-24 新闻稿（董事长兼 CEO Dunlap 上任后首次公开表态）",
+    "line": "L209",
+    "anchors": [
+     {
+      "accession": "0000950170-96-000493",
+      "line": "L209"
+     }
+    ],
+    "orig": "It is clear that Sunbeam will need to take a restructuring charge later this year.",
+    "press": {
+     "text": "「我们的目标是在接下来 45 天内基本完成重组举措。因此，公司完全有意达成此前宣布的目标：以一家新公司的姿态开局 1997 年。」",
+     "src": "1996-11-12 重组方案新闻稿",
+     "line": "L237",
+     "anchors": [
+      {
+       "accession": "0001016843-96-000061",
+       "line": "L237"
+      }
+     ],
+     "orig": "Our goal is to essentially complete the restructuring initiatives within the next 45 days. Therefore, the Company has every intention of meeting its previously stated goal of beginning 1997 as a new company.",
+     "coach": "计提重组费用本身是合法的，公司也提前告诉了市场。<b>疑点在于时间点</b>：坏消息全部落在 1996 年，1997 年 1 月 1 日起的报表干净得惊人。这条线索支撑的是「去查 1996 年那笔准备金后来怎么用掉的」，不是「所以它造假了」。"
     },
     "locked": false
    }

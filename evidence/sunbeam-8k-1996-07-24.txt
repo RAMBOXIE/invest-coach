@@ -1,0 +1,342 @@
+-----BEGIN PRIVACY-ENHANCED MESSAGE-----
+Proc-Type: 2001,MIC-CLEAR
+Originator-Name: webmaster@www.sec.gov
+Originator-Key-Asymmetric:
+ MFgwCgYEVQgBAQICAf8DSgAwRwJAW2sNKK9AVtBzYZmr6aGjlWyK3XmZv3dTINen
+ TWSM7vrzLADbmYQaionwg5sDW3P6oaM5D3tdezXMm7z1T+B+twIDAQAB
+MIC-Info: RSA-MD5,RSA,
+ S+ah1QIF3CLXB0Qk+2qN98cCzAR0QwjUfG/IVsskwLH3mL+Q0Eu20gJZCfT2aCFQ
+ fvFa5lmS+Qdc4NMJPeLJVA==
+
+<SEC-DOCUMENT>0000950170-96-000493.txt : 19960725
+<SEC-HEADER>0000950170-96-000493.hdr.sgml : 19960725
+ACCESSION NUMBER:		0000950170-96-000493
+CONFORMED SUBMISSION TYPE:	8-K
+PUBLIC DOCUMENT COUNT:		4
+CONFORMED PERIOD OF REPORT:	19960724
+ITEM INFORMATION:		Other events
+ITEM INFORMATION:		Financial statements and exhibits
+FILED AS OF DATE:		19960724
+SROS:			NYSE
+
+FILER:
+
+	COMPANY DATA:	
+		COMPANY CONFORMED NAME:			SUNBEAM CORP/FL/
+		CENTRAL INDEX KEY:			0000003662
+		STANDARD INDUSTRIAL CLASSIFICATION:	ELECTRIC HOUSEWARES & FANS [3634]
+		IRS NUMBER:				251638266
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			0102
+
+	FILING VALUES:
+		FORM TYPE:		8-K
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-00052
+		FILM NUMBER:		96598374
+
+	BUSINESS ADDRESS:	
+		STREET 1:		2100 NEW RIVER CTR
+		STREET 2:		200 E LAS OLAS BLVD
+		CITY:			FORT LAUDERDALE
+		STATE:			FL
+		ZIP:			33301-2248
+		BUSINESS PHONE:		3057672100
+
+	MAIL ADDRESS:	
+		STREET 1:		2100 NEW RIVER CTR
+		STREET 2:		200 E LAS OLAS BLVD
+		CITY:			FORT LAUDERDALE
+		STATE:			FL
+		ZIP:			33301-2248
+
+	FORMER COMPANY:	
+		FORMER CONFORMED NAME:	SUNBEAM OSTER COMPANY INC /DE/
+		DATE OF NAME CHANGE:	19931210
+</SEC-HEADER>
+<DOCUMENT>
+<TYPE>8-K
+<SEQUENCE>1
+<DESCRIPTION>CURRENT REPORT FOR SUNBEAM CORPORATION
+<TEXT>
+
+                      SECURITIES AND EXCHANGE COMMISSION
+
+                             Washington, D.C. 20549
+
+                                    FORM 8-K
+
+                             Current Report Pursuant
+                          to Section 13 or 15(d) of the
+                         Securities Exchange Act of 1934
+
+         Date of report: July 24, 1996
+
+                               SUNBEAM CORPORATION
+
+             (Exact Name of Registrant as Specified in Its Charter)
+
+                                    DELAWARE
+
+                 (State or Other Jurisdiction of Incorporation)
+
+                  1-52                                 25-1638266
+         (Commission File Number)         (I.R.S. Employer Identification No.)
+
+ 2100 New River Center, 200 East Las Olas Blvd., Fort Lauderdale, Florida 33301
+               (Address of Principal Executive Offices) (Zip Code)
+
+                                 (954) 767-2100
+
+              (Registrant's Telephone Number, Including Area Code)
+
+                                       N/A
+
+          (Former Name or Former Address, if Changed Since Last Report)
+
+                       Exhibit Index is located on page 4
+
+                                   Page 1 of 9
+
+
+<PAGE>
+
+
+Item 5.  Other Events.
+
+         The Company issued press releases today regarding the following: (i)
+the Company's second quarter 1996 earnings; (ii) the appointment of
+Russell A. Kersh as Executive Vice President, Finance and Administration of the
+Company; and (iii) the departure of Jim Clegg from employment with the Company.
+The information contained in such press releases, copies of which are attached
+hereto as Exhibits 99.1, 99.2 and 99.3, is incorporated herein by reference.
+
+Item 7.  Financial Statement and Exhibits.
+
+         (c) Exhibits
+
+         Exhibit 99.1 -  Press Release dated July 24, 1996, regarding second
+         quarter 1996 earnings.
+
+         Exhibit 99.2  -  Press Release dated July 24, 1996, regarding
+         employment of Russell A. Kersh.
+
+         Exhibit  99.3  -  Press Release dated July 24, 1996, regarding
+         departure of Jim Clegg.
+
+                                   Page 2 of 9
+<PAGE>
+
+                                   SIGNATURES
+
+         Pursuant to the requirements of the Securities Exchange Act of 1934,
+the registrant has duly caused this report to be signed on its behalf by the
+undersigned hereunto duly authorized.
+
+                                        SUNBEAM CORPORATION
+
+Date:  July 24, 1996
+
+                                        \s\  RUSSELL A. KERSH
+                                        Russell A. Kersh, Executive Vice
+                                        President, Finance and Administration
+
+                                   Page 3 of 9
+
+<PAGE>
+
+                                  EXHIBIT INDEX
+
+Number                            Description
+
+99.1                              Press Release dated July 24, 1996, regarding 
+                                  second quarter 1996 earnings
+
+99.2                              Press Release dated July 24, 1996, regarding
+                                  employment of Russell A. Kersh
+
+99.3                              Press Release dated July 24, 1996, regarding
+                                  departure of Jim Clegg
+
+
+
+                                   Page 4 of 9
+
+</TEXT>
+</DOCUMENT>
+<DOCUMENT>
+<TYPE>EX-99.1
+<SEQUENCE>2
+<TEXT>
+
+                                     [LOGO]
+
+                                                                  EXHIBIT 99.1
+
+FOR IMMEDIATE RELEASE:
+
+                 SUNBEAM CORPORATION REPORTS SECOND QUARTER 1996
+                RESULTS; ANTICIPATES THIRD QUARTER AND FULL YEAR
+                       EARNINGS TO BE BELOW THE PRIOR YEAR
+
+         FORT LAUDERDALE, FL - July 24, 1996 - Sunbeam Corporation (NYSE: SOC)
+announced second quarter sales of $345.9 million, 12% above second quarter of
+1995 sales of $308.8 million. Earnings per share for the quarter of $.09
+decreased 36% compared to the $.14 per share reported for the same period last
+year. For the first six months of 1996, sales increased approximately 6% over
+1995, from $648.3 million to $685.8 million, and earnings per share of $.30
+decreased 40% from $.50 per share reported for the first six months of 1995.
+
+         While sales increased for the quarter, the operating margin was two
+percentage points below the second quarter of 1995. The margin deterioration 
+was predominately due to higher manufacturing and SG&A costs. During the
+past two years, the Company increased production capacity based upon 
+anticipated sales growth which did not materialize. This increase in capacity
+has contributed to a higher cost structure. As a matter of corporate policy, 
+the Company does not project results for future periods, however, as a result
+of this increased cost structure, the Company now expects third quarter and 
+full year earnings per share to be significantly below the levels reported for
+the comparable prior year periods.
+
+         Albert Dunlap, the Company's recently appointed Chairman and Chief
+Executive Officer stated, "The disappointing financial performance at Sunbeam
+over the past 18 months has highlighted that a massive change had to take place
+at the Company. In the very near-term, we will be building a highly focused
+management team to significantly restructure the Company. The focus will be on
+reducing the Company's cost structure, divesting non-core, low margin products
+and developing a solid strategy for future growth. Every aspect of the 
+Company's cost structure will be examined. It is clear that Sunbeam will need 
+to take a restructuring charge later this year." Mr. Dunlap added, "Sunbeam has
+a solid balance sheet with highly recognized brand names and its market
+leadership in many product categories provide a strong platform upon which to
+build."
+
+         Certain of the statements contained herein, including statements 
+relating to the
+
+                                   Page 5 of 9
+
+<PAGE>
+
+Company's future operating performance, are forward looking statements, as
+defined in the Private Securities Litigation Reform Act of 1995. Actual results
+could differ materially from those projected in the forward looking statements
+as a results of various factors, including those set forth in the Company's
+report on Form 8-K, filed with the Securities and Exchange Commission on 
+January 30, 1996.
+
+         Sunbeam Corporation is a leading consumer products company that
+designs, manufactures and markets, nationally and internationally, a diverse
+portfolio of outdoor and household brand name products. The Company's Sunbeam 
+(R) and Oster(R) brands have been household names for generations, both
+domestically and abroad, and the Company is a market leader in many of its
+product categories.
+
+                                ****************
+
+Contact:          John DeSimone
+                  Manager, Investor Relations
+                  Sunbeam Corporation
+
+                  (305)767-2100
+
+                                   Page 6 of 9
+
+</TEXT>
+</DOCUMENT>
+<DOCUMENT>
+<TYPE>EX-99.2
+<SEQUENCE>3
+<TEXT>
+
+                                                                    EXHIBIT 99.2
+
+                                     [LOGO]
+
+                             FOR IMMEDIATE RELEASE:
+
+           SUNBEAM CORPORATION ANNOUNCES ELECTION OF RUSSELL KERSH AS
+              EXECUTIVE VICE PRESIDENT, FINANCE AND ADMINISTRATION
+
+         FORT LAUDERDALE, FL (July 24, 1996) -- Sunbeam Corporation (SOC)
+announced today that Russell A. Kersh has been appointed to the position of
+Executive Vice President, Finance and Administration. Mr. Kersh will report
+directly to Albert Dunlap, the Company's newly elected Chairman and Chief
+Executive Officer, and will be responsible for all finance, human resources, 
+MIS and purchasing functions of the Company. In addition, Mr. Kersh will be
+elected to the Board of Directors of the Company. Mr. Kersh also is making a
+significant investment of his own funds in Sunbeam stock.
+
+         Mr. Kersh brings to Sunbeam a strong business background and proven 
+expertise in revitalizing corporations. He most recently assisted Mr. Dunlap in
+the highly successful turnaround of Scott Paper Company, serving in the 
+capacity of Sr. Vice President, Finance and Administration. During their tenure
+at Scott Paper Company, shareholder value increased by $6.5 billion in less 
+than two years before Scott merged with Kimberly Clark last December. Prior to
+his employment at Scott Paper Company, Mr. Kersh served as the Chief Financial
+Officer/Chief Operating Officer of Adidas North America, Inc. where he was
+instrumental in the turnaround of that company. He has also worked with Sir
+James Goldsmith as Chief Financial Officer/Operations Director and with Owens
+Illinois N/K/A Lily-Tulip, Inc. as Corporate Treasurer.
+
+         Sunbeam Corporation is a leading consumer products company that
+designs, manufactures and markets, nationally and internationally, a diverse
+portfolio of outdoor and household brand name products. The Company's Sunbeam
+(R) and Oster(R) brands have been household names for generations, and the
+Company is a market share leader in many of its product categories.
+
+                                   Page 7 of 9
+
+  
+<PAGE>
+
+                                      -###-
+
+Contact:          Peter Judice              John G. De Simone
+                  Berson-Marsteller         Manager, Investor Relations
+                  212-614-4506              Sunbeam Corporation
+                                            954-767-2100
+
+                                   Page 8 of 9
+</TEXT>
+</DOCUMENT>
+<DOCUMENT>
+<TYPE>EX-99.3
+<SEQUENCE>4
+<TEXT>
+
+
+                                                                  EXHIBIT 99.3
+FOR IMMEDIATE RELEASE
+
+                      SUNBEAM MANAGEMENT CHANGES ANNOUNCED
+
+         Fort Lauderdale, FL, (July 24, 1996) -- Sunbeam Corporation 
+(NYSE:SOC). Albert Dunlap, Sunbeam's Chairman and Chief Executive Officer,
+stated today, "As reflected in our quarterly earnings release earlier today, 
+the poor performance of Sunbeam obviously will require a massive restructuring.
+To accomplish this, we will be recruiting an executive to run the operations of
+the Company on a global basis. I expect to announce this appointment quickly.
+Other organizational changes will be forthcoming as well.
+
+         Consistent with this decision, Jim Clegg, formerly Chief Operating
+Officer, North America, is no longer with the Company, effective immediately."
+
+         Sunbeam Corporation is a leading consumer products company that
+designs, manufactures and markets, nationally and internationally, a diverse
+portfolio of outdoor and household brand name products. The Company's 
+Sunbeam(R) and Oster(R) brands have been household names for generations, both
+domestically and abroad, and the Company is a market leader in many of its
+product categories.
+
+Contact:          John DeSimone
+                  Manager, Investor Relations
+                  SUNBEAM CORPORATION
+                  (954) 767-2100
+
+                                   Page 9 of 9
+
+</TEXT>
+</DOCUMENT>
+</SEC-DOCUMENT>
+-----END PRIVACY-ENHANCED MESSAGE-----

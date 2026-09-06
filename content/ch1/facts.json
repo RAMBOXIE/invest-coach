@@ -120,6 +120,18 @@
    "sha256": "4c3108255d3f55a3ff2a023c349125906f910b803edb03afe9c8fae34480c2d3",
    "source": "Sunbeam 1997 年一季度业绩新闻稿（EDGAR acc. 0000950170-97-000586，1997-04-23，公有领域）",
    "accession": "0000950170-97-000586"
+  },
+  {
+   "file": "evidence/sunbeam-8k-1996-07-24.txt",
+   "sha256": "4bb8d2ef21e75f69c1f764efcba3a306aa85b3a64774cfbbd1369cd263ae9299",
+   "source": "Sunbeam 1996-07-24 新闻稿（Dunlap 上任后首次公开表态，EDGAR acc. 0000950170-96-000493，公有领域）",
+   "accession": "0000950170-96-000493"
+  },
+  {
+   "file": "evidence/sunbeam-8k-1996-11-12.txt",
+   "sha256": "a363366e481ceeb82674db441d1aff0b330b2b3f9fcec4d950c7526d3f859fba",
+   "source": "Sunbeam 1996-11-12 重组方案新闻稿（EDGAR acc. 0001016843-96-000061，公有领域）",
+   "accession": "0001016843-96-000061"
   }
  ],
  "facts": [

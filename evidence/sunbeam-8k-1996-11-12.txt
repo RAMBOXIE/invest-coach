@@ -1,0 +1,533 @@
+-----BEGIN PRIVACY-ENHANCED MESSAGE-----
+Proc-Type: 2001,MIC-CLEAR
+Originator-Name: webmaster@www.sec.gov
+Originator-Key-Asymmetric:
+ MFgwCgYEVQgBAQICAf8DSgAwRwJAW2sNKK9AVtBzYZmr6aGjlWyK3XmZv3dTINen
+ TWSM7vrzLADbmYQaionwg5sDW3P6oaM5D3tdezXMm7z1T+B+twIDAQAB
+MIC-Info: RSA-MD5,RSA,
+ TkoqqewIjpydl98YHNxH5rV1dYB+Cs3oiwXkLvlDAhQxIBcyy/oaed1OHvbj9X6G
+ dItIOK8sksy8yX5Q47nnwA==
+
+<SEC-DOCUMENT>0001016843-96-000061.txt : 19961113
+<SEC-HEADER>0001016843-96-000061.hdr.sgml : 19961113
+ACCESSION NUMBER:		0001016843-96-000061
+CONFORMED SUBMISSION TYPE:	8-K
+PUBLIC DOCUMENT COUNT:		3
+CONFORMED PERIOD OF REPORT:	19961112
+ITEM INFORMATION:		Other events
+ITEM INFORMATION:		Financial statements and exhibits
+FILED AS OF DATE:		19961112
+SROS:			NYSE
+
+FILER:
+
+	COMPANY DATA:	
+		COMPANY CONFORMED NAME:			SUNBEAM CORP/FL/
+		CENTRAL INDEX KEY:			0000003662
+		STANDARD INDUSTRIAL CLASSIFICATION:	ELECTRIC HOUSEWARES & FANS [3634]
+		IRS NUMBER:				251638266
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			0102
+
+	FILING VALUES:
+		FORM TYPE:		8-K
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-00052
+		FILM NUMBER:		96658687
+
+	BUSINESS ADDRESS:	
+		STREET 1:		2100 NEW RIVER CTR
+		STREET 2:		200 E LAS OLAS BLVD
+		CITY:			FORT LAUDERDALE
+		STATE:			FL
+		ZIP:			33301-2248
+		BUSINESS PHONE:		3057672100
+
+	MAIL ADDRESS:	
+		STREET 1:		2100 NEW RIVER CTR
+		STREET 2:		200 E LAS OLAS BLVD
+		CITY:			FORT LAUDERDALE
+		STATE:			FL
+		ZIP:			33301-2248
+
+	FORMER COMPANY:	
+		FORMER CONFORMED NAME:	SUNBEAM OSTER COMPANY INC /DE/
+		DATE OF NAME CHANGE:	19931210
+</SEC-HEADER>
+<DOCUMENT>
+<TYPE>8-K
+<SEQUENCE>1
+<TEXT>
+
+                       SECURITIES AND EXCHANGE COMMISSION
+                             WASHINGTON, D.C. 20549
+
+
+                                    FORM 8-K
+
+
+                             Current Report Pursuant
+                          to Section 13 or 15(d) of the
+                        Securities Exchange Act of 1934
+
+
+        Date of report:             NOVEMBER 12, 1996
+                       --------------------------------------------------------
+
+                               SUNBEAM CORPORATION
+- -------------------------------------------------------------------------------
+             (Exact Name of Registrant as Specified in Its Charter)
+
+                                    DELAWARE
+- -------------------------------------------------------------------------------
+                 (State or Other Jurisdiction of Incorporation)
+
+          1-52                                       25-1638266
+- ------------------------                 --------------------------------------
+(Commission File Number)                 (I.R.S. Employer Identification No.)
+
+2100 NEW RIVER CENTER, 200 EAST LAS OLAS BLVD.,              
+FORT LAUDERDALE, FLORIDA                                    33301
+- -------------------------------------------------------------------------------
+(Address of Principal Executive Offices)                 (Zip Code)
+
+                                 (954) 767-2100
+- -------------------------------------------------------------------------------
+              (Registrant's Telephone Number, Including Area Code)
+
+                                       N/A
+- -------------------------------------------------------------------------------
+          (Former Name or Former Address, if Changed Since Last Report)
+
+
+
+
+
+
+
+
+                       Exhibit Index is located on page 4
+
+<PAGE>
+
+
+
+ITEM 5.  OTHER EVENTS.
+
+        The Company issued a press release today regarding the adoption of a
+restructuring plan. The information contained in such press release, a copy of
+which is attached hereto as Exhibit 99.1, is incorporated herein by reference.
+
+        In connection with the announcement of such restructuring plan, the
+Company is filing herewith certain "Cautionary Statements" for the purpose of
+establishing a readily available document which may be referenced pursuant to 
+the "safe harbor" provisions of the Private Securities Litigation Reform Act of
+1995. Such Cautionary Statements are attached hereto as Exhibit 99.2 and
+incorporated herein by reference.
+
+ITEM 7.  FINANCIAL STATEMENTS AND EXHIBITS.
+
+        (c) Exhibits
+
+        Exhibit 99.1 -   Press Release dated November 12, 1996, regarding
+                         restructuring plan.
+
+        Exhibit 99.2 -   Cautionary Statements.
+
+
+
+
+                                     Page 2
+<PAGE>
+
+
+
+                                   SIGNATURES
+
+        Pursuant to the requirements of the Securities Exchange Act of 1934, the
+registrant has duly caused this report to be signed on its behalf by the
+undersigned hereunto duly authorized.
+
+                                          SUNBEAM CORPORATION
+
+Date:  November 12, 1996                  /s/ Janet G. Kelley
+                                          -------------------------------------
+                                          Janet G. Kelley, Vice President
+                                          and Associate General Counsel
+
+
+
+
+                                     Page 3
+<PAGE>
+
+
+
+                                  EXHIBIT INDEX
+
+
+
+NUMBER                              DESCRIPTION
+- ------                              -----------
+
+Exhibit 99.1          Press Release dated November 12, 1996, regarding 
+                         restructuring plan.
+
+Exhibit 99.2          Cautionary Statements.
+
+
+
+                                     Page 4
+</TEXT>
+</DOCUMENT>
+<DOCUMENT>
+<TYPE>EX-99.1
+<SEQUENCE>2
+<TEXT>
+
+                                                                  EXHIBIT 99.1
+                                  SUNBEAM [LOGO]
+
+FOR IMMEDIATE RELEASE:
+
+
+                 SUNBEAM CORPORATION ANNOUNCES $225 MILLION COST
+               REDUCTION PROGRAM - SETS AGGRESSIVE GROWTH TARGETS
+
+         FORT LAUDERDALE, FL - November 12, 1996 - Sunbeam Corporation
+(NYSE:SOC) announced today the details of its highly anticipated restructuring
+and growth plan. The Company stated that this restructuring initiative is
+projected to generate approximately $225 million in annual savings for its
+businesses. Sunbeam anticipates that approximately 75% of these annual savings
+will be realized in 1997 and the remaining 25% in 1998. The savings will result
+primarily from the consolidation of administrative functions within the Company,
+the rationalization of facilities/headquarters, the centralization of the 
+Company's procurement function and the reduction of the Company's product 
+offerings. The facilities/headquarters rationalization entails the consolidation
+or sale of 39 of the Company's 53 facilities, including 18 of the Company's 26 
+factories, which will leave Sunbeam with 4 domestic factories and 4 factories 
+outside of the United States. The Company also plans to reduce the number of
+warehouses it utilizes from 61 to 24.
+         Correspondingly, the Company announced plans to divest several lines of
+business which it has determined are not core for Sunbeam, including furniture,
+time and temperature, the COUNSELOR and BORG scale lines and the decorative
+bedding business. Sunbeam is actively seeking purchasers for these lines of
+business and has appointed Chase Securities, Inc. to market them. A purchaser 
+will also be sought for the Company's textile mill in Biddeford, Maine. Sunbeam 
+expects to source blanket shells for its electric blanket business from the 
+purchaser of this textile operation.
+         The  Company's new core product  categories  will be: (1) Kitchen
+Appliances;  (2) Personal Care and Comfort; (3) Health Care; (4) Outdoor
+Cooking and (5) Professional Care.
+         Sunbeam Chairman and CEO, Albert J. Dunlap, stated, "As we have
+repeatedly advised investors, Sunbeam required a massive effort to reduce costs
+and grow the business in order to 
+
+<PAGE>
+
+restore higher levels of profitability and provide the kinds of returns our
+shareholders have a right to expect." Dunlap added, "We have stayed on an
+aggressive schedule, having assembled our new Management Team by the end of
+September and having completely analyzed the Company's strengths and weaknesses
+over the past 90 days through the joint efforts of internal personnel and a team
+of consolidation and cost reduction specialists from Coopers & Lybrand. We
+committed to unveil our plan by November 15, and we are ahead of schedule. Our
+goal is to essentially complete the restructuring initiatives within the next 45
+days. Therefore, the Company has every intention of meeting its previously
+stated goal of beginning 1997 as a new company."
+         Sunbeam expects to consolidate its current divisional and regional
+headquarters functions in Chicago, Nashville, Miami, Schaumburg, IL, Neosho, MO
+and Fort Lauderdale, FL into a single worldwide corporate headquarters in Delray
+Beach, FL, as was previously announced. As a result, headquarters personnel will
+be reduced from 308 to 123 persons, a reduction of 60%. In addition to the
+headquarters consolidation, Sunbeam will consolidate specific back office
+administrative functions, including certain finance, risk management and
+customer service operations, into its Hattiesburg manufacturing facility. The
+total headquarters and administrative consolidations will result in a 50%
+reduction of administrative personnel, from approximately 1,400 to 700.
+         The restructuring and growth plan includes reducing Sunbeam facilities
+from 53 to 14, including reducing the number of production facilities from 26 
+to 8. Twelve production facilities are expected to be eliminated or sold in 
+connection with the disposition of non-core business operations reducing 
+headcount by 3,300 jobs. The Company also plans to eliminate excess production 
+capacity in its core businesses by closing 6 additional production facilities 
+and reducing its production workforce by an additional 2,100 persons or 28%. 
+As a result of the rationalization and overhead consolidation efforts, total 
+Company headcount will be reduced 50% from approximately 12,000 employees 
+to 6,000.
+         Sunbeam formerly maintained separate purchasing functions for its
+operating divisions, preventing maximization of savings in procurement. The
+Company expects to generate substantial savings in raw material purchases which
+are used in all of its operations.
+         Sunbeam also plans to substantially reduce the number of stock keeping
+units ("SKUs") and, in many cases, the associated packaging, tooling and related
+expenses associated with these products. The Company expects to eliminate 87% of
+finished goods SKUs or nearly 10,000 SKUs, of which 5,500 pertain to the
+Company's core businesses and 4,500 pertain to the divestiture of its furniture
+
+                                       2
+
+
+<PAGE>
+
+business. The reduction in SKUs is not expected to affect the Company's core
+businesses or significantly reduce sales.
+         In conjunction with the implementation of the restructuring plan, the
+Company expects to record a one-time pre-tax special charge estimated to be $300
+million. Only 25%, or $75 million, of this special charge will impact cash
+through the payment of severance and other employee costs, lease obligations and
+other plant costs associated with the rationalization of excess facilities. The
+remaining special charges will be non-cash in nature consisting primarily of
+asset and inventory write-downs, losses anticipated to be incurred from
+divestiture of non-core businesses and increases in several reserve categories.
+          Sunbeam also announced the development of a comprehensive three year
+growth plan for the Company's core businesses. The Company's goal is for
+revenues to double, reaching $2 billion, by 1999, with operating margins
+improve to 20% of sales, a substantial increase from the 2.5% operating margin
+realized through the first nine months of 1996. The Company's goal is for Return
+on Equity to grow to 25%, up from 1% over the past twelve months. Additionally,
+the Company anticipates generating substantial cash flows over the next three
+years from the divestiture of non-core businesses and the reduction in capital
+spending and working capital requirements. In fact, Sunbeam anticipates being
+net debt free within the coming year.
+         The revenue growth goal will be driven, in large part, by the
+development and introduction of new innovative products and the globalization of
+the Company. Management's goal is to triple International sales to $600 million
+by 1999. The International thrust will come from adding distributors and
+completing licensing agreements and joint ventures in certain key regions of the
+world, namely Asia, Latin America and Europe. The Company expects to add 15
+International distributors and/or licensing agreements over the next 5 months.
+These agreements will provide the Company with access to such countries as
+China, Thailand, Malaysia, Indonesia, the Philippines, Taiwan, Brazil and
+Australia. The Company also expects to introduce 40 new 220 volt products into
+International markets over the next 5 months. These introductions are a
+milestone for the Company as they are the first products the Company has
+actually engineered for 220 volt capability.
+         In addition to the new 220 volt product introductions, the Company has
+a goal to introduce at least 30 new products a year for its domestic markets.
+Mr. Dunlap added, "I fully expect by 1999, that new product sales will account
+for 30% or more of our total sales. We will be a leader in new 
+
+                                       3
+
+
+<PAGE>
+
+product development. These new innovations will focus on products which are more
+relevant to the lifestyles and concerns of both individuals and families as the
+21st Century approaches. We will introduce new Sunbeam "Logic" products that do
+the thinking for you, including products such as the Toast Logic
+Toaster/trademark/, Blanket with a Brain/trademark/, Auto Shut-off Steam
+Master/registered trademark/ Iron and the Custom Blend Coffee Maker.
+Additionally, the Company will focus on its new "Healthy Home" concept which
+targets the health-conscious consumer with new products such as our Rotisserie
+which is currently sold out."
+         Both International expansion and new product introductions will be
+supported by a significant investment in a major new advertising program that is
+geared to rebuilding SUNBEAM/registered trademark/ and OSTER/registered
+trademark/ brand awareness in the marketplace. The new campaign, which will
+refocus the Company's advertising dollars on consumer marketing, will begin next
+week. The Company has also designed new, more powerful packaging for its
+SUNBEAM/registered trademark/ and OSTER/registered trademark/ branded products.
+         Finally, Sunbeam will venture into emerging new professional channels
+of distribution and "direct to the consumer" channels such as catalogs, the
+Internet and factory outlet stores. The plan includes the opening of two new
+outlet stores by the end of next month and 20 more in 1997.
+         CEO Al Dunlap stated, "Our bold restructuring plan not only
+dramatically reduces costs, but also enhances the long term growth of the
+Company. We have exciting plans for growing our domestic and international
+businesses under the marketing and sales leadership of P. Newton White, Don
+Uzzi, Lee Griffith and Dixon Thayer. Growth of Sunbeam's core businesses
+involves more rapid product development, international expansion and investing
+in supporting our brands. Sunbeam is committed to a marketing and sales strategy
+that is CONSUMER FOCUSED."
+         In conclusion, Mr. Dunlap added, "With renewed emphasis on our core
+businesses, a renewed emphasis on international expansion and reduction of the
+development cycle time on introduction of new products, Sunbeam will be an
+exciting consumer products company. As our new advertising campaign highlights,
+"There's a New Sunbeam Shining."
+         Sunbeam Corporation is a leading consumer products company that
+designs, manufactures and markets, nationally and internationally, a diverse
+portfolio of brand name products. The Company's SUNBEAM/registered trademark/
+and OSTER/registered trademark/ brands have been household names for
+generations, both domestically and abroad, and the Company is a market leader in
+many of its product categories.
+
+                                       4
+
+<PAGE>
+
+         CAUTIONARY STATEMENTS - Statements contained in this release, including
+statements relating to the Company's expectations regarding anticipated
+performance in the future, are "forward looking statements," as such term is
+defined in the Private Securities Litigation Reform Act of 1995. Actual results
+could differ materially from the Company's statements in this release regarding
+its expectations, goals, or projected results, due to various factors, including
+those set forth in the Company's Cautionary Statements included in Sunbeam's 
+report on Form 8-K, filed with the Securities and Exchange Commission on today's
+date.
+
+         CONFERENCE CALL - Sunbeam plans to hold a conference call for investors
+and analysts at 2:30 p.m. (EDT) today. The phone number for the call is (312)
+864-5041.
+
+
+
+                                ****************
+
+
+
+Contact:          Media:                       Investor Relations:
+
+                  Pete Judice                  John DeSimone
+                  Burson-Marsteller            Director, Investor Relations
+                  New York                     Sunbeam Corporation
+                  (212) 614-4506               (954) 767-2100
+
+
+
+                                       5
+
+
+</TEXT>
+</DOCUMENT>
+<DOCUMENT>
+<TYPE>EX-99.2
+<SEQUENCE>3
+<TEXT>
+
+
+                                                                  EXHIBIT 99.2
+
+                              CAUTIONARY STATEMENTS
+
+        Information provided by Sunbeam Corporation (the "Company") from time to
+time may contain certain "forward-looking" information, as that term is defined
+in the Private Securities Litigation Reform Act of 1995, as the same may be
+amended (herein the "Act") and in releases made by the Securities and Exchange
+Commission ("SEC") from time to time. These Cautionary Statements are being made
+pursuant to the Act, with the intention of obtaining the benefits of the "Safe
+Harbor" provisions of the Act. The Company cautions investors that any
+forward-looking statements made by the Company are not guarantees of future
+performance and that actual results may differ materially from those in the
+forward-looking statements as a result of various factors.
+
+        These Cautionary Statements are being made and filed with the SEC
+contemporaneously with the Company's release of a detailed restructuring plan
+(the "Plan") for the Company. Success of the Plan depends upon the successful
+completion of a number of actions which the Company expects will improve its
+future financial performance. It is possible, however, that certain of these
+actions may not be successfully completed for a variety of reasons, and
+therefore that future financial results may differ materially from those
+anticipated by the Company. The Company wishes to advise investors of the
+following risks to the Plan:
+
+        -The Company plans to close various facilities, reduce employment levels
+and consolidate production capacity. These actions are scheduled to be completed
+on an accelerated timetable. If the Company is unable to complete such actions
+within anticipated time frames, the full benefits of cost reductions may not be
+realized as quickly as anticipated by the Company or possibly may not be
+realized at all. Many factors could delay or materially affect realization of
+the anticipated benefits of cost reduction initiatives, including failure of
+Company personnel or of third parties to perform in a timely manner, events of
+force majeure or other circumstances which could prevent or delay
+implementation. Any material failure of the Company to reduce costs to the
+extent anticipated by the Company (or within the time frames anticipated by the
+Company) would likely have an adverse effect on anticipated future financial
+results, which effect could be material.
+
+        -The Company has announced plans to sell certain non-core businesses to
+third parties. It anticipates receiving proceeds from these sales and also
+anticipates that the sales will further reduce the costs of its ongoing
+business. If the Company is unsuccessful in disposing of any or all of these
+non-core businesses, or if it fails to realize disposition proceeds in amounts
+anticipated by the Company, or if such dispositions are not completed within the
+time frames anticipated by the Company, such events would likely have an adverse
+effect on future financial results, which effect could be material.
+
+        -The Company expects to substantially increase the amount of business
+conducted by it outside North America. If the Company fails to achieve
+anticipated market penetration in areas of the world into which the Company
+currently expects to expand its sales, such event is likely to have an adverse
+effect on the Company's future financial performance, which effect could be
+
+
+<PAGE>
+
+
+material. Expansion of the Company's sales in foreign markets depends upon many
+factors, including the states of economies in foreign countries, the strength of
+consumer demand in those countries for products which the Company sells (or
+expects to sell in those markets), the strength of competition from other global
+consumer products companies and other factors which may negatively affect the
+Company's anticipated performance in those markets.
+
+        The Company currently has significant sales in such economies as those
+of Mexico and Venezuela, both of which economies have been unstable or
+hyperinflationary in recent years. The economies of other foreign countries
+important to the Company's expansion plans could suffer similar instability in
+the future. Such factors as new tariffs, changes in monetary policies,
+inflation, governmental instability and similar matters could negatively affect
+the Company's anticipated performance in foreign markets. The occurrence of any
+of these circumstances could have an adverse effect on future financial
+performance, which effect could be material.
+
+        -A significant portion of the cost of goods manufactured by the Company
+in North America is raw material cost. The Company is implementing changes in
+its purchasing function which the Company anticipates will enable it to purchase
+raw materials more efficiently and economically than it has in the past. The
+success of the Company purchasing initiatives may be affected by many factors
+beyond the Company's control, such as commodity pricing generally and higher
+prices for the specific raw materials required by the Company. In addition, the
+Company's initiatives to reduce the cost of raw materials simply may not achieve
+savings in amounts which the Company anticipates. A material failure by the
+Company to achieve the anticipated reductions in raw material costs would likely
+have an adverse effect on anticipated future financial performance, which effect
+could be material.
+
+        -The Company anticipates realizing price increases for certain of its
+products. The Company operates in a highly competitive industry, and its ability
+to realize price increases may be limited due to competitive pressures. If there
+is a material failure to realize anticipated price increases, margins likely
+will be lower than anticipated by the Company, and this will likely have an
+adverse effect on future financial performance, which effect could be material.
+
+        -The Company anticipates that it will in the future more fully utilize
+its Advanced Manufacturing and Distribution Center (AMDC), constructed in
+1994-95 in Hattiesburg, Mississippi, as well as other key facilities being
+retained by the Company. If the Company fails to achieve full utilization of
+these facilities, particularly the AMDC, this will likely have an adverse effect
+on future financial performance, which effect could be material.
+
+        -The Company anticipates that it will be able to more rapidly develop
+and introduce a substantial number of new and innovative products in the future.
+However, the Company may prove unable to meet its more aggressive schedules for
+future product development. Failure to develop and manufacture new products in
+the amounts anticipated or a failure to reduce the cycle time for new product
+introductions would likely have an adverse effect on future financial
+performance, which effect could be material. The anticipated rapid development
+cycle also may result in higher than anticipated warranty returns, which also
+could have a materially adverse effect on future financial performance.
+
+        -The Company competes in a highly competitive environment with
+numerous competitors which are financially strong and capable of competing
+effectively with the Company 
+
+                                     Page 2
+<PAGE>
+
+
+in the marketplace. Such competitors may take actions to meet the Company's new
+product introductions and other initiatives. Some competitors may be willing to
+accept lower margins and to reduce prices to compete with the Company. As a
+result, the Company could fail to achieve anticipated sales increases, to
+realize anticipated price increases, or otherwise fail to meet its anticipated
+results. Any of such circumstances would likely have an adverse effect on future
+financial performance, which effect could be material.
+
+                                     Page 3
+
+</TEXT>
+</DOCUMENT>
+</SEC-DOCUMENT>
+-----END PRIVACY-ENHANCED MESSAGE-----
