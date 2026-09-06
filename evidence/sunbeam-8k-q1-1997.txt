@@ -1,0 +1,2690 @@
+-----BEGIN PRIVACY-ENHANCED MESSAGE-----
+Proc-Type: 2001,MIC-CLEAR
+Originator-Name: webmaster@www.sec.gov
+Originator-Key-Asymmetric:
+ MFgwCgYEVQgBAQICAf8DSgAwRwJAW2sNKK9AVtBzYZmr6aGjlWyK3XmZv3dTINen
+ TWSM7vrzLADbmYQaionwg5sDW3P6oaM5D3tdezXMm7z1T+B+twIDAQAB
+MIC-Info: RSA-MD5,RSA,
+ Hd+15fXnte15bo8YtogfjdGFyY9XqqgM3kiCFFBOdwQuWanruBPCk0/9K1hCVoim
+ 3PGZjQiixiKzNR+94eHFJA==
+
+<SEC-DOCUMENT>0000950170-97-000586.txt : 19970515
+<SEC-HEADER>0000950170-97-000586.hdr.sgml : 19970515
+ACCESSION NUMBER:		0000950170-97-000586
+CONFORMED SUBMISSION TYPE:	10-Q
+PUBLIC DOCUMENT COUNT:		6
+CONFORMED PERIOD OF REPORT:	19970330
+FILED AS OF DATE:		19970514
+SROS:			NYSE
+
+FILER:
+
+	COMPANY DATA:	
+		COMPANY CONFORMED NAME:			SUNBEAM CORP/FL/
+		CENTRAL INDEX KEY:			0000003662
+		STANDARD INDUSTRIAL CLASSIFICATION:	ELECTRIC HOUSEWARES & FANS [3634]
+		IRS NUMBER:				251638266
+		STATE OF INCORPORATION:			DE
+		FISCAL YEAR END:			1229
+
+	FILING VALUES:
+		FORM TYPE:		10-Q
+		SEC ACT:		1934 Act
+		SEC FILE NUMBER:	001-00052
+		FILM NUMBER:		97605069
+
+	BUSINESS ADDRESS:	
+		STREET 1:		1615 SOUTH CONGRESS AVENUE
+		STREET 2:		SUITE 200
+		CITY:			DELRAY BEACH
+		STATE:			FL
+		ZIP:			33445
+		BUSINESS PHONE:		3057672100
+
+	MAIL ADDRESS:	
+		STREET 1:		1615 SOUTH CONGRESS AVENUE
+		STREET 2:		SUITE 200
+		CITY:			DELRAY BEACH
+		STATE:			FL
+		ZIP:			33445
+
+	FORMER COMPANY:	
+		FORMER CONFORMED NAME:	SUNBEAM OSTER COMPANY INC /DE/
+		DATE OF NAME CHANGE:	19931210
+</SEC-HEADER>
+<DOCUMENT>
+<TYPE>10-Q
+<SEQUENCE>1
+<TEXT>
+
+
+- --------------------------------------------------------------------------------
+- --------------------------------------------------------------------------------
+                                 UNITED STATES
+                       SECURITIES AND EXCHANGE COMMISSION
+                            WASHINGTON, D.C. 20549
+                               ----------------
+
+                                   FORM 10-Q
+
+            [x] QUARTERLY REPORT PURSUANT TO SECTION 13 OR 15(D) OF
+                      THE SECURITIES EXCHANGE ACT OF 1934
+
+                      FOR THE PERIOD ENDED MARCH 30, 1997
+
+                                      OR
+
+           [ ] TRANSITION REPORT PURSUANT TO SECTION 13 OR 15(D) OF
+                      THE SECURITIES EXCHANGE ACT OF 1934
+
+            FOR THE TRANSITION PERIOD FROM __________ TO __________.
+
+                          COMMISSION FILE NUMBER 1-52
+
+                               [GRAPHIC OMITTED]
+                               
+                               SUNBEAM CORPORATION
+            (EXACT NAME OF REGISTRANT AS SPECIFIED IN ITS CHARTER)
+
+<TABLE>
+<S>                                           <C>
+                DELAWARE                          25-1638266
+     (STATE OR OTHER JURISDICTION OF           (I.R.S. EMPLOYER
+     INCORPORATION OR ORGANIZATION)            IDENTIFICATION NO.)
+
+       1615 SOUTH CONGRESS AVENUE                    33445
+                 SUITE 200                         (ZIP CODE)  
+         DELRAY BEACH, FLORIDA
+ (ADDRESS OF PRINCIPAL EXECUTIVE OFFICES)
+</TABLE>
+
+
+                                (561) 243-2100
+             (REGISTRANT'S TELEPHONE NUMBER, INCLUDING AREA CODE)
+
+                                NOT APPLICABLE
+              (FORMER NAME, FORMER ADDRESS AND FORMER FISCAL YEAR,
+                         IF CHANGED SINCE LAST REPORT)
+
+     Indicate by check mark whether the registrant (1) has filed all reports
+required to be filed by Section 13 or 15(d) of the Securities Exchange Act of
+1934 during the preceding 12 months (or for such shorter period that the
+registrant was required to file such reports), and (2) has been subject to such
+filing requirements for the past 90 days.
+
+                              Yes [X]       No [ ]
+
+     On May 2, 1997, there were 84,726,432 shares of the registrant's Common
+Stock ($.01 par value) outstanding.
+
+- --------------------------------------------------------------------------------
+- --------------------------------------------------------------------------------
+
+<PAGE>
+
+                     SUNBEAM CORPORATION AND SUBSIDIARIES
+                               QUARTERLY REPORT
+                                 ON FORM 10-Q
+      
+                                TABLE OF CONTENTS
+
+<TABLE>
+<CAPTION>
+ 
+                                                                                  PAGE
+                                                                                  ------
+<S>       <C>                                                                     <C>
+PART I.    FINANCIAL INFORMATION
+           Item 1. Financial Statements
+            Condensed Consolidated Statements of Operations (Unaudited)
+              for the three months ended March 31, 1996
+              and March 30, 1997 ................................................      2
+            Condensed Consolidated Balance Sheets
+              as of December 29, 1996 and March 30, 1997 (Unaudited) ............      3
+            Condensed Consolidated Statements of Cash Flows (Unaudited)
+              for the three months ended March 31, 1996 and March 30, 1997 ......      4
+            Notes to Condensed Consolidated Financial Statements (Unaudited)           5
+           Item 2. Management's Discussion and Analysis of Financial Condition
+                     and Results of Operations   ................................      8
+PART II.   OTHER INFORMATION
+           Item 6. Exhibits and Reports on Form 8-K   ...........................     11
+SIGNATURES   ................................................................... .    12
+</TABLE>
+
+ 
+<PAGE>
+
+
+PART I. FINANCIAL INFORMATION
+
+                     SUNBEAM CORPORATION AND SUBSIDIARIES
+                CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS
+                   (IN THOUSANDS, EXCEPT PER SHARE AMOUNTS)
+
+<TABLE>
+<CAPTION>
+                                                                               THREE MONTHS ENDED
+                                                                           --------------------------
+                                                                           MARCH 31,      MARCH 30,
+                                                                             1996           1997
+                                                                           ------------   -----------
+                                                                                  (UNAUDITED)
+<S>                                                                        <C>            <C>
+Net sales   ............................................................       $229,707     $ 253,450
+Cost of goods sold   ...................................................        181,608       185,669
+Selling, general and administrative expense  ...........................         32,585        33,008
+                                                                              ---------      ---------
+Operating earnings   ...................................................         15,516        34,743
+Interest expense  ......................................................          3,035         1,993
+Other expense, net   ...................................................          1,337           113
+                                                                              ---------      ---------
+Earnings from continuing operations before income taxes  ...............         11,144        32,637
+Income taxes (benefit):
+ Current ...............................................................          2,396        (1,052)
+ Deferred   ............................................................          2,128        13,128
+                                                                              ---------      ---------
+                                                                                  4,524        12,076
+                                                                              ---------      ---------
+Earnings from continuing operations ....................................          6,620        20,561
+Earnings (loss) from discontinued operations ...........................         10,741       (13,713)
+                                                                              ---------      ---------
+Net earnings   .........................................................       $ 17,361     $   6,848
+                                                                              =========      =========
+Net earnings per share of common stock from continuing operations ......       $    .08     $     .24
+                                                                              =========      =========
+Net earnings per share of common stock .................................       $    .21     $     .08
+                                                                              =========      =========
+Average number of common and common
+ equivalent shares outstanding   .......................................         82,530        86,978
+Dividends declared per share of common stock    ........................       $    .01     $     .01
+</TABLE>
+
+                   See Notes to Condensed Consolidated Financial Statements.
+
+                                       2
+
+<PAGE>
+
+
+                     SUNBEAM CORPORATION AND SUBSIDIARIES
+                     CONDENSED CONSOLIDATED BALANCE SHEETS
+                            (DOLLARS IN THOUSANDS)
+
+<TABLE>
+<CAPTION>
+                                                                  DECEMBER 29,      MARCH 30,
+                                                                      1996             1997
+                                                                  ---------------   -------------
+                                                                                    (UNAUDITED)
+<S>                                                               <C>               <C>
+ASSETS
+Current assets:   .............................................
+ Cash and cash equivalents ....................................      $    11,526      $    30,415
+ Receivables, net    ..........................................          213,438          296,716
+ Inventories   ................................................          162,252          148,011
+ Net assets of discontinued operations
+   and other assets held for sale  ............................          102,847           20,655
+ Deferred income taxes  .......................................           93,689           75,132
+ Prepaid expenses and other current assets   ..................           40,411           38,725
+                                                                       -----------     -----------
+    Total current assets   ....................................          624,163          609,654
+Property, plant and equipment, net  ...........................          220,088          217,453
+Trademarks and trade names, net  ..............................          200,262          199,028
+Other assets   ................................................           28,196           27,020
+                                                                       -----------     -----------
+                                                                     $ 1,072,709      $ 1,053,155
+                                                                       ===========     ===========
+LIABILITIES AND SHAREHOLDERS' EQUITY
+Current liabilities:
+ Short-term debt and current portion of long-term debt   ......      $       921      $       848
+ Accounts payable    ..........................................          107,319          100,648
+ Restructuring accrual  .......................................           63,834           45,309
+ Other current liabilities ....................................           99,509          113,349
+                                                                       -----------     -----------
+    Total current liabilities .................................          271,583          260,154
+Long-term debt    .............................................          201,115          175,235
+Non-operating and other long-term liabilities   ...............          152,451          151,074
+Deferred income taxes   .......................................           52,308           53,532
+Shareholders' equity:
+ Common stock (issued 88,441,479 and 89,195,790 shares)  ......              884              892
+ Other shareholders' equity   .................................          457,756          475,656
+ Treasury stock, at cost (4,478,814 shares)  ..................          (63,388)         (63,388)
+                                                                       -----------     -----------
+    Total shareholders' equity   ..............................          395,252          413,160
+                                                                       -----------     -----------
+                                                                     $ 1,072,709      $ 1,053,155
+                                                                       ===========     ===========
+</TABLE>
+
+                   See Notes to Condensed Consolidated Financial Statements.
+
+                                       3
+
+<PAGE>
+
+
+                     SUNBEAM CORPORATION AND SUBSIDIARIES
+                CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS
+                            (DOLLARS IN THOUSANDS)
+
+<TABLE>
+<CAPTION>
+                                                                          THREE MONTHS ENDED
+                                                                      --------------------------
+                                                                      MARCH 31,      MARCH 30,
+                                                                        1996           1997
+                                                                      ------------   -----------
+                                                                             (UNAUDITED)
+<S>                                                                   <C>            <C>
+OPERATING ACTIVITIES:
+ Net earnings   ...................................................     $  17,361      $   6,848
+ Adjustments to reconcile net earnings to net cash
+ used in operating activities:
+  Depreciation and amortization   .................................        11,376         10,587
+  Loss on sale of discontinued operations, net of taxes   .........             -         13,713
+  Deferred income taxes  ..........................................         2,128         13,128
+ Decrease in cash from changes in working capital and other  ......       (63,799)       (66,969)
+                                                                         ---------      ---------
+  Net cash used in operating activities ...........................       (32,934)       (22,693)
+                                                                         ---------      ---------
+INVESTING ACTIVITIES:
+ Capital expenditures, net  .......................................       (20,336)       (10,821)
+ Proceeds from sales of divested operations and other assets.......             -         70,404
+                                                                         ---------      ---------
+   Net cash provided by (used in) investing activities ............       (20,336)        59,583
+                                                                         ---------      ---------
+FINANCING ACTIVITIES:
+ Net borrowing (payments) under revolving credit facility .........        40,000        (20,000)
+ Issuance of long-term debt .......................................         6,500              -
+ Payments of debt obligations  ....................................          (642)        (6,322)
+ Proceeds from exercise of stock options   ........................            73          8,866
+ Other, net  ......................................................          (778)          (545)
+                                                                         ---------      ---------
+  Net cash provided by (used in) financing activities  ............        45,153        (18,001)
+                                                                         ---------      ---------
+  Net increase (decrease) in cash and cash equivalents ............        (8,117)        18,889
+Cash and cash equivalents at beginning of period ..................        28,273         11,526
+                                                                         ---------      ---------
+Cash and cash equivalents at end of period ........................     $  20,156      $  30,415
+                                                                         =========      =========
+</TABLE>
+
+                   See Notes to Condensed Consolidated Financial Statements.
+
+                                       4
+
+<PAGE>
+
+
+                     SUNBEAM CORPORATION AND SUBSIDIARIES
+              NOTES TO CONDENSED CONSOLIDATED FINANCIAL STATEMENTS
+                                  (UNAUDITED)
+
+1. OPERATIONS AND BASIS OF PRESENTATION
+
+     Sunbeam Corporation (the "Company") is a leading designer, manufacturer and
+marketer of consumer branded products. The Sunbeam- and Oster- brands have been
+household names for generations, and the Company is a market share leader in
+many of its product categories.
+
+     The Company markets its products through virtually every category of
+retailer including mass merchandisers, catalog showrooms, warehouse clubs,
+department stores, catalogs, Company-owned outlet stores, television shopping
+channels, hardware stores, home centers, drug and grocery stores, pet supply
+retailers, as well as independent distributors and the military. The Company
+also sells its products to commercial end-users such as hotels and other
+institutions.
+
+     In the opinion of management, the unaudited condensed consolidated
+financial statements furnished herein include all adjustments (with the
+exception of the loss from discontinued operations in the first quarter of 1997)
+necessary for a fair presentation of the results of operations for the interim
+periods presented. These interim results of operations are not necessarily
+indicative of results for the entire year. Certain prior year amounts have been
+reclassified to reflect discontinued operations as described in Note 4. The
+condensed consolidated financial statements contained herein should be read in
+conjunction with the consolidated financial statements and related notes
+contained in the Company's 1996 Annual Report on Form 10-K ("Form 10-K").
+
+2. SUPPLEMENTAL FINANCIAL STATEMENT DATA
+     (In thousands)
+
+<TABLE>
+<CAPTION>
+                                                        DECEMBER 29,      MARCH 30,
+                                                            1996            1997
+                                                        ---------------   -----------
+<S>                                                   <C>               <C>
+ Inventories:
+  Finished goods  .................................      $   85,213      $   63,045
+  Work in process .................................          25,167          32,391
+  Raw materials and supplies  .....................          52,272          52,575
+                                                           ----------     ----------
+                                                         $  162,252      $  148,011
+                                                           ==========     ==========
+ Property, plant and equipment:
+  Land   ..........................................      $    2,524      $    2,394
+  Buildings and improvements  .....................          95,619          93,687
+  Machinery and equipment  ........................         258,199         236,330
+                                                           ----------     ----------
+                                                            356,342         332,411
+  Accumulated depreciation and amortization  ......        (136,254)       (114,958)
+                                                           ----------     ----------
+                                                         $  220,088      $  217,453
+                                                           ==========     ==========
+ Trademarks and trade names:
+  Gross  ..........................................      $  245,307      $  229,969
+  Accumulated amortization ........................         (45,045)        (30,941)
+                                                           ----------     ----------
+                                                         $  200,262      $  199,028
+                                                           ==========     ==========
+</TABLE>
+
+
+                                       5
+
+<PAGE>
+
+
+                     SUNBEAM CORPORATION AND SUBSIDIARIES
+        NOTES TO CONDENSED CONSOLIDATED FINANCIAL STATEMENTS-(CONTINUED)
+                                  (UNAUDITED)
+
+<TABLE>
+<CAPTION>
+                                              THREE MONTHS ENDED
+                                          --------------------------
+                                           MARCH 31,      MARCH 30,
+                                             1996          1997
+                                          ------------   -----------
+<S>                                       <C>            <C>
+ Cash paid during the period for:
+  Interest  ...........................      $1,280        $1,103
+                                            =======       =======
+  Income taxes (refunds) ..............      $2,629      $(11,920)
+                                            =======       =======
+</TABLE>
+
+
+3. RESTRUCTURING COSTS
+
+     During the fourth quarter of 1996, the Company initiated a restructuring
+and growth plan. As a result, the Company recorded a pre-tax special charge to
+earnings of approximately $337.6 million in the fourth quarter of 1996 of which
+approximately 20% was for cash items.
+
+     During the first quarter of 1997, the restructuring reserve was reduced by
+$18.5 million as a result of cash and non-cash charges. The following table sets
+forth the details and the cumulative activity in the restructuring account as of
+March 30, 1997 (in millions):
+
+<TABLE>
+<CAPTION>
+                                                 RESERVE BALANCE            CASH          NON-CASH       RESERVE BALANCE
+                                               AT DECEMBER 29, 1996      REDUCTIONS      REDUCTIONS     AT MARCH 30, 1997
+                                               -----------------------   -------------   -------------   -------------------
+<S>                                            <C>                       <C>             <C>             <C>
+ Severance and other employee costs  .                 $36.9             $   (8.4)       $   (5.5)             $23.0
+ Closure and consolidation of facilities
+ and related exit costs   ...............               26.9                 (4.6)              -               22.3
+                                                    -------                --------        --------         -------
+   Total  ..............................               $63.8             $  (13.0)       $   (5.5)             $45.3
+                                                    =======                ========        ========         =======
+</TABLE>
+
+4. DISCONTINUED OPERATIONS AND OTHER ASSETS HELD FOR SALE
+
+     On February 10, 1997, the Company entered into an agreement to sell its
+furniture business (by a sale of assets) to a subsidiary of U.S. Industries,
+Inc., which was completed on March 17, 1997. The Company initially recorded a
+provision for estimated losses to be incurred on the sale of the furniture
+business of $32.4 million, net of applicable income tax benefits, for the fiscal
+year ended December 29, 1996.
+
+     During the first quarter of 1997, upon the completion of the sale, the
+Company provided for additional losses on disposal of the furniture business in
+the amount of $13.7 million, net of applicable income tax benefits as a result
+of lower than anticipated sales proceeds.
+
+                                       6
+
+<PAGE>
+
+
+                     SUNBEAM CORPORATION AND SUBSIDIARIES
+        NOTES TO CONDENSED CONSOLIDATED FINANCIAL STATEMENTS-(CONTINUED)
+                                  (UNAUDITED)
+
+5. EARNINGS PER SHARE
+
+     During the first quarter of 1997, the Financial Accounting Standards Board
+("FASB") issued Statement No. 128, EARNINGS PER SHARE, which supersedes
+Accounting Principles Board ("APB") Opinion No. 15, EARNINGS PER SHARE. SFAS No.
+128 is effective for financial statements for both interim and annual periods
+after December 15, 1997. Early application is prohibited; although, footnote
+disclosure of pro forma earnings per share ("EPS") amounts computed under SFAS
+No. 128 is permitted, as follows:
+
+<TABLE>
+<CAPTION>
+                                                 THREE MONTHS ENDED
+                                             --------------------------
+                                             MARCH 31,      MARCH 30,
+                                               1996           1997
+                                             ------------   -----------
+<S>                                          <C>            <C>
+ Primary EPS as reported   ............         $ .21         $ .08
+ Effect of SFAS No. 128 ...............             -             -
+                                               -------      -------
+ Basic EPS as restated  ...............          $.21          $.08
+                                               =======      =======
+ Fully diluted EPS as reported   ......         $ .21         $ .08
+ Effect of SFAS No. 128 ...............             -             -
+                                               -------      -------
+ Diluted EPS as restated   ............          $.21          $.08
+                                               =======      =======
+</TABLE>
+
+
+
+                                       7
+
+<PAGE>
+
+
+ITEM 2. MANAGEMENT'S DISCUSSION AND ANALYSIS OF FINANCIAL CONDITION AND RESULTS
+   OF OPERATIONS
+
+     The following discussion should be read in conjunction with the
+accompanying condensed consolidated financial statements for the three months
+ended March 31, 1996 and March 30, 1997 and the 1996 Form 10-K.
+
+RESULTS OF OPERATIONS
+
+     The table below sets forth selected operating data of the Company for the
+three months ended March 31, 1996 and March 30, 1997:
+
+<TABLE>
+<CAPTION> 
+                                                               THREE MONTHS ENDED
+                                                           --------------------------
+                                                           MARCH 31,      MARCH 30,
+                                                             1996           1997
+                                                           ------------   -----------
+<S>                                                        <C>            <C>
+ Net sales ..........................................         100.0%        100.0%
+ Cost of goods sold .................................          79.1          73.3
+                                                           --------      --------
+ Gross margin .......................................          20.9          26.7
+ Selling, general and administrative expense   ......          14.2          13.0
+                                                           --------      --------
+ Operating earnings .................................           6.7%         13.7%
+                                                           ========      ========
+</TABLE>
+
+NET SALES
+
+     Net sales from continuing operations for the Company for the three months
+ended March 30, 1997 were $253.5 million, an increase of $23.7 million (10.3%)
+over the comparable period of the prior year.
+
+     Domestic sales from ongoing operations, which represents approximately 80%
+of total Company sales, increased by 12.5% for the three months ended March 30,
+1997. The Company experienced sales growth in each of its five product
+categories- Appliances, Health Care, Personal Care and Comfort, Outdoor Cooking
+and Away From Home. This growth was achieved through a combination of factors
+including enhanced channels of distribution, modest price increases, new product
+introductions and the results of the Company's $12.0 million advertising
+campaign launched in the fourth quarter of 1996. The Company also realized $1.1
+million in revenues during the first quarter of 1997 from its new retail outlet
+stores which have opened over the last five months.
+
+     The Company's international sales increased 14.7% for the three months
+ended March 30, 1997. Essentially every international region in which Sunbeam
+operates, including Canada, Mexico, Latin America, and the Far East, experienced
+substantial sales growth over the comparable period of the prior year, except
+for Venezuela which had inflated sales activity in the first quarter of 1996 due
+to the April 1996 devaluation of the bolivar. The current quarter's sales growth
+internationally was spurred by the introduction of 42 new 220 volt products and
+the signing of 15 new distribution and licensing agreements giving the Company
+access to fast-growing markets in Asia and Latin America.
+
+GROSS MARGIN
+
+     The gross margin percentage for the three months ended March 30, 1997
+increased 5.8 percentage points, to 26.7%. This increase reflects the successful
+implementation of the Company's restructuring and growth initiatives announced
+on November 12, 1996. Specifically, the Company has now reduced its number of
+manufacturing facilities from 26 to 9 and warehouses from 61 to 18 and has taken
+other actions contributing to the margin improvement, including the elimination
+of low margin and/or unprofitable products/stock keeping units (SKU's) and the
+consolidation of the Company's purchasing activities resulting in procurement
+savings for raw materials.
+
+OPERATING EARNINGS
+
+     Operating earnings for the quarter ended March 30, 1997 increased $19.2
+million over the prior year, or 123.9%, to $34.7 million. As a percentage of
+sales, operating earnings increased from 6.7% in
+
+                                       8
+
+<PAGE>
+
+1996 to 13.7% in 1997. This increase is primarily attributable to the gross
+margin improvement described above as well as a 1.2 percentage point decrease in
+selling, general and administrative expenses ("SG&A") as a percent of sales, to
+13.0%.
+
+     The SG&A decrease, as a percentage of sales, for the three months ended
+March 30, 1997 was also indicative of the Company's successful implementation of
+its cost cutting initiatives associated with the restructuring plan announced in
+the fourth quarter of 1996. The reduction in SG&A from these initiatives,
+including the consolidation of six divisional and regional headquarters into one
+worldwide headquarters and the outsourcing of certain back-office functions,
+were partially offset by the Company's renewed commitment to marketing, media
+advertising and sales promotion in support of new product introductions and
+efforts to increase brand relevance.
+
+INTEREST EXPENSE
+
+     Interest expense for the three months ended March 30, 1997 decreased $1.0
+million from the comparable period of the prior year due to lower borrowing
+levels.
+ 
+
+OTHER EXPENSE, NET
+
+     Other expense, net decreased from $1.3 million for the first quarter of
+1996 to $0.1 million for the first quarter of 1997. This change is primarily
+attributable to the recognition by the Company of approximately $1.0 million in
+foreign exchange losses in the first quarter of 1996 associated with the April
+1996 Venezuelan currency devaluation.
+
+INCOME TAXES
+
+     The Company's effective income tax rate for both the three months ended
+March 31, 1996 and March 30, 1997 was 37.0%.
+
+EARNINGS FROM CONTINUING OPERATIONS AND EARNINGS PER SHARE FROM CONTINUING
+   OPERATIONS
+
+     For the three months ended March 30, 1997, the Company's earnings from
+continuing operations were $20.5 million, an increase of $13.9 million over
+earnings from continuing operations of $6.6 million in 1996. Earnings per share
+from continuing operations for the three months ended March 30, 1997 were $.24,
+an increase of $.16 from $.08 in 1996.
+
+NET EARNINGS AND NET EARNINGS PER SHARE
+
+     The Company's discontinued furniture operations broke-even for the three
+months ended March 30, 1997 on revenues of $51.6 million compared to earnings of
+$10.7 million in 1996 on revenues of $110.2 million. In addition, the Company
+provided for additional losses on disposal of the furniture business in the
+amount of $13.7 million, net of applicable income tax benefits, in the first
+quarter of 1997. The additional provision was required primarily due to lower
+than anticipated sales proceeds.
+
+     As a result of the additional loss provision from discontinued operations,
+the Company's net earnings for the three months ended March 30, 1997 were $6.9
+million, a decrease of $10.5 million below net earnings of $17.4 million in
+1996. Net earnings per share for the three months ended March 30, 1997 were
+$.08, a decrease of $.13 from $.21 in 1996.
+
+LIQUIDITY AND CAPITAL RESOURCES
+
+     At March 30, 1997, the Company had cash and cash equivalents of $30.4
+million and total debt of $176.1 million. Cash used in operating activities for
+the three months ended March 30, 1997 was $22.7 million compared to $32.9
+million for the comparable period of 1996. This decrease is primarily
+attributable to an increase in earnings before non-cash charges.
+
+                                       9
+
+<PAGE>
+
+
+     Capital spending totaled $10.8 million for the first quarter of 1997 and
+was primarily attributable to new product development and cost reduction
+initiatives. Cash provided by investing activities for the first quarter of 1997
+also included $70.4 million from the divestiture of product categories and
+businesses determined to be non-core to Sunbeam operations in conjunction with
+the Company's fourth quarter 1996 restructuring and growth plan.
+
+     During the first three months of 1997, the Company repaid $20.0 million
+under its revolving credit facility in comparison to net borrowings of $40.0
+million during the first quarter of 1996.
+
+     The Company believes that its cash flow from operations, existing cash and
+cash equivalent balances as well as its revolving credit facility will be
+sufficient to finance its requirements to support working capital needs, capital
+expenditures, restructuring expenditures and debt service in the foreseeable
+future.
+
+CAUTIONARY STATEMENTS
+
+     Certain of the information contained herein may contain "forward-looking"
+information, as such term is defined by the Private Securities Litigation Reform
+Act of 1995 and in releases made by the Securities and Exchange Commission
+("SEC" ). Actual results could differ materially from those projected in the
+forward-looking statements as a result of various factors, including those set
+forth in Part 1, Item 1 under the heading "Cautionary Statements" in the 1996
+Form 10-K, which cautionary statements are incorporated herein by reference.
+
+                                       10
+
+<PAGE>
+
+
+ITEM 6. EXHIBITS AND REPORTS ON FORM 8-K.
+
+     (a) Exhibits
+
+<TABLE>
+<S>       <C>
+ 3a.       By-Laws of the Company, as amended.
+10a.       Amended and Restated Sunbeam Corporation Equity Team Plan.
+11a.       Calculation of Earnings Per Share of Common Stock.
+ 27.       Financial Data Schedule, submitted electronically to the Securities
+           and Exchange Commission for information only and not filed.
+ 99.a      Press Release dated April 23, 1997, reporting first quarter 1997
+           results.
+</TABLE>
+
+     (b)  Reports on Form 8-K
+
+     The Company has not filed any reports on Form 8-K during the first quarter
+of 1997.
+
+                                       11
+
+<PAGE>
+
+
+                                  SIGNATURES
+
+     Pursuant to the requirements of the Securities Exchange Act of 1934, the
+registrant has duly caused this report to be signed on its behalf by the
+undersigned thereunto duly authorized.
+
+                       SUNBEAM CORPORATION
+
+Date: May 14, 1997                        By: /s/ Russell A. Kersh
+                                            -----------------------------------
+                                            Russell A. Kersh
+                                            Executive Vice President,
+                                            Finance and Administration
+                                            (Principal Financial Officer
+                                            and duly authorized to sign
+                                            on behalf of the Registrant)
+ 
+
+                                       12
+
+<PAGE>
+
+                               INDEX TO EXHIBITS
+
+
+EXHIBIT 
+NUMBER                         DESCRIPTION
+- -------                        -----------
+
+3.a               By-Laws of the Company, as amended
+
+10.a              Amended and Restated Sunbeam Corporation Equity Team Plan
+
+11.a              Calculation of Earnings Per Share of Common Stock
+
+27                Financial Data Schedule, submitted electronically to the
+                  Securities and Exchange Commission for information only and
+                  not filed.
+
+99.a              Press Release dated April 23, 1997, reporting first quarter
+                  1997 results
+
+
+</TEXT>
+</DOCUMENT>
+<DOCUMENT>
+<TYPE>EX-3.A
+<SEQUENCE>2
+<TEXT>
+
+
+                                                                   EXHIBIT 3.a
+
+                                     BY-LAWS
+
+                                       OF
+
+                               SUNBEAM CORPORATION
+
+                              ---------------------
+
+                                    ARTICLE I
+
+                                     OFFICES
+
+         Section 1.1 REGISTERED OFFICE. The registered office of the Corporation
+within the State of Delaware shall be located at the principal place of business
+in said State of such corporation or individual acting as the Corporation's
+registered agent in Delaware.
+
+         Section 1.2 OTHER OFFICES. The Corporation may also have offices and
+places of business at such other places both within and without the State of
+Delaware as the Board of Directors may from time to time determine or the
+business of the Corporation may require.
+
+                                   ARTICLE II
+
+                            MEETINGS OF STOCKHOLDERS
+
+         Section 2.1 PLACE OF MEETINGS. All meetings of stockholders shall be
+held at the principal office of the Corporation, or at such other place within
+or without the State of Delaware as shall be stated in the notice of the meeting
+or in a duly executed waiver of notice thereof.
+
+         Section 2.2 ANNUAL MEETINGS. The annual meeting of stockholders for the
+election of directors shall be held at such time on such day, other than a legal
+holiday, as the Board of Directors in each such year determines. At the annual
+meeting, the stockholders entitled to vote for the election of directors shall
+elect, by a plurality vote, a Board of Directors and transact such other
+business as may properly come before the meeting.
+
+         Section 2.3 SPECIAL MEETINGS. Special meetings of stockholders, for any
+purpose or purposes, may be called by the Chairman of the Board of Directors.
+Any such request shall state the purpose or purposes of the proposed meeting. At
+any special meeting of stockholders, only such business may be transacted as is
+related to the purpose or purposes set forth in the notice of such meeting.
+
+         Section 2.4 NOTICE OF MEETINGS. Written notice of every meeting of
+stockholders, stating the place, date and hour thereof and, in the case of a
+special meeting of stockholders, the purpose or purposes thereof and the person
+or persons by whom or at whose direction such meeting has been called and such
+notice is being issued, shall be given not less than ten (10) nor more than
+sixty (60) days before the date of the meeting, either personally or by mail, by
+or at
+
+
+<PAGE>
+
+the direction of the Chairman of the Board, to each stockholder of record
+entitled to vote at such meeting. If mailed, such notice shall be deemed to be
+given when deposited in the United States mail, postage prepaid, directed to the
+stockholder at his address as it appears on the stock transfer books of the
+Corporation. Nothing herein contained shall preclude the stockholders from
+waiving notice as provided in Section 4.1 hereof.
+
+         Section 2.5 QUORUM. The holders of a majority of the issued and
+outstanding shares of stock of the Corporation entitled to vote, represented in
+person or by proxy, shall be necessary to and shall constitute a quorum for the
+transaction of business at any meeting of stockholders. If, however, such quorum
+shall not be present or represented at any meeting of stockholders, the
+stockholders entitled to vote thereat, present in person or represented by
+proxy, shall have power to adjourn the meeting from time to time, without notice
+other than announcement at the meeting, until a quorum shall be present or
+represented. At any such adjourned meeting at which a quorum shall be present or
+represented, any business may be transacted which might have been transacted at
+the meeting as originally noticed. Notwithstanding the foregoing, if after any
+such adjournment the Board of Directors shall fix a new record date for the
+adjourned meeting, or if the adjournment is for more than thirty (30) days, a
+notice of such adjourned meeting shall be given as provided in Section 2.4
+hereof, but such notice may be waived as provided in Section 4.1 hereof.
+
+         Section 2.6 VOTING. At each meeting of stockholders, each holder of
+record of shares of stock entitled to vote shall be entitled to vote in person
+or by proxy, and each such holder shall be entitled to one vote for every share
+standing in his name on the books of the Corporation as of the record date fixed
+by the Board of Directors or prescribed by law and, if a quorum is present, a
+majority of the shares of such stock present or represented at any meeting of
+stockholders shall be the vote of the stockholders with respect to any item of
+business, unless otherwise provided by any applicable provision of law, by these
+By-Laws or by the Certificate of Incorporation.
+
+         Section 2.7 PROXIES. Every stockholder entitled to vote at a meeting or
+by consent without a meeting may authorize another person or persons to act for
+him by proxy. Each proxy shall be in writing executed by the stockholder giving
+the proxy or by his duly authorized attorney. No proxy shall be valid after the
+expiration of three (3) years from its date, unless a longer period is provided
+for in the proxy. Unless and until voted, every proxy shall be revocable at the
+pleasure of the person who executed it, or his legal representatives or assigns
+except in those cases where an irrevocable proxy permitted by statute has been
+given.
+
+         Section 2.8 CONSENTS. Whenever a vote of stockholders at a meeting
+thereof is required or permitted to be taken in connection with any corporate
+action by any provision of statute, the Certificate of Incorporation or these
+By-Laws, the meeting, prior notice thereof and vote of stockholders may be
+dispensed with if the holders of shares having not less than the minimum number
+of votes that would have been necessary to authorize or take such action at a
+meeting at which all shares entitled to vote thereon were present and voted
+shall consent in writing to the taking of such action. Where corporate action is
+taken in such matter by less than unanimous written consent, prompt written
+notice of the taking of such action shall be given thereto.
+
+<PAGE>
+
+         Section 2.9 STOCK RECORDS. The Secretary or agent having charge of the
+stock transfer books shall make, at least ten (10) days before each meeting of
+stockholders, a complete list of the stockholders entitled to vote at such
+meeting or any adjournment thereof, arranged in alphabetical order and showing
+the address of and the number and class and series, if any, of shares held by
+each. For a period of ten (10) days prior to such meeting, such list shall be
+kept at the principal place of business of the Corporation or at the office of
+the transfer agent or registrar of the Corporation and such other places as
+required by statute and shall be subject to inspection by any stockholder at any
+time during usual business hours. Such list shall also be produced and kept open
+at the time and place of the meeting and shall be subject to the inspection of
+any stockholder at any time during the meeting.
+
+                                   ARTICLE III
+
+                                    DIRECTORS
+
+         Section 3.1 NUMBER. The number of directors of the Corporation which
+shall constitute the entire Board of Directors shall not be less than three nor
+more than twelve as fixed from time to time by a vote of a majority of the
+entire Board, provided, however, that the number of directors shall not be
+reduced so as to shorten the term of any director at the time in office.
+
+         Section 3.2 RESIGNATION AND REMOVAL. Any director may resign at any
+time upon notice of resignation to the Corporation. Any director may be removed
+at any time by vote of the stockholders then entitled to vote for the election
+of directors at a special meeting called for that purpose, either with or
+without cause.
+
+         Section 3.3 NEWLY CREATED DIRECTORSHIP AND VACANCIES. Newly created
+directorships resulting from an increase in the number of directors and
+vacancies occurring in the Board of Directors for any reason whatsoever shall be
+filled by vote of the Board. If the number of directors then in office is less
+than a quorum, such newly created directorships and vacancies may be filled by a
+vote of a majority of the directors then in office. Any director elected to fill
+a vacancy shall be elected until the next meeting of stockholders at which the
+election of directors is in the regular course of business, and until his
+successor has been elected and qualified.
+
+         Section 3.4 POWERS AND DUTIES. Subject to the applicable provisions of
+law, these By-Laws or the Certificate of Incorporation, but in furtherance and
+not in limitation of any rights therein conferred, the Board of Directors shall
+have the control and management of the business and affairs of the Corporation
+and shall exercise all such powers of the Corporation and do all such lawful
+acts and things as may be exercised by the Corporation.
+
+         Section 3.5 PLACE OF MEETINGS. All meetings of the Board of Directors
+may be held either within or without the State of Delaware.
+
+         Section 3.6 ANNUAL MEETINGS. An annual meeting of each newly elected
+Board of Directors shall be held immediately following the annual meeting of
+stockholders, and no notice of such meeting to the newly elected directors shall
+be necessary in order to legally constitute the
+
+<PAGE>
+
+meeting, provided a quorum shall be present, or the newly elected directors may
+act by the written consent of all of such directors.
+
+         Section 3.7 REGULAR MEETINGS. Regular meetings of the Board of
+Directors may be held without notice, and at such time and at such place as
+shall from time to time be fixed, in advance, by resolution of the Board.
+
+         Section 3.8 SPECIAL MEETINGS. Special meetings of the Board of
+Directors may be called by the Chairman of the Board. Written notice of each
+special meeting of directors stating the time and place of the meeting shall be
+given to each director at least twenty-four (24) hours before such meeting,
+provided that neither the business to be transacted at, nor the purpose of, any
+special meeting of the Board of Directors need be specified in the notice or
+waiver of notice of such meeting.
+
+         Section 3.9 NOTICE OF MEETINGS. Notice of each special meeting of the
+Board shall be given by the Secretary or an Assistant Secretary and shall state
+the place, date and time of the meeting. Notice of each such meeting shall be
+given orally or shall be mailed to each director at his residence or usual place
+of business. If notice of less than three (3) days is given, it shall be oral,
+whether by telephone or in person, or sent by special delivery mail, facsimile
+or telegraph. If mailed, the notice shall be given when deposited in the United
+States mail, postage prepaid. Notice of any adjourned meeting, including the
+place, date and time of the new meeting, shall be given to all directors not
+present at the time of the adjournment, as well as to the other directors unless
+the place, date and time of the new meeting is announced at the adjourned
+meeting. Nothing herein contained shall preclude the directors from waiving
+notice as provided in Section 4.1 hereof.
+
+         Section 3.10 QUORUM AND VOTING. At all meetings of the Board of
+Directors, a majority of the entire Board shall be necessary to and shall
+constitute a quorum for the transaction of business, unless otherwise provided
+by any applicable provision of law, by these By-Laws, or by the Certificate of
+Incorporation. The act of a majority of the directors present at the time of the
+vote, if a quorum is present at such time, shall be the act of the Board of
+Directors, unless otherwise provided by an applicable provision of law, by these
+By-Laws or by the Certificate of Incorporation. If a quorum shall not be present
+at any meeting of the Board of Directors, the directors present thereat may
+adjourn the meeting from time to time, until a quorum shall be present.
+
+         Section 3.11 COMPENSATION. The salaries and other compensation of
+directors for services to the Corporation as directors, officers or otherwise
+shall be fixed by, or in the manner prescribed by, the Board of Directors,
+irrespective of any personal interest of any of its members.
+
+         Section 3.12 BOOKS AND RECORDS. The directors may keep the books of the
+Corporation, except such as are required by law to be kept within the state,
+outside of the State of Delaware, at such place or places as they may from time
+to time determine.
+
+         Section 3.13 ACTION WITHOUT A MEETING. Any action required or permitted
+to be taken by the Board, or by a committee of the Board, may be taken without a
+meeting if all members
+
+<PAGE>
+
+of the Board or the committee, as the case may be, consent in writing to the
+adoption of a resolution authorizing the action. Any such resolution and the
+written consents thereto by the members of the Board or committee shall be filed
+with the minutes of the proceedings of the Board or committee.
+
+         Section 3.14 TELEPHONE PARTICIPATION. Any one or more members of the
+Board, or any committee of the Board, may participate in a meeting of the Board
+or committee by means of a conference telephone call or similar communications
+equipment allowing all persons participating in the meeting to hear each other
+at the same time. Participation by such means shall constitute presence in
+person at a meeting.
+
+         Section 3.15 EXECUTIVE COMMITTEE. The Board of Directors may, by
+resolution adopted by the Board, appoint an Executive Committee consisting of
+not less than three (3) directors, at least one of whom is not a beneficial
+owner, or the representative of a beneficial owner, of 10% or more of the
+Corporation's outstanding common stock. The Executive Committee shall keep
+minutes of its meetings and report the same to the Board. The Executive
+Committee, subject to the last sentence of Section 3.16 of these Bylaws, shall
+have and may exercise all of the powers of the Board.
+
+         Section 3.16 OTHER COMMITTEES OF THE BOARD. The Board, by resolution
+adopted by a majority of the entire Board, may designate such other committees,
+each consisting of one or more directors and having such title as the Board may
+consider to be a proper description of its function. The Board may designate one
+or more directors as alternate members of any such other committee. Such
+alternate members may replace any absent member or members at any meeting of
+such other committee. Each other committee (including the members thereof) shall
+serve at the pleasure of the Board and shall keep minutes of its meetings and
+report the same to the Board. Except as otherwise provided by law, each such
+committee, to the extent provided in the resolution establishing it, shall have
+and may exercise all the authority of the Board with respect to all matters.
+However, no such other committee shall have power or authority to:
+
+                  A.       amend the Certificate of Incorporation;
+
+                  B.       adopt an agreement of merger or consolidation;
+
+                  C.       recommend to the stockholders the sale, lease or
+exchange of all or substantially all of the Corporation's property and assets;
+
+                  D.       recommend to the stockholders a dissolution of the
+Corporation or a revocation of a dissolution;
+
+                  E.       amend these By-Laws; and
+
+                  F.       unless expressly so provided by resolution of the
+Board, (i) declare a dividend; or (ii) authorize the issuance of shares of the
+Corporation of any class.
+
+<PAGE>
+
+         Section 3.17 MANDATORY RETIREMENT. No nominee for election as a
+director shall be seventy (70) years or older on the date of election. A
+director who attains the age of seventy (70) during his or her term of office
+shall complete his or her term but shall not be eligible to stand for reelection
+thereafter.
+
+                                   ARTICLE IV
+
+                                     WAIVER
+
+         Section 4.1 WAIVER. Whenever a notice is required to be given by any
+provision of law, by these By-Laws, or by the Certificate of Incorporation, a
+written waiver, signed by the person entitled to notice, whether before or after
+the time stated therein, shall be deemed equivalent to such notice. Attendance
+of a person at a meeting shall constitute a waiver of notice of such meeting,
+except when the person attends a meeting for the express purpose of objecting at
+the beginning of the meeting, to the transaction of any business because the
+meeting is not lawfully called or convened.
+
+                                    ARTICLE V
+
+                                    OFFICERS
+
+         Section 5.1 EXECUTIVE OFFICERS. The officers of the Corporation shall
+be the Chairman of the Board, a Treasurer and Secretary. Any person may hold two
+or more of such offices. The officers of the Corporation shall be elected
+annually (and from time to time by the Board of Directors, as vacancies occur),
+at the annual meeting of the Board of Directors following the meeting of
+stockholders at which the Board of Directors was elected.
+
+         Section 5.2 OTHER OFFICERS. The Board of Directors may appoint such
+other officers and agents, including a Chief Executive Officer, President, Chief
+Financial Officer, Vice President, Assistant Vice Presidents, Secretaries,
+Assistant Secretaries and Assistant Treasurers, as it shall at any time or from
+time to time deem necessary or advisable.
+
+         Section 5.3 AUTHORITIES AND DUTIES. All officers, as between themselves
+and the Corporation, shall have such authority and perform such duties in the
+management of business and affairs of the Corporation as may be provided in
+these By-Laws, or, to the extent not so provided, as may be prescribed by the
+Board of Directors.
+
+         Section 5.4 TENURE AND REMOVAL. The officers of the Corporation shall
+be elected or appointed to hold office until their respective successors are
+elected or appointed. All officers shall hold office at the pleasure of the
+Board of Directors, and any officer elected or appointed by the Board of
+Directors may be removed at any time by the Board of Directors for cause or
+without cause at any regular or special meeting.
+
+         Section 5.5 VACANCIES. Any vacancy occurring in any office of the
+Corporation, whether because of death, resignation or removal, with or without
+cause, or any other reason, shall be filled by the Board of Directors.
+
+<PAGE>
+
+         Section 5.6 COMPENSATION. The salaries and other compensation of all
+officers and agents of the Corporation shall be fixed by or in the manner
+prescribed by the Board of Directors.
+
+         Section 5.7 CHAIRMAN OF THE BOARD. The Chairman of the Board shall have
+the general charge of the business and affairs of the Corporation and shall
+preside at all meetings of the stockholders and the directors. The Chairman
+shall see to it that all resolutions and orders of the Board are carried into
+effect, and, in connection therewith, shall be authorized to delegate the other
+executive officers such of his powers and duties as Chairman of the Board at
+such times and in such manner as he may deem advisable. In the event that the
+Corporation shall at any time or from time to time own or have power to vote any
+securities of any other issuer, such securities shall be voted by the Chairman
+of the Board. The Chairman of the Board shall perform such other duties as are
+properly required of him by the Board of Directors.
+
+         Section 5.8 PRESIDENT. The President, if and when appointed or elected,
+shall assist the Chairman of the Board in the management of the business of the
+Corporation and, in the absence of the Chairman, he shall preside at all
+meetings of the stockholders and the directors and exercise the other powers and
+perform the other duties of the Chairman or designate the executive officers of
+the Corporation by whom such other powers shall be exercised and other duties
+performed; and he shall have such other powers and duties as the Board of
+Directors or Chairman of the Board may from time to time prescribe. Except where
+by law or by order of the Board of Directors the signature of the Chairman of
+the Board is required, the President shall have the same power as the Chairman
+of the Board to execute instruments on behalf of the Corporation.
+
+         Section 5.9 SECRETARY. The Secretary shall attend all meetings of the
+stockholders and all meetings of the Board of Directors and shall record all
+proceedings taken at such meetings in a book to be kept for that purpose; he
+shall see that all notices of meetings of stockholders and meetings of the 
+Board of Directors are duly given in accordance with the provisions of these
+By-Laws or as required by law; he shall be the custodian of the records and of
+the corporate seal or seals of the Corporation; he shall have authority to affix
+the corporate seal or seals to all documents, the execution of which, on behalf
+of the Corporation, under its seal, is duly authorized, and when so affixed it
+may be attested by his signature; and in general, he shall perform all duties
+incident to the office of the Secretary of a corporation, and such other duties
+as the Board of Directors may from time to time prescribe.
+
+         Section 5.10 TREASURER. The Treasurer shall have charge of and be
+responsible for all funds, securities, receipts and disbursements of the
+Corporation and shall deposit, or cause to be deposited, in the name and to the
+credit of the Corporation, all moneys and valuable effects in such banks, trust
+companies, or other depositories as shall from time to time be selected by the
+Board of Directors. He shall keep full and accurate accounts of receipts and
+disbursements in books belonging to the Corporation; he shall render to the
+Chairman of the Board and to each member of the Board of Directors, whenever
+requested, an account of all of his transactions as Treasurer and of the
+financial condition of the Corporation; and in general, he shall perform all of
+the duties incident to the office of the Treasurer of a corporation, and such
+other duties as the Board of Directors may from time to time prescribe.
+
+<PAGE>
+
+         Section 5.11 OTHER OFFICERS. The Board of Directors may also elect or
+may delegate to the Chairman of the Board the power to appoint such other
+officers as it may at any time or from time to time deem advisable, and any
+officers so elected or appointed shall have such authority and perform such
+duties as the Board of Directors or the Chairman of the Board, if he shall have
+appointed them, may from time to time prescribe.
+
+                                   ARTICLE VI
+
+           PROVISIONS RELATING TO STOCK CERTIFICATES AND STOCKHOLDERS
+
+         Section 6.1 FORM AND SIGNATURE. The shares of the Corporation shall be
+represented by a certificate signed by the Chairman of the Board or the
+President or any Vice President and by the Secretary or any Assistant Secretary
+or the Treasurer, or any Assistant Treasurer, and shall bear the seal of the
+Corporation or a facsimile thereof. Each certificate representing shares shall
+state upon its face (a) that the Corporation is formed under the laws of the
+State of Delaware, (b) the name of the person or persons to whom it is issued,
+(c) the number of shares which such certificate represents and (d) the par
+value, if any, of each share represented by such certificate.
+
+         Section 6.2 REGISTERED STOCKHOLDERS. The Corporation shall be entitled
+to recognize the exclusive right of a person registered on its books as the
+owner of shares of stock to receive dividends or other distributions, and to
+vote as such owner, and to hold liable for calls and assessments a person
+registered on its books as the owner of stock, and shall not be bound to
+recognize any equitable or legal claim to or interest in such shares on the part
+of any other person.
+
+         Section 6.3 TRANSFER OF STOCK. Upon surrender to the Corporation or the
+appropriate transfer agent, if any, of the Corporation, of a certificate
+representing shares of stock duly endorsed or accompanied by proper evidence of
+succession, assignment or authority to transfer, and, in the event that the
+certificate refers to any agreement restricting transfer of the shares which it
+represents, proper evidence of compliance with such agreement, a new certificate
+shall be issued to the person entitled thereto, and the old certificate
+cancelled and the transaction recorded upon the books of the Corporation.
+
+         Section 6.4 LOST CERTIFICATES, ETC. The Corporation may issue a new
+certificate for shares in place of any certificate theretofore issued by it,
+alleged to have been lost, mutilated, stolen or destroyed, and the Board may
+require the owner of such lost, mutilated, stolen or destroyed certificate, or
+his legal representatives, to make an affidavit of the fact and/or to give the
+Corporation a bond in such sum as it may direct as indemnity against any claim
+that may be made against the Corporation on account of the alleged loss,
+mutilation, theft or destruction of any such certificate or the issuance of any
+such new certificate.
+
+         Section 6.5 RECORD DATE. For the purpose of determining the
+stockholders entitled to notice of, or to vote at, any meeting of stockholders
+or any adjournment thereof, or to express written consent to any corporate
+action without a meeting, or for the purpose of determining stockholders
+entitled to receive payment of any dividend or other distribution or allotment
+of any rights, or entitled to exercise any rights in respect of any change,
+conversion or exchange of
+
+<PAGE>
+
+stock, or for the purpose of any other lawful action, the Board may fix, in
+advance, a record date. Such date shall not be more than sixty (60) nor less
+than ten (10) days before the date of any such meeting, nor more than sixty (60)
+days prior to any other action.
+
+         Section 6.6 REGULATIONS. Except as otherwise provided by law, the Board
+may make such additional rules and regulations, not inconsistent with these
+By-Laws, as it may deem expedient, concerning the issue, transfer and
+registration of certificates for the securities of the Corporation. The Board
+may appoint, or authorize any officer of officers to appoint, one or more
+transfer agents and one or more registrars and may require all certificates for
+shares of capital stock to bear the signature or signatures of any of them.
+
+                                   ARTICLE VII
+
+                               GENERAL PROVISIONS
+
+         Section 7.1 DIVIDENDS AND DISTRIBUTIONS. Dividends and other
+distributions upon or with respect to outstanding shares of stock of the
+Corporation may be declared by the Board of Directors at any regular or special
+meeting, and may be paid in cash, bonds, property, or in stock of the
+Corporation. The Board shall have full power and discretion, subject to the
+provisions of the Certificate of Incorporation or the terms of any other
+corporate document or instrument to determine what, if any, dividends or
+distributions shall be declared and paid or made.
+
+         Section 7.2 CHECKS, ETC. All checks or demands for money and notes or
+other instruments evidencing indebtedness or obligations of the Corporation
+shall be signed by such officer or officers or other person or persons as may
+from time to time be designated by the Board of Directors.
+
+         Section 7.3 SEAL. The corporate seal shall have inscribed thereon the
+name of the Corporation, the year of its incorporation and the words "Corporate
+Seal Delaware". The seal may be used by causing it or a facsimile thereof to be
+impressed or affixed or otherwise reproduced.
+
+         Section 7.4 FISCAL YEAR. The fiscal year of the Corporation shall end
+on the Sunday closest to December 31 each year.
+
+         Section 7.5 GENERAL AND SPECIAL BANK ACCOUNTS. The Board may authorize
+from time to time the opening and keeping of general and special bank accounts
+with such banks, trust companies or other depositories as the Board may
+designate or as may be designated by any officer or officers of the Corporation
+to whom such power of designation may be delegated by the Board from time to
+time. The Board may make such special rules and regulations with respect to such
+bank accounts, not inconsistent with the provisions of these By-Laws, as it may
+deem expedient.
+
+<PAGE>
+
+                                  ARTICLE VIII
+
+            INDEMNIFICATION OF DIRECTORS, OFFICERS AND OTHER PERSONS
+
+         Section 8.1 INDEMNIFICATION BY CORPORATION. To the extent permitted by
+law, as the same exists or may hereafter be amended (but, in the case of any
+such amendment, only to the extent that such amendment permits the Corporation
+to provide broader indemnification rights than said law permitted the
+Corporation to provide prior to such amendment) the Corporation shall indemnify
+any person against any and all judgments, fines, amounts paid in settling or
+otherwise disposing of threatened, pending or completed actions, suits or
+proceedings, whether by reason of the fact that he, his testator or intestate
+representative, is or was a director or officer of (or a plan fiduciary or plan
+administrator of any employee benefit plan sponsored by) the Corporation or of
+(or by) any other corporation of any type or kind, domestic or foreign, which he
+served in any capacity at the request of the Corporation. Expenses so incurred
+by any such person in defending or investigating a threatened or pending civil
+or criminal action or proceeding shall at his request be paid by the Corporation
+in advance of the final disposition of such action or proceeding upon receipt of
+an undertaking by or on behalf of such director or officer to repay such amount
+if it shall ultimately be determined that such person is not entitled to be
+indemnified by the Corporation as authorized by this Article VIII. The foregoing
+right of indemnification shall in no way be exclusive of any other rights or
+indemnification to which any such person may be entitled, under any By-law,
+agreement, vote of shareholders or disinterested directors or otherwise, and
+shall inure to the benefit of the heirs, executors and administrators of such
+person.
+
+                                   ARTICLE IX
+
+                             ADOPTION AND AMENDMENTS
+
+         Section 9.1 POWER TO AMEND. These By-Laws may be amended or repealed
+and any new By-Laws may be adopted by the Board of Directors; provided that
+these By-Laws and any other By-Laws amended or adopted by the Board of Directors
+may be amended, may be reinstated, and new By-Laws may be adopted, by the
+stockholders of the Corporation entitled to vote at the time for the election of
+directors.
+
+</TEXT>
+</DOCUMENT>
+<DOCUMENT>
+<TYPE>EX-10.A
+<SEQUENCE>3
+<TEXT>
+
+
+                                                                  EXHIBIT 10.a
+
+                              AMENDED AND RESTATED
+                               SUNBEAM CORPORATION
+                                EQUITY TEAM PLAN
+
+                         (Amended as of April 15, 1997)
+
+1.       PURPOSE.
+
+         The purpose of the Sunbeam Corporation Equity Team Plan is to provide
+         incentives for selected executives, key employees, Outside Directors
+         and Designated Others to promote the financial success and progress of
+         Sunbeam Corporation. Capitalized terms used throughout this Plan shall
+         have the meanings ascribed to them in Section 16 hereof.
+
+2.       STOCK SUBJECT TO THE PLAN.
+
+         (a)      Subject to the provisions of this Section and Section 9, the
+                  maximum number of shares of Stock that may be issued under the
+                  Plan is 11,500,000 shares, to be allocated as follows:
+
+                  (i)      11,300,000 shares may be issued in connection with
+                           the grant of Options pursuant to Section 3; and
+
+                  (ii)     200,000 shares may be issued in connection with the
+                           grant of Restricted Stock Awards pursuant to Section
+                           3.
+
+                  Such shares may be either authorized but unissued shares or
+                  treasury shares.
+
+         (b)      The number of shares subject to an Option or a Restricted
+                  Stock Award that has been granted under the Plan shall no
+                  longer be charged against the limitation provided in Section
+                  2(a), and may again be made subject to Options or Restricted
+                  Stock Awards, as the case may be, to the extent that Options
+                  expire unexercised or are terminated, surrendered or canceled
+                  before exercise or Restricted Stock Awards are forfeited,
+                  terminated, surrendered or canceled due to a Participant's
+                  termination of employment or service as an Outside Director or
+                  for any other reason.
+
+3.       GRANTS OF OPTIONS AND RESTRICTED STOCK AWARDS.
+
+         (a)      Subject to the provisions of the Plan, the Committee may at
+                  any time, or from time to time, grant Options to officers, key
+                  employees, Outside Directors of the Company (or its
+                  subsidiaries) and Designated Others.
+
+         (b)      Subject to the provisions of the Plan, the Committee may at
+                  any time, or from time to time, grant shares of Stock which
+                  are subject to the Restrictions set forth in Section 4(b)
+                  ("Restricted Stock") to officers, key employees and Outside
+                  Directors of the Company (or its subsidiaries) and Designated
+                  Others.
+
+         (c)      The Committee shall cause shares of Restricted Stock to be
+                  issued to each Outside Director immediately and automatically
+                  upon his or her election, re-election or appointment as a
+                  Director of the Company. If such Outside Director is elected
+                  at an Annual Meeting of the Shareholders of the Company (the
+                  "Annual Meeting"), the number of shares of Restricted Stock to
+                  be issued shall
+
+<PAGE>
+
+                  be 1,500. The number of shares of Restricted Stock to be
+                  issued to an Outside Director who is elected or appointed at
+                  any time other than at an Annual Meeting shall be 1,500
+                  multiplied by a fraction, the numerator of which shall be the
+                  number of days after the date of such election to and
+                  including the date of the next Annual Meeting (which for such
+                  purpose shall be assumed to be the next May 15) and the
+                  denominator of which shall be 365; provided, however, (i) that
+                  in the case of an Outside Director elected to the Board for
+                  the first time during the period beginning August 1, 1996 and
+                  ending December 31, 1996, the number of such shares shall not
+                  be prorated, and each such Outside Director shall receive
+                  1,500 shares for the period of his service between the date of
+                  his election and the date of the next Annual Meeting (assumed
+                  to be May 15, 1997); and (ii) that each incumbent Outside
+                  Director, elected prior to August 1, 1996, shall receive that
+                  number of shares of Restricted Stock which results from
+                  applying to 1,500 such shares the proration formula provided
+                  above, using for such calculation the period from August 6,
+                  1996 until and including the date of the next Annual Meeting
+                  (assumed to be May 15, 1997).
+
+         (d)      Deleted.
+
+         (e)      Each Option shall be evidenced by a Stock Option Agreement,
+                  and each Restricted Stock Award shall be evidenced by a
+                  Restricted Stock Award Agreement, each in a form approved by
+                  the Committee or by a Company officer designated by the
+                  Committee.
+
+         (f)      Notwithstanding any other provision of the Plan, no person
+                  shall be granted Options for more than 250,000 shares of Stock
+                  or Restricted Stock Awards for more than 25,000 shares of
+                  Stock in any single fiscal year of the Company.
+
+4.       TERMS AND CONDITIONS.
+
+         (a)      OPTIONS.
+
+                  (i)      An Option shall entitle the Participant who holds it
+                           to exercise the Option on and subject to the terms,
+                           conditions and restrictions of the Plan (as the Plan
+                           may be amended from time to time) and such additional
+                           terms, conditions and restrictions as may be imposed
+                           by the Committee at the time of grant.
+
+                  (ii)     Unless otherwise specified by the Committee, the term
+                           of each Option granted prior to May 15, 1996 (herein
+                           the "1996 Amendment Date") and which is In-the-Money
+                           as of the 1996 Amendment Date shall commence on the
+                           date of grant of the Option and shall expire at the
+                           close of business on the earlier of (A) the tenth
+                           anniversary of the date of grant or (B) the 45th day
+                           following the termination of the Participant's
+                           employment with, or service as director of, the
+                           Company (or a subsidiary). Unless otherwise specified
+                           by the Committee, the term of each Option granted on
+                           or after the 1996 Amendment Date and the term of each
+                           Option granted prior to the 1996 Amendment Date which
+                           is Out- of-the- Money as of the 1996 Amendment Date,
+                           shall commence on the Grant Date of the Option and
+                           shall expire at the close of business on the earliest
+                           of (A) the tenth anniversary of the Grant Date; or
+                           (B) the third anniversary of the date of termination
+                           of the Participant's employment with, or service as a
+                           director of, the Company (or a subsidiary), in the
+                           case of retirement or termination by the Company
+                           without Cause; or (C) 90 days after the date of
+                           termination of employment in the case of resignation,
+                           voluntary departure or
+
+                                        2
+
+<PAGE>
+
+                           termination by the Company with Cause; or (D) in the
+                           case of a Designated Other, the date specified in the
+                           Stock Option Agreement. Notwithstanding the foregoing
+                           sentence, Participants who are subject to Section
+                           16(b) of the Exchange Act shall have until the
+                           earlier of (A) the tenth anniversary of the Grant
+                           Date; or (B) the third anniversary of the date of
+                           termination of their employment with, or service as a
+                           director of the Company, regardless of the cause,
+                           within which to exercise Options which are granted on
+                           or after the 1996 Amendment Date and Options which
+                           are Out-of-the-Money as of the 1996 Amendment Date;
+                           provided, however, that no such Option may be
+                           exercised by any such person during the period
+                           beginning on the date of termination and ending on
+                           the six month anniversary of the date of termination.
+
+                  (iii)    All Restrictions shall lapse with respect to the
+                           Restricted Stock subject to a Restricted Stock Award
+                           made to an Outside Director pursuant to Section 3(c)
+                           hereof immediately and automatically upon the
+                           Director's acceptance of election or appointment as a
+                           Director of the Company, as evidenced in such manner
+                           as may be established by the Committee. Unless
+                           otherwise specified by the Committee (which is
+                           empowered to provide different vesting schedules with
+                           respect to any grant of Options or Restricted Stock),
+                           all other Options granted under the Plan (from and
+                           after July 18, 1996) shall become exercisable with
+                           respect to one-third of the shares subject to the
+                           Option beginning on the first anniversary of the
+                           Grant Date and as to an additional one-third on each
+                           of the second and third anniversaries of the Grant
+                           Date (each twelve month period ending on an
+                           anniversary of a Grant Date being referred to herein
+                           as an "Option Year"), provided in each case that the
+                           Participant shall have remained an employee or a
+                           director of the Company (or a subsidiary), or in the
+                           case of a Designated Other, shall have remained in
+                           the position set forth in the Stock Option Agreement,
+                           continuously since the Grant Date. Notwithstanding
+                           the foregoing, during the remaining term of any
+                           options (if not already so exercisable) : (A) if a
+                           Participant's employment or service as a director, or
+                           in the case of a Designated Other, the period of
+                           service as defined in the Stock Option Agreement,
+                           terminates due to death, all Options held by the
+                           Participant at death shall become immediately
+                           exercisable in full; (B) upon a Change in Control,
+                           all Options held by such Participant who is then an
+                           employee or director of the Company (or a subsidiary)
+                           shall become immediately exercisable in full; and (C)
+                           in the event that the exercisability of an Option
+                           accelerates due to a Change in Control, Participants
+                           who are subject to Section 16(b) of the Exchange Act
+                           may not sell the shares acquired upon such
+                           accelerated exercise within six months of the Grant
+                           Date of such Option.
+
+                  (iv)     Except to the extent permitted by Rule 16b-3 or its
+                           successor, Options shall not be sold, assigned,
+                           transferred, pledged, hypothecated, or otherwise
+                           disposed of, except by will or the laws of descent
+                           and distribution, pursuant to a qualified domestic
+                           relations order ("QDRO") as defined in the Code or
+                           ERISA (or the rules thereunder) or as otherwise set
+                           forth in this Section 4(a)(iv). Each Option shall be
+                           exercisable during the lifetime of a Participant only
+                           by the Participant to whom it was granted, and after
+                           the Participant's death only by the Participant's
+                           estate or legal representative. To the extent
+                           exercisable, an Option may be exercised in whole at
+                           any time, or in part from time to time, during the
+                           term of the Option.
+
+                  (v)      Any Option may be converted, modified, forfeited or
+                           canceled, prospectively or retroactively, in whole or
+                           in part, by the Committee in its sole discretion;
+                           provided,
+
+                                        3
+
+<PAGE>
+
+                           however, that no such action shall adversely affect
+                           the rights of any Participant under any Option
+                           granted prior to such action without his consent.
+                           Except as may be otherwise provided in an Agreement,
+                           the Committee may, in its sole discretion, in whole
+                           or in part, waive any restrictions or conditions
+                           applicable to, or accelerate the vesting of, any
+                           Option.
+
+         (b)      STOCK AWARDS.
+
+                  (i)      Upon the grant of a Restricted Stock Award, a stock
+                           certificate representing a number of shares of Stock
+                           equal to the number of shares of Restricted Stock
+                           granted to a Participant shall be registered in the
+                           Participant's name but shall be held in custody by
+                           the Company for the Participant's account. The
+                           Participant shall generally have the rights and
+                           privileges of a stockholder as to such Restricted
+                           Stock, including the right to vote such Restricted
+                           Stock, except that the following restrictions (the
+                           "Restrictions") shall apply: (A) the Participant
+                           shall not be entitled to delivery of the certificate
+                           until the Restricted Period (set forth in paragraph
+                           (iii) below) applicable to such Restricted Stock has
+                           expired or terminated and until any other conditions
+                           prescribed by the Committee are satisfied; (B) none
+                           of the Restricted Stock may be sold, transferred,
+                           assigned, pledged, or otherwise encumbered or
+                           disposed of during the Restricted Period applicable
+                           to such Restricted Stock and prior to the
+                           satisfaction of any other conditions prescribed by
+                           the Committee; and (C) shares of Restricted Stock
+                           shall be forfeited and all rights of the Participant
+                           to such Restricted Stock shall terminate without
+                           further obligation on the part of the Company unless
+                           the Participant has (1) remained an employee or a
+                           director of the Company (or a subsidiary) until the
+                           expiration or termination of the Restricted Period
+                           applicable to such Restricted Stock (or in the case
+                           of a Designated Other, the duration specified in the
+                           Restricted Stock Award Agreement) and (2) satisfied
+                           any other conditions prescribed by the Committee
+                           applicable to such Restricted Stock. At the
+                           discretion of the Committee, cash and stock dividends
+                           with respect to the Restricted Stock may be either
+                           currently paid or withheld by the Company for the
+                           Participant's account. Cash dividends so withheld by
+                           the Committee shall not be subject to forfeiture.
+                           Upon the forfeiture of any shares of Restricted
+                           Stock, such forfeited Restricted Stock shall be
+                           transferred to the Company without further action by
+                           the Participant. The Participant shall have the same
+                           rights and privileges, and be subject to the
+                           Restrictions, with respect to any shares or other
+                           property received pursuant to Section 9.
+
+                  (ii)     Upon the expiration or termination of the Restricted
+                           Period with respect to shares of Restricted Stock and
+                           the satisfaction of any other conditions prescribed
+                           by the Committee, the Restrictions applicable to such
+                           Restricted Stock shall lapse and a stock certificate
+                           for the number of shares of Stock with respect to
+                           which the Restricted Period has lapsed shall be
+                           delivered, free of all restrictions, except any that
+                           may be imposed by law, to the Participant or the
+                           Participant's beneficiary or estate, as the case may
+                           be. The Company shall not be required to deliver any
+                           fractional share of Stock but will pay, in lieu
+                           thereof, the Fair Market Value (determined as of the
+                           date the Restricted Period expires or terminates) of
+                           such fractional share to the Participant or the
+                           Participant's beneficiary or estate, as the case may
+                           be. No payment will be required from the Participant
+                           upon the issuance or delivery of any shares of Stock
+                           under this paragraph, except that any amount
+                           necessary to satisfy applicable federal, state or
+                           local tax requirements shall be withheld or paid
+                           promptly upon notification of the amount due and
+                           prior to or concurrently with the issuance or
+                           delivery of a certificate representing such shares.
+
+                                        4
+
+<PAGE>
+
+         (iii)             Unless otherwise specified by the Committee at the
+                           time of the award and included in the Restricted
+                           Stock Award Agreement, the Restrictions shall also
+                           lapse with respect to one- third of the Restricted
+                           Stock subject to all other Restricted Stock Awards on
+                           each of the first through the third anniversaries of
+                           the Grant Date, provided in each case that the
+                           Participant shall have remained an employee or a
+                           director of the Company (or a subsidiary)
+                           continuously since the date of grant (or in the case
+                           of a Designated Other, shall have complied with the
+                           terms and conditions of the Restricted Stock Award
+                           Agreement). Notwithstanding the foregoing: (A) if a
+                           Participant's employment or service as a director, or
+                           in the case of a Designated Other, the period defined
+                           in the Restricted Stock Award Agreement, terminates
+                           due to death, the Restrictions shall lapse with
+                           respect to all Restricted Stock Awards held by the
+                           Participant at death (if not already so lapsed); (B)
+                           upon a Change in Control, the Restrictions shall
+                           lapse with respect to all Restricted Stock Awards
+                           held by such Participant who is an employee or
+                           director of the Company (or a subsidiary) (if not
+                           already so lapsed); and (C) in the event of an
+                           accelerated lapse of Restrictions due to a Change in
+                           Control, Participants who are subject to Section
+                           16(b) of the Exchange Act may not sell the shares of
+                           Stock whose Restrictions have so lapsed within six
+                           months of the Grant Date of the Restricted Stock
+                           Award pursuant to which such Stock was received. The
+                           "Restricted Period" as to any shares constituting
+                           part of a Restricted Stock Award shall be the period
+                           of time commencing with the Grant Date of a
+                           Restricted Stock Award and ending with the date on
+                           which the Restrictions lapse with respect to any such
+                           shares, or any portion thereof.
+
+         (c)      In the event that the acceleration of (i) the exercisability
+                  of an Option or (ii) the lapse of Restrictions relating to
+                  Restricted Stock upon a Change in Control and a Change in
+                  Status results in excise tax pursuant to Section 4999 of the
+                  Code, or any successor or similar provision thereto, or
+                  comparable state or local tax laws, the Company shall pay to
+                  the Participant such additional compensation as is necessary
+                  (after taking into account all Federal, state and local income
+                  and excise taxes payable by the Participant as a result of the
+                  receipt of such compensation ) to place the Participant in the
+                  same after-tax position he would have been in had no such
+                  excise tax (or any interest or penalties thereon) been paid or
+                  incurred. The amount of such payment shall be determined by
+                  the independent accounting firm serving as the Company's
+                  outside auditor immediately prior to the Change in Control.
+
+5.       EXERCISE OF OPTIONS.
+
+         (a)      The Exercise Price of the shares purchasable under an Option
+                  shall be the Fair Market Value per share on the Grant Date of
+                  such Option, subject to subsequent adjustment pursuant to the
+                  provisions of Section 9.
+
+         (b)      Options shall be considered exercised (herein the "Exercise
+                  Date") on the date written notice, in such form as the
+                  Committee may prescribe, is received by the Option Plan
+                  Administrator of the Company, advising of the exercise of an
+                  Option and either transmitting payment of the total Exercise
+                  Price for the number of shares of Stock involved or electing
+                  one of the alternative payment procedures set forth in Section
+                  5(c) below.
+
+         (c)      The Exercise Price shall be paid in cash (including cash
+                  obtained through a margin loan on the shares as to which the
+                  Option is being exercised) or (and provided (x) the use of the
+                  following
+
+                                        5
+
+<PAGE>
+
+                  procedure by a Participant would comply with safeguards
+                  established by the Committee designed to avoid "short-swing"
+                  profits to the Participant under Section 16(b) of the Exchange
+                  Act, and (y) does not otherwise violate any applicable laws)
+                  through (i) a broker-assisted cashless exercise program
+                  established by the Committee, based on the actual proceeds
+                  from the sale of share of Stock; or (ii) in shares of Stock,
+                  valued on the basis of the closing market price of the Stock
+                  on the Exercise Date.
+
+         (d)      Subject to the provisions of Section 6 and the other
+                  provisions of the Plan, the Stock Option Agreement and the
+                  Option, the Company shall issue shares of Stock in the
+                  Participant's name as soon as practicable (but in no event
+                  later than 30 days) after the Exercise Date. The Participant
+                  shall not be deemed to be a holder of any shares pursuant to
+                  an Option, and shall not have any rights as a stockholder in
+                  connection with such shares, until the date of transfer of
+                  shares of Stock to the Participant. The Company shall have no
+                  liability of any nature whatsoever to any Participant by
+                  reason of any change in the market price of the Stock during
+                  the period of time between the Exercise Date and the date on
+                  which any shares of Stock resulting from the exercise are
+                  issued or sold.
+
+6.       RESTRICTIONS.
+
+         (a)      Notwithstanding any other provision of the Plan, an Option or
+                  Restricted Stock Award to the contrary, no Option shall be
+                  exercised, and the Company shall not be obligated to issue or
+                  transfer shares of Stock under any Option or Restricted Stock
+                  Award, until the Company shall have received such assurances
+                  as the Company may reasonably request from its counsel that
+                  the exercise of the Option and the issuance and transfer of
+                  shares pursuant to the Option or Restricted Stock Award will
+                  not violate the Securities Act of 1933, as amended, or any
+                  other applicable Federal or state laws. In connection with any
+                  such issuance or transfer, the Participant shall, if requested
+                  by the Company, give assurances satisfactory to counsel to the
+                  Company, in respect of the Participant's investment intent or
+                  such other matters as counsel to the Company may deem
+                  necessary or desirable to assure compliance with all
+                  applicable legal requirements.
+
+         (b)      No provisions of the Plan or any Option or Restricted Stock
+                  Award shall be interpreted or construed to obligate the
+                  Company to register any Stock under Federal or state law.
+
+         (c)      The Company and the Committee reserve the right to investigate
+                  at any time the circumstances surrounding any exercise of
+                  Options, including any investigation regarding whether a
+                  Participant is in compliance with the provisions of Section 13
+                  hereof (or has threatened or is reasonably believed to intend
+                  to violate the provisions of Section 13 hereof), and the
+                  Company and the Committee shall have no liability or
+                  responsibility to any Participant for any alleged damage
+                  sustained by the Participant by reason of any delay in the
+                  implementation of an Option exercise during the pendency of
+                  any such investigation, whether by reason of any change in the
+                  market price of the Stock or otherwise.
+
+         (d)      Notwithstanding any other provision hereof, the Committee
+                  shall have the right at any time to deny or delay a
+                  Participant's exercise of Options if such Participant is
+                  reasonably believed by the Committee (i) to be engaged in
+                  material conduct adversely affecting the Company or (ii) to be
+                  contemplating such conduct, unless and until the Committee
+                  shall have received reasonable assurance that the Participant
+                  is not engaged in, and is not contemplating, such material
+                  conduct adverse to the interests of the Company.
+
+                                        6
+
+<PAGE>
+
+         (e)      Participants are and at all times shall remain subject to the
+                  trading window policies adopted by the Company from time to
+                  time throughout the period of time during which they may
+                  exercise Options or sell Restricted Stock granted pursuant to
+                  the Plan. Participants may request at any time a copy of any
+                  calendar of scheduled open windows by contacting the Option
+                  Plan Administrator.
+
+7.       FAIR MARKET VALUE.
+
+         (a)      During any period that the Company's Stock is Actively Traded,
+                  Fair Market Value shall equal the arithmetic average of the
+                  closing prices of a share of Stock on the exchange or national
+                  market system on which the Stock is traded, for the last
+                  twenty market trading days prior to the date of determination
+                  of Fair Market Value, or pursuant to such other method as the
+                  Committee may reasonably specify for determining the Stock's
+                  Fair Market Value.
+
+         (b)      During any period during which the Company's Stock is not
+                  Actively Traded, Fair Market Value shall be determined by the
+                  Committee.
+
+8.       TERM.
+
+         This Amended and Restated Plan shall be effective as of the date set
+         forth on the first page hereof. No Option or Restricted Stock Award
+         shall be granted under the Plan after February 12, 2006, but the Plan
+         shall continue in effect thereafter with respect to any previously
+         granted Options and Restricted Stock Awards that remain outstanding and
+         the duration of any such grant or award shall not be affected by the
+         expiration of the Plan.
+
+9.       ADJUSTMENTS.
+
+         In the event that any recapitalization, or reclassification, split-up
+         or consolidation of shares of Stock shall be effected, or the
+         outstanding shares of Stock shall, in connection with a merger or
+         consolidation of the Company or a transaction or series of related
+         transactions that results in the sale of all or substantially all of
+         the Company's assets, be exchanged for a different number or class of
+         shares of stock or other securities or property of the Company or any
+         other Person, or a record date or dates for determination of holders of
+         Stock entitled to receive a dividend payable in stock or a liquidating
+         dividend (or series of dividends) shall occur, equitable and
+         proportional adjustments aimed at preventing the inequitable
+         enlargement or dilution of any rights hereunder shall be made to (i)
+         the number and class of shares or other securities or property that may
+         be issued or transferred pursuant to the Plan and any outstanding
+         Options and Restricted Stock Awards and (ii) the Exercise Price to be
+         paid per share under any outstanding Options; PROVIDED, HOWEVER, that
+         in the event of a merger or consolidation of the Company, or similar
+         transaction pursuant to which the outstanding Stock is exchanged for
+         cash or other property, the unexercised Options shall thereafter be
+         exercisable for, and the Restricted Stock Awards shall entitle the
+         Participant to receive, the cash or other property which an Option or
+         Restricted Stock Award holder, as the case may be, would have been
+         entitled to receive had the Options been exercised, or the Restrictions
+         relating to the Restricted Stock Award lapsed, immediately prior to the
+         record date for such merger, consolidation or similar transaction
+         except to the extent that provision is made in writing in connection
+         with such transaction for (1) the assumption of the Options by, or the
+         substitution for the Options of new options covering the stock of, a
+         successor acquiring corporation, in each case providing terms no less
+         favorable to the holder of such Options than would an assumption or
+         substitution described in Treasury Regulation Section 1.425-1(a) that
+         would not constitute a "modification" for purposes of Code Section
+         424(a), and (2) the substitution for Restricted Stock Awards of stock
+         of a successor or acquiring corporation having terms no less favorable
+         to the holder thereof than the terms
+
+                                        7
+
+<PAGE>
+
+         of the Restricted Stock Award in effect before such transaction.
+
+10.      ADMINISTRATION.
+
+         (a)      The Plan shall be administered by the Committee. The Committee
+                  shall, subject to the provisions of the Plan, have full power
+                  and authority to administer the Plan, to select the
+                  Participants in the Plan, and, except for grants and awards
+                  which are automatically made to Outside Directors as provided
+                  pursuant to Section 3 of the Plan, to determine the number of
+                  shares to be made subject to each Option and Restricted Stock
+                  Award and all terms and conditions of each Option and
+                  Restricted Stock Award. The Committee shall have the power to
+                  interpret the Plan and to adopt such rules for the
+                  administration, interpretation and application of the Plan as
+                  are consistent therewith and to interpret, amend or revoke any
+                  such rules. All actions taken and all interpretations and
+                  determinations made by the Committee shall be final and
+                  binding upon all Participants, the Company and all other
+                  interested persons, absent a determination by a court of
+                  competent jurisdiction that the Committee has acted in bad
+                  faith or has engaged in reckless or willful misconduct.
+
+         (b)      Members of the Committee and the Board and officers
+                  administering this Plan shall be fully protected in taking
+                  actions under the Plan or in relying upon the advice of
+                  counsel and shall incur no liability except for bad faith,
+                  recklessness or willful misconduct in the performance of their
+                  duties.
+
+         (c)      Except as required by Rule 16b-3 with respect to grants of
+                  Options to individuals who are subject to Section 16 of the
+                  Exchange Act, or as otherwise required for compliance with
+                  Rule 16b-3 or other applicable law, the Committee may delegate
+                  all or any part of its authority under the Plan to an
+                  employee, employees or committee of employees.
+
+         (d)      To the extent the Committee deems it necessary, appropriate or
+                  desirable to comply with foreign law or practices and to
+                  further the purpose of the Plan, the Committee may, without
+                  amending this Plan, establish special rules applicable to
+                  Options granted to Participants who are foreign nationals, are
+                  employed outside the United States, or both, including rules
+                  that differ from those set forth in the Plan, and grant
+                  Options to such Participants in accordance with those rules.
+
+         (e)      Determinations by the Committee under the Plan relating to the
+                  form, amount and terms and conditions of grants and awards
+                  need not be uniform, and may be made selectively among persons
+                  who receive or are eligible to receive grants and awards under
+                  the Plan, whether or not such persons are similarly situated.
+
+11.      GENERAL PROVISIONS.
+
+         (a)      Nothing in this Plan or in any instrument executed pursuant
+                  hereto shall confer upon any Person any right to continue in
+                  the employment or other service of the Company (or any
+                  subsidiary), or shall affect the right of the Company (or any
+                  subsidiary) to terminate the employment or other service of
+                  any person at any time with or without Cause.
+
+         (b)      The Company may make appropriate provisions for the
+                  withholding of any taxes which the Company determines it is
+                  required to withhold in connection with any Option or
+                  Restricted Stock Award including, at the request of a
+                  Participant and provided that it does not violate any
+                  applicable
+
+                                        8
+
+<PAGE>
+
+                  laws, the payment of such withholding taxes through a
+                  broker-assisted sale of a sufficient number of shares
+                  underlying the Option or subject to the Restricted Stock Award
+                  or by delivery to the Company of shares of Stock previously
+                  owned by the Participant, in either case having an actual sale
+                  price equal to the amount of such taxes. Notwithstanding the
+                  foregoing, a Participant whose transactions in Stock are
+                  subject to Section 16(b) of the Exchange Act may make a share
+                  withholding election only if it complies with safeguards
+                  established by the Committee designed to avoid "short swing"
+                  profits to the Participant under Section 16(b) of the Exchange
+                  Act. The certificates evidencing a Restricted Stock Award made
+                  to an Outside Director pursuant to Section 3(c) hereof shall
+                  be automatically reduced by 28% to provide for the estimated
+                  Federal income tax payment obligation of the Outside Director,
+                  or by such other higher percentage as may be required by law
+                  to be withheld, with the Company remitting to the appropriate
+                  tax authorities the fair market value of the Restricted Stock
+                  Award for which the certificates are not so delivered.
+
+         (c)      By accepting any benefits under the Plan, each Participant,
+                  and each Person claiming under or through the Participant,
+                  shall be conclusively deemed to have indicated acceptance and
+                  ratification of, and consent to, all provisions of the Plan.
+                  Each Participant hereby further agrees that amendments and
+                  modifications to the Plan, which may be adopted from time to
+                  time by the Committee and/or the Board of the Corporation (as
+                  set forth in Section 12 hereof), shall be binding upon such
+                  Participant and upon all Options or Restricted Stock which the
+                  Participant may hold, including (with retroactive effect)
+                  Options or Restricted Stock previously granted to the
+                  Participant, except to the extent set forth in Section 12
+                  hereof.
+
+         (d)      With respect to Participants subject to Section 16 of the
+                  Exchange Act, transactions under the Plan are intended to
+                  comply with all applicable provisions of Rule 16b-3 or its
+                  successor. To the extent any provision the Plan or action by
+                  the Plan administrators fails to so comply, it shall be deemed
+                  null and void, to the extent permitted by law and deemed
+                  advisable by the Committee.
+
+         (e)      A Participant shall have no rights as a stockholder of the
+                  Company with respect to any Shares to be issued upon exercise
+                  of an Option until such Participant has exercised such Option
+                  and becomes a holder of such Shares.
+
+12.      AMENDMENTS; MODIFICATION AND TERMINATION.
+
+         This Plan may be amended or modified by the Committee, with
+         ratification by the Board, or terminated by the Board, at any time and
+         in any respect, except that no amendment shall be made without the
+         approval of the shareholders of the Company if shareholder approval
+         would be required by Rule 16b-3 under the Exchange Act or any other law
+         or rule of any governmental authority, stock exchange or other
+         self-regulatory organization to which the Company is subject. No such
+         amendment, modification or termination shall have effect to reduce the
+         number of shares as to which any Option or Restricted Stock Award
+         previously has been granted to a Participant; to extend the vesting
+         schedule with respect to any Option or Restricted Stock Award or to
+         extend the period of non-competition or confidentiality as set forth in
+         Section 13 hereof. In the event of the passage of any law, rule or
+         regulation or a determination by any regulatory agency or court,
+         requiring an adverse change in the Company's accounting or tax
+         treatment relating to the Plan, the Committee shall have the right to
+         modify the terms of outstanding Options and Restricted Stock Awards to
+         the extent necessary to avoid the adverse consequences of such change.
+
+13.      CONFIDENTIALITY AND NON-COMPETITION; CONDUCT NOT IN THE INTEREST OF THE
+         CORPORATION.
+
+                                        9
+
+<PAGE>
+
+         By accepting Options or Restricted Stock Awards under the Plan and as a
+         condition to the exercise of Options and the enjoyment of any of the
+         benefits of the Plan, each Participant agrees as follows:
+
+         (a)      CONFIDENTIALITY -- During the period of each Participant's
+                  employment or service as a director with the Company (or the
+                  Participant's engaging in any other activity with or for the
+                  Company) and for a two year period thereafter, each
+                  Participant shall treat and safeguard as confidential and
+                  secret all Confidential Information received by such
+                  Participant at any time. Without the prior written consent of
+                  the Company, except as required by law, such Participant will
+                  not disclose or reveal any Confidential Information to any
+                  third party whatsoever or use the same in any manner except in
+                  connection with the businesses of the Company and its
+                  subsidiaries. In the event that a Participant is requested or
+                  required (by oral questions, interrogatories, requests for
+                  information or documents, subpoena, civil investigative demand
+                  or other process) to disclose (i) any Confidential Information
+                  or (ii) any information relating to his opinion, judgment or
+                  recommendations concerning the Company or its subsidiaries as
+                  developed from the Confidential Information, Participant will
+                  provide the Company with prompt written notice of any such
+                  request or requirement so that the Company may seek an
+                  appropriate protective order or waive compliance with the
+                  provisions contained herein. If, failing the entry of a
+                  protective order or the receipt of a waiver hereunder,
+                  Participant is, in the reasonable opinion of his counsel,
+                  compelled to disclose Confidential Information, Participant
+                  shall disclose only that portion of the Confidential
+                  Information which his counsel advises that he is compelled to
+                  disclose and will exercise best efforts to obtain assurances
+                  that confidential treatment will be accorded such Confidential
+                  Information.
+
+         (b)      NON-COMPETITION -- During the period of employment with the
+                  Company or its subsidiaries of any Participant (other than a
+                  director) compensated at a rate (including bonuses) in excess
+                  of $75,000 per year in cash compensation from his employment
+                  with the Company or any of its subsidiaries (determined as of
+                  the most recently completed fiscal year of the Company), and,
+                  for a two-year period thereafter (the "Non-Compete Period"),
+                  each such Participant shall not, without prior written consent
+                  of the Committee, do, directly or indirectly, any of the
+                  following:
+
+                  (1)      own, manage, control or participate in the ownership,
+                           management, or control of, or be employed or engaged
+                           by or otherwise affiliated or associated with, any
+                           other corporation, partnership, proprietorship, firm,
+                           association or other business entity, or otherwise
+                           engage in any business which competes with the
+                           business of the Company or any of its subsidiaries
+                           (as such business is conducted during the term of
+                           such Participant's employment with the Company or its
+                           subsidiaries) in the geographical regions in which
+                           such business is conducted; PROVIDED, HOWEVER, that
+                           the ownership of a maximum of one percent of the
+                           outstanding stock of any publicly traded corporation
+                           shall not violate this covenant; or
+
+                  (2)      employ, solicit for employment or assist in employing
+                           or soliciting for employment any present, former or
+                           future employee, officer or agent of the Company or
+                           any of its subsidiaries.
+
+                  In the event any court of competent jurisdiction should
+                  determine that the foregoing covenant of non-competition is
+                  not enforceable because of the extent of the geographical area
+                  or the duration thereof, then the Company and the affected
+                  Participant hereby petition such court to modify the
+
+                                       10
+
+<PAGE>
+
+                  foregoing covenant to the extent, but only to the extent,
+                  necessary to create a covenant which is enforceable in the
+                  opinion of such court, with the intention of the parties that
+                  the Company shall be afforded the maximum enforceable covenant
+                  of non-competition which may be available under the
+                  circumstances and applicable law.
+
+         (c)      Each Participant acknowledges that remedies at law for any
+                  breach by him of this section 13 may be inadequate and that
+                  the damages resulting from any such breach are not readily
+                  susceptible to being measured in monetary terms. Accordingly,
+                  each Participant acknowledges that upon his violation of any
+                  provision of this Section 13, the Company will be entitled to
+                  immediate injunctive relief and may obtain an order
+                  restraining any threatened or future breach. Each Participant
+                  further agrees, subject to the proviso at the end of this
+                  sentence, that if he violates any provision of this Section
+                  13, he shall immediately forfeit any rights and benefits under
+                  this Plan and shall return to the Company any unexercised
+                  Options and forfeit the rights under any Restricted Stock
+                  Awards and shall return any shares of Stock held by such
+                  Participant received upon exercise of any Option or the lapse
+                  of the Restrictions relating to Restricted Stock Awards
+                  granted hereunder, together with any proceeds from sales of
+                  any shares of Stock received upon exercise of such Options or
+                  the lapse of Restrictions of such Restricted Stock Awards;
+                  PROVIDED, HOWEVER, that upon violation of subsection (b) of
+                  this Section, the forfeiture and return provisions contained
+                  in this sentence shall apply only to Options which have become
+                  exercisable, and Restricted Stock, the Restrictions with
+                  respect to which have lapsed, and in any such case the
+                  proceeds of sales therefrom, during the two year period
+                  immediately prior to termination of the Participant's
+                  employment. Nothing in this Section 13 will be deemed to
+                  limit, in any way, the remedies at law or in equity of the
+                  Company, for a breach by Participant of any of the provisions
+                  of this Section 13.
+
+         (d)      Each Participant agrees to provide written notice of the
+                  provisions of this Section 13 to any future employer of
+                  Participant, and the Company expressly reserves the right to
+                  provide such notice to the Participant's future employer(s).
+
+         (e)      If any provision or part of any provision of this Section 13
+                  is held for any reason to be unenforceable, (i) the remainder
+                  of this Section 13 shall nevertheless remain in full force and
+                  effect and (ii) such provision or part shall be deemed to be
+                  amended in such manner as to render such provision
+                  enforceable.
+
+14.      GOVERNING LAW.
+
+         The validity, construction and effect of the Plan and any rules
+         relating to the Plan shall be determined in accordance with the laws of
+         the State of Delaware and applicable Federal law.
+
+15.      ARBITRATION.
+
+         The Company and each Participant hereby agree that in the event of any
+         dispute or controversy arising with respect to the Plan, any Stock
+         Option Agreement, the exercise of any Option (or the disallowance of
+         any exercise at any time, for any reason) or any other matter relating
+         to Options or Restricted Stock Awards, then such dispute or controversy
+         shall be submitted by the parties to mandatory and binding arbitration
+         before a panel of arbitrators appointed by the American Arbitration
+         Association ("AAA"), each of whom shall be knowledgeable in matters of
+         securities in general and, if possible, the administration of stock
+         option programs similar to the Plan. The arbitration proceedings shall
+         be conducted in whichever of the following
+
+                                       11
+
+<PAGE>
+
+         cities is closest to the work location of the affected Participant:
+         Delray Beach, Florida; New York, New York; Kansas City, Missouri;
+         Jackson, Mississippi; or Atlanta, Georgia. The decision of the Company
+         as to which city is closest to the work location of the Participant
+         shall be conclusive and binding, except for manifest error. The
+         decision of the arbitrators shall be rendered in writing, shall be
+         promptly rendered after a hearing on the matter and shall be final,
+         conclusive and binding and may be incorporated in a final judgment
+         rendered by any court of competent jurisdiction.
+
+         Notwithstanding the foregoing, nothing contained herein shall preclude
+         the Company from seeking injunctive or other relief from any court of
+         competent jurisdiction to enforce the provisions of Section 13 hereof.
+
+16.      DEFINITIONS.
+
+         The following terms, when used in the Plan, shall have the meanings set
+         forth below:
+
+                  ACTIVELY TRADED: Trading of Company Stock on the New York
+                  Stock Exchange, the American Stock Exchange or the NASDAQ
+                  National Market System in an average weekly volume that equals
+                  at least 0.20% of the then outstanding Company Stock for each
+                  of at least four weeks in a row.
+
+                  BENEFICIAL OWNER: With respect to any securities of the
+                  Company, any Person who is a beneficial owner of such
+                  securities as defined in rule 13d-3 under the Exchange Act.
+                  The Committee may from time to time adopt interpretations or
+                  pronouncements as to who shall be deemed to be Beneficial
+                  Owners of the Company's outstanding voting securities as of a
+                  given date, which interpretation shall be final and binding on
+                  all Participants, the Company and all other interested
+                  Persons.
+
+                  BOARD:  The Board of Directors of the Company.
+
+                  CAUSE: Any cause stated in an employment agreement between the
+                  Company and the Participant and/or material violations of
+                  employment agreements or the terms of this Plan, acts of
+                  dishonesty with respect to the Company, insubordination,
+                  divulging confidential information about the Company,
+                  interference with the relationship between the Company and any
+                  supplier, client, customer, similar person, or performance of
+                  any act or omission which the Committee, in its sole
+                  discretion, deems to be sufficiently injurious to the interest
+                  of the Company to constitute cause.
+
+                  CHANGE IN CONTROL: The occurrence of any of the following: (i)
+                  a merger or consolidation to which the Company is a party if
+                  the individuals and entities who were stockholders of the
+                  Company immediately prior to the effective date of such merger
+                  or consolidation are Beneficial Owners of less than 50% of the
+                  total combined voting power for election of directors of the
+                  surviving corporation following the effective date of such
+                  merger or consolidation; or (ii) any Person becomes the
+                  Beneficial Owner in the aggregate of securities of the Company
+                  representing 50% or more of the total combined voting power of
+                  the Company's then issued and outstanding securities unless
+                  such Person (or a Person owned directly or indirectly by such
+                  Person) was the Beneficial Owner, directly or indirectly, as
+                  of the Grant Date applicable to the affected Participant, of
+                  more than 50% of the Company's voting securities outstanding
+                  as of such Grant Date; or (iii) the sale of all or
+                  substantially all of the assets of the Company to any person
+                  or entity that is not a wholly-owned subsidiary of the
+                  Company; or (iv) the stockholders of the Company approve any
+                  plan or proposal for the liquidation of the Company.
+
+                                       12
+
+<PAGE>
+
+                  CODE:  Internal Revenue Code of 1986, as amended.
+
+                  COMMITTEE: A committee designated by the Board consisting of
+                  not less than two members of the Board who are "non-employee
+                  directors" as defined in Rule 16b-3 under the Exchange Act, to
+                  administer the Plan.
+
+                  COMPANY: Sunbeam Corporation (formerly known as Sunbeam-Oster
+                  Company, Inc.)
+
+                  CONFIDENTIAL INFORMATION: Any information not generally known
+                  to the public, including, without limiting the generality of
+                  the foregoing, any customer lists, supplier lists, trade
+                  secrets, invention, formulas, methods or processes, whether or
+                  not patented or patentable, channels of distribution, business
+                  plans, pricing policies and records, financial information of
+                  any sort and inventory records of the Company or any affiliate
+                  (and such other information normally understood to be
+                  confidential or otherwise designated as such in writing by the
+                  Company or its subsidiaries). It is not necessary, however,
+                  that any information be formally designated as "confidential"
+                  if it falls within any of the foregoing categories and is not
+                  generally known to the public.
+
+                  DESIGNATED OTHER: Any consultant, advisor, contractor or agent
+                  of the Company or its subsidiaries, who is not an employee,
+                  officer or Outside Director of the Company and who is granted
+                  Options or a Restricted Stock Award pursuant to this Plan.
+
+                  EFFECTIVE DATE: January 1, 1991; Amended and Restated as of
+                  May 15, 1996.
+
+                  ERISA: Titles I and IV of the Employee Retirement Income
+                  Security Act of 1974, as amended.
+
+                  EXCHANGE ACT: The Securities Exchange Act of 1934, as amended.
+
+                  EXERCISE PRICE: The Exercise Price of shares purchasable upon
+                  exercise of an Option, as determined pursuant to the terms of
+                  Section 5(a).
+
+                  FAIR MARKET VALUE: The fair market value of a share of Stock,
+                  as determined pursuant to the terms of Section 7.
+
+                  GRANT DATE: The date as of which the Committee (or such other
+                  committee of the Board of Directors of the Company as shall be
+                  empowered to grant Options or to make awards of Restricted
+                  Stock) shall grant Options or Restricted Stock, as the case
+                  may be, to a Participant under the Plan, as so designated by
+                  such Committee.
+
+                  IN-THE-MONEY: Options to acquire Stock are considered to be
+                  "in-the-money" if the exercise price of the Option is less
+                  than the current market price of the Stock.
+
+                  NEXT OPTION INCREMENT: This term shall have the meaning
+                  ascribed to it in Section 4(a)(iii).
+
+                  OPTION: An option, granted under the Plan, to purchase shares
+                  of Stock at the Exercise Price. Options granted under the Plan
+                  shall not be incentive stock options pursuant to Section 422
+                  of the Code.
+
+                                       13
+
+<PAGE>
+
+                  OPTION YEAR: This term shall have the meaning ascribed to it
+                  in Section 4(a)(iii).
+
+                  OUT-OF-THE-MONEY: Options to acquire Stock are considered to
+                  be "out-of-the-money" if the exercise price is equal to or
+                  greater than the current market price of the Stock.
+
+                  OUTSIDE DIRECTOR: A director of the Company who is not either:
+                  (i) an officer or employee of the Company, or (ii) a
+                  Beneficial Owner of, or an officer or employee of any Person
+                  which is a direct or indirect Beneficial Owner of, more than
+                  10% of the outstanding Stock.
+
+                  PARTICIPANT: An officer, employee, Outside Director of the
+                  Company (or a subsidiary of the Company) or Designated Other
+                  who is granted an Option or a Restricted Stock Award under the
+                  Plan by the Committee. Upon the death of a Participant, the
+                  "Participant" shall be deemed to mean the Participant's estate
+                  or legal representative.
+
+                  PERSON: Any individual, corporation, partnership, association,
+                  company, trust, joint venture or other organization or entity
+                  or group of associated persons or entities acting in concert.
+                  As used herein, references to the male gender shall include
+                  the female gender or the neuter, as applicable.
+
+                  PLAN: The Equity Team Plan herein set forth, as it may be
+                  amended from time to time.
+
+                  RESTRICTED PERIOD: This term shall have the meaning ascribed
+                  to it in Section 4(b)(iii).
+
+                  RESTRICTED STOCK: Shares of Stock granted pursuant to Section
+                  3(b) or (c) of the Plan.
+
+                  RESTRICTED STOCK AWARD: The grant of Shares of Restricted
+                  Stock to a Participant pursuant to Section 3(b) or 3(c) of the
+                  Plan.
+
+                  RESTRICTED STOCK AWARD AGREEMENT: The agreement described in
+                  Section 3(e).
+
+                  RESTRICTIONS: The restrictions described in Section 4(b)
+                  relating to Restricted Stock.
+
+                  "SHARES" or "STOCK": The Common Stock, $0.01 par value per
+                  share, of the Company, or such other class of securities as
+                  may be applicable pursuant to the provisions of Section 9.
+
+                  STOCK OPTION AGREEMENT: The agreement described in Section
+                  3(e).
+
+                                       14
+
+</TEXT>
+</DOCUMENT>
+<DOCUMENT>
+<TYPE>EX-11.A
+<SEQUENCE>4
+<TEXT>
+
+
+
+                                                                   EXHIBIT 11.a.
+
+
+
+
+                      SUNBEAM CORPORATION AND SUBSIDIARIES
+                            CALCULATIONS OF EARNINGS
+                            PER SHARE OF COMMON STOCK
+                    (In thousands, except per share amounts)
+
+
+                                                      THREE MONTHS ENDED      
+                                                 -----------------------------
+                                                 MARCH 31,        MARCH 30,
+                                                   1996              1997
+                                                 ---------        ---------
+Net earnings applicable to common
+ shareholders...........................         $ 17,361          $  6,848
+                                                 ========          ========
+Weighted average number of common
+ shares outstanding.....................           81,982            84,278
+
+Add:
+ Common shares issuable for exercise of
+ warrants and options, net of shares
+ assumed to have been acquired with
+ proceeds therefrom.....................              548             2,700
+                                                 --------          --------
+Number of shares applicable to              
+ earnings per share calculation.........           82,530            86,978
+                                                 ========          ========
+
+Earnings per share of common 
+ stock .................................         $    .21          $    .08
+
+
+</TEXT>
+</DOCUMENT>
+<DOCUMENT>
+<TYPE>EX-27
+<SEQUENCE>5
+<TEXT>
+
+<TABLE> <S> <C>
+
+<ARTICLE>            5
+       
+<S>                           <C>
+<PERIOD-TYPE>                 3-MOS
+<FISCAL-YEAR-END>                        DEC-28-1997
+<PERIOD-START>                           DEC-30-1996
+<PERIOD-END>                             MAR-30-1997
+<CASH>                                   30,415
+<SECURITIES>                             0
+<RECEIVABLES>                            296,716
+<ALLOWANCES>                             0
+<INVENTORY>                              148,011
+<CURRENT-ASSETS>                         609,654
+<PP&E>                                   332,411
+<DEPRECIATION>                           114,958
+<TOTAL-ASSETS>                           1,053,155
+<CURRENT-LIABILITIES>                    260,154
+<BONDS>                                  175,235
+<PREFERRED-MANDATORY>                    0
+<PREFERRED>                              0
+<COMMON>                                 892
+<OTHER-SE>                               412,268
+<TOTAL-LIABILITY-AND-EQUITY>             1,053,155
+<SALES>                                  253,450
+<TOTAL-REVENUES>                         253,450
+<CGS>                                    185,669
+<TOTAL-COSTS>                            185,669
+<OTHER-EXPENSES>                         0
+<LOSS-PROVISION>                         0
+<INTEREST-EXPENSE>                       1,993
+<INCOME-PRETAX>                          32,637
+<INCOME-TAX>                             12,076
+<INCOME-CONTINUING>                      20,561
+<DISCONTINUED>                           (13,713)
+<EXTRAORDINARY>                          0
+<CHANGES>                                0
+<NET-INCOME>                             6,848
+<EPS-PRIMARY>                            .08
+<EPS-DILUTED>                            .08
+        
+
+</TABLE>
+</TEXT>
+</DOCUMENT>
+<DOCUMENT>
+<TYPE>EX-99.A
+<SEQUENCE>6
+<TEXT>
+
+FOR IMMEDIATE RELEASE:
+
+SUNBEAM'S FIRST QUARTER SALES UP 13%, EARNINGS PER SHARE UP
+200% FROM ONGOING OPERATIONS
+
+         Delray Beach, FL - April 23, 1997 - Sunbeam Corporation (NYSE: SOC)
+announced today its first quarter 1997 results. Sales for the quarter were
+$253.5 million and increased 13% over the prior year period on a comparable
+basis (excluding discontinued businesses and divested product lines), while
+Earnings Per Share from continuing operations of $.24 were triple the $.08
+earned during the same period last year.
+         "The impressive growth in both revenue and earnings is proof that the
+revitalization of Sunbeam is working. In fact, the sales growth in the first
+quarter is the highest level achieved without acquisitions since Sunbeam became
+public in 1992." said Albert J. Dunlap, Sunbeam's Chairman and Chief Executive
+Officer.
+         On a reported basis, sales were up 10%, which includes certain divested
+businesses not classified as discontinued operations - time & temperature
+products, decorative bedding and Counselor and Borg branded scales.
+         For the quarter, domestic sales from ongoing operations increased
+12.5%, with growth achieved in every product category - Appliances, Outdoor
+Cooking, Health at Home, Personal Care & Comfort and Away From Home.
+International revenues increased 14.7% for the quarter, led by an increase of
+almost 400% in the Far East, a 90% increase in Canada and a 30% increase in
+Latin America (excluding Venezuela) and Mexico.
+         Mr. Dunlap stated, "I am excited by the positive developments in all
+our product categories and many regions of the world. I expect the tremendous
+number of growth initiatives instituted to drive further benefits throughout
+1997." Dunlap added, "In just the last 6 months, we have implemented a major new
+advertising program which increased our brand relevance by 25% in the fourth
+quarter of 1996 and by another 9 percentage points in the first quarter of 1997.
+What's more, we have just launched our new Grillmaster(R) barbecue grill
+advertising campaign, and we expect to introduce our redesigned packaging in the
+second quarter. We signed 15 new distribution and licensing agreements giving
+the Company access to fast-growing markets such as Asia and Latin America and
+introduced 42 new international 220 volt products, a key component in the
+globalization of Sunbeam. We entered new channels of distribution including
+opening 10 factory outlet stores, and we shortened our new product development
+cycle to six months to introduce 30 new products a year."
+         Mr. Dunlap continued, "The substantially higher earnings in the quarter
+from ongoing operations were due to the increased sales coupled with the
+successful implementation of our restructuring efforts. We have cut our
+employment in half, reduced the number of factories from 26 to 8 and decreased
+the number of warehouses utilized from 61 to 18. During the quarter, we closed
+on the sale of our furniture business and our time & temperature product line,
+and we signed a contract to sell our Biddeford textile facility."
+         In the first quarter, the Company recorded a one-time loss of $.16 per
+share on discontinued operations in conjunction with the disposal of its
+furniture business. Mr. Dunlap commented, "We are delighted the first quarter
+brought to a conclusion the sale of our furniture business. The furniture
+business did not fit into our strategic plans and, in fact, it inhibited the
+Company's ability to implement its strategy. With all divestitures essentially
+complete, our management team is now completely focused on growing our core
+business and increasing shareholder value."
+
+
+<PAGE>
+
+         Gross margins for the quarter of 27% were 6 percentage points above the
+first quarter of 1996, while operating margins of 14% were double last year's
+level. Mr. Dunlap commented, "The margins attained in the quarter are the
+highest achieved by Sunbeam in two years. I believe we are well on our way to
+achieving our goal of 20% operating margins."
+         Mr. Dunlap concluded, "The results for our ongoing operations are the
+beginning of the new Sunbeam. The turnaround is going strong. We are focused on
+building the business and I believe the best is yet to come."
+         CAUTIONARY STATEMENT -- Statements contained in this press release,
+including statements relating to the Company's expectations regarding
+anticipated performance in the future, are "forward looking statements," as such
+term is defined in the Private Securities Litigation Reform Act of 1995. Actual
+results could differ materially from the Company's statements in this release
+regarding its expectations, goals or projected results, due to various factors,
+including those set forth in the Company's Cautionary Statements contained in
+its Form 10-K, filed with the Securities and Exchange Commission on March 31,
+1997.
+         Sunbeam Corporation is a leading consumer products company that
+designs, manufactures and markets, nationally and internationally, a diverse
+portfolio of brand name products. The Company's Sunbeam(R) and Oster(R) brands
+have been household names for generations, both domestically and abroad, and the
+Company is a market leader in many of its product categories.
+
+
+                                ****************
+Contact:          Media:                              Investors:
+
+                  Helen Sanders                       John DeSimone
+                  (202)783-4600                       (561)243-2100
+
+
+<PAGE>
+
+<TABLE>
+<CAPTION>
+                      SUNBEAM CORPORATION AND SUBSIDIARIES
+
+                CONDENSED CONSOLIDATED STATEMENTS OF OPERATIONS
+                       (dollars in millions, except EPS)
+
+
+
+                                                                              THREE MONTHS ENDED
+                                                                        -------------------------------
+                                                                         MARCH 30,            MARCH 31,
+                                                                             1997                1996
+                                                                          -------             -------
+
+<S>                                                                       <C>                 <C>      
+Net sales                                                                 $   253.5           $   229.7
+
+Cost of goods sold                                                            185.7               181.6
+                                                                          ---------           ---------
+
+     Gross profit                                                              67.8                48.1
+     % of sales                                                                26.7%               20.9%
+
+Selling, general & administrative expense                                      33.0                32.6
+                                                                          ---------           ---------
+
+     Operating earnings                                                        34.8                15.5
+     % of sales                                                                13.7%                6.7%
+
+Inerest expense                                                                 2.0                 3.0
+Other (income) expense, net                                                     0.1                 1.3
+                                                                          ---------           ---------
+     Earnings from continuing operations before
+       income taxes                                                            32.7                11.2
+
+Income taxes                                                                   12.1                 4.5
+                                                                          ---------           ---------
+
+     EARNINGS FROM CONTINUING OPERATIONS                                       20.6                 6.7
+                                                                          =========           =========
+
+Earnings (loss) from discontinued operations, net of tax                      (13.7)               10.7
+
+  Net earnings, including discontinued operations                         $     6.9           $    17.4
+
+EARNINGS PER SHARE, FROM CONTINUING OPERATIONS                            $    0.24           $    0.08
+                                                                          =========           =========
+
+Earnings per share, including discountinued operatins                     $    0.08           $    0.21
+
+Average number of common shares outstanding                                    87.0                82.5
+
+</TABLE>
+
+
+<PAGE>
+<TABLE>
+<CAPTION>
+
+
+                      SUNBEAM CORPORATION AND SUBSIDIARIES
+
+                     CONDENSED CONSOLIDATED BALANCE SHEETS
+                             (dollars in millions)
+
+
+                                                                         MARCH 30,            DECEMBER 29,
+                                                                             1997                 1996
+                                                                        ---------             ------------
+
+<S>                                                                        <C>                  <C>
+ASSETS
+     Current assets:
+          Cash and cash equivalents                                      $   30.4             $  11.5
+          Receivables, net                                                  296.7               213.4
+          Inventories                                                       148.0               162.3
+          Net assets of discontinued operations and other assets
+            held for sale                                                    20.7               102.8
+          Deferred income taxes                                              75.1                93.7
+          Prepaid expenses and other current assets                          38.7                40.4
+                                                                        ---------            --------
+               Total current assets                                         609.6               624.1
+
+Property, plant and equipment, net                                          217.5               220.1
+Trademarks and trade names, net                                             199.0               200.3
+Other assets                                                                 27.0                28.2
+                                                                        ---------            --------
+
+                                                                         $1,053.1            $1,072.7
+                                                                        =========            ========
+
+LIABILITIES AND SHAREHOLDERS' EQUITY
+     Current Liabilities:
+          Short-term debt and current oirtion of long-term, debt         $    0.8            $    0.9
+          Accounts payable                                                  100.7               107.3
+          Restructuring accrual                                              45.3                63.8
+          Other current liabilities                                         113.3                99.5
+                                                                        ---------            --------
+               Totzl current liabilities                                    260.1               271.5
+
+     Long-term debt                                                         175.3               201.1
+     Deferred income taxes                                                   53.5                52.3
+     Non-operating and other long-term liabilities                          151.1               152.5
+
+     Shareholders' equity                                                   413.1               395.3
+                                                                        ---------            --------
+                                                                         $1,053.1            $1,072.7
+                                                                        =========            ========
+</TABLE>
+
+<PAGE>
+<TABLE>
+<CAPTION>
+
+
+                      SUNBEAM CORPORATION AND SUBSIDIARIES
+
+                 CONDENSED CONSOLIDATED STATEMENTS OF CASH FLOWS
+                              (dollars in millions)
+
+
+
+                                                                              THREE MONTHS ENDED
+                                                                        -------------------------------
+                                                                         MARCH 30,            MARCH 31,
+                                                                             1997                1996
+                                                                          -------             -------
+
+<S>                                                                        <C>                  <C>
+OPERATING ACTIVITIES 
+     Net earnings, including discontinued operations                      $  6.9               $ 17.4
+     Depreciation and amortization                                          10.6                 11.3
+     Deferred income taxes                                                  13.1                  2.1  
+     Loss on sale of discontinued operations                                13.7                   -
+     Decrease from changes in working capital and other                    (67.0)               (63.7)
+                                                                         -------              -------
+                                                                           (22.7)               (32.9)
+
+INVESTING ACTIVITIES
+     Capital expenditures                                                  (10.8)               (20.3)
+     Proceeds from sale of divested operations                              70.4                   -
+                                                                         -------              -------
+                                                                            59.6                (20.3)
+
+FINANCING ACTIVITIES
+     Net borrowings (payments) under revolving credit facility             (20.0)                40.0
+     Issuance of long-term debt                                               -                   6.5
+     Payment of debt obligations                                            (6.3)                (0.6)
+     Proceeds from exercise of stock options                                 8.9                   -
+     Other                                                                  (0.6)                (0.8)
+                                                                         -------              -------
+                                                                           (18.0)                45.1
+                                                                         -------              -------
+
+Net increase (decrease) in case and cash equivalents                        18.9                 (8.1)
+
+Cash and cash equivalents, beginning of period                              11.5                 28.3
+                                                                         -------              -------
+
+Cazh and cash equivalents, end of period                                  $ 30.4               $ 20.2
+                                                                         =======              =======
+</TABLE>
+
+</TEXT>
+</DOCUMENT>
+</SEC-DOCUMENT>
+-----END PRIVACY-ENHANCED MESSAGE-----

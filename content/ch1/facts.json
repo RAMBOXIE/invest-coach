@@ -102,6 +102,24 @@
    "sha256": "74a0074c945fa179426d416dba3603ecfa44718e7250b906e6a10980a922a379",
    "source": "Nikola 2021-02-25 Q4/FY2020 业绩新闻稿（随 8-K 报送 SEC，公有领域）",
    "accession": "NKLA-8K-PR-20210225"
+  },
+  {
+   "file": "evidence/lbhi-8k-pr-2008-03-18.html",
+   "sha256": "3d59f5ead4bd711ab540b03b9e5fadad002085ae955c901138bf7070f8feca3b",
+   "source": "Lehman 2008 财年一季度业绩新闻稿（8-K Exhibit 99.1，2008-03-18，公有领域）",
+   "accession": "LBHI-8K-PR-20080318"
+  },
+  {
+   "file": "evidence/lbhi-fwp-2008-04-01.html",
+   "sha256": "888ff8647c24707e7f46f39d6abfed726684bf04884acf4df556ffba38cbdc54",
+   "source": "Lehman 40 亿美元可转换优先股定价新闻稿（FWP，2008-04-01，公有领域）",
+   "accession": "LBHI-FWP-20080401"
+  },
+  {
+   "file": "evidence/sunbeam-8k-q1-1997.txt",
+   "sha256": "4c3108255d3f55a3ff2a023c349125906f910b803edb03afe9c8fae34480c2d3",
+   "source": "Sunbeam 1997 年一季度业绩新闻稿（EDGAR acc. 0000950170-97-000586，1997-04-23，公有领域）",
+   "accession": "0000950170-97-000586"
   }
  ],
  "facts": [
@@ -536,6 +554,24 @@
    "basis": "Valukas 报告 Vol.3 p.129 逐字引用 2008-03-18 一季度电话会上 Callan 的话",
    "accession": "Valukas-Vol3",
    "line": "p.129"
+  },
+  {
+   "id": "lb-convpref-2008",
+   "company": "Lehman Brothers",
+   "item": "2008-04-01 可转换优先股发行（当年背景）",
+   "value": "40 亿美元，超额认购；所得用于充实资本与增加财务灵活性",
+   "basis": "FWP 新闻稿「Lehman Brothers Prices $4.0 Billion Offering of Convertible Preferred Stock」",
+   "accession": "LBHI-FWP-20080401",
+   "line": "L145–L155"
+  },
+  {
+   "id": "sb-opmargin-target",
+   "company": "Sunbeam",
+   "item": "20% 营业利润率目标与实际（Dunlap 1998-01-28 公开表态）",
+   "value": "三年目标 20% 营业利润率；公司称第四季度 20%、全年 17%",
+   "basis": "10-K405 内附 1998-01-28 全年业绩新闻稿，Dunlap 原话与紧随其后的公司口径",
+   "accession": "0000950170-98-000413",
+   "line": "L22583–L22585"
   }
  ],
  "approved_tokens": {
@@ -686,6 +722,10 @@
   "79.73": "nk-price-2020：10-K 封面 L63 与风险因素 L1299",
   "67.53": "nk-price-2020：10-K 封面 L63 与风险因素 L1299",
   "15.4": "lb-netlev-q1：Valukas p.129 引电话会",
-  "16.1": "lb-netlev-q1：Valukas p.129 引电话会"
+  "16.1": "lb-netlev-q1：Valukas p.129 引电话会",
+  "40": "lb-convpref-2008：FWP 新闻稿 L145–L155",
+  "4.0": "lb-convpref-2008：FWP 新闻稿 L145–L155",
+  "20": "sb-opmargin-target：10-K405 L22583–L22585",
+  "17": "sb-opmargin-target：10-K405 L22583–L22585"
  }
 }

@@ -39,28 +39,40 @@
    "narration": "这一次，答案就印在年报里。先看看它给了你什么。",
    "context": [
     {
-     "date": "1996 秋",
-     "t": "Albert J. Dunlap 当选董事长，宣布大规模重组与增长计划。",
-     "src": "10-K405 · Business",
-     "line": "L237–L239"
+     "date": "1996-07",
+     "t": "Sunbeam 董事会任命 Albert J. Dunlap 为董事长兼 CEO。他说过去 18 个月令人失望的业绩说明公司必须发生一场大变革。",
+     "src": "8-K 新闻稿",
+     "line": "acc. 0000950170-96-000493"
     },
     {
-     "date": "1997",
-     "t": "重组完成：关闭 18 座工厂、43 个仓库、5 处总部，制造设施从 26 处减到 8 处，预计每年节省约 2.25 亿美元。",
+     "date": "1996 秋",
+     "t": "宣布大规模重组：关 18 座工厂、43 个仓库、5 处总部，制造设施 26 处减到 8 处。",
      "src": "10-K405 · Business",
-     "line": "L239–L255"
+     "line": "L237–L255"
+    },
+    {
+     "date": "1997-04-23",
+     "t": "一季度业绩新闻稿，Dunlap 说：收入与盈利的强劲增长「证明 Sunbeam 的振兴正在奏效」。",
+     "src": "一季度业绩新闻稿",
+     "line": "L2444"
     },
     {
      "date": "1998-01-28",
-     "t": "公司新闻稿宣布「创纪录」的四季度与全年业绩，称销售增长是「战略奏效的明确信号」，并称经营利润率「同比显著改善」。",
-     "src": "AAER 1393 引用该新闻稿",
-     "line": "L1396"
+     "t": "全年业绩新闻稿称「创纪录」，Dunlap 说三年前定的 20% 营业利润率目标，第三、四季度基本达到了。",
+     "src": "10-K405 内附新闻稿",
+     "line": "L22583"
+    },
+    {
+     "date": "1998-01-28",
+     "t": "同一份新闻稿里他说：并购能让股东价值实现跃升，他很急切想在 1998 年上半年做这一步。",
+     "src": "10-K405 内附新闻稿",
+     "line": "L22629"
     },
     {
      "date": "1998-03",
-     "t": "1997 年报（10-K405）报送，CFO Russell A. Kersh 签署。",
+     "t": "1997 年报（10-K405）报送，CFO Russell A. Kersh 签署。你手上的两行数字就来自这份年报。",
      "src": "10-K405",
-     "line": "L989 / L1811"
+     "line": "L989"
     }
    ]
   },
@@ -415,6 +427,33 @@
      }
     ],
     "orig": "The Company recognizes revenues from product sales principally at the time of shipment to customers."
+   },
+   {
+    "id": "t4",
+    "text": "「一季度收入与盈利的强劲增长，证明 Sunbeam 的振兴正在奏效。事实上，这是自 1992 年上市以来在没有并购的情况下取得的最高销售增速。」",
+    "src": "1997-04-23 一季度业绩新闻稿（董事长兼 CEO Dunlap 的公开表态）",
+    "line": "L2444",
+    "anchors": [
+     {
+      "accession": "0000950170-97-000586",
+      "line": "L2444"
+     }
+    ],
+    "orig": "The impressive growth in both revenue and earnings is proof that the revitalization of Sunbeam is working. In fact, the sales growth in the first quarter is the highest level achieved without acquisitions since Sunbeam became public in 1992.",
+    "press": {
+     "text": "「三年前我们定下 20% 营业利润率的目标，今年第三、第四季度基本已经达到。」",
+     "src": "1998-01-28 全年业绩新闻稿",
+     "line": "L22583",
+     "anchors": [
+      {
+       "accession": "0000950170-98-000413",
+       "line": "L22583"
+      }
+     ],
+     "orig": "We set a three year goal to have 20% operating margins, and we were essentially at that level in the 3rd and 4th quarters this year",
+     "coach": "公司一季一季这么说，市场也这么信。这些话本身不违法，也不一定假。你要做的不是判断谁在撒谎。把这些话和年报里的应收那一行放在一起看就够了。"
+    },
+    "locked": false
    }
   ],
   "no_record": {
@@ -426,8 +465,8 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "Rambo",
-  "reviewed_at": "2026-09-06",
-  "reviewed_hash": "5b150aacc5f02c8f"
+  "reviewed_by": "",
+  "reviewed_at": "",
+  "reviewed_hash": ""
  }
 }

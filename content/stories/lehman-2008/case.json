@@ -46,6 +46,18 @@
      "line": "p.129"
     },
     {
+     "date": "2008-03-18",
+     "t": "同日业绩新闻稿里，董事长兼 CEO Fuld 说：这个环境仍然充满挑战，而结果体现了公司在管控风险、维持强健资本与流动性上的坚持。",
+     "src": "随 8-K 报送的业绩新闻稿",
+     "line": "L165"
+    },
+    {
+     "date": "2008-04-01",
+     "t": "雷曼为 40 亿美元可转换优先股定价。Callan 称超额认购「说明投资者对雷曼的信心」。",
+     "src": "FWP 新闻稿",
+     "line": "L151"
+    },
+    {
      "date": "2008-04-09",
      "t": "一季报报送，Callan 签署。现金及等价物 75.64 亿美元。",
      "src": "10-Q 签署页",
@@ -355,6 +367,33 @@
     ],
     "orig": "trying to give the group [i.e., the analysts] a great amount of transparency on the balance sheet.",
     "locked": false
+   },
+   {
+    "id": "t4",
+    "text": "「这笔交易的大幅超额认购，说明投资者对雷曼兄弟抱有信心。交易的成功也反映了本公司商业模式、资本基础与流动性状况的强健，我们将继续成功地穿越充满挑战的环境。」",
+    "src": "2008-04-01 可转换优先股定价新闻稿（FWP 报送 SEC）",
+    "line": "L151–L155",
+    "anchors": [
+     {
+      "accession": "LBHI-FWP-20080401",
+      "line": "L151–L155"
+     }
+    ],
+    "orig": "The significant oversubscription for this deal demonstrates the confidence that investors have in Lehman Brothers. The success of the transaction is also reflective of the strength of the business model, the capital base and liquidity profile of the Firm as we continue to successfully weather challenging environments",
+    "press": {
+     "text": "「本次发行所得将用于充实资本、增加财务灵活性。」",
+     "src": "2008-04-01 定价新闻稿",
+     "line": "L145",
+     "coach": "这是她签这份季报的<b>八天前</b>说的话。她说的每一件事在当时都成立。你要判断的不是她诚不诚实。要判断的是季末那五天里资产负债表上发生了什么。",
+     "orig": "proceeds from the offering will be used to bolster its capital and increase financial flexibility.",
+     "anchors": [
+      {
+       "accession": "LBHI-FWP-20080401",
+       "line": "L145"
+      }
+     ]
+    },
+    "locked": false
    }
   ],
   "no_record": {
@@ -366,8 +405,8 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "Rambo",
-  "reviewed_at": "2026-09-06",
-  "reviewed_hash": "2023c975cfc5f718"
+  "reviewed_by": "",
+  "reviewed_at": "",
+  "reviewed_hash": ""
  }
 }

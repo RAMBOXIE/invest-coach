@@ -8,6 +8,7 @@ ERROR 非零退出（build.py 据此拒绝构建）。
 在对应字段尚为空时降级为 WARN 提示，字段一旦出现即全量校验。
 """
 import hashlib
+import html
 import json
 import re
 import subprocess
@@ -454,7 +455,10 @@ def validate_stories(release=False):
             pad, raw, vis = 6, "", ""
             while pad <= 150:
                 raw = chr(10).join(EL[max(0, lo - pad):min(len(EL), hi + pad)])
-                vis = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", raw.replace("&nbsp;", " ")))
+                # HTML 实体要解码。原先只换了 &nbsp;，而 SEC 的申报文件大量使用**数字实体**
+                # （&#160; &#147; &#151;）。不解码的话实体会以字面形式留在窗口里，
+                # 逐字引文永远对不上——等于这一类原档的 S7 静默失效。
+                vis = re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", raw)))
                 if len(vis) >= 800:
                     break
                 pad += 12

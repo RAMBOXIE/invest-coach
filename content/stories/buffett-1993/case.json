@@ -15,7 +15,7 @@
    "avatar": "🎩",
    "role": "买方 · 伯克希尔·哈撒韦董事长",
    "intro": "他不为自己辩护。14 年后他自己把这笔交易写成了反面教材。你听到的每句话，都是他公开写下的。",
-   "rule": "他只说 1993 年那份 10-K 记录的事实、他 1993 年致股东信里写过的话，和他 2007 年致股东信里写过的话。",
+   "rule": "他只说 1993 年那份 10-K 记录的事实，和他在 1993 年致股东信（1994-03-01 落款）里写过的话。那封信写于收购四个月后、任何问题显露之前。他解释的是当时为什么这么做，不是事后复盘。",
    "note": "在世人物。台词全部为其公开发表文字的逐字引用（2007 年致股东信）或该年 10-K 的事实记载，不含任何虚构言论。"
   }
  ],
@@ -40,16 +40,22 @@
      "line": "L193–L195"
     },
     {
-     "date": "1993-11-07",
-     "t": "伯克希尔以重新发行的 25,203 股库存普通股换取 Dexter 100% 股权，合并完成。",
-     "src": "FY1993 10-K",
-     "line": "L378–L380"
+     "date": "1991",
+     "t": "伯克希尔收购做工作鞋的 H. H. Brown。这笔买卖成了赢家，结果远超当初的期望。",
+     "src": "1993 年致股东信",
+     "line": "L177–L182"
     },
     {
-     "date": "1994-03",
-     "t": "1993 年致股东信：「Dexter 不需要任何修补，是查理和我见过管理最好的公司之一。」",
+     "date": "1992 年底",
+     "t": "又收购了女鞋与护士鞋厂 Lowell Shoe。同样，结果超出预期。",
      "src": "1993 年致股东信",
-     "line": "L189–L191"
+     "line": "L183–L186"
+    },
+    {
+     "date": "1993-11-07",
+     "t": "伯克希尔以重新发行的 25,203 股库存普通股换取 Dexter 100% 股权，合并完成。",
+     "src": "老 Berkshire FY1993 10-K",
+     "line": "L378–L380"
     }
    ]
   },
@@ -300,7 +306,7 @@
    {
     "id": "b2",
     "text": "「去年我们抓住机会收购了缅因州德克斯特的 Dexter 鞋业，它生产平价的男鞋和女鞋。我可以向你保证，Dexter 不需要任何修补：它是查理和我在职业生涯里见过的管理最好的公司之一。」",
-    "src": "1993 年致股东信",
+    "src": "1993 年致股东信（1994-03-01 落款，收购四个月后）",
     "line": "L187–L191",
     "anchors": [
      {
@@ -311,7 +317,7 @@
     "orig": "at the chance last year to acquire Dexter Shoe of Dexter, Maine, which manufactures popular-priced men's and women's shoes. Dexter, I can assure you, needs no fixing: It is one of the best-managed companies Charlie and I have seen in our business lifetimes.",
     "press": {
      "text": "「大家都说美国本土制鞋业竞争不过低工资国家的进口货。但有人忘了把这件事告诉 Dexter 和 H. H. Brown 那些足智多谋的管理层，以及他们熟练的工人，两家公司的美国工厂对所有对手都极具竞争力。」",
-     "src": "1993 年致股东信",
+     "src": "1993 年致股东信（1994-03-01 落款）",
      "line": "L198–L204",
      "coach": "这是他当时给「持久竞争优势」下的判断。记住这句话，揭晓之后回来对照。",
      "orig": "the domestic shoe industry is generally thought to be unable to compete with imports from low-wage countries. But someone forgot to tell this to the ingenious managements of Dexter and H. H. Brown and to their skilled labor forces, which together make the U.S. plants of both companies highly competitive against all comers."
@@ -321,7 +327,7 @@
    {
     "id": "b3",
     "text": "「我们相信 Harold 和 Peter（他们对现金不感兴趣）用 Dexter 股票换伯克希尔股份是一个明智的决定。他们实际上是用一家极好生意的全部权益，换取了一大批极好生意的较小份额。」",
-    "src": "1993 年致股东信",
+    "src": "1993 年致股东信（1994-03-01 落款，收购四个月后）",
     "line": "L234–L239",
     "anchors": [
      {
@@ -332,7 +338,7 @@
     "orig": "we believe that Harold and Peter (who were not interested in cash) made a sound decision in exchanging their Dexter stock for shares of Berkshire. What they did, in effect, was trade a 100% interest in a single terrific business for a smaller interest in a large group of terrific businesses.",
     "press": {
      "text": "「在伯克希尔，我们对未来没有任何一种会决定我们进入哪些行业的看法。我们更愿意聚焦于我们想拥有的生意的经济特征、以及我们想与之共事的经理人的个人品质，然后指望运气好，两样同时碰上。在 Dexter，我们碰上了。」",
-     "src": "1993 年致股东信",
+     "src": "1993 年致股东信（1994-03-01 落款）",
      "line": "L223–L230",
      "coach": "注意这一段讲的是<b>他为什么愿意付</b>，没有讲<b>用什么付</b>。用股票还是用现金，那是另一个决定。",
      "orig": "At Berkshire, we have no view of the future that dictates what businesses or industries we will enter. Indeed, we think it's usually poison for a corporate giant's shareholders if it embarks upon new ventures pursuant to some grand vision."
@@ -349,8 +355,8 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "Rambo",
-  "reviewed_at": "2026-09-06",
-  "reviewed_hash": "5dd9e71d9ca9cf77"
+  "reviewed_by": "",
+  "reviewed_at": "",
+  "reviewed_hash": ""
  }
 }
