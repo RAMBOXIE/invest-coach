@@ -1,7 +1,10 @@
 # invest-coach · Claude 开发指引
 
-单文件 HTML 知识图谱学习站 + 极简 Go 后端。产品是**投资教练**：跟着教练在历史实战里做决策，
+单文件 HTML 知识图谱学习站 + 零依赖 Python 轻后端。产品是**投资教练**：跟着教练在历史实战里做决策,
 教练盯的是判断习惯而不是对错。
+
+**接手先读 [docs/HANDOFF.md](docs/HANDOFF.md)** —— 当前状态快照:停在哪、接手第一件事做什么、
+线上部署的现状。它只讲「现在」,「怎么做」由下面的契约文档管。
 
 ## 动手之前必读
 
@@ -45,15 +48,19 @@
 python tools/build.py          # 内部先跑 validate，再跑四道门禁
 ```
 
-六道关卡，任一 FAIL 即构建不合格：
+十道关卡，任一 FAIL 即构建不合格（`build.py` 内部依次跑）：
 
-- `validate.py` —— 内容/出处/图结构（R1–R25）+ 目录登记（R26）
+- `validate.py` —— 内容/出处/图结构（R1–R31）+ 目录登记（R26）+ 幕（`--stories`：S1–S9）；`--selftest` 变异测试 7 条
+- `check_src.py` —— 源码卫生：S1 字面控制符、S2 永假构造、E1 端点覆盖、E2 LLM 调用登记；`--selftest` 3 条
 - `check_js.py` —— J1 `node --check` 源码分片 + 产物内联 script；J2 被调用却从未声明的标识符
-  （排最前：跑不起来就没必要看别的）
-- `check_a11y.py` —— 对比度（从令牌注记推导 + 状态色遍历所有会被画出的面 + 实扫 CSS 与内联 style）、
-  字号下限、触控目标、浮层层级（A7）、点击三态（A8）、死样式（A9）
-- `check_budget.py` —— 体积与性能预算
+- `check_a11y.py` —— 对比度、字号下限、触控目标、浮层层级（A7）、点击三态（A8）、死样式（A9）
+- `check_budget.py` —— 体积与性能预算（450 KB）
 - `check_tokens.py` —— 字面值棘轮，只减不增（`--update` 在还债后降基线）
+- `check_coach.py` —— 教练闭环 C0–C13；`--selftest` 13 条
+- `check_style.py` —— 黑话/AI 腔棘轮；`--selftest` 2 条
+- `check_server.py` —— 后端隐私承诺跑一遍（打码/出口检查/留存/Origin/discuss）；`--selftest` 7 条
+
+新增门禁必须带 `--selftest` 变异测试（把规则弄坏，确认它会红）。
 
 修掉字面值之后跑 `python tools/check_tokens.py --update` 把基线降下来。
 

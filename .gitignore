@@ -12,3 +12,6 @@ tools/__pycache__/
 
 # 时事管线的 staging 产物：未签字、不入构建、待法律评估（见 docs/DEBT.md D6）
 content/current/*.json
+
+# Local Netlify folder
+.netlify
