@@ -144,6 +144,12 @@
    "sha256": "db72ff0a79bbfd4901c05db899fad227c622885ba95a5a34e809d0b59f339686",
    "source": "SEC v. Luckin Coffee 民事起诉状（comp-pr2020-319，2020-12-16，公有领域；注:PDF 文字层为自定义编码，逐字锚定不可用，仅作留档，数字核定以 20-F 自披露为准）",
    "accession": "SEC-LUCKIN-2020"
+  },
+  {
+   "file": "evidence/luckin-f1-2019.html",
+   "sha256": "5c1539ef789f235118cb56c4240374c0d0e674b41489b7f5b73bc98a74f9c6b9",
+   "source": "Luckin Coffee F-1 招股书（2019-04-22 报送，IPO 前，EDGAR acc. 0001047469-19-002450，公有领域）",
+   "accession": "0001047469-19-002450"
   }
  ],
  "facts": [
@@ -623,6 +629,24 @@
    "basis": "SEC 新闻稿 2020-319 与起诉状",
    "accession": "SEC-LUCKIN-2020",
    "line": "—"
+  },
+  {
+   "id": "lk-stores-ipo",
+   "company": "Luckin Coffee",
+   "item": "门店数（2019-03-31，招股书自证）",
+   "value": "2,370 家门店、28 个城市",
+   "basis": "F-1 招股书自证",
+   "accession": "0001047469-19-002450",
+   "line": "2,370 stores 段"
+  },
+  {
+   "id": "lk-customers-ipo",
+   "company": "Luckin Coffee",
+   "item": "累计交易客户（招股书自证）",
+   "value": "超过 1,680 万",
+   "basis": "F-1 招股书自证",
+   "accession": "0001047469-19-002450",
+   "line": "16.8 million 段"
   }
  ],
  "approved_tokens": {
@@ -783,6 +807,10 @@
   "0.70": "lk-rev-inflate：20-F FY2019 自披露 Special Committee 结论",
   "1.17": "lk-rev-inflate：20-F FY2019 自披露 Special Committee 结论",
   "1.34": "lk-cost-inflate：20-F FY2019 同段",
-  "180": "lk-sec-penalty：SEC 新闻稿 2020-319 与起诉状"
+  "180": "lk-sec-penalty：SEC 新闻稿 2020-319 与起诉状",
+  "2,370": "lk-stores-ipo：F-1 招股书",
+  "28": "lk-stores-ipo：F-1 招股书",
+  "16.8": "lk-customers-ipo：F-1 招股书",
+  "1,680": "lk-customers-ipo：F-1 招股书"
  }
 }

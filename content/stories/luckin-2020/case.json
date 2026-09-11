@@ -1,0 +1,347 @@
+{
+ "case_id": "luckin-2020",
+ "title": "18 个月开出的咖啡帝国",
+ "subtitle": "2019 年 5 月 · 一家上市 18 个月的中国咖啡公司,增长快得不像真的",
+ "era": "2019",
+ "status": "settled",
+ "hook": "门店在涨,客户在涨,收入在涨。前三样是真的,最后一样是编的。",
+ "knowledge_node": "case-first-look",
+ "_note": "第五幕,第一个中概股案例(ADR-0005 本土化阶段 A)。教学定位:与 Sunbeam「应收跑赢收入」不同,瑞幸教「收入本身是虚构的」:关联方虚构交易,是异常信号之外更根本的一类。当事人走 Nikola 模式(文件本身发声),因涉案个人已被 SEC 认定并解职(ADR-0005 §2 边界:真人具名但不让 AI 替被定罪者生成新句)。所有引文逐字来自原档,带行号;数字全部指向 facts.json。",
+ "cast": [
+  {
+   "id": "prospectus",
+   "name": "这份招股书",
+   "avatar": "📄",
+   "role": "2019 年 4 月报送 · 上市前的官方口径",
+   "intro": "它讲的是一个漂亮的增长故事:18 个月、2,370 家店、China's fastest-growing。你问什么,它就把自己写过的那一行念给你听。它不知道一年后会发生什么。",
+   "rule": "它只念这份 F-1 招股书里逐字写过的话。文件里没有的,它会直说没有。",
+   "note": "本幕的「人物」是文件本身,不是任何自然人。这是刻意的:涉案的原 CEO Jenny Zhiya Qian、原 COO Jian Liu 后被 SEC 认定参与 Fabricated Transactions 并遭解职(20-F FY2019 L8528),按 ADR-0005 §2 不让 AI 替被定罪者生成新句;招股书是造假败露之前公司的官方声音,逐字可锚。"
+  }
+ ],
+ "beats": [
+  {
+   "id": "l0",
+   "kind": "cold_open",
+   "eyebrow": "2019 年 5 月",
+   "title": "所有人都在讲这个增长",
+   "lines": [
+    "一家中国咖啡公司刚在纳斯达克上市。",
+    "它的故事简单又诱人:用 App 下单、便宜、遍地开花,要在中国把星巴克拉下马。",
+    "招股书里写着:18 个月,从北京一家试营店开到 2,370 家店、28 个城市,累计超过 1,680 万客户。",
+    "增长曲线陡得几乎不真实。你手上只有这份招股书。"
+   ],
+   "narration": "增长的每一个数字看起来都在往上冲。先看看它给了你什么。",
+   "context": [
+    {
+     "date": "2019-04-22",
+     "t": "瑞幸咖啡报送 F-1 招股书,自称「中国第二大、增长最快的咖啡网络」。",
+     "src": "F-1 招股书",
+     "line": "L1019"
+    },
+    {
+     "date": "2019-05",
+     "t": "瑞幸在纳斯达克上市,代码 LK。上市时开业不满 18 个月。",
+     "src": "F-1 招股书",
+     "line": "L1075"
+    }
+   ]
+  },
+  {
+   "id": "l1",
+   "kind": "evidence",
+   "eyebrow": "第 1 份材料",
+   "title": "增长的三个数字",
+   "panel": {
+    "kind": "list",
+    "title": "招股书自证(截至 2019-03-31)",
+    "rows": [
+     {
+      "k": "门店数",
+      "v": "2,370 家 · 28 个城市",
+      "fact": "lk-stores-ipo"
+     },
+     {
+      "k": "累计交易客户",
+      "v": "超过 1,680 万",
+      "fact": "lk-customers-ipo"
+     },
+     {
+      "k": "开业时长",
+      "v": "18 个月(从北京 1 家试营店起)",
+      "fact": "lk-stores-ipo"
+     }
+    ]
+   },
+   "derived": "门店、客户、时间,三个都是可以数、可以核的实物数字。它们都在飞涨,而且大概率是真的。",
+   "narration": "先别急着信也别急着疑。记住:这三个数字都是「实物」,店真的开了,客户真的下过单。"
+  },
+  {
+   "id": "l2",
+   "kind": "evidence",
+   "eyebrow": "第 2 份材料",
+   "title": "但还有第四个数字",
+   "panel": {
+    "kind": "list",
+    "title": "增长故事的核心",
+    "rows": [
+     {
+      "k": "增长叙事",
+      "v": "「China's fastest-growing coffee network」",
+      "fact": null
+     },
+     {
+      "k": "商业模式",
+      "v": "「disruptive model」,要满足中国未被满足的咖啡需求",
+      "fact": null
+     },
+     {
+      "k": "关键问题",
+      "v": "店和客户是实物,能数。收入呢?",
+      "fact": null
+     }
+    ]
+   },
+   "narration": "门店数你能去实地数,客户数有 App 后台。但「收入」这个数字,它是谁记的、怎么记的?一个越是靠 App 交易、越是关联方能碰账的生意,收入越容易被人做出来。这一层,招股书不会主动告诉你。"
+  },
+  {
+   "id": "l3",
+   "kind": "decision",
+   "eyebrow": "上市第一周",
+   "title": "你要不要买它的股票?",
+   "prompt": "手上只有这份招股书。你可以先问它,它会用自己的原话回答你。想好了再选。",
+   "options": [
+    {
+     "id": "a",
+     "t": "先别动。门店和客户能核,但收入的真实性我还没法验,我要先弄清收入是怎么确认的、有没有关联方",
+     "verdict": "prudent",
+     "kind": "转入核查"
+    },
+    {
+     "id": "b",
+     "t": "增长这么猛、店这么多,买入",
+     "verdict": "risky",
+     "kind": "顺势"
+    },
+    {
+     "id": "c",
+     "t": "中国咖啡不可能打过星巴克,这是泡沫,做空",
+     "verdict": "hasty",
+     "kind": "认定造假"
+    }
+   ],
+   "confidence": true,
+   "ask_enabled": true
+  },
+  {
+   "id": "l4",
+   "kind": "reveal",
+   "eyebrow": "十个月后",
+   "title": "公司自己承认了",
+   "quote": {
+    "text": "「特别委员会发现,虚构交易始于 2019 年 4 月,由此,公司 2019 年的净收入被虚增了约人民币 21.2 亿元(其中二季度 2.5 亿、三季度 7.0 亿、四季度 11.7 亿)。」",
+    "src": "20-F FY2019 · 内部调查披露",
+    "line": "L328",
+    "anchors": [
+     {
+      "accession": "0001104659-21-087180",
+      "line": "L328"
+     }
+    ],
+    "orig": "the Special Committee found that the fabrication of transactions began in April 2019 and that, as a result, the Company's net revenue in 2019 was inflated by approximately RMB 2.12 billion (consisting of RMB 0.25 billion in the second quarter, RMB 0.70 billion in the third quarter and RMB 1.17 billion in the fourth quarter)."
+   },
+   "lines": [
+    "就在你看到那份招股书的同一年,收入里已经有一大块是编出来的。",
+    "手法不像「应收跑赢收入」那种账面失衡。它是用关联方做出成千上万笔假订单,凭空造出销售。",
+    "原 CEO 与原 COO 因参与虚构交易被董事会解职。公司退市,SEC 罚款 1.8 亿美元。"
+   ],
+   "narration": "门店是真的,客户是真的,连你的咖啡也是真的。假的是「卖了多少」这个数字本身。"
+  },
+  {
+   "id": "l5",
+   "kind": "contrast",
+   "eyebrow": "和第一个案例比",
+   "title": "两种不同的假",
+   "columns": [
+    "Sunbeam(第一课)",
+    "瑞幸"
+   ],
+   "them": [
+    {
+     "k": "假在哪",
+     "a": "应收账款跑赢收入:数字之间的关系失衡",
+     "b": "收入本身是虚构的:凭空造出的销售"
+    },
+    {
+     "k": "怎么看出来",
+     "a": "把两个增速放在一起比,再查现金流",
+     "b": "问收入怎么确认、有没有关联方能碰账"
+    },
+    {
+     "k": "线索在报表哪",
+     "a": "应收、现金流、附注",
+     "b": "收入确认政策、关联交易披露"
+    }
+   ],
+   "canon": {
+    "t": "招股书当时怎么说自己",
+    "detail": "F-1 自称「China's second largest and fastest-growing coffee network」,主打「disruptive model」。这些话在当时不违法,门店与客户数也大概率真实。假的是嫁接在真实门店之上的那笔虚构收入。",
+    "src": "F-1 招股书",
+    "line": "L1019",
+    "anchors": [
+     {
+      "accession": "0001047469-19-002450",
+      "line": "L1019"
+     }
+    ],
+    "orig": "We are China's second largest and fastest-growing coffee network, in terms of number of stores and cups of coffee sold, according to the Frost & Sullivan Report."
+   },
+   "knowhow": "看一家增长极快的公司,先分清哪些数字是「实物」(店、客户、产量,能去核)、哪些是「口径」(收入、利润,由公司记账)。实物在涨不等于口径为真,尤其当关联方能碰到账的时候。",
+   "narration": "第一课教你看数字之间的关系,这一课教你问一个更前面的问题:这个数字本身,是谁记的?"
+  },
+  {
+   "id": "l6",
+   "kind": "abstract",
+   "eyebrow": "把它变成一条判断",
+   "title": "实物 vs 口径",
+   "rule": "增长故事里,先把「能第三方核验的实物指标」和「公司自己记账的财务口径」分开。实物(门店、客户、销量、产能)真,不代表口径(收入、利润)真。",
+   "label": "收入真实性",
+   "boundary": "这条不是说「增长快就是假」,瑞幸的店和客户是真的。它说的是:当收入的确认高度依赖公司自己或关联方时,收入这个数字需要单独的证据,不能靠「店这么多」推出来。",
+   "story_form": "越是「轻资产、高频交易、关联方深度介入」的生意,收入越容易被做出来。",
+   "formula": "实物指标可核 ≠ 财务口径可信;收入真实性要单独问「谁记的、有没有关联方」",
+   "narration": "这是一条能带走的判断:分清实物与口径,对收入的真实性单独存疑。"
+  },
+  {
+   "id": "l7",
+   "kind": "twin",
+   "eyebrow": "换一家公司",
+   "title": "同样增长很猛,这家呢?",
+   "panel": {
+    "kind": "list",
+    "title": "H 公司(虚构练习)",
+    "rows": [
+     {
+      "k": "门店/产量",
+      "v": "三年翻两番,第三方审计的开工率与之吻合",
+      "fact": null
+     },
+     {
+      "k": "收入",
+      "v": "由数千家独立加盟商向公司报账后汇总",
+      "fact": null
+     },
+     {
+      "k": "关联方",
+      "v": "披露显示:前五大客户中无关联方,加盟商独立结算",
+      "fact": null
+     }
+    ]
+   },
+   "question": "只看这三条,收入真实性该给多大怀疑?",
+   "options": [
+    {
+     "id": "a",
+     "t": "怀疑度应下调:收入来自大量独立第三方、无关联方能碰账,虚构的门槛高得多",
+     "ok": true
+    },
+    {
+     "id": "b",
+     "t": "怀疑度不变:增长这么猛一定有问题",
+     "ok": false
+    },
+    {
+     "id": "c",
+     "t": "信息不足,无法判断",
+     "ok": false,
+     "na": true
+    }
+   ],
+   "fb": "该盯住的是收入由谁记、有没有关联方,增长快慢本身不是关键。瑞幸的假建立在关联方能凭空造单;H 公司的收入来自大量独立加盟商、无关联方,凭空造收入要串通成百上千方,门槛完全不同。实物指标又有第三方审计吻合,收入真实性的先验怀疑应当下调,但仍要看后续现金是否收得回。",
+   "narration": "分清实物与口径、盯住关联方,这一条你已经能用到一家从没见过的公司上了。"
+  }
+ ],
+ "interrogation": {
+  "opening": "「我们是中国增长最快的咖啡网络。18 个月,2,370 家店。」",
+  "howto": "听它讲这个增长故事。觉得哪一句没有回答「收入是不是真的」,就把这个问题摆给它。",
+  "cards": [
+   {
+    "id": "c-stores",
+    "t": "2,370 家店、28 个城市(2019-03)",
+    "fact": "lk-stores-ipo"
+   },
+   {
+    "id": "c-cust",
+    "t": "累计交易客户超 1,680 万",
+    "fact": "lk-customers-ipo"
+   },
+   {
+    "id": "c-inflate",
+    "t": "后来自认:2019 收入虚增约 21.2 亿",
+    "fact": "lk-rev-inflate"
+   }
+  ],
+  "testimony": [
+   {
+    "id": "p1",
+    "text": "「我们是中国第二大、增长最快的咖啡网络,以门店数量和售出咖啡杯数计,依据 Frost & Sullivan 报告。我们开创了一套技术驱动的新零售模式。」",
+    "src": "F-1 招股书 · 业务概述",
+    "line": "L1019",
+    "anchors": [
+     {
+      "accession": "0001047469-19-002450",
+      "line": "L1019"
+     }
+    ],
+    "orig": "We are China's second largest and fastest-growing coffee network, in terms of number of stores and cups of coffee sold, according to the Frost & Sullivan Report. We have pioneered a technology-driven new retail model",
+    "press": {
+     "text": "「自成立以来,我们在 18 个月内从北京一家试营店扩张开来,建立了高品质、高性价比、高便利的品牌价值主张。」",
+     "src": "F-1 招股书 · 业务概述",
+     "line": "L1075",
+     "anchors": [
+      {
+       "accession": "0001047469-19-002450",
+       "line": "L1075"
+      }
+     ],
+     "orig": "Within 18 months, we expanded from a single trial store in Beijing",
+     "coach": "它讲的全是门店和扩张速度,都是实物,大概率真。注意它一个字没说「收入是怎么确认的」。你手上那个问题,它绕开了。"
+    },
+    "breaks": [
+     {
+      "card": "c-inflate",
+      "text": "「特别委员会发现,虚构交易始于 2019 年 4 月,公司 2019 年净收入被虚增约人民币 21.2 亿元。」",
+      "src": "20-F FY2019 · 内部调查披露",
+      "line": "L328",
+      "anchors": [
+       {
+        "accession": "0001104659-21-087180",
+        "line": "L328"
+       }
+      ],
+      "orig": "the fabrication of transactions began in April 2019 and that, as a result, the Company's net revenue in 2019 was inflated by approximately RMB 2.12 billion",
+      "coach": "这是公司一年后自己承认的。<b>造假 2019 年 4 月就开始了</b>,正好在你读那份招股书的时候。门店是真的,收入是编的。到这里你不需要任何人的动机了。"
+     }
+    ],
+    "locked": false
+   },
+   {
+    "id": "p2",
+    "text": "「我们相信,这套颠覆性的模式满足了中国大量未被满足的咖啡需求,推动了咖啡的大众化消费。」",
+    "src": "F-1 招股书 · 业务概述",
+    "line": "L1019",
+    "anchors": [
+     {
+      "accession": "0001047469-19-002450",
+      "line": "L1019"
+     }
+    ],
+    "orig": "We believe that our disruptive model has fulfilled the large unmet demand for coffee",
+    "locked": false,
+    "coach": "招股书讲愿景、讲模式、讲需求,不讲「收入由谁记、关联方能不能碰账」。它答不了你要问的那个问题,而收入造假就藏在那里。"
+   }
+  ],
+  "no_record": {
+   "text": "「这一点,这份招股书里没有写。」",
+   "coach": "它只能念自己写过的话。你能拿到的只有它写了什么、和它没写什么。「没写收入怎么确认」本身,就是下一个该追的问题。"
+  }
+ }
+}
