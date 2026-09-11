@@ -132,6 +132,18 @@
    "sha256": "a363366e481ceeb82674db441d1aff0b330b2b3f9fcec4d950c7526d3f859fba",
    "source": "Sunbeam 1996-11-12 重组方案新闻稿（EDGAR acc. 0001016843-96-000061，公有领域）",
    "accession": "0001016843-96-000061"
+  },
+  {
+   "file": "evidence/luckin-20f-fy2019.html",
+   "sha256": "af075852f99f90460f8bfa54ec0ce6114b8756b6ba789578450bc455523b7f2a",
+   "source": "Luckin Coffee FY2019 20-F（造假披露后重报，2020-06-30 报送，EDGAR acc. 0001104659-21-087180，公有领域）",
+   "accession": "0001104659-21-087180"
+  },
+  {
+   "file": "evidence/luckin-sec-complaint-2020.pdf",
+   "sha256": "db72ff0a79bbfd4901c05db899fad227c622885ba95a5a34e809d0b59f339686",
+   "source": "SEC v. Luckin Coffee 民事起诉状（comp-pr2020-319，2020-12-16，公有领域；注:PDF 文字层为自定义编码，逐字锚定不可用，仅作留档，数字核定以 20-F 自披露为准）",
+   "accession": "SEC-LUCKIN-2020"
   }
  ],
  "facts": [
@@ -584,6 +596,33 @@
    "basis": "10-K405 内附 1998-01-28 全年业绩新闻稿，Dunlap 原话与紧随其后的公司口径",
    "accession": "0000950170-98-000413",
    "line": "L22583–L22585"
+  },
+  {
+   "id": "lk-rev-inflate",
+   "company": "Luckin Coffee",
+   "item": "2019 年收入虚增（公司自披露）",
+   "value": "约 RMB 21.2 亿（Q2 2.5 亿 / Q3 7.0 亿 / Q4 11.7 亿）",
+   "basis": "20-F FY2019 自披露 Special Committee 结论",
+   "accession": "0001104659-21-087180",
+   "line": "RMB 2.12 billion 段"
+  },
+  {
+   "id": "lk-cost-inflate",
+   "company": "Luckin Coffee",
+   "item": "2019 年成本费用虚增（公司自披露）",
+   "value": "RMB 13.4 亿",
+   "basis": "20-F FY2019 同段",
+   "accession": "0001104659-21-087180",
+   "line": "RMB 1.34 billion 段"
+  },
+  {
+   "id": "lk-sec-penalty",
+   "company": "Luckin Coffee",
+   "item": "SEC 民事和解罚款",
+   "value": "1.8 亿美元（$180 million）",
+   "basis": "SEC 新闻稿 2020-319 与起诉状",
+   "accession": "SEC-LUCKIN-2020",
+   "line": "—"
   }
  ],
  "approved_tokens": {
@@ -738,6 +777,12 @@
   "40": "lb-convpref-2008：FWP 新闻稿 L145–L155",
   "4.0": "lb-convpref-2008：FWP 新闻稿 L145–L155",
   "20": "sb-opmargin-target：10-K405 L22583–L22585",
-  "17": "sb-opmargin-target：10-K405 L22583–L22585"
+  "17": "sb-opmargin-target：10-K405 L22583–L22585",
+  "2.12": "lk-rev-inflate：20-F FY2019 自披露 Special Committee 结论",
+  "0.25": "lk-rev-inflate：20-F FY2019 自披露 Special Committee 结论",
+  "0.70": "lk-rev-inflate：20-F FY2019 自披露 Special Committee 结论",
+  "1.17": "lk-rev-inflate：20-F FY2019 自披露 Special Committee 结论",
+  "1.34": "lk-cost-inflate：20-F FY2019 同段",
+  "180": "lk-sec-penalty：SEC 新闻稿 2020-319 与起诉状"
  }
 }
