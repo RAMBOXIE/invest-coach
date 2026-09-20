@@ -21,8 +21,8 @@
     STORY = STORIES.find(s => s.case_id === cid) || STORIES[0];
     ST = { i: 0, pick: null, conf: null, twinOk: null, asked: [], seen: new Set(),
       mode: STORY.rpg && STORY.rpg.scenes ? 'rpg' : 'legacy',
-      role: null, sceneId: STORY.rpg && STORY.rpg.initial_scene || null,
-      rpgAction: null, rpgVoice: null };
+      role: null, sceneId: STORY.rpg && STORY.rpg.initial_scene || null, rpgPath: null,
+      rpgAction: null, rpgVoice: null, rpgReturn: null, rpgPressure: null };
     el.classList.add('show');
     track('story_open', { case: STORY.case_id });
     draw();
@@ -101,6 +101,13 @@
      rpg.scenes 是新故事契约。每个场景由处境、已知材料和行动组成；行动只改变
      玩家接下来面对的压力与信息路径，真实结局仍由冻结的 reveal beat 接管。 */
   function rpgScene() {
+    if (ST.sceneId === '__rpg_pressure__') {
+      const p = ST.rpgPressure || {};
+      return { id: '__rpg_pressure__', eyebrow: '你的行动已经传出去', place: p.place || '事件现场', time: p.time || '几分钟后',
+        title: p.title || '房间里的空气变了', lines: p.lines || [], evidence: p.evidence || [],
+        actions: [{ id: 'continue', kind: '承受后果', label: '继续面对下一步', prompt: '带着这个压力回到证据桌前。',
+          consequence: p.consequence || '', result_title: p.result_title || '后果已经发生', narration: p.narration || '', next: ST.rpgReturn }] };
+    }
     return (STORY.rpg.scenes || []).find(s => s.id === ST.sceneId);
   }
   function rpgBeat(id) { return STORY.beats.find(b => b.id === id); }
@@ -109,6 +116,11 @@
   }
   function rpgEvidence(ids) {
     return (ids || []).map(rpgBeat).filter(Boolean).map(b => {
+      if (b.panel && b.panel.kind === 'list') {
+        const rows = (b.panel.rows || []).map(r => `<div class="rpg-role"><div class="rpg-kicker">${esc(r.k || '')}</div><div class="rpg-title">${esc(r.v || '')}</div></div>`).join('');
+        const note = typeof b.derived === 'string' ? `<p class="rpg-pressure">${md(b.derived)}</p>` : derived(b.derived);
+        return `<div class="rpg-evidence-list">${b.panel.title ? `<div class="eyebrow">${esc(b.panel.title)}</div>` : ''}${rows}</div>${note}`;
+      }
       if (b.panel) return `${evPanel(b.panel)}${derived(b.derived)}`;
       if (b.quote) return docQuote(b.quote);
       return '';
@@ -135,7 +147,7 @@
     bodyEl.innerHTML = `<div class="eyebrow">${esc(s.eyebrow || '事件现场')}</div>
       <div class="rpg-scene-meta"><span>${esc(s.place || '')}</span><span>${esc(s.time || '')}</span></div>
       <h2>${esc(s.title)}</h2>${rpgRoleCard()}
-      ${(s.role_lines?.[ST.role] || s.lines || []).map(x => `<p class="ln">${md(x)}</p>`).join('')}
+      ${(s.path_lines?.[ST.rpgPath] || s.role_lines?.[ST.role] || s.lines || []).map(x => `<p class="ln">${md(x)}</p>`).join('')}
       ${rpgEvidence(s.evidence)}
       ${action ? `<div class="rpg-result"><div class="rpg-result-title">${esc(action.result_title || '你的行动已经产生后果')}</div>
         <p class="ln">${md(action.consequence || '')}</p>
@@ -153,7 +165,7 @@
     footEl.innerHTML = '';
     dotsEl.innerHTML = `<i class="on"></i>${(r.scenes || []).map(() => '<i></i>').join('')}`;
     bodyEl.querySelectorAll('[data-rpg-role]').forEach(x => x.onclick = () => {
-      ST.role = x.dataset.rpgRole; ST.sceneId = r.initial_scene; ST.rpgAction = null;
+      ST.role = x.dataset.rpgRole; ST.sceneId = r.initial_scene; ST.rpgAction = null; ST.rpgPath = null;
       track('story_role', { case: STORY.case_id, role: ST.role }); draw();
     });
   }
@@ -170,10 +182,18 @@
     if (next) next.onclick = () => {
       const a = rpgActions(s).find(y => y.id === ST.rpgAction);
       if (!a) return;
-      if (s.final || a.next === '__legacy_reveal') {
+      if (s.id === '__rpg_pressure__') {
+        ST.sceneId = a.next; ST.rpgAction = null; ST.rpgPressure = null;
+      } else if (s.final || a.next === '__legacy_reveal') {
         ST.mode = 'legacy'; ST.i = STORY.beats.findIndex(x => x.kind === 'reveal');
         if (ST.i < 0) ST.i = 0;
-      } else { ST.sceneId = a.next; ST.rpgAction = null; ST.rpgVoice = null; }
+      } else {
+        ST.rpgPath = ST.rpgAction; ST.rpgReturn = a.next; ST.rpgAction = 'continue'; ST.rpgVoice = null;
+        ST.rpgPressure = { place: s.place, time: s.time, title: a.result_title || '房间里的空气变了',
+          lines: [`${a.label}已经改变了下一步的压力。现在没有人能回到选择之前。`],
+          consequence: a.consequence, result_title: a.result_title, narration: a.narration };
+        ST.sceneId = '__rpg_pressure__';
+      }
       draw();
     };
   }
