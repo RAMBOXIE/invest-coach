@@ -64,6 +64,10 @@
 .rpg-active-role b{font-size:var(--size-17);color:var(--gold)}
 .rpg-role-list,.rpg-actions{display:flex;flex-direction:column;gap:var(--space-2);max-width:var(--measure-read)}
 .rpg-evidence-list{max-width:var(--measure-read);margin:var(--space-4) 0}
+.rpg-guide{max-width:var(--measure-read);margin:var(--space-5) 0 var(--space-3);padding:var(--space-3) var(--space-4);
+  border-left:3px solid var(--gold);background:rgba(255,209,102,.07);border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.rpg-guide p{margin:0 0 var(--space-2);font-size:var(--size-17);line-height:var(--lh-read);color:var(--ink)}
+.rpg-guide small{display:block;font-size:var(--size-15);line-height:var(--lh-ui);color:var(--soft)}
 .rpg-learning{max-width:var(--measure-read);margin:var(--space-4) 0;padding:var(--space-3) var(--space-4);border-left:3px solid var(--gold);background:rgba(255,209,102,.08)}
 .rpg-learning p{margin:0 0 var(--space-3);line-height:var(--lh-ui)}
 .rpg-skill-list{display:flex;flex-wrap:wrap;gap:var(--space-2)}

@@ -110,16 +110,67 @@
     }
     return (STORY.rpg.scenes || []).find(s => s.id === ST.sceneId);
   }
+  const RPG_ZH = {
+    'Before the decision':'决定之前','Historical decision room':'历史决策现场','The pressure is rising':'压力正在上升',
+    'The second decision':'第二个决定','Investment committee':'投资委员会','The window is closing':'窗口正在关闭',
+    'Build the evidence chain':'建立证据链','Evidence':'证据','Shortcut':'捷径','Risk budget':'风险预算','Conviction':'确信',
+    'Research':'研究','Narrative':'叙事','Impulse':'冲动','Build the evidence chain before committing':'先建立证据链，再投入资金',
+    'Trust the strongest narrative':'相信最有说服力的故事','Write the failure case first':'先写失败情形','Let the story decide':'让故事替你决定',
+    'Turn the story into variables you can verify.':'把故事拆成可以核对的变量。','The story is popular, simple, and emotionally convincing.':'这个故事流行、简单，而且很有感染力。',
+    'Define the evidence that would change your mind.':'先定义什么证据会让你改变判断。','The opportunity feels too obvious to delay.':'机会看起来太明显，已经不容拖延。',
+    'The story becomes a model':'故事变成了模型','The narrative goes first':'叙事抢在证据之前','The failure case gets a seat':'失败情形也坐上了桌面',
+    'Conviction outruns evidence':'确信跑在证据前面','A useful story creates a question that can be falsified.':'有用的故事会变成一个可以被证伪的问题。',
+    'Good decisions preserve the ability to make the next decision.':'好的决定会保留做出下一次决定的能力。','The most dangerous shortcut is the one that feels like courage.':'最危险的捷径，往往感觉最像勇气。',
+    'Evidence table':'证据表','What must be verified?':'哪些内容必须核对？','Information available then':'当时能看到的信息',
+    'Historical record':'历史原档','The result is not the lesson':'结果不是要点','Debrief':'复盘','What the method adds':'这套方法多做了什么',
+    'Transferable method':'可以迁移的方法','Method card':'方法卡','A reusable decision loop':'一套可以复用的判断循环',
+    'Turn an exciting story into a falsifiable question, then price the uncertainty.':'把令人兴奋的故事变成可证伪的问题，再给不确定性定价。',
+    'The room wants a decision before every uncertainty is resolved.':'现场要求现在就决定，所有不确定性还没有消失。',
+    'Your choice':'你的选择','The public record preserves the decision context, the evidence, and the consequences.':'公开原档保留了决策背景、证据和后果。',
+    'History lets you inspect the ending. The skill is learning what could have been known before the ending.':'历史让你看见结局；关键训练是，结局发生前你本来能知道什么。'
+  };
+  function rpgText(value) { return typeof value === 'string' ? (RPG_ZH[value] || value) : value; }
   function rpgBeat(id) { return STORY.beats.find(b => b.id === id); }
   function rpgActions(s) {
     return (s.actions || []).filter(a => !a.roles || a.roles.includes(ST.role));
   }
+  function rpgDecisionGuide(s, available) {
+    if (!available.length) return '';
+    const prompt = rpgText(s.prompt) || '这一刻要先决定：你准备验证哪一条证据链？';
+    return `<div class="rpg-guide"><div class="rpg-kicker">此刻要判断</div><p>${md(prompt)}</p>
+      <small>先看证据，再选行动。选择之后，你会看到它怎样改变现场，以及它遗漏了什么。</small></div>`;
+  }
+  const RPG_SCENE_ZH = {
+    'buffett-coke-1988': ['管理层把品牌、渠道和全球增长摆上桌面。你的任务，是把掌声拆成可以核对的经营变量。','先从单位经济学开始：客户愿意持续为哪一部分付钱？'],
+    'burry-mortgage-2007': ['一只结构化证券经过评级和分散化，看起来很安全。你的任务，是沿着现金流找到实际的付款人。','先看借款人、合同条款，以及损失会从哪里开始。'],
+    'lynch-fidelity-1985': ['货架上的产品很受欢迎，自己的生活也能感受到它。这个观察只有变成可检验的问题，才有投资价值。','先写下假设，再去年报里找能支持或推翻它的数字。'],
+    'munger-costco-1999': ['仓库里堆着低价、快周转的商品。单看毛利率，解释不了这套生意如何运转。','先看顾客得到的价值、周转速度，以及维持规模需要多少资本。'],
+    'soros-gbp-1992': ['市场听见政府要守住一种货币。你的任务，是找出承诺背后的工具、约束和代价。','先看制度约束，不要先跟着最响亮的标题走。']
+  };
+  const RPG_TITLE_ZH = {
+    'buffett-coke-1988':'亚特兰大：品牌到底值多少钱？','burry-mortgage-2007':'评级背后的住房贷款','lynch-fidelity-1985':'购物车里的线索',
+    'munger-costco-1999':'仓库里那个一美元的问题','soros-gbp-1992':'伦敦：哪一种约束会赢？'
+  };
+  const RPG_SECOND_ZH = {
+    'buffett-coke-1988':['把好生意和买入价格分开。','再好的系统，也不能替你免除价格纪律。'],
+    'burry-mortgage-2007':['把模型结果和底层现金流分开。','模型可以整洁，调查不能因此结束。'],
+    'lynch-fidelity-1985':['把日常观察和原始证据分开。','增长必须同时出现在收入、利润、现金和合理价格里。'],
+    'munger-costco-1999':['把经营质量和估值分开。','一套优秀的系统，也不能成为忽略价格的理由。'],
+    'soros-gbp-1992':['把方向判断和仓位大小分开。','观点正确，也可能因为没有定义亏损预算而失败。']
+  };
+  function rpgLines(s) {
+    const lines = s.lines || [];
+    const translated = RPG_SCENE_ZH[STORY.case_id];
+    if (translated && s.id === 'decision-room') return translated;
+    const second = RPG_SECOND_ZH[STORY.case_id];
+    return second && s.id === 'pressure-room' ? [second[1]] : lines.map(rpgText);
+  }
   function rpgEvidence(ids) {
     return (ids || []).map(rpgBeat).filter(Boolean).map(b => {
       if (b.panel && b.panel.kind === 'list') {
-        const rows = (b.panel.rows || []).map(r => `<div class="rpg-role"><div class="rpg-kicker">${esc(r.k || '')}</div><div class="rpg-title">${esc(r.v || '')}</div></div>`).join('');
+        const rows = (b.panel.rows || []).map(r => `<div class="rpg-role"><div class="rpg-kicker">${esc(rpgText(r.k || ''))}</div><div class="rpg-title">${esc(rpgText(r.v || ''))}</div></div>`).join('');
         const note = typeof b.derived === 'string' ? `<p class="rpg-pressure">${md(b.derived)}</p>` : derived(b.derived);
-        return `<div class="rpg-evidence-list">${b.panel.title ? `<div class="eyebrow">${esc(b.panel.title)}</div>` : ''}${rows}</div>${note}`;
+        return `<div class="rpg-evidence-list">${b.panel.title ? `<div class="eyebrow">${esc(rpgText(b.panel.title))}</div>` : ''}${rows}</div>${note}`;
       }
       if (b.panel) return `${evPanel(b.panel)}${derived(b.derived)}`;
       if (b.quote) return docQuote(b.quote);
@@ -128,7 +179,8 @@
   }
   function rpgRoleCard() {
     const role = (STORY.rpg.roles || []).find(r => r.id === ST.role);
-    return role ? `<div class="rpg-active-role"><span>当前身份</span><b>${esc(role.title)}</b><small>${esc(role.goal)}</small></div>` : '';
+    const goals = { researcher:'核对证据链', risk:'定义失败边界', allocator:'保护资本安全边界' };
+    return role ? `<div class="rpg-active-role"><span>当前身份</span><b>${esc(rpgText(role.title))}</b><small>${esc(rpgText(role.goal) || goals[role.id] || '把判断落到证据上')}</small></div>` : '';
   }
   function drawRpg() {
     const r = STORY.rpg;
@@ -138,20 +190,20 @@
     const available = rpgActions(s);
     const action = available.find(a => a.id === ST.rpgAction);
     const final = s.final === true;
-    const voice = action ? (ST.rpgVoice || action.narration || '') : '';
+    const voice = action ? (ST.rpgVoice || rpgText(action.narration) || '') : '';
     const actions = action ? '' : available.map(a =>
-      `<button class="rpg-action" data-rpg-action="${esc(a.id)}"><span class="rpg-action-kind">${esc(a.kind || '行动')}</span><b>${esc(a.label)}</b><small>${esc(a.prompt || '')}</small></button>`).join('');
+      `<button class="rpg-action" data-rpg-action="${esc(a.id)}"><span class="rpg-action-kind">${esc(rpgText(a.kind || '行动'))}</span><b>${esc(rpgText(a.label))}</b><small>${esc(rpgText(a.prompt || ''))}</small></button>`).join('');
     const conf = final && action ? `<div class="eyebrow rpg-conf-label">你对这个判断有多大把握？</div>
       <div class="seg2">${CONF.map(c => `<button data-rpg-conf="${c.v}" class="${ST.conf === c.v ? 'on' : ''}">${c.t}</button>`).join('')}</div>` : '';
     const nextDisabled = final ? !action || ST.conf == null : !action;
-    bodyEl.innerHTML = `<div class="eyebrow">${esc(s.eyebrow || '现场')}</div>
-      <div class="rpg-scene-meta"><span>${esc(s.place || '')}</span><span>${esc(s.time || '')}</span></div>
-      <h2>${esc(s.title)}</h2>${rpgRoleCard()}
-      ${(s.path_lines?.[ST.rpgPath] || s.role_lines?.[ST.role] || s.lines || []).map(x => `<p class="ln">${md(x)}</p>`).join('')}
+    bodyEl.innerHTML = `<div class="eyebrow">${esc(rpgText(s.eyebrow || '现场'))}</div>
+      <div class="rpg-scene-meta"><span>${esc(rpgText(s.place || ''))}</span><span>${esc(rpgText(s.time || ''))}</span></div>
+      <h2>${esc(s.id === 'pressure-room' && RPG_SECOND_ZH[STORY.case_id] ? RPG_SECOND_ZH[STORY.case_id][0] : (RPG_TITLE_ZH[STORY.case_id] && s.id === 'decision-room' ? RPG_TITLE_ZH[STORY.case_id] : rpgText(s.title)))}</h2>${rpgRoleCard()}
+      ${(s.path_lines?.[ST.rpgPath] || s.role_lines?.[ST.role] || rpgLines(s)).map(x => `<p class="ln">${md(rpgText(x))}</p>`).join('')}
       ${rpgEvidence(s.evidence)}
-      ${action ? `<div class="rpg-result"><div class="rpg-result-title">${esc(action.result_title || '行动结果')}</div>
-        <p class="ln">${md(action.consequence || '')}</p>
-        <p class="rpg-pressure" id="rpg-voice-${STORY.case_id}"><b>画外音</b>${md(voice)}</p></div>` : `<div class="rpg-actions">${actions}</div>`}`;
+      ${action ? `<div class="rpg-result"><div class="rpg-kicker">发生了什么</div><div class="rpg-result-title">${esc(rpgText(action.result_title || '行动结果'))}</div>
+        <p class="ln">${md(rpgText(action.consequence || ''))}</p>
+        <p class="rpg-pressure" id="rpg-voice-${STORY.case_id}"><b>画外音</b>${md(voice)}</p></div>` : `${rpgDecisionGuide(s, available)}<div class="rpg-actions">${actions}</div>`}`;
     footEl.innerHTML = action ? `${final ? conf : ''}<button class="sty-cta" id="rpg-next" ${nextDisabled ? 'disabled' : ''}>${final ? '进入原档揭示' : '继续'}</button>` : '';
     dotsEl.innerHTML = (r.scenes || []).map(x => `<i class="${x.id === s.id ? 'on' : ''}"></i>`).join('');
     if (action) narrateChoice(action, 'rpg-voice-' + STORY.case_id);
@@ -159,9 +211,11 @@
   }
   function drawRpgRoles() {
     const r = STORY.rpg;
-    bodyEl.innerHTML = `<div class="eyebrow">角色选择</div><h2>${esc(r.title || '选择你的身份')}</h2>
-      <p class="ln">${md(r.premise || '')}</p><div class="rpg-role-list">${(r.roles || []).map(x =>
-        `<button class="rpg-role-choice" data-rpg-role="${esc(x.id)}"><b>${esc(x.title)}</b><span>${esc(x.goal)}</span><small>${esc(x.pressure || '')}</small></button>`).join('')}</div>`;
+    const goals = { researcher:'核对证据链', risk:'定义失败边界', allocator:'保护资本安全边界' };
+    const pressure = { researcher:'现场催你先给出依据。', risk:'大家都在奖励确信。', allocator:'机会看起来正在消失。' };
+    bodyEl.innerHTML = `<div class="eyebrow">角色选择</div><h2>${esc(STORY.title || '选择你的身份')}</h2>
+      <p class="ln">${md(STORY.hook || r.premise || '')}</p><div class="rpg-role-list">${(r.roles || []).map(x =>
+        `<button class="rpg-role-choice" data-rpg-role="${esc(x.id)}"><b>${esc(rpgText(x.title))}</b><span>${esc(goals[x.id] || rpgText(x.goal))}</span><small>${esc(pressure[x.id] || rpgText(x.pressure || ''))}</small></button>`).join('')}</div>`;
     bodyEl.insertAdjacentHTML('afterbegin', learningCard(STORY.rpg.learning_goal || STORY.learning_goal, STORY.rpg.learning_skills || STORY.skills));
     footEl.innerHTML = '';
     dotsEl.innerHTML = `<i class="on"></i>${(r.scenes || []).map(() => '<i></i>').join('')}`;
@@ -208,8 +262,8 @@
 
   function learningCard(goal, skills) {
     if (!goal && !(skills || []).length) return '';
-    return `<div class="rpg-learning"><div class="rpg-kicker">LEARNING TARGET</div><p>${esc(goal || '')}</p>
-      <div class="rpg-skill-list">${(skills || []).map(x => `<span>${esc(x)}</span>`).join('')}</div></div>`;
+    return `<div class="rpg-learning"><div class="rpg-kicker">学习目标</div><p>${esc(rpgText(goal || ''))}</p>
+      <div class="rpg-skill-list">${(skills || []).map(x => `<span>${esc(rpgText(x))}</span>`).join('')}</div></div>`;
   }
 
   function roleCard() {
