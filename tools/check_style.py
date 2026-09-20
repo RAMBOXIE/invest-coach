@@ -28,6 +28,9 @@ import sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 BASELINE = ROOT / "design" / "style-debt.json"
 SITE = ROOT / "content" / "ch1" / "site.json"
+# 多章(D11):文风扫描要覆盖所有章,不能只数第一章。否则第二章的破折号/黑话/AI 腔
+# 全部漏过,正是本仓反复栽的「只查形状不查真值」。coach 名/自检仍以 ch1 为准(教练共用一份)。
+SITES = sorted((ROOT / "content").glob("ch*/site.json"))
 STORIES = ROOT / "content" / "stories"
 UI = [ROOT / "src" / "template.html", ROOT / "src" / "parts" / "court.js",
       ROOT / "src" / "parts" / "story.js"]
@@ -135,7 +138,8 @@ def user_text():
         elif isinstance(o, str) and o.strip():
             out.append((f"{src}:{key}", o))
 
-    walk(json.loads(SITE.read_text(encoding="utf-8")), "site.json")
+    for sp in SITES:
+        walk(json.loads(sp.read_text(encoding="utf-8")), sp.parent.name + "/site.json")
     for f in sorted(STORIES.glob("*/case.json")):
         walk(json.loads(f.read_text(encoding="utf-8")), f.parent.name)
     # UI 文案：只取源码里的中文字符串字面量，注释与标识符不算
