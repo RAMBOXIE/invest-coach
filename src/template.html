@@ -220,6 +220,7 @@
   .story-front-rule{margin:14px 0 24px;color:var(--text-meta-color);font-size:var(--size-13);line-height:var(--lh-read)}
   .story-front-list{display:grid;gap:8px;padding-top:18px;border-top:1px solid var(--surface-rule)}
   .story-row{margin:0}
+  .story-atlas{display:grid;gap:10px}
   .pick-eye{font-size:var(--size-13);letter-spacing:var(--track-eyebrow);color:var(--state-focus)}
   .pick-t{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);
     letter-spacing:var(--track-display);margin:13px 0 11px;
@@ -863,7 +864,7 @@ function viewToday(){
   const ch=curChapter(), chNodes=SITE.nodes.filter(n=>chOf(n)===ch);
   const P=plan(), done=chNodes.filter(n=>lit.has(n.id)).length, total=chNodes.length, pf=profile();
   // 体验 §5：首个动作是选主教练。没选过就只给这一件事，别的都不显示。
-  if(!pf.tone) return storyFront();
+  return storyFront();
   const head=P.q[0], rest=P.q.slice(1);
   // 移动端是自然流；桌面用 .today 网格分栏，DOM 顺序不变（无障碍阅读顺序 = 视觉优先级）
   let side='';
@@ -987,7 +988,24 @@ function dw(title,body){
   return `<details class="dw"><summary>${title}</summary><div class="dw-in">${body}</div></details>`;
 }
 
+function storyAtlas(){
+  const stories = SITE.x_stories || [];
+  return `<div class="sec story-atlas"><h2>真实事件档案</h2>
+    <p class="tip">每个档案都从原始材料开始，经过角色选择、压力场和后果，再回到证据。</p>
+    ${stories.map(x => {
+      const done = !!((S.story || {})[x.case_id]);
+      const role = x.rpg && x.rpg.roles && x.rpg.roles[0];
+      return `<button class="rowbtn story-row" data-story="${x.case_id}">
+        <span class="ic">${x.cast && x.cast[0] ? (x.cast[0].avatar || '◈') : '◈'}</span>
+        <span><span class="nm">${x.company || x.title}</span><span class="mt">${x.era || ''} · ${x.title} · ${role ? role.title : '事件决策'}</span></span>
+        <span class="chipS ${done ? 'lit' : 'open'}">${done ? '已完成' : '进入'}</span>
+      </button>`;
+    }).join('')}
+  </div>`;
+}
+
 function viewAtlas(){
+  return storyAtlas();
   /* 目录：要学的东西按层排开，点一行就进。
      全景图撤了：手机上它只是一张看不清的星图，既不能点也不解释顺序。
      目录才回答用户真正的问题：接下来学什么、为什么锁着、案例什么时候能进。 */
