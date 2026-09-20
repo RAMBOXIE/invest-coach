@@ -1,4 +1,5 @@
 dist/
+publish/
 server/invest-coach-server*
 server/*.exe
 *.db

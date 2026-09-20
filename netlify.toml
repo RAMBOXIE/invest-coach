@@ -1,0 +1,15 @@
+# Netlify 部署配置（根目录，权威）。
+# 只发布 dist/ 里那一个自包含的 index.html——不要把源码/evidence/docs/tools 传上公网。
+# 这份覆盖 .netlify/netlify.toml 里那个危险的默认 publish = "C:\invest-coach"（整仓）。
+
+[build]
+  publish = "publish"
+
+# 私有预览：不进搜索引擎，最小化外泄面。
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow, noarchive"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
