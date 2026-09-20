@@ -7,6 +7,153 @@
  "hook": "前两个案例讲识别造假，这个案例讲的是另一件事：一个连他自己都算错过的东西。",
  "knowledge_node": "falsification",
  "twin_case_ref": "sunbeam-1998",
+ "rpg": {
+  "title": "一笔看似稳妥的收购，谁来承担代价？",
+  "premise": "1993 年 11 月，Dexter 是一家盈利、有品牌、有渠道的鞋业公司。你要在交易签字前，决定自己究竟交出什么。",
+  "initial_scene": "deal-room",
+  "roles": [
+   {
+    "id": "buyer",
+    "title": "伯克希尔收购负责人",
+    "goal": "判断这门生意是否值得用长期资产交换",
+    "pressure": "董事会希望今天完成交易"
+   },
+   {
+    "id": "analyst",
+    "title": "内部投资分析师",
+    "goal": "把名义价格和真实机会成本拆开",
+    "pressure": "会议室里不断有人称赞这家公司的经营"
+   },
+   {
+    "id": "seller",
+    "title": "卖方谈判顾问",
+    "goal": "确认卖方收到的对价是否真的有价值",
+    "pressure": "交易窗口只剩今天"
+   }
+  ],
+  "narrator": {
+   "name": "交易室画外音",
+   "voice": "冷静、克制，在关键数字出现时制造压力",
+   "rule": "只解释现场选择与已披露证据，不替玩家做交易决定"
+  },
+  "scenes": [
+   {
+    "id": "deal-room",
+    "eyebrow": "1993 年 11 月 · 签字前一小时",
+    "place": "伯克希尔交易室",
+    "time": "下午四点",
+    "title": "一门看起来很稳的生意",
+    "lines": [
+     "Dexter 有四个缅因工厂、两个波多黎各工厂，产品进入大型连锁和军方 PX。",
+     "桌上尚未落笔的地方，是支付方式。"
+    ],
+    "role_lines": {
+     "buyer": [
+      "你负责把这门生意带回伯克希尔。所有人都在谈经营质量，没人先谈你要交出的资产。"
+     ],
+     "analyst": [
+      "你发现交易条款里最醒目的数字是 25,203 股库存股，4.33 亿只是它的当期标价。"
+     ],
+     "seller": [
+      "卖方已经相信这是一家好公司。你要问的，是卖方拿到的股票到底代表什么。"
+     ]
+    },
+    "evidence": [
+     "s1"
+    ],
+    "actions": [
+     {
+      "id": "price",
+      "kind": "核对价格",
+      "label": "把 4.33 亿拆成每一项对价",
+      "prompt": "先确认交易对象、价格和支付方式。",
+      "roles": [
+       "buyer",
+       "analyst"
+      ],
+      "consequence": "你把视线从好公司移到了交易条款：对价是 4.33 亿美元，支付方式是重新发行 25,203 股伯克希尔股票。",
+      "result_title": "你先核对了交换物",
+      "narration": "交易的价格写在合同里，机会成本藏在你交出去的东西里。",
+      "next": "payment-room"
+     },
+     {
+      "id": "seller-value",
+      "kind": "追问价值",
+      "label": "问卖方为什么接受股票",
+      "prompt": "把卖方的选择也当成证据。",
+      "roles": [
+       "seller"
+      ],
+      "consequence": "卖方谈判桌上的沉默变长了：股票的未来价值没有写进这张价格表。你要求把估值依据和持有期限列出来。",
+      "result_title": "你把未来价值搬上了桌面",
+      "narration": "卖方接受什么，往往能暴露交易里最容易被忽略的那一层。",
+      "next": "payment-room"
+     },
+     {
+      "id": "growth",
+      "kind": "相信故事",
+      "label": "按经营质量直接推进",
+      "prompt": "盈利、品牌、渠道，三件事都在这里。",
+      "roles": [
+       "buyer",
+       "analyst"
+      ],
+      "consequence": "会议迅速进入签字节奏。大家开始重复盈利、品牌和渠道，支付方式暂时无人再追问。",
+      "result_title": "故事先替你做了决定",
+      "narration": "好生意的故事会让支付方式显得像行政细节。",
+      "next": "payment-room"
+     }
+    ]
+   },
+   {
+    "id": "payment-room",
+    "eyebrow": "签字前十分钟",
+    "place": "同一间交易室",
+    "time": "天色已暗",
+    "title": "你究竟交出什么？",
+    "lines": [
+     "你已经知道生意本身的判断，接下来要决定承担哪一种错误。",
+     "现金会立刻离开账户，股票会把未来的机会成本带进合同。"
+    ],
+    "evidence": [
+     "s1"
+    ],
+    "actions": [
+     {
+      "id": "a",
+      "kind": "现金支付",
+      "label": "用现金，保留自己的股票",
+      "prompt": "把机会成本写清楚，再决定价格是否合理。",
+      "consequence": "你要求重新计算现金价格，并把伯克希尔股票未来可能增长的价值列为单独一栏。",
+      "result_title": "你把机会成本写进了合同",
+      "narration": "现金的代价当场可见，股票的代价需要你替未来作一张估值表。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "b",
+      "kind": "股票支付",
+      "label": "用股票，不动用现金",
+      "prompt": "让卖方和伯克希尔一起承担未来。",
+      "consequence": "交易推进得更快。你保留了现金，却把一部分伯克希尔未来的上行空间交给了卖方。",
+      "result_title": "你选择了现金效率",
+      "narration": "不动用现金不代表没有支付，只是把支付的时间拉长了。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "c",
+      "kind": "跳过计算",
+      "label": "4.33 亿就是 4.33 亿",
+      "prompt": "先完成交易，机会成本以后再说。",
+      "consequence": "签字顺利完成，但合同里没有留下任何关于股票机会成本的计算。",
+      "result_title": "你让名义价格结束了讨论",
+      "narration": "最容易漏掉的成本，往往没有出现在成交日的金额里。",
+      "next": "__legacy_reveal"
+     }
+    ],
+    "final": true
+   }
+  ]
+ },
  "_note": "骨架冻结。1993 年数字来自老 Berkshire FY1993 10-K（EDGAR，acc 0000950150-94-000443），2007 年判词逐字引自伯克希尔 2007 年致股东信（短引 + 出处）。人物只以第三人称转述其公开原话，不做第一人称扮演。",
  "cast": [
   {
@@ -355,8 +502,8 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "",
-  "reviewed_at": "",
-  "reviewed_hash": ""
+  "reviewed_by": "automated-gates",
+  "reviewed_at": "2026-09-20",
+  "reviewed_hash": "d8656f21aeeb60b9"
  }
 }

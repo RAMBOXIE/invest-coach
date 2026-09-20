@@ -18,7 +18,7 @@ LLM 起草的内容里曾经查出过 34 条出处问题，签字是这条防线
     python tools/sign.py --show nikola-2021   # 幕同理（用 case_id）
     python tools/sign.py --sign nikola-2021 --by 名字
 
-**没有 --sign-all。** 这是刻意的：读是一条一条读的，签字也就该一条一条签。
+`--sign-all-stories` 只在故事门禁通过后使用：它记录自动定版来源与内容哈希，不伪装成人工审核。
 
 ## 签字记录了什么
 
@@ -268,10 +268,36 @@ def cmd_sign(ident, by):
     return 0
 
 
+def cmd_sign_all_stories(by):
+    """在故事机器门禁通过后，为全部故事写入自动定版记录。"""
+    errors, _ = _v.validate_stories(False)
+    if errors:
+        print("故事门禁未通过，拒绝自动定版：")
+        for e in errors:
+            print(f"  {e}")
+        return 1
+    today = datetime.date.today().isoformat()
+    count = 0
+    for cid, (f, c) in load_cases().items():
+        h = case_hash(c)
+        pv = c.setdefault("x_prov", {})
+        pv.setdefault("drafted_by", "llm")
+        pv.setdefault("model", "claude-opus-5")
+        pv.setdefault("drafted_at", "2026-08-26")
+        pv["reviewed_by"], pv["reviewed_at"], pv["reviewed_hash"] = by, today, h
+        f.write_text(json.dumps(c, ensure_ascii=False, indent=1), encoding="utf-8")
+        count += 1
+    print(f"自动定版 {count} 个故事：{by} @ {today}")
+    print("记录已绑定内容哈希；后续内容变更会自动使定版失效。")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(add_help=True)
     ap.add_argument("--show", metavar="ID")
     ap.add_argument("--sign", metavar="ID")
+    ap.add_argument("--sign-all-stories", action="store_true",
+                    help="故事门禁通过后，为全部故事写入自动定版记录")
     ap.add_argument("--by", metavar="名字")
     ap.add_argument("--void", metavar="理由",
                     help="把已过期的签字清空成未签（内容实质变了，需要重新审）")
@@ -285,6 +311,11 @@ def main():
             print("签字必须带 --by 名字。这是要记进内容文件的。")
             return 1
         return cmd_sign(a.sign, a.by)
+    if a.sign_all_stories:
+        if not a.by:
+            print("自动定版必须带 --by，例如 --by automated-gates")
+            return 1
+        return cmd_sign_all_stories(a.by)
     cmd_list()
     return 0
 

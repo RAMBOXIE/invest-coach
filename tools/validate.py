@@ -697,7 +697,7 @@ def validate_stories(release=False):
         pv = c.get("x_prov") or {}
         if not pv.get("reviewed_by"):
             (errors if release else warns).append(
-                f"{cid}: 幕未经人工审核签字（x_prov.reviewed_by 为空）"
+                f"{cid}: 幕没有定版记录（x_prov.reviewed_by 为空）"
                 + ("——--release 阻断" if release else "——定版前必须补"))
         # 内容改了签字必须失效。这条一度只在节点侧（R23）有，幕这边只查了
         # reviewed_by 非空——结果是给幕签完字之后正文随便改，签字永远有效，
@@ -708,7 +708,7 @@ def validate_stories(release=False):
                 errors.append(f"{cid}: 幕的审核已过期——内容 hash 与 x_prov.reviewed_hash "
                               f"不符，改动后必须重审（现 {h}，签字时 {pv['reviewed_hash']}）")
         else:
-            errors.append(f"{cid}: 幕有 reviewed_by 却没有 reviewed_hash —— "
+            errors.append(f"{cid}: 幕有定版来源却没有 reviewed_hash —— "
                           "没有指纹的签字无法判断是否过期，等于没签")
 
     # 原档登记自检

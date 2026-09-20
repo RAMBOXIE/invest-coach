@@ -252,6 +252,46 @@ def p8_nextsteps_wiring(S, port, errors):
         errors.append("P8 方法种子没有原样到达模型层")
 
 
+def p9_story_narrate_gate(S, errors):
+    """RPG 画外音只沿固定选择解释压力，不生成事实或结局。"""
+    source = "选择：先查清缺口。压力：承担错过行情的压力。种子：先把疑点拆成可验证动作。"
+    ok = "你把决定拆成了动作，压力仍在，但它现在可以被证据检验。"
+    if S.check_story_narrate(ok, source)[0] is None:
+        errors.append("P9 合格的 RPG 画外音被误杀")
+    for bad, why in (("后来真相终于揭开了。", "后见之明"),
+                     ("这家公司现在值得买入。", "投资建议"),
+                     ("你应该承担 99% 的风险。", "来源外数字")):
+        if S.check_story_narrate(bad, source)[0] is not None:
+            errors.append(f"P9 该丢弃的没丢（{why}）：{bad}")
+
+
+def p9_story_narrate_wiring(S, port, errors):
+    """端点接线 + 选择/压力/种子原样到达模型层。"""
+    seen = {}
+
+    def probe(narrator, choice, pressure, seed, question):
+        seen.update(narrator=narrator, choice=choice, pressure=pressure, seed=seed)
+        return "你把疑点拆成了下一步。", {"raw": "x", "kept": True}
+
+    S.API_KEY = "test-key-not-used"
+    real, S.story_narrate = S.story_narrate, probe
+    try:
+        body = json.dumps({"case_id": "sunbeam-1998", "device": "test",
+                           "narrator": {"voice": "紧张的历史档案旁白"},
+                           "choice": "先查清缺口", "pressure": "承担错过行情的压力",
+                           "seed": "先把疑点拆成可验证动作",
+                           "question": "解释我现在承担的判断压力"}).encode()
+        code, _, out = hit(port, "/api/v1/story-narrate", "null", body)
+    finally:
+        S.story_narrate = real
+        S.API_KEY = ""
+    if code != 200 or b'"source": "llm"' not in out:
+        errors.append(f"P9 /api/v1/story-narrate 没接通或没走到模型层（{code} {out[:80]}）")
+        return
+    if seen.get("choice") != "先查清缺口" or "可验证动作" not in seen.get("seed", ""):
+        errors.append("P9 RPG 选择或旁白种子没有原样到达模型层")
+
+
 def main():
     S, dbfile = load()
     errors = []
@@ -260,12 +300,14 @@ def main():
     p3_retention(S, errors)
     p6_discuss_gate(S, errors)
     p8_nextsteps_gate(S, errors)
+    p9_story_narrate_gate(S, errors)
     srv, port = serve(S)
     try:
         p4_origin(S, port, errors)
         p5_order(S, port, errors)
         p7_discuss_wiring(S, port, errors)
         p8_nextsteps_wiring(S, port, errors)
+        p9_story_narrate_wiring(S, port, errors)
     finally:
         srv.shutdown()
         if S._db:
@@ -277,7 +319,7 @@ def main():
     if not errors:
         print("INFO : P1 打码分语境 ✓  P2 出口检查 ✓  P3 90 天留存 ✓  "
               "P4 Origin 收口 ✓  P5 打码先于调模型 ✓  P6 决策人出口检查 ✓  P7 discuss 接线 ✓  "
-              "P8 next-steps 出口检查+接线 ✓")
+              "P8 next-steps 出口检查+接线 ✓  P9 RPG 画外音出口检查+接线 ✓")
     print("SERVER:", "FAIL" if errors else "PASS")
     return 1 if errors else 0
 

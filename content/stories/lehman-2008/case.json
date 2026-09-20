@@ -7,6 +7,154 @@
  "hook": "上一个案例教你读到第 18 页。这个案例告诉你：有些东西，读到第几页都读不到。",
  "knowledge_node": "base-rate",
  "twin_case_ref": "sunbeam-1998",
+ "rpg": {
+  "title": "季末的五天，谁能看见表外？",
+  "premise": "2008 年 6 月，雷曼刚报送第二季度季报。现金稳定、杠杆下降，报告看起来像一场有秩序的收缩。",
+  "initial_scene": "filing-desk",
+  "roles": [
+   {
+    "id": "analyst",
+    "title": "卖方信用分析师",
+    "goal": "决定这份季报支撑得起多强的结论",
+    "pressure": "客户明早要一份明确评级"
+   },
+   {
+    "id": "journalist",
+    "title": "金融记者",
+    "goal": "找到季末数字背后的时间线",
+    "pressure": "市场正在寻找下一个倒下的投行"
+   },
+   {
+    "id": "risk",
+    "title": "机构风险负责人",
+    "goal": "判断报告日数据能否代表整个季度",
+    "pressure": "持仓限额今晚就要调整"
+   }
+  ],
+  "narrator": {
+   "name": "报告日画外音",
+   "voice": "冷峻、带有倒计时感",
+   "rule": "允许解释信息边界，不把审查报告的事后结论提前塞进玩家选择"
+  },
+  "scenes": [
+   {
+    "id": "filing-desk",
+    "eyebrow": "2008 年 6 月 · 季报送达",
+    "place": "风险委员会办公室",
+    "time": "晚上八点",
+    "title": "财报给了你什么？",
+    "lines": [
+     "贝尔斯登刚被接走，所有人都在盯投行的杠杆率。",
+     "雷曼的现金还在，杠杆率在下降。你要先决定从哪里开始。"
+    ],
+    "role_lines": {
+     "analyst": [
+      "你需要给客户一个评级，但手上的材料只有报告期末那一刻。"
+     ],
+     "journalist": [
+      "你不急着写标题。你先记下报告覆盖的日期，再看它没有覆盖哪几天。"
+     ],
+     "risk": [
+      "你的限额模型只接受可验证的数据。问题是，这组数字能代表整个季度吗？"
+     ]
+    },
+    "evidence": [
+     "s1"
+    ],
+    "actions": [
+     {
+      "id": "trend",
+      "kind": "读趋势",
+      "label": "先把三期现金放在一起",
+      "prompt": "从数字变化开始，不先猜故事。",
+      "roles": [
+       "analyst",
+       "risk"
+      ],
+      "consequence": "三期现金分别是 72.86 亿、75.64 亿和 65.13 亿美元。报告期末的数字确实存在，但它只描述了几个时点。",
+      "result_title": "你先确认了时点",
+      "narration": "时点数据很精确，代表性却需要另一个问题来证明。",
+      "next": "period-room"
+     },
+     {
+      "id": "timeline",
+      "kind": "追时间线",
+      "label": "把季度拆成报告日前后",
+      "prompt": "问问季末前后发生了什么。",
+      "roles": [
+       "journalist",
+       "risk"
+      ],
+      "consequence": "你把追问写成一条时间线：报告日前几天、报告日、下一季度开始后的几天，三段都需要数据。",
+      "result_title": "你把表格变成了时间线",
+      "narration": "资产负债表是一张照片，风险有时发生在照片之间。",
+      "next": "period-room"
+     },
+     {
+      "id": "headline",
+      "kind": "接受披露",
+      "label": "按杠杆下降写出结论",
+      "prompt": "报告已经签字，先给市场一个方向。",
+      "roles": [
+       "analyst",
+       "journalist"
+      ],
+      "consequence": "标题很快成形：杠杆下降、现金仍在。你暂时没有要求季中数据。",
+      "result_title": "你让报告替你完成了叙事",
+      "narration": "披露可以是真的，叙事也可以因此走得太快。",
+      "next": "period-room"
+     }
+    ]
+   },
+   {
+    "id": "period-room",
+    "eyebrow": "晚上十点 · 风险委员会",
+    "place": "同一间办公室",
+    "time": "距离开盘还有九小时",
+    "title": "材料的边界在哪里？",
+    "lines": [
+     "你面对的是数字真假问题，也要判断证据能支撑多大结论。",
+     "明早市场会把你的判断当成方向。"
+    ],
+    "evidence": [
+     "s1"
+    ],
+    "actions": [
+     {
+      "id": "a",
+      "kind": "承认边界",
+      "label": "我无法判断，先要季中的数据",
+      "prompt": "要求报告期内的融资和资产变化。",
+      "consequence": "你拒绝把报告日的杠杆率当成季度平均状态，要求补充季中交易、融资安排和资产回表时间。",
+      "result_title": "你把结论停在证据边界前",
+      "narration": "无法判断会留下一个空白，它规定了下一份材料必须回答什么。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "b",
+      "kind": "接受披露",
+      "label": "杠杆在降，风险可控",
+      "prompt": "沿用报告给出的收缩故事。",
+      "consequence": "你的评级沿着报告口径上调，委员会暂时放松了对季末前后几天的追问。",
+      "result_title": "你接受了报告日的照片",
+      "narration": "照片里的每个像素都可能是真的，镜头外的五天仍然没有出现。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "c",
+      "kind": "先入为主",
+      "label": "投行都有问题，直接看空",
+      "prompt": "用行业印象替代这份文件。",
+      "consequence": "你给出了方向，却没有指出文件里的哪一组数据支持它。团队无法把这个判断变成可复核的检查。",
+      "result_title": "你让结论跑在证据前面",
+      "narration": "怀疑可以启动调查，不能代替调查本身。",
+      "next": "__legacy_reveal"
+     }
+    ],
+    "final": true
+   }
+  ]
+ },
  "_note": "骨架冻结。数字与引文逐字来自 Valukas 审查人报告 Vol.3（破产法院指定审查人，公开）与雷曼自己的 10-K/10-Q。措辞铁律：只说审查人认定「colorable claims」，不写「有罪」。",
  "cast": [
   {
@@ -405,8 +553,8 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "",
-  "reviewed_at": "",
-  "reviewed_hash": ""
+  "reviewed_by": "automated-gates",
+  "reviewed_at": "2026-09-20",
+  "reviewed_hash": "b4036846b224bc48"
  }
 }

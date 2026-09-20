@@ -44,6 +44,36 @@
   margin:0 0 var(--space-4);max-width:var(--measure-read);color:var(--ink)}
 .sty .ln.dim{color:var(--soft)}
 
+/* RPG 角色卡与后果拍：让“我在事件里”先于知识点出现。 */
+.rpg-role{margin:0 0 var(--space-5);padding:var(--space-3) var(--space-4);
+  border:1px solid rgba(255,255,255,.24);border-radius:var(--radius-md);
+  background:rgba(255,209,102,.09);max-width:var(--measure-read)}
+.rpg-kicker{font-size:var(--size-13);letter-spacing:.14em;color:var(--gold);margin-bottom:var(--space-2)}
+.rpg-title{font-size:var(--size-17);font-weight:800;margin-bottom:var(--space-3)}
+.rpg-goal{font-size:var(--size-15);line-height:var(--lh-ui);color:var(--soft);margin-top:var(--space-2)}
+.rpg-goal b{display:inline-block;width:3em;color:var(--ink)}
+.rpg-consequence{max-width:var(--measure-read);margin:var(--space-4) 0}
+.rpg-pressure{margin:var(--space-4) 0 0;padding-top:var(--space-3);
+  border-top:1px solid rgba(255,255,255,.22);font-size:var(--size-17);line-height:var(--lh-read);color:var(--gold)}
+.rpg-pressure b{display:block;font-size:var(--size-13);letter-spacing:.12em;margin-bottom:var(--space-2)}
+.rpg-scene-meta{display:flex;justify-content:space-between;gap:var(--space-3);margin:-var(--space-3) 0 var(--space-4);
+  font-size:var(--size-13);letter-spacing:.08em;color:var(--soft)}
+.rpg-active-role{display:flex;flex-direction:column;gap:4px;margin:0 0 var(--space-4);padding:var(--space-2) var(--space-3);
+  border:1px solid rgba(255,255,255,.18);border-radius:var(--radius-sm);background:rgba(255,255,255,.05);max-width:var(--measure-read)}
+.rpg-active-role span,.rpg-active-role small{font-size:var(--size-13);color:var(--soft)}
+.rpg-active-role b{font-size:var(--size-17);color:var(--gold)}
+.rpg-role-list,.rpg-actions{display:flex;flex-direction:column;gap:var(--space-2);max-width:var(--measure-read)}
+.rpg-role-choice,.rpg-action{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;text-align:left;
+  min-height:var(--tap-rec);padding:var(--space-3) var(--space-4);border:1px solid rgba(255,255,255,.2);
+  border-radius:var(--radius-md);background:rgba(255,255,255,.06);color:var(--ink)}
+.rpg-role-choice:hover,.rpg-action:hover{border-color:var(--gold);background:rgba(255,209,102,.12)}
+.rpg-role-choice b,.rpg-action b{font-size:var(--size-17)}
+.rpg-role-choice span,.rpg-role-choice small,.rpg-action small{font-size:var(--size-15);line-height:var(--lh-ui);color:var(--soft)}
+.rpg-action-kind{font-size:var(--size-13);letter-spacing:.12em;color:var(--gold)}
+.rpg-result{max-width:var(--measure-read);margin:var(--space-4) 0}
+.rpg-result-title{font-size:var(--size-17);font-weight:800;color:var(--gold);margin-bottom:var(--space-3)}
+.rpg-conf-label{margin-top:var(--space-5)}
+
 /* 画外音：教练常驻，不打断 */
 .vo{display:flex;gap:var(--space-2);align-items:flex-start;margin-top:var(--space-5);
   padding:var(--space-3) var(--space-3);border-left:2px solid var(--gold);
@@ -153,6 +183,8 @@
 
 @media(prefers-reduced-motion:no-preference){
   .sty-body>*{animation:rise var(--dur-trans) ease both}
+  /* 交互控件不参与入场位移，避免动画中的父层短暂覆盖按钮命中区域。 */
+  .sty-body>.rpg-actions,.sty-body>.rpg-role-list,.sty-body>.seg2{animation:none}
   @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 }
 

@@ -5,6 +5,7 @@
   'use strict';
 
   const md = s => String(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const STORIES = SITE.x_stories || [];
   if (!STORIES.length) return;
   let STORY = STORIES[0];
@@ -18,7 +19,10 @@
 
   window.openStory = function (cid) {
     STORY = STORIES.find(s => s.case_id === cid) || STORIES[0];
-    ST = { i: 0, pick: null, conf: null, twinOk: null, asked: [], seen: new Set() };
+    ST = { i: 0, pick: null, conf: null, twinOk: null, asked: [], seen: new Set(),
+      mode: STORY.rpg && STORY.rpg.scenes ? 'rpg' : 'legacy',
+      role: null, sceneId: STORY.rpg && STORY.rpg.initial_scene || null,
+      rpgAction: null, rpgVoice: null };
     el.classList.add('show');
     track('story_open', { case: STORY.case_id });
     draw();
@@ -77,12 +81,13 @@
 
   function draw() {
     if (!ST) return;   // 悬空的跨层回调兜底：幕已关，ST 是 null
+    if (ST.mode === 'rpg') return drawRpg();
     const b = STORY.beats[ST.i];
     ST.seen.add(b.id);
     dots();
     const R = ({
       cold_open: bCold, evidence: bEvid, decision: bDec,
-      reveal: bReveal, contrast: bContrast, abstract: bAbstract, twin: bTwin
+      consequence: bConsequence, reveal: bReveal, contrast: bContrast, abstract: bAbstract, twin: bTwin
     })[b.kind](b);
     bodyEl.innerHTML = R.body;
     footEl.innerHTML = R.foot;
@@ -90,6 +95,97 @@
     R.bind && R.bind();
     const n = document.getElementById('sty-next');
     if (n) n.onclick = () => { ST.i++; track('story_beat', { case: STORY.case_id, beat: b.id }); draw(); };
+  }
+
+  /* ===== 金融事件 RPG 引擎 =====
+     rpg.scenes 是新故事契约。每个场景由处境、已知材料和行动组成；行动只改变
+     玩家接下来面对的压力与信息路径，真实结局仍由冻结的 reveal beat 接管。 */
+  function rpgScene() {
+    return (STORY.rpg.scenes || []).find(s => s.id === ST.sceneId);
+  }
+  function rpgBeat(id) { return STORY.beats.find(b => b.id === id); }
+  function rpgActions(s) {
+    return (s.actions || []).filter(a => !a.roles || a.roles.includes(ST.role));
+  }
+  function rpgEvidence(ids) {
+    return (ids || []).map(rpgBeat).filter(Boolean).map(b => {
+      if (b.panel) return `${evPanel(b.panel)}${derived(b.derived)}`;
+      if (b.quote) return docQuote(b.quote);
+      return '';
+    }).join('');
+  }
+  function rpgRoleCard() {
+    const role = (STORY.rpg.roles || []).find(r => r.id === ST.role);
+    return role ? `<div class="rpg-active-role"><span>你扮演</span><b>${esc(role.title)}</b><small>${esc(role.goal)}</small></div>` : '';
+  }
+  function drawRpg() {
+    const r = STORY.rpg;
+    if (!ST.role) return drawRpgRoles();
+    const s = rpgScene();
+    if (!s) return drawRpgFinish();
+    const available = rpgActions(s);
+    const action = available.find(a => a.id === ST.rpgAction);
+    const final = s.final === true;
+    const voice = action ? (ST.rpgVoice || action.narration || '') : '';
+    const actions = action ? '' : available.map(a =>
+      `<button class="rpg-action" data-rpg-action="${esc(a.id)}"><span class="rpg-action-kind">${esc(a.kind || '行动')}</span><b>${esc(a.label)}</b><small>${esc(a.prompt || '')}</small></button>`).join('');
+    const conf = final && action ? `<div class="eyebrow rpg-conf-label">你对这个决定有多大把握？</div>
+      <div class="seg2">${CONF.map(c => `<button data-rpg-conf="${c.v}" class="${ST.conf === c.v ? 'on' : ''}">${c.t}</button>`).join('')}</div>` : '';
+    const nextDisabled = final ? !action || ST.conf == null : !action;
+    bodyEl.innerHTML = `<div class="eyebrow">${esc(s.eyebrow || '事件现场')}</div>
+      <div class="rpg-scene-meta"><span>${esc(s.place || '')}</span><span>${esc(s.time || '')}</span></div>
+      <h2>${esc(s.title)}</h2>${rpgRoleCard()}
+      ${(s.role_lines?.[ST.role] || s.lines || []).map(x => `<p class="ln">${md(x)}</p>`).join('')}
+      ${rpgEvidence(s.evidence)}
+      ${action ? `<div class="rpg-result"><div class="rpg-result-title">${esc(action.result_title || '你的行动已经产生后果')}</div>
+        <p class="ln">${md(action.consequence || '')}</p>
+        <p class="rpg-pressure" id="rpg-voice-${STORY.case_id}"><b>画外音</b>${md(voice)}</p></div>` : `<div class="rpg-actions">${actions}</div>`}`;
+    footEl.innerHTML = action ? `${final ? conf : ''}<button class="sty-cta" id="rpg-next" ${nextDisabled ? 'disabled' : ''}>${final ? '进入真实档案' : '继续'}</button>` : '';
+    dotsEl.innerHTML = (r.scenes || []).map(x => `<i class="${x.id === s.id ? 'on' : ''}"></i>`).join('');
+    if (action) narrateChoice(action, 'rpg-voice-' + STORY.case_id);
+    bindRpg(s);
+  }
+  function drawRpgRoles() {
+    const r = STORY.rpg;
+    bodyEl.innerHTML = `<div class="eyebrow">进入事件</div><h2>${esc(r.title || '先决定你是谁')}</h2>
+      <p class="ln">${md(r.premise || '')}</p><div class="rpg-role-list">${(r.roles || []).map(x =>
+        `<button class="rpg-role-choice" data-rpg-role="${esc(x.id)}"><b>${esc(x.title)}</b><span>${esc(x.goal)}</span><small>${esc(x.pressure || '')}</small></button>`).join('')}</div>`;
+    footEl.innerHTML = '';
+    dotsEl.innerHTML = `<i class="on"></i>${(r.scenes || []).map(() => '<i></i>').join('')}`;
+    bodyEl.querySelectorAll('[data-rpg-role]').forEach(x => x.onclick = () => {
+      ST.role = x.dataset.rpgRole; ST.sceneId = r.initial_scene; ST.rpgAction = null;
+      track('story_role', { case: STORY.case_id, role: ST.role }); draw();
+    });
+  }
+  function bindRpg(s) {
+    bodyEl.querySelectorAll('[data-rpg-action]').forEach(x => x.onclick = () => {
+      ST.rpgAction = x.dataset.rpgAction;
+      const a = rpgActions(s).find(y => y.id === ST.rpgAction);
+      if (s.final && a && ['a', 'b', 'c'].includes(a.id)) ST.pick = a.id;
+      track('story_action', { case: STORY.case_id, scene: s.id, action: ST.rpgAction, role: ST.role });
+      draw();
+    });
+    footEl.querySelectorAll('[data-rpg-conf]').forEach(x => x.onclick = () => { ST.conf = +x.dataset.rpgConf; draw(); });
+    const next = document.getElementById('rpg-next');
+    if (next) next.onclick = () => {
+      const a = rpgActions(s).find(y => y.id === ST.rpgAction);
+      if (!a) return;
+      if (s.final || a.next === '__legacy_reveal') {
+        ST.mode = 'legacy'; ST.i = STORY.beats.findIndex(x => x.kind === 'reveal');
+        if (ST.i < 0) ST.i = 0;
+      } else { ST.sceneId = a.next; ST.rpgAction = null; ST.rpgVoice = null; }
+      draw();
+    };
+  }
+  function drawRpgFinish() { ST.mode = 'legacy'; draw(); }
+
+  function roleCard() {
+    const r = STORY.rpg;
+    if (!r || !r.role) return '';
+    return `<div class="rpg-role"><div class="rpg-kicker">你现在不是旁观者</div>
+      <div class="rpg-title">${esc(r.role.title)}</div>
+      <div class="rpg-goal"><b>任务</b>${esc(r.role.goal)}</div>
+      <div class="rpg-goal"><b>限制</b>${esc(r.role.constraint)}</div></div>`;
   }
 
   /* 「当时」时间线：owner 要求每个真实案例都带时间与当年背景，让故事有临场感。
@@ -104,11 +200,42 @@
   function bCold(b) {
     return {
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
+        ${roleCard()}
         ${ctxStrip(b.context)}
         ${b.lines.map((l, i) => `<p class="ln${i === b.lines.length - 1 ? '' : ' dim'}">${md(l)}</p>`).join('')}
         ${vo(b.narration)}`,
       foot: `<button class="sty-cta" id="sty-next">翻开年报</button>`
     };
+  }
+
+  /* 选择后的后果：玩家没有改写历史，但改变了自己接下来面对的压力和信息路径。 */
+  function bConsequence(b) {
+    const path = (b.paths || {})[ST.pick] || {};
+    const voiceId = 'rpg-voice-' + STORY.case_id;
+    return {
+      body: `<div class="eyebrow">${b.eyebrow}</div><h2>${path.title || b.title}</h2>
+        <div class="rpg-consequence"><p class="ln">${md(path.body || '')}</p>
+          <p class="rpg-pressure"><b>你承担的压力</b>${md(path.pressure || '')}</p></div>
+        <div id="${voiceId}">${vo(path.narration || '')}</div>`,
+      foot: `<button class="sty-cta" id="sty-next">继续翻查原档</button>`,
+      bind() { narrateChoice(path, voiceId); }
+    };
+  }
+
+  function narrateChoice(path, targetId) {
+    const r = STORY.rpg, target = document.getElementById(targetId);
+    if (!r || !r.narrator || !target || typeof BACKEND === 'undefined' || !BACKEND) return;
+    const ctl = new AbortController();
+    const tm = setTimeout(() => ctl.abort(), 12000);
+    fetch(BACKEND + '/api/v1/story-narrate', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
+      body: JSON.stringify({ device: S.device, case_id: STORY.case_id,
+        narrator: r.narrator, choice: path.title || path.label, pressure: path.pressure || path.consequence,
+        seed: path.narration, question: '请沿着玩家刚才的选择，用画外音解释他现在承担的判断压力。' })
+    }).then(x => x.json()).then(d => {
+      clearTimeout(tm);
+      if (d && d.text && target) target.innerHTML = vo(esc(d.text));
+    }).catch(() => clearTimeout(tm));
   }
 
   /* S1/S2 证据幕 */

@@ -387,6 +387,56 @@ def nextsteps(seed, history, question):
     return text, {"system": sys_p, "history": msgs, "raw": raw, "kept": bool(text), "rejected": why}
 
 
+STORY_NARRATE_SYS = """你是金融历史事件 RPG 的画外音。
+
+玩家刚刚做了一个选择。你要沿着这个选择，解释他现在承担的判断压力，让事件更有现场感。
+你只能使用给出的选择、后果和本地种子，不得创造新的事实、数字、人物或历史结局。
+
+画外音设定：{voice}
+选择：{choice}
+后果：{pressure}
+本地种子：{seed}
+
+规则：
+1. 中文，两到三句，允许有紧张感和戏剧性，但不要写成鸡汤。
+2. 不提前泄露后来发生了什么，不使用“后来”“最终”“事后”“真相”等后见之明词。
+3. 不给买卖建议，不说股票会涨跌，不替玩家宣布正确答案。
+4. 不要说你是 AI、模型或助手。
+5. 只输出画外音正文，不加标题。"""
+
+
+def check_story_narrate(text, source):
+    if not text or len(text) > 360:
+        return None, "空或过长"
+    allowed = set(OUT_NUM.findall(source))
+    bad = [n for n in set(OUT_NUM.findall(text)) if n not in allowed]
+    if bad:
+        return None, f"出现来源里没有的数字 {bad[:3]}"
+    for w in HINDSIGHT + ADVICE + BREAK_CHAR:
+        if w in text:
+            return None, f"越界措辞「{w}」"
+    return text, ""
+
+
+def story_narrate(narrator, choice, pressure, seed, question):
+    voice = (narrator.get("voice") or "有现场感的历史档案旁白")[:300]
+    source = "\n".join((choice, pressure, seed))
+    sys_p = STORY_NARRATE_SYS.format(voice=voice, choice=choice, pressure=pressure, seed=seed)
+    body = json.dumps({
+        "model": MODEL, "max_tokens": 240, "system": sys_p,
+        "messages": [{"role": "user", "content": question[:300]}],
+    }).encode()
+    req = urllib.request.Request(
+        "https://api.anthropic.com/v1/messages", data=body,
+        headers={"content-type": "application/json", "x-api-key": API_KEY,
+                 "anthropic-version": "2023-06-01"})
+    with urllib.request.urlopen(req, timeout=12) as r:
+        out = json.load(r)
+    raw = (out.get("content") or [{}])[0].get("text", "").strip()
+    text, why = check_story_narrate(raw, source)
+    return text, {"system": sys_p, "raw": raw, "kept": bool(text), "rejected": why}
+
+
 class H(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
 
@@ -452,6 +502,8 @@ class H(BaseHTTPRequestHandler):
             return self._discuss(raw)
         if self.path == "/api/v1/next-steps":
             return self._nextsteps(raw)
+        if self.path == "/api/v1/story-narrate":
+            return self._story_narrate(raw)
 
         if self.path != "/api/v1/ask-coach":
             return self._send({"ok": False}, 404)
@@ -567,6 +619,33 @@ class H(BaseHTTPRequestHandler):
         if db():
             db().execute("INSERT INTO notes(node, trace, at) VALUES(?,?,?)",
                          ("nextsteps:" + str(req.get("quiz_id")), json.dumps(trace, ensure_ascii=False), int(time.time())))
+            db().commit()
+            purge_old()
+        return self._send({"text": text, "source": "llm" if text else "fallback"})
+
+    def _story_narrate(self, raw):
+        """RPG 选择后的画外音。只改写本地种子，不创造事件事实。"""
+        try:
+            req = json.loads(raw or b"{}")
+        except Exception:
+            return self._send({"text": None, "source": "fallback"})
+        narrator = req.get("narrator") or {}
+        choice = (req.get("choice") or "").strip()
+        pressure = (req.get("pressure") or "").strip()
+        seed = (req.get("seed") or "").strip()
+        if (not choice or not pressure or not seed or len(choice) > 300 or len(pressure) > 500
+                or len(seed) > 500 or not API_KEY or not allow(req.get("device"))):
+            return self._send({"text": None, "source": "fallback"})
+        try:
+            text, trace = story_narrate(narrator, choice, pressure, seed, req.get("question") or "")
+        except Exception as e:
+            print("story narrate err:", e, file=sys.stderr)
+            return self._send({"text": None, "source": "fallback"})
+        if not text:
+            print("story narrate 出口检查丢弃：", trace.get("rejected"), file=sys.stderr)
+        if db():
+            db().execute("INSERT INTO notes(node, trace, at) VALUES(?,?,?)",
+                         ("story-narrate:" + str(req.get("case_id")), json.dumps(trace, ensure_ascii=False), int(time.time())))
             db().commit()
             purge_old()
         return self._send({"text": text, "source": "llm" if text else "fallback"})

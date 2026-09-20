@@ -65,3 +65,16 @@
 | `x_casefile` | 节点 | 手机原生案卷：`{code, status:settled\|regulator_asked\|teaching, asof, brief, panels[], srcs[], letter?, disclaimer?}`；panel kind ∈ `cmp\|trend\|note\|quote`；`srcs[].f` 必须命中 facts.json（R25 强校验）。材料屏用它渲染，原教学屏降为按需「补课」抽屉 | 在用 |
 | `x_lab` | 顶层 | 时事案卷（B 轨）实验室：管线自动产出、**未经人工签字**。硬性：不进错题档案、不进复训队列、不计校准分、不作锚题、不能点亮任何节点 | 在用 |
 | `x_facts` | 顶层 | 构建期由 build.py 从 facts.json 注入（id → 事实条目），供溯源徽标只读展示。**不手写** | 构建注入 |
+
+## 故事 RPG 字段（2026-09-20）
+
+故事字段位于 `content/stories/*/case.json`，不进入 SITE 扩展字段白名单，但同样受 `validate --stories`、S6 数字纪律、S7 引文锚定和人工签字指纹约束。
+
+| 字段 | 层级 | 说明 | 状态 |
+|---|---|---|---|
+| `rpg` | 故事顶层 | `{premise, roles[], initial_scene, scenes[], narrator}`。定义玩家进入真实金融事件时的身份、目标、压力和场景图；不写真实结局 | 在用 |
+| `rpg.roles[]` | RPG 身份 | `{id, title, goal, pressure}`。同一金融事件允许从分析师、记者、审计等不同参与者进入；身份先于知识点出现 | 在用 |
+| `rpg.scenes[]` | RPG 场景 | `{id, eyebrow, place, time, title, lines[], role_lines?, evidence[], actions[], final?}`。场景串联证据、叙事和可行动节点；`role_lines[role_id]` 让同一事件从不同责任位置发声；`actions[].next` 决定下一幕 | 在用 |
+| `rpg.scenes[].actions[]` | RPG 行动 | `{id, roles?, kind, label, prompt, consequence, result_title, narration, next}`。`roles` 限定可见身份；行动必须带来可见后果或压力变化；不得改写历史事实 | 在用 |
+| `rpg.narrator` | 故事顶层 | LLM 画外音的声音设定。运行时只接收固定选择、后果和本地旁白种子；失败回落本地 `narration` | 在用 |
+| `beats[].kind=consequence` | 兼容字段 | 旧线性播放器的决策后果拍。新 RPG 故事优先使用 `rpg.scenes[].actions[]`，该字段仅为未迁移故事保留 | 兼容 |

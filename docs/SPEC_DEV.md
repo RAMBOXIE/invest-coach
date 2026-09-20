@@ -60,14 +60,14 @@ CSS 变量**由构建期从 tokens.json 生成**，源码里不许出现字面�
 
 | 项 | 阈值 |
 |---|---|
-| `dist/index.html` | **≤560KB**（owner 裁决 2026-09-11「做完」第二章放宽；真源是 `design/tokens.json` 的 `budget.dist_kb`） |
+| `dist/index.html` | **≤600KB**（owner 裁决 2026-09-20「RPG 五幕迁移」放宽；真源是 `design/tokens.json` 的 `budget.dist_kb`） |
 | LCP | <2.5s |
 | INP | <200ms |
 | CLS | <0.1 |
 | 滚动帧率（中端 Android + 微信 WebView） | ≥50fps，无整页重绘 |
 | 动效时长 | ≤200ms（微交互）/ ≤400ms（转场） |
 
-> **预算是 owner 裁决项。** 560KB 于 2026-09-11 定案(前值 480KB / 450KB / 320KB / 300KB)。
+> **预算是 owner 裁决项。** 600KB 于 2026-09-20 定案(前值 560KB / 480KB / 450KB / 320KB / 300KB)。本次增量用于五幕 RPG 场景、身份和行动数据；gzip 首屏触发线仍保持 250KB。
 > 560 的增量给的是**第二章内容**(owner「做完」指令):第 8–10 层六个概念节点已并入,
 > 第 11–12 层好市多案例(case-healthy/checklist-good)待接,预留其体量。
 > 480 那次给的是内容本土化的新幕(第五幕瑞幸),不含第二章;本次为第二章单独放宽。

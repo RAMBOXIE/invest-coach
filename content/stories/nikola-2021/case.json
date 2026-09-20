@@ -7,6 +7,156 @@
  "hook": "所有人都在讲这个故事。年报的第一行写着另一件事。",
  "knowledge_node": "growth-rate",
  "twin_case_ref": "moderna-2019",
+ "rpg": {
+  "title": "一家公司可以没有收入，却拥有很高估值吗？",
+  "premise": "2021 年 2 月，Nikola 报送第一份完整年报。市场还在谈氢燃料和重卡，利润表第一行已经给出了另一种现场。",
+  "initial_scene": "committee-room",
+  "roles": [
+   {
+    "id": "analyst",
+    "title": "投委会分析师",
+    "goal": "用财报判断故事是否已有商业兑现",
+    "pressure": "明早要决定是否继续持有"
+   },
+   {
+    "id": "engineer",
+    "title": "技术尽调负责人",
+    "goal": "把技术叙事和可交付产品分开",
+    "pressure": "团队都在引用演示视频"
+   },
+   {
+    "id": "journalist",
+    "title": "汽车产业记者",
+    "goal": "确认收入、客户和产品是否已相遇",
+    "pressure": "市场估值已经先写出了结论"
+   }
+  ],
+  "narrator": {
+   "name": "年报画外音",
+   "voice": "冷静、带一点荒诞感，让巨大叙事撞上第一行数字",
+   "rule": "只做比率和证据解释，不把创始人案件的后见之明塞回决策时点"
+  },
+  "scenes": [
+   {
+    "id": "committee-room",
+    "eyebrow": "2021 年 2 月 · 年报送达",
+    "place": "投委会会议室",
+    "time": "开会前一晚",
+    "title": "先看利润表第一行",
+    "lines": [
+     "氢燃料、重型卡车、加氢网络，每个词都足够宏大。",
+     "收入 95 千美元，研发 185,619 千美元。你先决定让哪张表发言。"
+    ],
+    "role_lines": {
+     "analyst": [
+      "你的任务是评估梦想能否支撑当前估值。"
+     ],
+     "engineer": [
+      "你知道技术演示可以证明概念，收入和交付才能证明商业化。"
+     ],
+     "journalist": [
+      "市场在讨论未来工厂，你先问：现在有没有客户向它付款？"
+     ]
+    },
+    "evidence": [
+     "n1",
+     "n2"
+    ],
+    "actions": [
+     {
+      "id": "ratio",
+      "kind": "计算比例",
+      "label": "先算研发和收入的关系",
+      "prompt": "把叙事换成可以复核的比例。",
+      "roles": [
+       "analyst",
+       "engineer"
+      ],
+      "consequence": "研发约为收入的 1,954 倍。这个数字没有告诉你技术一定失败，却清楚标出商业化仍在很远处。",
+      "result_title": "你让第一行数字压住了故事音量",
+      "narration": "这个比例先描述公司所处阶段。",
+      "next": "valuation-room"
+     },
+     {
+      "id": "customer",
+      "kind": "追客户",
+      "label": "查收入来自哪一个客户",
+      "prompt": "把收入和交付对象接起来。",
+      "roles": [
+       "journalist",
+       "engineer"
+      ],
+      "consequence": "你要求把 95 千美元收入对应的客户、交付和合同列出。演示视频暂时不能替代交易证据。",
+      "result_title": "你把产品故事拉回了付款记录",
+      "narration": "产品存在和产品产生收入，中间隔着一份合同。",
+      "next": "valuation-room"
+     },
+     {
+      "id": "story",
+      "kind": "相信叙事",
+      "label": "氢能赛道会改变汽车业",
+      "prompt": "先按长期叙事给它机会。",
+      "roles": [
+       "analyst",
+       "journalist"
+      ],
+      "consequence": "会议先讨论市场规模和先发优势，收入规模与研发投入的距离暂时没有成为主线。",
+      "result_title": "远景暂时盖过了损益表",
+      "narration": "远景可以进入估值模型，但不能替当前收入填空。",
+      "next": "valuation-room"
+     }
+    ]
+   },
+   {
+    "id": "valuation-room",
+    "eyebrow": "投委会开场前",
+    "place": "同一间会议室",
+    "time": "早上八点半",
+    "title": "你在投委会上说什么？",
+    "lines": [
+     "你不需要判断氢燃料最终能否成功。你要决定，证据还在什么位置。",
+     "估值会逼你给出方向，财报要求你先给出边界。"
+    ],
+    "evidence": [
+     "n1",
+     "n2"
+    ],
+    "actions": [
+     {
+      "id": "a",
+      "kind": "等待证据",
+      "label": "先不下结论，追踪收入和交付",
+      "prompt": "要求把故事拆成合同、客户和交付。",
+      "consequence": "你建议把估值建立在可观察的交付和收入增长上，先不把远期市场规模当成当前业绩。",
+      "result_title": "你把远景换成了验证节点",
+      "narration": "好判断不一定更兴奋，但它会告诉你下一步该看哪份材料。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "b",
+      "kind": "顺势",
+      "label": "技术路线正确，继续持有",
+      "prompt": "给长期故事更多时间。",
+      "consequence": "你让技术愿景成为主要依据，当前收入和研发倍数被放到了备注里。",
+      "result_title": "你选择了远期兑现",
+      "narration": "远期价值越大，等待兑现的时间和证据成本也越高。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "c",
+      "kind": "定性",
+      "label": "没有收入，所以一定是骗局",
+      "prompt": "用一个数字完成全部定性。",
+      "consequence": "你把商业化早期的事实直接写成了道德结论，错过了区分技术风险、执行风险和欺诈风险的机会。",
+      "result_title": "你让一个比率承担了全部判断",
+      "narration": "低收入是重要事实，舞弊判断还需要另一组证据。",
+      "next": "__legacy_reveal"
+     }
+    ],
+    "final": true
+   }
+  ]
+ },
  "_note": "第四幕。前三幕教的都是「数字被操纵」；这一幕教的是「根本没有数字」——判断不需要法证会计，只需要除法。负样本 Moderna FY2019 在 twin 拍，判断是「没问题」。全部数字绑定 accn 0001731289-21-000006 与 0001682852-20-000006，见 facts.json。",
  "cast": [
   {
@@ -323,9 +473,9 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "",
-  "reviewed_at": "",
-  "reviewed_hash": ""
+  "reviewed_by": "automated-gates",
+  "reviewed_at": "2026-09-20",
+  "reviewed_hash": "eb22ef297d3bc196"
  },
  "interrogation": {
   "opening": "「2020 年第四季度，我们做了必要的调整，让公司重新聚焦。」",

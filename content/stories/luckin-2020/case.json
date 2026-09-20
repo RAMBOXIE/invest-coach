@@ -6,6 +6,156 @@
  "status": "settled",
  "hook": "门店在涨,客户在涨,收入在涨。前三样是真的,最后一样是编的。",
  "knowledge_node": "case-first-look",
+ "rpg": {
+  "title": "增长曲线里，哪一个数字由人记下？",
+  "premise": "2019 年，Luckin 用 18 个月开出 2,370 家店。你手上只有招股书，要决定先相信实物增长，还是先核对收入口径。",
+  "initial_scene": "ipo-room",
+  "roles": [
+   {
+    "id": "analyst",
+    "title": "IPO 研究员",
+    "goal": "把可数的实物和管理层口径分开",
+    "pressure": "发行价和增长故事正在同时升温"
+   },
+   {
+    "id": "journalist",
+    "title": "调查记者",
+    "goal": "找到收入数字背后的记录者",
+    "pressure": "所有人都在转发门店和客户数量"
+   },
+   {
+    "id": "auditor",
+    "title": "审计项目成员",
+    "goal": "确认收入是否来自可独立验证的交易",
+    "pressure": "招股书今晚要进入底稿"
+   }
+  ],
+  "narrator": {
+   "name": "招股书画外音",
+   "voice": "快速、锋利，像一场上市前夜的核查",
+   "rule": "把实物、口径和关联方线索分层，不提前宣布舞弊结论"
+  },
+  "scenes": [
+   {
+    "id": "ipo-room",
+    "eyebrow": "2019 年 5 月 · 上市前夜",
+    "place": "承销商会议室",
+    "time": "晚上十一点",
+    "title": "三个数字正在起飞",
+    "lines": [
+     "2,370 家店、28 个城市、1,680 万累计交易客户。",
+     "它们都很醒目，但你还没有看到收入是怎么被记录的。"
+    ],
+    "role_lines": {
+     "analyst": [
+      "你要把可以去现场数的东西，和只能相信账簿的东西分开。"
+     ],
+     "journalist": [
+      "你把门店和客户数字圈起来，又在收入旁边画了一个问号。"
+     ],
+     "auditor": [
+      "你的底稿需要交易证据。客户数量增加，并不自动等于收入已经实现。"
+     ]
+    },
+    "evidence": [
+     "l1",
+     "l2"
+    ],
+    "actions": [
+     {
+      "id": "trace",
+      "kind": "追收入",
+      "label": "沿着收入确认规则往下查",
+      "prompt": "先问收入由谁记录、何时确认。",
+      "roles": [
+       "analyst",
+       "auditor"
+      ],
+      "consequence": "你要求把收入确认、关联方交易和订单明细放进下一轮核查，门店增长暂时不能替收入背书。",
+      "result_title": "你把增长故事拆成了两条线",
+      "narration": "实物增长能证明业务存在，收入口径还需要另一套证据。",
+      "next": "underwriting-room"
+     },
+     {
+      "id": "source",
+      "kind": "找记录者",
+      "label": "去找订单和关联方名单",
+      "prompt": "从交易链条而非宣传语开始。",
+      "roles": [
+       "journalist",
+       "auditor"
+      ],
+      "consequence": "你把问题落到订单、付款方和关联方名单。招股书里的客户数量不再是故事终点。",
+      "result_title": "你开始追一笔具体交易",
+      "narration": "当数字来自很多笔交易时，先问每一笔由谁发起、谁付款。",
+      "next": "underwriting-room"
+     },
+     {
+      "id": "momentum",
+      "kind": "顺势",
+      "label": "增长已经足够说明问题",
+      "prompt": "店和客户都在高速增加。",
+      "roles": [
+       "analyst",
+       "journalist"
+      ],
+      "consequence": "会议沿着增长曲线推进，收入确认和关联方问题被放到发行之后。",
+      "result_title": "曲线暂时赢得了会议",
+      "narration": "曲线越陡，越需要知道纵轴上的数字由谁写下。",
+      "next": "underwriting-room"
+     }
+    ]
+   },
+   {
+    "id": "underwriting-room",
+    "eyebrow": "招股书定稿前",
+    "place": "承销商会议室",
+    "time": "凌晨一点",
+    "title": "你要不要把钱交给这条曲线？",
+    "lines": [
+     "门店和客户可能都是真的。关键判断落在收入数字上。",
+     "现在你要决定的是下一步核查，或者把增长直接变成仓位。"
+    ],
+    "evidence": [
+     "l1",
+     "l2"
+    ],
+    "actions": [
+     {
+      "id": "a",
+      "kind": "转入核查",
+      "label": "先不动，查清收入确认和关联方",
+      "prompt": "把收入从实物增长里单独拎出来。",
+      "consequence": "你暂缓买入，要求取得订单、付款方和关联方证据。上市节奏因此慢了一步。",
+      "result_title": "你把怀疑变成了核查清单",
+      "narration": "对收入保持谨慎，不需要否定门店和客户的真实性。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "b",
+      "kind": "顺势",
+      "label": "增长这么猛，买入",
+      "prompt": "门店和客户已经给出了方向。",
+      "consequence": "你把实物增长直接外推到收入和估值，仓位先于收入证据建立起来。",
+      "result_title": "你让增长曲线替你下注",
+      "narration": "实物、口径和估值之间，每跨一步都增加一个需要验证的假设。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "c",
+      "kind": "定性",
+      "label": "中国咖啡一定是泡沫，做空",
+      "prompt": "用行业判断替代公司证据。",
+      "consequence": "你给出了强烈方向，却没有指出招股书里哪一项收入证据支持它。",
+      "result_title": "你把行业印象当成了公司结论",
+      "narration": "不喜欢商业模式，和证明收入有问题，是两种不同的任务。",
+      "next": "__legacy_reveal"
+     }
+    ],
+    "final": true
+   }
+  ]
+ },
  "_note": "第五幕,第一个中概股案例(ADR-0005 本土化阶段 A)。教学定位:与 Sunbeam「应收跑赢收入」不同,瑞幸教「收入本身是虚构的」:关联方虚构交易,是异常信号之外更根本的一类。当事人走 Nikola 模式(文件本身发声),因涉案个人已被 SEC 认定并解职(ADR-0005 §2 边界:真人具名但不让 AI 替被定罪者生成新句)。所有引文逐字来自原档,带行号;数字全部指向 facts.json。",
  "cast": [
   {
@@ -343,5 +493,13 @@
    "text": "「这一点,这份招股书里没有写。」",
    "coach": "它只能念自己写过的话。你能拿到的只有它写了什么、和它没写什么。「没写收入怎么确认」本身,就是下一个该追的问题。"
   }
+ },
+ "x_prov": {
+  "drafted_by": "llm",
+  "model": "claude-opus-5",
+  "drafted_at": "2026-08-26",
+  "reviewed_by": "automated-gates",
+  "reviewed_at": "2026-09-20",
+  "reviewed_hash": "f5bceb6bed31cf11"
  }
 }

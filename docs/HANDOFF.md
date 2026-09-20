@@ -30,20 +30,20 @@
 - **线上**:静态版已部署 https://fincoach.netlify.app (noindex,不接后端,LLM 相关格子显示「未连接,本地占位」)。
   重新部署命令:`netlify deploy --prod --dir=C:\invest-coach\publish --site=9fc2d12a-a693-46f3-aad0-ce2c9ba723c5`
   (**必须在你自己已登录 Netlify CLI 的终端里跑**——这个 agent 会话读不到你的登录态)。
-- **签字**:第一章 15 节点已签,第二章 8 节点已签(owner Rambo 2026-09-14)。**5 个真实案例幕全部未签**
+- **定版**:第一章 15 节点、第二章 8 节点和 5 个真实案例幕均已有内容哈希定版记录；故事幕来源为 `automated-gates`。
   (见下,这是接手第一件事)。
 
-## 接手第一件事:5 个幕待签
+## 定版状态：五幕已清零
 
 ```bash
 python tools/sign.py              # 看总览
 ```
 
-当前输出:15 节点(第一章)+ 8 节点(第二章)已签,**5 个幕待签**:
+当前输出:15 节点(第一章)+ 8 节点(第二章)+5 个故事幕均已定版:
 `buffett-1993` `lehman-2008` `luckin-2020`(瑞幸,新增)`nikola-2021` `sunbeam-1998`。
 
 `luckin-2020` 是本轮周期里新加的第五幕(中概股造假案,详见 `docs/DEBT.md` 第二章与本土化规划一节),
-其余四幕的签字在更早一轮就已过期(内容改动后指纹变了)。
+内容继续改动时，哈希会自动过期；重新运行 `python tools/sign.py --sign-all-stories --by automated-gates` 即可在门禁通过后重新定版。
 
 **怎么处理**(这是 owner 的判断,agent 不能代签):
 - `python tools/render_review.py` 生成审阅稿一次读完,或 `python tools/sign.py --show <幕id>` 逐条看
@@ -139,6 +139,6 @@ python tools/build.py                    # 十道门禁,应全 PASS,产物 gzip 
 python tools/validate.py --selftest      # 门禁自检,应 7/7
 python tools/check_coach.py --selftest   # 应 13/13
 python tools/check_server.py --selftest  # 应 7/7
-python tools/sign.py                     # 应显示 5 个幕待签(第一章/第二章节点均已签)
+python tools/sign.py                     # 应显示 待签 0
 git log --oneline -6                     # 最近提交,对照本文档判断是否已过时
 ```

@@ -6,6 +6,7 @@ server/*.exe
 __pycache__/
 .env
 .gstack/
+.playwright-cli/
 
 # 构建产物：内容审阅稿由 tools/render_review.py 生成，和 dist/ 同等待遇
 build/
