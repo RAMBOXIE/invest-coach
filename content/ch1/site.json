@@ -1,7 +1,7 @@
 {
  "id": "invest-coach-redflags-ch1",
- "title": "投资教练 · 读财报 第一章：收入的水分",
- "tag": "读财报 · 第一章",
+ "title": "投资教练",
+ "tag": "",
  "about": "这一章训练一件事：从财报数字里看出「收入的水分」。先理解三张表和记账规则，再学两面互相印证的判断依据，最后在真实 SEC 执法案例上做完整判断。本站只做历史案例复盘与判断习惯训练，不提供任何投资建议、不输出任何前瞻信号；「信息不足，无法判断」在这里是可以得满分的答案。关于数据：真实公司的每一个数字都绑定到 SEC EDGAR 原档的申报号与行号，可当场点开核对；术语与定义来自本站所列的正典出处。通俗解释与教练点评由 AI 起草、经人工核对后固定内置。判分由页面内置的确定性规则完成。",
  "reorder": "与教科书顺序的三处刻意差异：① 案例先行：第一案（whole-task）在只学两个基础节点后立即出现，先凭直觉判断再学工具（v3 §3.2 whole-task first；§3.3.5 故事先行）；② 异常信号清单后置：清单是最后一个节点，定位为验证工具而非初判工具（v3 §3.3.5，清单初判压低职业怀疑有成体系实证）；③ 元能力横插：基率与证伪思维作为 cross 节点嵌在异常信号与案例之间，而非附录（v3 §3.1/§3.6）。",
  "x_note": "扩展字段说明（登记簿见 docs/SCHEMA.md）：ageStart=图层深度 1–7；x_qtype=节点题型；x_pairs=混淆对（id/look/a/b/key）；x_level=材料难度 L1/L2；x_coaches=教练原型（人格字段不用真人名，出处字段必须真名真书）；x_review_bank=复训变体题库（pair_id × a/b 面）；x_coach_notes=案例节点三声道点评（UI 默认只显主教练）；quiz 扩展：hints=三级提示、confidence=需信心三档、opts[].na=「无法判断」选项、x_pair=挂靠混淆对、x_kind=main|pretest|decision|review。 ｜ v2「判卷台」新增：x_cards（证据卡池，role=support/distractor/irrelevant）、x_ruleout（排除辩护词，verdict=excluded/not_excluded/insufficient）、x_selfcheck（自评清单，转自 evidence[]）、x_anchors（锚题 id，来自复训库=换公司换壳，点亮的唯一条件）。 ｜ v3 案卷化：x_casefile（code/status/asof/brief/panels[cmp|trend|note|quote]/srcs→facts.json）——材料屏改为手机原生案卷，原教学屏降为按需「补课」抽屉。",

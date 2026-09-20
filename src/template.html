@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F3EAD6"><!-- paper-100，随 tokens 手动同步 -->
+<link rel="icon" href="data:,">
 <title>投资教练</title>
 <!--
   invest-coach 前端 v2「判卷台」（单文件，手机优先）。
@@ -76,6 +77,7 @@
     padding:calc(10px + env(safe-area-inset-top)) 2px 8px;position:sticky;top:0;z-index:20;
     background:linear-gradient(180deg,var(--bg1) 70%,transparent)}
   .top .tt{font-size:var(--size-13);letter-spacing:2px;color:var(--gold)}
+  .top .tt:empty{display:none}
   .top h1{font-size:var(--size-17);margin:2px 0 0;font-weight:700}
   /* 图标：描线、继承 currentColor、随字号缩放 */
   .pop-ic{font-size:var(--size-40);line-height:1;color:var(--state-focus)}
@@ -211,17 +213,19 @@
   /* 首次进入：选主教练 */
   .pick{padding:30px 2px 8px}
   .story-front{padding:22px 2px 8px}
-  .story-front-kicker{font-size:var(--size-13);letter-spacing:var(--track-eyebrow);color:var(--state-focus);text-transform:uppercase}
-  .story-front-title{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);margin:12px 0 6px;color:var(--text-display-color);overflow-wrap:anywhere}
+  .story-front-title{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);margin:0 0 6px;color:var(--text-display-color);overflow-wrap:anywhere}
   .story-front-company{font-size:var(--size-15);line-height:var(--lh-read);color:var(--state-focus);overflow-wrap:anywhere}
-  .story-front-sub{font-size:var(--size-17);line-height:var(--lh-read);color:var(--text-body-color);margin:0 0 18px}
+  .story-front-sub{font-size:var(--size-17);line-height:var(--lh-read);color:var(--text-body-color);margin:4px 0 18px}
   .story-front-role{display:grid;gap:3px;padding:14px 16px;margin:0 0 18px;border-left:3px solid var(--state-focus);background:var(--surface-card)}
   .story-front-role span,.story-front-role small{color:var(--text-meta-color)}
   .story-front-role b{font-size:var(--size-19);color:var(--text-display-color)}
-  .story-front-rule{margin:14px 0 24px;color:var(--text-meta-color);font-size:var(--size-13);line-height:var(--lh-read)}
-  .story-front-list{display:grid;gap:8px;padding-top:18px;border-top:1px solid var(--surface-rule)}
+  .story-front-list{display:grid;gap:8px;margin-top:24px;padding-top:18px;border-top:1px solid var(--surface-rule)}
   .story-row{margin:0}
-  .story-atlas{display:grid;gap:10px}
+  .story-row-copy{display:grid;gap:2px;min-width:0}
+  .story-row .nm,.story-row .mt{display:block;overflow-wrap:anywhere}
+  .story-row-go{margin-left:auto;font-size:var(--size-24);line-height:1;color:var(--text-meta-color)}
+  .story-atlas{display:grid;gap:8px;padding-top:22px}
+  @media(max-width:480px){.story-front-title{font-size:var(--size-32)}}
   .pick-eye{font-size:var(--size-13);letter-spacing:var(--track-eyebrow);color:var(--state-focus)}
   .pick-t{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);
     letter-spacing:var(--track-display);margin:13px 0 11px;
@@ -639,8 +643,8 @@ function braveRate(){return S.brave.n?Math.round(100*S.brave.dared/S.brave.n):nu
 
 /* ============ 壳渲染 ============ */
 let TAB='today';
-document.getElementById('tag').textContent=SITE.tag||'';
-document.getElementById('title').textContent=SITE.title;
+document.getElementById('tag').textContent='';
+document.getElementById('title').textContent='投资教练';
 document.querySelectorAll('.tabbar button').forEach(b=>b.onclick=()=>{
   TAB=b.dataset.tab;document.querySelectorAll('.tabbar button').forEach(x=>x.classList.toggle('on',x===b));
   render();window.scrollTo(0,0);});
@@ -880,6 +884,21 @@ function viewToday(){
 
 /* 首次进入：只给这一件事（体验 §5 / DESIGN.md §2）。
    选的是**教练盯你哪一面**，不是选一个人物——教练自始至终是「你的教练」。 */
+function storyMeta(x){
+  return [x.company,x.era].filter(Boolean).join(' · ');
+}
+function storyLead(x){
+  return (x.subtitle||x.hook||'')
+    .replace(/^\s*(?:19|20)\d{2}\s*年(?:\s*\d{1,2}\s*月)?\s*[·｜|]\s*/,'');
+}
+function storyRow(x,done){
+  return `<button class="rowbtn story-row" data-story="${x.case_id}">
+    <span class="story-row-copy"><span class="nm">${x.title}</span><span class="mt">${storyMeta(x)}</span></span>
+    ${done
+      ? '<span class="chipS lit">已完成</span>'
+      : '<span class="story-row-go" aria-hidden="true">›</span>'}
+  </button>`;
+}
 function storyFront(){
   const stories = (SITE.x_stories || []).slice();
   const completed = S.story || {};
@@ -887,24 +906,14 @@ function storyFront(){
   const rest = stories.filter(x => x.case_id !== (first && first.case_id));
   if(!first) return `<div class="hero"><h3 class="hero-t">暂无案例</h3></div>`;
   const role = first.rpg && first.rpg.roles && first.rpg.roles[0];
-  const cards = rest.map(x => {
-    const done = !!completed[x.case_id];
-    const r = x.rpg && x.rpg.roles && x.rpg.roles[0];
-    return `<button class="rowbtn story-row" data-story="${x.case_id}">
-      <span class="ic">${x.cast && x.cast[0] ? (x.cast[0].avatar || '◈') : '◈'}</span>
-      <span><span class="nm">${x.company || x.title}</span><span class="mt"> · ${x.era || ''} · ${x.title} · ${r ? r.title : '进入事件现场'}</span></span>
-      <span class="chipS ${done ? 'lit' : 'open'}">${done ? '已完成' : '进入'}</span>
-    </button>`;
-  }).join('');
+  const cards = rest.map(x => storyRow(x,!!completed[x.case_id])).join('');
   return `<div class="story-front">
-    <div class="story-front-kicker">真实事件 · 你的判断改变下一幕</div>
     <h2 class="story-front-title">${first.title}</h2>
-    <div class="story-front-company">${first.company || '真实主体见原档'} · ${first.era || ''}</div>
-    <p class="story-front-sub">${first.subtitle || first.hook || ''}</p>
+    <div class="story-front-company">${storyMeta(first)}</div>
+    <p class="story-front-sub">${storyLead(first)}</p>
     <div class="story-front-role"><span>你先扮演</span><b>${role ? role.title : '事件中的决策者'}</b><small>${role ? role.goal : '从原始材料出发，做出一个会产生后果的选择。'}</small></div>
     <button class="cta" id="go-story" data-cid="${first.case_id}">进入现场 · 约 8 分钟</button>
-    <div class="story-front-rule">先看材料，再选行动。每一步都会把你推向下一间会议室。</div>
-    ${rest.length ? `<div class="story-front-list"><div class="eyebrow">其他真实事件</div>${cards}</div>` : ''}
+    ${rest.length ? `<div class="story-front-list"><div class="eyebrow">其他故事</div>${cards}</div>` : ''}
   </div>`;
 }
 
@@ -992,17 +1001,8 @@ function dw(title,body){
 
 function storyAtlas(){
   const stories = SITE.x_stories || [];
-  return `<div class="sec story-atlas"><h2>真实事件档案</h2>
-    <p class="tip">每个档案都从原始材料开始，经过角色选择、压力场和后果，再回到证据。</p>
-    ${stories.map(x => {
-      const done = !!((S.story || {})[x.case_id]);
-      const role = x.rpg && x.rpg.roles && x.rpg.roles[0];
-      return `<button class="rowbtn story-row" data-story="${x.case_id}">
-        <span class="ic">${x.cast && x.cast[0] ? (x.cast[0].avatar || '◈') : '◈'}</span>
-        <span><span class="nm">${x.company || x.title}</span><span class="mt">${x.era || ''} · ${x.title} · ${role ? role.title : '事件决策'}</span></span>
-        <span class="chipS ${done ? 'lit' : 'open'}">${done ? '已完成' : '进入'}</span>
-      </button>`;
-    }).join('')}
+  return `<div class="story-atlas">
+    ${stories.map(x => storyRow(x,!!((S.story || {})[x.case_id]))).join('')}
   </div>`;
 }
 
