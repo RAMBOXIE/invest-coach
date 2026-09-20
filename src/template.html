@@ -214,11 +214,6 @@
   .pick-t{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);
     letter-spacing:var(--track-display);margin:13px 0 11px;
     color:var(--text-display-color);font-weight:var(--weight-display)}
-  .pick-s{font-size:var(--size-15);line-height:var(--lh-read);
-    color:var(--text-meta-color);margin:0 0 26px}
-  .pick-why{font-size:var(--size-13);line-height:var(--lh-read);color:var(--text-meta-color);
-    background:var(--surface-card);border:1px solid var(--surface-rule);
-    border-radius:var(--radius-md);padding:12px 14px;margin:0 0 22px}
   .pick-c{display:block;width:100%;text-align:left;background:var(--surface-card);
     border:1px solid var(--surface-rule);border-radius:14px;padding:17px;
     margin-bottom:10px;min-height:var(--tap-rec)}
@@ -877,9 +872,6 @@ function coachPicker(){
   return `<div class="pick">
     <div class="pick-eye">开始之前</div>
     <h2 class="pick-t">你希望教练先盯你哪一面？</h2>
-    <p class="pick-s">教练是你的，不是某个人的模拟。他会记住你的判断习惯，在你判错时告诉你错在哪。随时能换。</p>
-    <p class="pick-why"><b>为什么不直接问 AI？</b>AI 能替你读完一份 10-K，但它不会训练你的判断——
-      下一份年报摆在面前，做判断的还是你。这里每道题都是闭卷的：换一家公司、没见过的材料、不给提示。</p>
     ${TONES.map(x=>`<button class="pick-c" data-tone="${x.id}">
       <span class="pick-n">${x.k}</span>
       <span class="pick-d">${x.d}</span></button>`).join('')}
