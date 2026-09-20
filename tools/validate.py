@@ -298,7 +298,7 @@ BEAT_REQ = {
     "cold_open": ["eyebrow", "title", "lines"],
     "evidence":  ["eyebrow", "title", "panel"],
     "decision":  ["eyebrow", "title", "prompt", "options"],
-    "reveal":    ["eyebrow", "title", "quote", "lines"],
+    "reveal":    ["eyebrow", "title", "lines"],
     "contrast":  ["eyebrow", "title", "columns", "them", "canon", "knowhow"],
     "abstract":  ["eyebrow", "title", "rule", "label", "boundary", "formula"],
     "twin":      ["eyebrow", "title", "panel", "question", "options", "fb"],
@@ -389,6 +389,8 @@ def validate_stories(release=False):
             for k in BEAT_REQ.get(b.get("kind"), []):
                 if not b.get(k):
                     errors.append(f"S2 {cid}/{b.get('id')}({b.get('kind')}): 缺字段 {k}")
+            if b.get("kind") == "reveal" and not (b.get("quote") or b.get("record_summary")):
+                errors.append(f"S2 {cid}/{b.get('id')}: reveal 必须有逐字 quote 或明确标注的 record_summary")
 
         # S3 决策拍的三种 verdict 必须齐
         for b in c.get("beats", []):

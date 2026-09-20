@@ -410,10 +410,13 @@
 
   /* S4 ?? */
   function bReveal(b) {
-    const factButton = b.quote.fact ? `<div class="qchips"><button data-f="${b.quote.fact}">${ic('link')} 查看原档</button></div>` : '';
+    const q = b.quote || b.record_summary;
+    const sourceCard = b.quote ? docQuote(q)
+      : `<div class="doc"><div class="dh"><span>${ic('doc')} 史实摘要 · ${q.src}</span><span class="ln">${q.line}</span></div><div class="dt">${q.text}</div></div>`;
+    const factButton = b.quote && b.quote.fact ? `<div class="qchips"><button data-f="${b.quote.fact}">${ic('link')} 查看原档</button></div>` : '';
     return {
       body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${b.title}</h2>
-        ${docQuote(b.quote)}
+        ${sourceCard}
         ${b.lines.map(l => `<p class="ln">${md(l)}</p>`).join('')}
         ${factButton}
         ${vo(b.narration)}`,
