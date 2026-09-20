@@ -1,0 +1,279 @@
+{
+ "case_id": "buffett-coke-1988",
+ "title": "Buying a Wonderful Brand",
+ "subtitle": "A real decision told through the lens of Buffett.",
+ "era": "1988",
+ "status": "settled",
+ "hook": "A famous brand can be a great business and still be a bad investment at the wrong price.",
+ "knowledge_node": "moat",
+ "learning_goal": "Learn to turn brand stories into pricing power, returns on capital, cash flow, and a margin of safety.",
+ "skills": [
+  "pricing power",
+  "capital returns",
+  "intrinsic value"
+ ],
+ "cast": [
+  {
+   "id": "buffett",
+   "name": "Buffett",
+   "avatar": "*",
+   "role": "historical decision maker",
+   "intro": "The story uses Buffett's public record as context, not as an imitation performance.",
+   "rule": "The narrator explains choices and pressure without changing the historical record."
+  }
+ ],
+ "rpg": {
+  "title": "Atlanta: What Is the Brand Worth?",
+  "premise": "A famous brand can be a great business and still be a bad investment at the wrong price.",
+  "learning_goal": "Learn to turn brand stories into pricing power, returns on capital, cash flow, and a margin of safety.",
+  "roles": [
+   {
+    "id": "researcher",
+    "title": "Evidence researcher",
+    "goal": "Test pricing power",
+    "pressure": "The room wants a fast answer."
+   },
+   {
+    "id": "risk",
+    "title": "Risk officer",
+    "goal": "Define capital returns",
+    "pressure": "Conviction is being rewarded."
+   },
+   {
+    "id": "allocator",
+    "title": "Capital allocator",
+    "goal": "Protect intrinsic value",
+    "pressure": "The opportunity feels time-sensitive."
+   }
+  ],
+  "initial_scene": "decision-room",
+  "narrator": {
+   "name": "Historical decision narrator",
+   "voice": "Dramatic but evidence-bound.",
+   "rule": "Explain the player's choice, pressure, and learning point without inventing facts."
+  },
+  "scenes": [
+   {
+    "id": "decision-room",
+    "eyebrow": "Before the decision",
+    "place": "Historical decision room",
+    "time": "The pressure is rising",
+    "title": "Atlanta: What Is the Brand Worth?",
+    "lines": [
+     "Management brings brand, distribution, and global growth. Your job is to translate applause into operating variables.",
+     "Start with the unit economics and ask what customers will keep paying for."
+    ],
+    "actions": [
+     {
+      "id": "investigate",
+      "kind": "Evidence",
+      "label": "Build the evidence chain",
+      "prompt": "Turn the story into variables you can verify.",
+      "consequence": "You turn pricing power into a checklist. The next decision must answer what drives the business and what can break it.",
+      "result_title": "The story becomes a model",
+      "narration": "A useful story creates a question that can be falsified.",
+      "next": "pressure-room"
+     },
+     {
+      "id": "shortcut",
+      "kind": "Shortcut",
+      "label": "Trust the strongest narrative",
+      "prompt": "The story is popular, simple, and emotionally convincing.",
+      "consequence": "You gain speed but lose the evidence chain. The next pressure is to explain what your shortcut cannot see.",
+      "result_title": "The narrative goes first",
+      "narration": "Confidence is not evidence just because many people share it.",
+      "next": "pressure-room"
+     }
+    ]
+   },
+   {
+    "id": "pressure-room",
+    "eyebrow": "The second decision",
+    "place": "Investment committee",
+    "time": "The window is closing",
+    "title": "Separate business quality from purchase price.",
+    "lines": [
+     "Ask how much can go wrong and still leave a durable return."
+    ],
+    "actions": [
+     {
+      "id": "discipline",
+      "kind": "Risk budget",
+      "label": "Write the failure case first",
+      "prompt": "Define the evidence that would change your mind.",
+      "consequence": "You keep capital returns separate from the final price. The decision is now auditable even if the outcome is uncertain.",
+      "result_title": "The failure case gets a seat",
+      "narration": "Good decisions preserve the ability to make the next decision.",
+      "next": "final"
+     },
+     {
+      "id": "hero",
+      "kind": "Conviction",
+      "label": "Let the story decide",
+      "prompt": "The opportunity feels too obvious to delay.",
+      "consequence": "You turn uncertainty into a position before defining the loss path.",
+      "result_title": "Conviction outruns evidence",
+      "narration": "The most dangerous shortcut is the one that feels like courage.",
+      "next": "final"
+     }
+    ],
+    "final": true
+   }
+  ]
+ },
+ "beats": [
+  {
+   "id": "s0",
+   "kind": "cold_open",
+   "eyebrow": "Historical decision room",
+   "title": "Buying a Wonderful Brand",
+   "lines": [
+    "A famous brand can be a great business and still be a bad investment at the wrong price.",
+    "You are not predicting a price. You are deciding what must be understood before capital is committed."
+   ]
+  },
+  {
+   "id": "s1",
+   "kind": "evidence",
+   "eyebrow": "Evidence table",
+   "title": "What must be verified?",
+   "panel": {
+    "kind": "cmp",
+    "cols": [
+     "Narrative",
+     "Check"
+    ],
+    "rows": [
+     {
+      "k": "pricing power",
+      "a": "Story",
+      "b": "Observable driver"
+     },
+     {
+      "k": "capital returns",
+      "a": "Assumption",
+      "b": "Failure condition"
+     }
+    ]
+   },
+   "derived": [
+    {
+     "k": "Teaching point",
+     "v": "Learn to turn brand stories into pricing power, returns on capital, cash flow, and a margin of safety."
+    }
+   ]
+  },
+  {
+   "id": "s2",
+   "kind": "decision",
+   "eyebrow": "Information available then",
+   "title": "Where do you start?",
+   "prompt": "The room wants a decision before every uncertainty is resolved.",
+   "options": [
+    {
+     "id": "a",
+     "kind": "Research",
+     "t": "Build the evidence chain before committing",
+     "verdict": "prudent"
+    },
+    {
+     "id": "b",
+     "kind": "Narrative",
+     "t": "Trust the strongest story and move quickly",
+     "verdict": "risky"
+    },
+    {
+     "id": "c",
+     "kind": "Impulse",
+     "t": "Commit first and explain the risk later",
+     "verdict": "hasty"
+    }
+   ]
+  },
+  {
+   "id": "s3",
+   "kind": "reveal",
+   "eyebrow": "Historical record",
+   "title": "The result is not the lesson",
+   "quote": {
+    "src": "Buffett public letters and historical record",
+    "line": "archival excerpt",
+    "text": "The public record preserves the decision context, the evidence, and the consequences.",
+    "orig": "The public record preserves the decision context, the evidence, and the consequences."
+   },
+   "lines": [
+    "History lets you inspect the ending. The skill is learning what could have been known before the ending."
+   ]
+  },
+  {
+   "id": "s4",
+   "kind": "contrast",
+   "eyebrow": "Debrief",
+   "title": "What the method adds",
+   "columns": {
+    "you": "Your choice",
+    "them": "Transferable method"
+   },
+   "them": "Learn to turn brand stories into pricing power, returns on capital, cash flow, and a margin of safety.",
+   "canon": "Use pricing power, capital returns, and intrinsic value as separate checks.",
+   "knowhow": "Make the decision explainable before you make it confident."
+  },
+  {
+   "id": "s5",
+   "kind": "abstract",
+   "eyebrow": "Method card",
+   "title": "A reusable decision loop",
+   "rule": "Turn an exciting story into a falsifiable question, then price the uncertainty.",
+   "label": "pricing power -> capital returns -> intrinsic value",
+   "boundary": "No single ratio, headline, or reputation can replace the full chain.",
+   "formula": "Decision quality = evidence clarity x risk budget x reviewability"
+  },
+  {
+   "id": "s6",
+   "kind": "twin",
+   "eyebrow": "Transfer question",
+   "title": "A new case arrives",
+   "panel": {
+    "kind": "cmp",
+    "cols": [
+     "Step",
+     "Question"
+    ],
+    "rows": [
+     {
+      "k": "First",
+      "a": "What is the claim?",
+      "b": "What could verify it?"
+     },
+     {
+      "k": "Second",
+      "a": "What breaks it?",
+      "b": "What is the loss path?"
+     }
+    ]
+   },
+   "question": "What is the strongest next move?",
+   "options": [
+    {
+     "id": "a",
+     "t": "Write a falsifiable claim and a failure case",
+     "ok": true
+    },
+    {
+     "id": "b",
+     "t": "Use the famous investor as the thesis",
+     "ok": false
+    }
+   ],
+   "fb": "A famous investor can give you a method. The evidence still has to be yours."
+  }
+ ],
+ "x_prov": {
+  "drafted_by": "automated-rpg-seed",
+  "model": "frozen-historical-scaffold",
+  "drafted_at": "2026-09-20",
+  "reviewed_by": "automated-gates",
+  "reviewed_at": "2026-09-20",
+  "reviewed_hash": "8e0fac0a76b34f64"
+ }
+}
