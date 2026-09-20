@@ -210,6 +210,16 @@
 
   /* 首次进入：选主教练 */
   .pick{padding:30px 2px 8px}
+  .story-front{padding:22px 2px 8px}
+  .story-front-kicker{font-size:var(--size-13);letter-spacing:var(--track-eyebrow);color:var(--state-focus);text-transform:uppercase}
+  .story-front-title{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);margin:12px 0 8px;color:var(--text-display-color)}
+  .story-front-sub{font-size:var(--size-17);line-height:var(--lh-read);color:var(--text-body-color);margin:0 0 18px}
+  .story-front-role{display:grid;gap:3px;padding:14px 16px;margin:0 0 18px;border-left:3px solid var(--state-focus);background:var(--surface-card)}
+  .story-front-role span,.story-front-role small{color:var(--text-meta-color)}
+  .story-front-role b{font-size:var(--size-19);color:var(--text-display-color)}
+  .story-front-rule{margin:14px 0 24px;color:var(--text-meta-color);font-size:var(--size-13);line-height:var(--lh-read)}
+  .story-front-list{display:grid;gap:8px;padding-top:18px;border-top:1px solid var(--surface-rule)}
+  .story-row{margin:0}
   .pick-eye{font-size:var(--size-13);letter-spacing:var(--track-eyebrow);color:var(--state-focus)}
   .pick-t{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);
     letter-spacing:var(--track-display);margin:13px 0 11px;
@@ -853,7 +863,7 @@ function viewToday(){
   const ch=curChapter(), chNodes=SITE.nodes.filter(n=>chOf(n)===ch);
   const P=plan(), done=chNodes.filter(n=>lit.has(n.id)).length, total=chNodes.length, pf=profile();
   // 体验 §5：首个动作是选主教练。没选过就只给这一件事，别的都不显示。
-  if(!pf.tone) return coachPicker();
+  if(!pf.tone) return storyFront();
   const head=P.q[0], rest=P.q.slice(1);
   // 移动端是自然流；桌面用 .today 网格分栏，DOM 顺序不变（无障碍阅读顺序 = 视觉优先级）
   let side='';
@@ -868,6 +878,33 @@ function viewToday(){
 
 /* 首次进入：只给这一件事（体验 §5 / DESIGN.md §2）。
    选的是**教练盯你哪一面**，不是选一个人物——教练自始至终是「你的教练」。 */
+function storyFront(){
+  const stories = (SITE.x_stories || []).slice();
+  const completed = S.story || {};
+  const first = stories.find(x => !completed[x.case_id]) || stories[0];
+  const rest = stories.filter(x => x.case_id !== (first && first.case_id));
+  if(!first) return `<div class="hero"><h3 class="hero-t">暂无案例</h3></div>`;
+  const role = first.rpg && first.rpg.roles && first.rpg.roles[0];
+  const cards = rest.map(x => {
+    const done = !!completed[x.case_id];
+    const r = x.rpg && x.rpg.roles && x.rpg.roles[0];
+    return `<button class="rowbtn story-row" data-story="${x.case_id}">
+      <span class="ic">${x.cast && x.cast[0] ? (x.cast[0].avatar || '◈') : '◈'}</span>
+      <span><span class="nm">${x.company || x.title}</span><span class="mt">${x.era || ''} · ${x.title} · ${r ? r.title : '进入事件现场'}</span></span>
+      <span class="chipS ${done ? 'lit' : 'open'}">${done ? '已完成' : '进入'}</span>
+    </button>`;
+  }).join('');
+  return `<div class="story-front">
+    <div class="story-front-kicker">真实事件 · 你的判断改变下一幕</div>
+    <h2 class="story-front-title">${first.company || first.title}</h2>
+    <p class="story-front-sub">${first.title} · ${first.subtitle || first.hook || ''}</p>
+    <div class="story-front-role"><span>你先扮演</span><b>${role ? role.title : '事件中的决策者'}</b><small>${role ? role.goal : '从原始材料出发，做出一个会产生后果的选择。'}</small></div>
+    <button class="cta" id="go-story" data-cid="${first.case_id}">进入现场 · 约 8 分钟</button>
+    <div class="story-front-rule">先看材料，再选行动。每一步都会把你推向下一间会议室。</div>
+    ${rest.length ? `<div class="story-front-list"><div class="eyebrow">其他真实事件</div>${cards}</div>` : ''}
+  </div>`;
+}
+
 function coachPicker(){
   return `<div class="pick">
     <div class="pick-eye">开始之前</div>
@@ -935,7 +972,7 @@ function drawers(P,pf){
   if(P.read.length)
     h+=dw(`读过的案例 · ${P.read.length}`,P.read.map(x=>
       `<button class="rowbtn" data-story="${x.case_id}">
-        <span><span class="nm">${x.title}</span><span class="mt">${x.era} · ${x.subtitle}</span></span>
+        <span><span class="nm">${x.company || x.title}</span><span class="mt">${x.era} · ${x.title} · ${x.subtitle}</span></span>
         <span class="chipS lit">已读</span></button>`).join(''));
   if(Object.keys(S.lab||{}).length)
     h+=dw('读过的实验区材料',`<div class="tip">这些是时事卷：不进错题档案、不进复习、不计校准分。
@@ -991,7 +1028,7 @@ function viewAtlas(){
       const kn=x.knowledge_node?(SITE.nodes.find(n=>n.id===x.knowledge_node)||{}).name:'';
       h+=`<button class="rowbtn" data-story="${x.case_id}" ${ok?'':'disabled'}>
         <span class="ic">${(x.cast&&x.cast[0]&&x.cast[0].avatar)||''}</span>
-        <span><span class="nm">${x.title}</span><span class="mt">${x.era||''} · ${ok?'和当事人一起复盘':'先过「'+kn+'」'}</span></span>
+        <span><span class="nm">${x.company || x.title}</span><span class="mt">${x.era||''} · ${x.title} · ${ok?'和当事人一起复盘':'先过「'+kn+'」'}</span></span>
         <span class="chipS ${ok?'open':'locked'}">${ok?'可进入':'未解锁'}</span></button>`;
     }
     h+='</div>';
