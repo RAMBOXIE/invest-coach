@@ -211,6 +211,47 @@ def p7_discuss_wiring(S, port, errors):
         errors.append("P7 人物或材料没有原样到达模型层")
 
 
+def p8_nextsteps_gate(S, errors):
+    """D14 出口闸 check_nextsteps：合格的方法讨论放行；荐股/出戏整条丢弃。"""
+    ok_text = "先去调它过去几年的毛利率趋势，看这个差距稳不稳；再翻附注对一下成本口径。两项都对上才谈得上定价权。"
+    if S.check_nextsteps(ok_text)[0] is None:
+        errors.append("P8 合格的方法讨论被误杀")
+    for bad, why in (
+        ("这家公司现在值得买入。", "投资建议"),
+        ("我给你的目标价是 200 元。", "投资建议"),
+        ("作为 AI，我建议你先查财报。", "出戏"),
+    ):
+        if S.check_nextsteps(bad)[0] is not None:
+            errors.append(f"P8 该丢弃的没丢（{why}）：{bad}")
+
+
+def p8_nextsteps_wiring(S, port, errors):
+    """端点接线 + 打码先于调模型 + 种子原样到达模型层。"""
+    seen = {}
+
+    def probe(seed, history, question):
+        seen.update(seed=seed, question=question)
+        return "先从历史趋势查起，因为定价权要看差距能不能持续。", {"raw": "x", "kept": True}
+
+    S.API_KEY = "test-key-not-used"
+    real, S.nextsteps = S.nextsteps, probe
+    try:
+        body = json.dumps({"quiz_id": "rv-gm-p1-b",
+                           "seed": "题目：丙公司毛利率比同行高。区分线索：看差距能不能持续。该去补的证据：调历史趋势。",
+                           "question": "我持仓 50 万，手机 13800138000。我该从哪一步开始查？"}).encode()
+        code, _, out = hit(port, "/api/v1/next-steps", "null", body)
+    finally:
+        S.nextsteps = real
+        S.API_KEY = ""
+    if code != 200 or b'"source": "llm"' not in out:
+        errors.append(f"P8 /api/v1/next-steps 没接通或没走到模型层（{code} {out[:80]}）")
+        return
+    if "13800138000" in seen.get("question", "") or "50 万" in seen.get("question", ""):
+        errors.append(f"P8 送给模型的问题里还有原始 PII：{seen.get('question')}")
+    if "调历史趋势" not in seen.get("seed", ""):
+        errors.append("P8 方法种子没有原样到达模型层")
+
+
 def main():
     S, dbfile = load()
     errors = []
@@ -218,11 +259,13 @@ def main():
     p2_exit_gate(S, errors)
     p3_retention(S, errors)
     p6_discuss_gate(S, errors)
+    p8_nextsteps_gate(S, errors)
     srv, port = serve(S)
     try:
         p4_origin(S, port, errors)
         p5_order(S, port, errors)
         p7_discuss_wiring(S, port, errors)
+        p8_nextsteps_wiring(S, port, errors)
     finally:
         srv.shutdown()
         if S._db:
@@ -233,7 +276,8 @@ def main():
         print("ERROR:", e)
     if not errors:
         print("INFO : P1 打码分语境 ✓  P2 出口检查 ✓  P3 90 天留存 ✓  "
-              "P4 Origin 收口 ✓  P5 打码先于调模型 ✓  P6 决策人出口检查 ✓  P7 discuss 接线 ✓")
+              "P4 Origin 收口 ✓  P5 打码先于调模型 ✓  P6 决策人出口检查 ✓  P7 discuss 接线 ✓  "
+              "P8 next-steps 出口检查+接线 ✓")
     print("SERVER:", "FAIL" if errors else "PASS")
     return 1 if errors else 0
 

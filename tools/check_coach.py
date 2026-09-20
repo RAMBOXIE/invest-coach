@@ -22,6 +22,38 @@ TPL = ROOT / "src" / "template.html"
 PARTS = ROOT / "src" / "parts"
 SITE = ROOT / "content" / "ch1" / "site.json"
 
+
+def load_merged_site():
+    """多章(D11):教练门禁必须看全部章节，不能只查第一章。
+
+    build.py 把各章的 nodes/edges/x_review_bank 并进同一个 SITE，前端跑的是合并后的图。
+    门禁只查 ch1 就会把第二章的反馈/位置/误解/长度线索全漏过——正是本仓反复栽的
+    「只查形状不查真值」。这里按同样规则合并出门禁要审的 site。自检变异仍作用于 ch1 单文件。
+    """
+    site = json.loads(SITE.read_text(encoding="utf-8"))
+    for sp in sorted((ROOT / "content").glob("ch*/site.json")):
+        if sp == SITE:
+            continue
+        ch = json.loads(sp.read_text(encoding="utf-8"))
+        site["nodes"] = site.get("nodes", []) + ch.get("nodes", [])
+        site["edges"] = site.get("edges", []) + ch.get("edges", [])
+        site["x_review_bank"] = site.get("x_review_bank", []) + ch.get("x_review_bank", [])
+    return site
+
+
+def load_merged_taxonomy():
+    """C11 误解分类法：合并各章 misconceptions.json（第一章仍是主表，后续章各带一份）。"""
+    items, seen = [], set()
+    for tp in [ROOT / "content" / "ch1" / "misconceptions.json",
+               *sorted((ROOT / "content").glob("ch[2-9]/misconceptions.json"))]:
+        if not tp.exists():
+            continue
+        for m in json.loads(tp.read_text(encoding="utf-8")).get("items", []):
+            if m["id"] not in seen:
+                seen.add(m["id"])
+                items.append(m)
+    return items
+
 ERRORS, WARNS, INFOS = [], [], []
 
 
@@ -297,10 +329,10 @@ def c11_misconceptions(src, site):
     tax_p = ROOT / "content" / "ch1" / "misconceptions.json"
     if not tax_p.exists():
         return err("C11", "找不到 content/ch1/misconceptions.json —— 误解分类法是 mis 的真源")
-    tax = json.loads(tax_p.read_text(encoding="utf-8"))
-    valid = {m["id"] for m in tax["items"]}
+    tax_items = load_merged_taxonomy()
+    valid = {m["id"] for m in tax_items}
     node_ids = {n["id"] for n in site["nodes"]}
-    bad_teach = [m["id"] for m in tax["items"] if m.get("teach") not in node_ids]
+    bad_teach = [m["id"] for m in tax_items if m.get("teach") not in node_ids]
     if bad_teach:
         return err("C11", f"这些类目的 teach 指向不存在的节点：{', '.join(bad_teach)} —— "
                           "处方会把用户送去一个不存在的地方")
@@ -468,7 +500,7 @@ def check_self():
 
 def run():
     check_self()
-    src, site = sources(), json.loads(SITE.read_text(encoding="utf-8"))
+    src, site = sources(), load_merged_site()
     c1_diagnose(src)
     c2_prescribe(src)
     c3_objective(src)
@@ -482,6 +514,7 @@ def run():
     c11_misconceptions(src, site)
     c12_lab(src, site)
     c13_no_length_tell(site)
+    c14_na_next(site)
     for i in INFOS:
         print("INFO :", i)
     for w in WARNS:
@@ -537,6 +570,39 @@ def item_stats(site):
     conc = round(abs_bad / (abs_bad + abs_ok), 4) if (abs_bad + abs_ok) else 0
     return {"na_bad": na_bad, "longest_rate": rate, "longest": longest, "n": tot,
             "abs_conc": conc, "abs_bad": abs_bad, "abs_ok": abs_ok}
+
+
+def c14_na_next(site):
+    """C14（D14）：凡「无法判断」是正确答案的题，必须带 x_next（答对后「该去查什么」的方法种子）。
+
+    没有 x_next，D14 那一格就没东西可展示、后端也没种子可讨论——而这正是这类题的教学落点
+    （承认判不了之后，知道去补哪些证据）。缺了它，na 题只剩「你对了」，把最该延伸的一步丢了。
+    这条只查形状（字段在不在、非空），不查内容对错——内容由 G2 人工签字。
+    """
+    # 章闸：D14 是第二章起的功能，只强制 ch2+ 覆盖；第一章的 na 题是已冻结签字的屏内题，
+    # 给它们补 x_next 会改内容指纹、作废签字——那是单独的回填任务(DEBT D15)，这里只 WARN。
+    node_ch = {n["id"]: n.get("x_chapter", 1) for n in site["nodes"]}
+    pair_ch = {p["id"]: node_ch.get(n["id"], 1)
+               for n in site["nodes"] for p in (n.get("x_pairs") or []) if p.get("id")}
+    new_miss, old_miss, n_new = [], [], 0
+    for owner, kind, q in quizzes(site):
+        na = [o for o in q.get("opts", []) if o.get("na") and o.get("ok")]
+        if not na:
+            continue
+        ch = pair_ch.get(owner, 1) if kind == "review" else node_ch.get(owner, 1)
+        if ch >= 2:
+            n_new += 1
+            if not (q.get("x_next") or "").strip():
+                new_miss.append(q.get("x_id"))
+        elif not (q.get("x_next") or "").strip():
+            old_miss.append(q.get("x_id"))
+    if old_miss:
+        warn("C14", f"{len(old_miss)} 道第一章 na-正确题还没有 x_next（D14 回填待办，见 DEBT D15；"
+                    "不阻断：补进屏内题会作废已签字指纹）")
+    if new_miss:
+        return err("C14", f"{len(new_miss)} 道第二章起的「无法判断」为正确答案的题缺 x_next："
+                          f"{', '.join(m for m in new_miss[:5] if m)} —— D14 答对后要给「接下来该去查什么」，缺了它这一步没落点")
+    ok("C14", f"缺证据落点 第二章起 {n_new} 道 na-正确题全部带 x_next（答对后「该去查什么」的方法种子）✓")
 
 
 def c13_no_length_tell(site):

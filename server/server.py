@@ -6,6 +6,8 @@
   POST /api/v1/events     匿名遥测
   POST /api/v1/ask-coach   追问的语义路由
   POST /api/v1/review-note 教练读你写的那段推理，写回一段话
+  POST /api/v1/discuss     决策人复盘对话（幕里当事人，当年口吻）
+  POST /api/v1/next-steps  D14：答对「无法判断」后，教练讨论下一步该去查什么（只谈方法）
 
 **ask-coach 的关键设计：LLM 只返回命中的陈述 id，绝不生成台词。**
 人物说的每一句永远来自前端已冻结的 case.json。所以模型物理上无法编造
@@ -329,6 +331,62 @@ def discuss(persona, era, material, history, question):
     return text, trace
 
 
+# ── D14：答对「无法判断」之后，教练讨论「下一步该去查什么」 ────────────────
+#
+# 这不是决策人复盘（那是幕里的当事人），是**教练就方法展开讨论**。用户已经由规则判为答对
+# （na=正确，判分不经模型，铁律不破）；模型只在这之后讨论「为什么先查这个、具体怎么查」。
+# 它拿到的只有这道题的题干、区分线索(key)、以及人工写好的固定清单(x_next)——全是方法，
+# 不含任何真实公司的事实，所以模型也无从产出事实。出口闸挡投资建议与出戏。
+NEXTSTEPS_SYS = """你是一位投资学习教练。学习者刚在一道题上正确判断出「信息不足、无法下结论」。
+这一步的功课就是：承认证据不够，然后知道接下来该去补哪些证据。
+
+这道题、区分这类判断的线索、以及该去查的方向如下（你只能依据这些，不得引入任何具体公司的数字或事实）：
+
+{seed}
+
+规则（不可违反）：
+1. 只讨论方法与流程：为什么要先查这几项、具体去哪查、查到什么样算够。
+2. 不给任何投资建议，不评论任何股票值不值得买，不预测涨跌，不报目标价。
+3. 不编造任何具体公司的数字或事实；这里没有真实公司，只谈通用方法。
+4. 中文，两到四句，像教练在点拨，不用破折号，不用「不是 X 而是 Y」这种对偶。
+5. 不要说你是 AI、模型或助手；屏上会另行标注这是 AI 教练推演。"""
+
+
+def check_nextsteps(text):
+    """D14 出口闸：只讲方法，不许越界成投资建议或出戏。任一命中整条丢弃，前端回落到 x_next。"""
+    if not text or len(text) > 600:
+        return None, "空或过长"
+    for w in ADVICE:
+        if w in text:
+            return None, f"出现越界措辞「{w}」"
+    for w in BREAK_CHAR:
+        if w in text:
+            return None, f"出戏「{w}」"
+    return text, ""
+
+
+def nextsteps(seed, history, question):
+    """教练就「下一步该去查什么」展开讨论。返回 (文本或 None, 可回放记录)。"""
+    sys_p = NEXTSTEPS_SYS.format(seed=seed)
+    msgs = []
+    for h in (history or [])[-6:]:
+        if h.get("role") in ("user", "assistant") and h.get("content"):
+            msgs.append({"role": h["role"], "content": str(h["content"])[:600]})
+    if msgs and msgs[0]["role"] != "user":
+        msgs = msgs[1:]
+    msgs.append({"role": "user", "content": question})
+    body = json.dumps({"model": MODEL, "max_tokens": 500, "system": sys_p, "messages": msgs}).encode()
+    req = urllib.request.Request(
+        "https://api.anthropic.com/v1/messages", data=body,
+        headers={"content-type": "application/json", "x-api-key": API_KEY,
+                 "anthropic-version": "2023-06-01"})
+    with urllib.request.urlopen(req, timeout=20) as r:
+        out = json.load(r)
+    raw = (out.get("content") or [{}])[0].get("text", "").strip()
+    text, why = check_nextsteps(raw)
+    return text, {"system": sys_p, "history": msgs, "raw": raw, "kept": bool(text), "rejected": why}
+
+
 class H(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
 
@@ -392,6 +450,8 @@ class H(BaseHTTPRequestHandler):
             return self._review(raw)
         if self.path == "/api/v1/discuss":
             return self._discuss(raw)
+        if self.path == "/api/v1/next-steps":
+            return self._nextsteps(raw)
 
         if self.path != "/api/v1/ask-coach":
             return self._send({"ok": False}, 404)
@@ -481,6 +541,32 @@ class H(BaseHTTPRequestHandler):
         if db():
             db().execute("INSERT INTO notes(node, trace, at) VALUES(?,?,?)",
                          ("discuss:" + str(req.get("case_id")), json.dumps(trace, ensure_ascii=False), int(time.time())))
+            db().commit()
+            purge_old()
+        return self._send({"text": text, "source": "llm" if text else "fallback"})
+
+    def _nextsteps(self, raw):
+        """D14：答对「无法判断」后的方法讨论。任何一环出问题回 {"text": null}，前端回落到 x_next。"""
+        try:
+            req = json.loads(raw or b"{}")
+        except Exception:
+            return self._send({"text": None, "source": "fallback"})
+        q = (req.get("question") or "").strip()
+        seed = (req.get("seed") or "").strip()      # 题干 + key + x_next，全是方法，前端拼好传入
+        if (not q or len(q) > 300 or not seed or not API_KEY or not allow(req.get("device"))):
+            return self._send({"text": None, "source": "fallback"})
+        q, nmask = mask_pii(q)                       # 打码先于调模型，同一条纪律
+        try:
+            text, trace = nextsteps(seed, req.get("history") or [], q)
+            trace["masked"] = nmask
+        except Exception as e:
+            print("nextsteps err:", e, file=sys.stderr)
+            return self._send({"text": None, "source": "fallback"})
+        if not text:
+            print("nextsteps 出口检查丢弃：", trace.get("rejected"), file=sys.stderr)
+        if db():
+            db().execute("INSERT INTO notes(node, trace, at) VALUES(?,?,?)",
+                         ("nextsteps:" + str(req.get("quiz_id")), json.dumps(trace, ensure_ascii=False), int(time.time())))
             db().commit()
             purge_old()
         return self._send({"text": text, "source": "llm" if text else "fallback"})
