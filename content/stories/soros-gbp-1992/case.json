@@ -1,124 +1,172 @@
 {
  "case_id": "soros-gbp-1992",
- "title": "货币防线崩溃的那一夜",
- "subtitle": "1992 年 · George Soros 面对英镑与政策约束",
- "company": "Bank of England / British pound sterling",
+ "title": "英镑保卫战的最后一天",
+ "subtitle": "1992 年 · 乔治·索罗斯面对英镑与政策约束",
+ "company": "英格兰银行与英镑",
  "era": "1992",
  "status": "settled",
- "hook": "政府的承诺，不等于它有能力守住承诺。",
+ "hook": "政府承诺守住汇率，可国内经济已经承受不起德国式高利率。哪一边先让步？",
  "knowledge_node": "base-rate",
- "learning_goal": "区分政策承诺、硬约束、催化剂和仓位风险。",
+ "learning_goal": "把政策承诺、硬约束、催化时点和仓位风险分开判断。",
  "skills": [
-  "macro constraints",
-  "catalysts",
-  "risk budget"
+  "宏观约束",
+  "催化时点",
+  "风险预算"
  ],
  "cast": [
   {
    "id": "soros",
-   "name": "Soros",
-   "avatar": "*",
-   "role": "historical decision maker",
-   "intro": "The story uses Soros's public record as context, not as an imitation performance.",
-   "rule": "The narrator explains choices and pressure without changing the historical record."
+   "name": "乔治·索罗斯",
+   "avatar": "人物",
+   "role": "量子基金经理",
+   "intro": "故事只使用公开历史背景和政策记录，不模仿本人生成交易指令。",
+   "rule": "只引用公开记录；解释选择，不改写历史事实。"
   }
  ],
  "rpg": {
-  "title": "London: Which Constraint Wins?",
-  "premise": "A government promise is not the same thing as the ability to keep it.",
-  "learning_goal": "Learn to separate policy promises, hard constraints, catalysts, and position risk.",
+  "title": "英镑保卫战的最后一天",
+  "premise": "政府承诺守住汇率，可国内经济已经承受不起德国式高利率。哪一边先让步？",
+  "learning_goal": "把政策承诺、硬约束、催化时点和仓位风险分开判断。",
+  "learning_skills": [
+   "宏观约束",
+   "催化时点",
+   "风险预算"
+  ],
   "roles": [
    {
     "id": "researcher",
-    "title": "证据研究员",
-    "goal": "Test macro constraints",
-    "pressure": "The room wants a fast answer."
+    "title": "宏观研究员",
+    "goal": "找出汇率承诺背后的硬约束",
+    "pressure": "政府公开说不会离开汇率机制。"
    },
    {
     "id": "risk",
-    "title": "风险负责人",
-    "goal": "Define catalysts",
-    "pressure": "Conviction is being rewarded."
+    "title": "交易风控负责人",
+    "goal": "把方向判断变成可承受的仓位",
+    "pressure": "波动正在放大，任何错误都很昂贵。"
    },
    {
     "id": "allocator",
-    "title": "资本配置人",
-    "goal": "Protect risk budget",
-    "pressure": "The opportunity feels time-sensitive."
+    "title": "基金经理",
+    "goal": "判断哪一个约束会先断",
+    "pressure": "窗口可能只剩几个小时。"
    }
   ],
-  "initial_scene": "decision-room",
+  "initial_scene": "opening",
   "narrator": {
-   "name": "Historical decision narrator",
-   "voice": "Dramatic but evidence-bound.",
-   "rule": "Explain the player's choice, pressure, and learning point without inventing facts."
+   "name": "画外音",
+   "voice": "中文，简短，像纪录片旁白。",
+   "rule": "只解释玩家选择、现场压力和证据边界，不编造事实。"
   },
   "scenes": [
    {
-    "id": "decision-room",
-    "eyebrow": "Before the decision",
-    "place": "Historical decision room",
-    "time": "The pressure is rising",
-    "title": "London: Which Constraint Wins?",
+    "id": "opening",
+    "eyebrow": "故事开始",
+    "place": "伦敦 · 1992 年 9 月",
+    "time": "英镑贴着汇率下限",
+    "title": "政府说会守，经济却在往下掉",
     "lines": [
-     "The market hears a promise to defend a currency. Your job is to find the tools and costs behind the promise.",
-     "Start with the institutional constraint, not the loudest headline."
+     "英国要在欧洲汇率机制内守住英镑，就不能让利率明显低于德国。",
+     "可英国经济疲弱，德国统一后的高利率却迟迟不降。承诺和国内现实开始互相撕扯。"
     ],
     "actions": [
      {
-      "id": "investigate",
-      "kind": "Evidence",
-      "label": "Build the evidence chain",
-      "prompt": "Turn the story into variables you can verify.",
-      "consequence": "You turn macro constraints into a checklist. The next decision must answer what drives the business and what can break it.",
-      "result_title": "The story becomes a model",
-      "narration": "A useful story creates a question that can be falsified.",
-      "next": "pressure-room"
+      "id": "map-constraints",
+      "kind": "列出约束",
+      "label": "分别写下守汇率和救经济各要付什么代价",
+      "prompt": "看政策有没有同时满足两边的工具。",
+      "consequence": "争论不再是“政府有没有决心”，而是“决心需要付出什么，能付多久”。",
+      "result_title": "承诺背后出现了价格",
+      "narration": "宏观判断先看约束，再看表态。",
+      "next": "development"
      },
      {
-      "id": "shortcut",
-      "kind": "Shortcut",
-      "label": "Trust the strongest narrative",
-      "prompt": "The story is popular, simple, and emotionally convincing.",
-      "consequence": "You gain speed but lose the evidence chain. The next pressure is to explain what your shortcut cannot see.",
-      "result_title": "The narrative goes first",
-      "narration": "Confidence is not evidence just because many people share it.",
-      "next": "pressure-room"
+      "id": "trust-promise",
+      "kind": "相信承诺",
+      "label": "央行既然公开表态，就不会后退",
+      "prompt": "把政策信誉当成无限资源。",
+      "consequence": "政府的话被当成事实，利率、衰退和外汇储备的代价没有进入判断。",
+      "result_title": "一句承诺盖住了三重压力",
+      "narration": "政策可以坚持很久，但很少能无限支付代价。",
+      "next": "development"
      }
     ]
    },
    {
-    "id": "pressure-room",
-    "eyebrow": "The second decision",
-    "place": "Investment committee",
-    "time": "The window is closing",
-    "title": "Separate direction from position size.",
+    "id": "development",
+    "eyebrow": "故事发展",
+    "place": "黑色星期三 · 交易室",
+    "time": "加息和干预接连宣布",
+    "title": "英镑还在下限，利率已经被推到极端",
     "lines": [
-     "A correct view can still fail if the loss budget is undefined."
+     "官方不断买入英镑，连续加息，又预告第二天进一步上调利率。",
+     "市场仍不相信这套组合能维持。现在问题不只是方向，而是你敢把多少资金放在这个判断上。"
     ],
     "actions": [
      {
-      "id": "discipline",
-      "kind": "Risk budget",
-      "label": "Write the failure case first",
-      "prompt": "Define the evidence that would change your mind.",
-      "consequence": "You keep catalysts separate from the final price. The decision is now auditable even if the outcome is uncertain.",
-      "result_title": "The failure case gets a seat",
-      "narration": "Good decisions preserve the ability to make the next decision.",
-      "next": "final"
+      "id": "size-position",
+      "kind": "控制仓位",
+      "label": "按政策还能反击几次来倒推仓位",
+      "prompt": "把追加保证金和政策突袭写进预算。",
+      "consequence": "你仍然做空英镑，但仓位可以承受一次更猛烈的干预。",
+      "result_title": "观点有了生存空间",
+      "narration": "仓位给错误和波动预留了时间。",
+      "next": "climax"
      },
      {
-      "id": "hero",
-      "kind": "Conviction",
-      "label": "Let the story decide",
-      "prompt": "The opportunity feels too obvious to delay.",
-      "consequence": "You turn uncertainty into a position before defining the loss path.",
-      "result_title": "Conviction outruns evidence",
-      "narration": "The most dangerous shortcut is the one that feels like courage.",
-      "next": "final"
+      "id": "max-position",
+      "kind": "押注崩溃",
+      "label": "矛盾这么明显，仓位越大越好",
+      "prompt": "用逻辑强度决定仓位。",
+      "consequence": "潜在收益被放大，任何临时协议、资本管制或政策突袭也会同样放大。",
+      "result_title": "你把未知事件排除在预算外",
+      "narration": "宏观逻辑可以清楚，路径仍然会很脏。",
+      "next": "climax"
      }
+    ]
+   },
+   {
+    "id": "climax",
+    "eyebrow": "故事高潮",
+    "place": "伦敦时间傍晚",
+    "time": "英镑仍守不住下限",
+    "title": "哪一个约束会先断？",
+    "lines": [
+     "继续加息会进一步伤害国内经济；继续干预会消耗更多资金；退出机制会打破公开承诺。你必须选一个最可能先发生的变化。"
     ],
-    "final": true
+    "final": true,
+    "actions": [
+     {
+      "id": "a",
+      "kind": "约束交易",
+      "label": "做空英镑，但把政策反击算进仓位",
+      "prompt": "押注约束，不押注政府会按你的时间表行动。",
+      "consequence": "你保留了方向判断，也给突发政策留出承受空间。",
+      "result_title": "你在交易约束",
+      "narration": "宏观交易即使看对，也可能被只能赢一次的仓位毁掉。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "b",
+      "kind": "孤注一掷",
+      "label": "今晚一定退出，把仓位推到极限",
+      "prompt": "把时点也当成确定事实。",
+      "consequence": "方向和时点只要有一个偏差，保证金就可能先替你结束交易。",
+      "result_title": "你把正确观点压成了单点成败",
+      "narration": "方向、时点、仓位是三道题。答对一道，不会自动答对另外两道。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "c",
+      "kind": "只信官方",
+      "label": "政府不会食言，反向买入英镑",
+      "prompt": "让承诺压过经济约束。",
+      "consequence": "你站在了官方干预一边，却没有回答这项政策还能承担多少国内代价。",
+      "result_title": "你买入了承诺",
+      "narration": "承诺越强，越要问维持它的账单由谁支付。",
+      "next": "__legacy_reveal"
+     }
+    ]
    }
   ]
  },
@@ -126,155 +174,173 @@
   {
    "id": "s0",
    "kind": "cold_open",
-   "eyebrow": "Historical decision room",
-   "title": "The Night a Currency Broke",
+   "eyebrow": "故事开始",
+   "title": "英镑保卫战的最后一天",
    "lines": [
-    "A government promise is not the same thing as the ability to keep it.",
-    "You are not predicting a price. You are deciding what must be understood before capital is committed."
+    "政府承诺守住汇率，可国内经济已经承受不起德国式高利率。哪一边先让步？",
+    "你会先看到当时能看到的材料，做完决定以后，历史才会翻牌。"
    ]
   },
   {
    "id": "s1",
    "kind": "evidence",
-   "eyebrow": "Evidence table",
-   "title": "What must be verified?",
+   "eyebrow": "故事发展",
+   "title": "现在要盯住什么",
    "panel": {
     "kind": "cmp",
     "cols": [
-     "Narrative",
-     "Check"
+     "表面说法",
+     "继续追问"
     ],
     "rows": [
      {
-      "k": "macro constraints",
-      "a": "Story",
-      "b": "Observable driver"
+      "k": "宏观约束",
+      "a": "故事怎么讲",
+      "b": "事实怎样支持"
      },
      {
-      "k": "catalysts",
-      "a": "Assumption",
-      "b": "Failure condition"
+      "k": "催化时点",
+      "a": "哪里最诱人",
+      "b": "哪里会失效"
      }
     ]
    },
    "derived": [
     {
-     "k": "Teaching point",
-     "v": "Learn to separate policy promises, hard constraints, catalysts, and position risk."
+     "k": "这一段要学会",
+     "v": "把政策承诺、硬约束、催化时点和仓位风险分开判断。"
     }
    ]
   },
   {
    "id": "s2",
    "kind": "decision",
-   "eyebrow": "Information available then",
-   "title": "Where do you start?",
-   "prompt": "The room wants a decision before every uncertainty is resolved.",
+   "eyebrow": "故事高潮",
+   "title": "哪一个约束会先断？",
+   "prompt": "继续加息会进一步伤害国内经济；继续干预会消耗更多资金；退出机制会打破公开承诺。你必须选一个最可能先发生的变化。",
    "options": [
     {
      "id": "a",
-     "kind": "Research",
-     "t": "Build the evidence chain before committing",
+     "kind": "约束交易",
+     "t": "做空英镑，但把政策反击算进仓位",
      "verdict": "prudent"
     },
     {
      "id": "b",
-     "kind": "Narrative",
-     "t": "Trust the strongest story and move quickly",
+     "kind": "孤注一掷",
+     "t": "今晚一定退出，把仓位推到极限",
      "verdict": "risky"
     },
     {
      "id": "c",
-     "kind": "Impulse",
-     "t": "Commit first and explain the risk later",
+     "kind": "只信官方",
+     "t": "政府不会食言，反向买入英镑",
      "verdict": "hasty"
     }
-   ]
+   ],
+   "confidence": true
   },
   {
    "id": "s3",
    "kind": "reveal",
-   "eyebrow": "Historical record",
-   "title": "The result is not the lesson",
+   "eyebrow": "历史翻牌",
+   "title": "当天晚上，英国退出汇率机制",
    "quote": {
-    "src": "Soros public letters and historical record",
-    "line": "archival excerpt",
-    "text": "The public record preserves the decision context, the evidence, and the consequences.",
-    "orig": "The public record preserves the decision context, the evidence, and the consequences."
+    "src": "英格兰银行 1992 年第四季度公报",
+    "line": "1992 年 9 月货币政策操作",
+    "text": "维持原有汇率的预期成本已经高得无法承受，英国因此暂停英镑参与欧洲汇率机制。",
+    "orig": "维持原有汇率的预期成本已经高得无法承受，英国因此暂停英镑参与欧洲汇率机制。"
    },
    "lines": [
-    "History lets you inspect the ending. The skill is learning what could have been known before the ending."
-   ]
+    "大规模干预和加息未能把英镑拉离下限，英国在当晚暂停参与欧洲汇率机制，并撤回进一步升息的决定。"
+   ],
+   "narration": "现在回头看你的选择。当时抓住决定局面的那条线，比猜中结局更重要。"
   },
   {
    "id": "s4",
    "kind": "contrast",
-   "eyebrow": "Debrief",
-   "title": "What the method adds",
+   "eyebrow": "收获",
+   "title": "回看你刚才的决定",
    "columns": {
-    "you": "Your choice",
-    "them": "Transferable method"
+    "you": "你的选择",
+    "them": "这次事件留下的方法",
+    "canon": "历史记录"
    },
-   "them": "Learn to separate policy promises, hard constraints, catalysts, and position risk.",
-   "canon": "Use macro constraints, catalysts, and risk budget as separate checks.",
-   "knowhow": "Make the decision explainable before you make it confident."
+   "them": {
+    "t": "政策表态要翻译成工具、成本和持续时间。",
+    "detail": "方向、催化时点和仓位必须分别作答。"
+   },
+   "canon": {
+    "t": "大规模干预和加息未能把英镑拉离下限，英国在当晚暂停参与欧洲汇率机制，并撤回进一步升息的决定。",
+    "detail": "宏观矛盾再清楚，也要给政策突袭留预算。",
+    "src": "英格兰银行 1992 年第四季度公报"
+   },
+   "knowhow": [
+    "政策表态要翻译成工具、成本和持续时间。",
+    "方向、催化时点和仓位必须分别作答。",
+    "宏观矛盾再清楚，也要给政策突袭留预算。"
+   ],
+   "narration": "这次不用记住结局。记住下一次遇到类似材料时，你先查什么。"
   },
   {
    "id": "s5",
    "kind": "abstract",
-   "eyebrow": "Method card",
-   "title": "A reusable decision loop",
-   "rule": "Turn an exciting story into a falsifiable question, then price the uncertainty.",
-   "label": "macro constraints -> catalysts -> risk budget",
-   "boundary": "No single ratio, headline, or reputation can replace the full chain.",
-   "formula": "Decision quality = evidence clarity x risk budget x reviewability"
+   "eyebrow": "收获",
+   "title": "先找不能同时成立的目标",
+   "story_form": "政府承诺守住汇率，可国内经济已经承受不起德国式高利率。哪一边先让步？",
+   "rule": "政府承诺了什么？维持承诺要付什么？谁在承担成本？哪个条件最先到极限？",
+   "formula": "宏观交易 = 硬约束 × 催化时点 × 可承受仓位",
+   "label": "承诺 → 工具 → 成本 → 极限 → 仓位",
+   "boundary": "政策拥有充足工具，而且国内经济能长期承受其成本时",
+   "narration": "方法不是一句口号。它要能告诉你下一步去哪找证据。"
   },
   {
    "id": "s6",
    "kind": "twin",
-   "eyebrow": "Transfer question",
-   "title": "A new case arrives",
+   "eyebrow": "尾声",
+   "title": "另一种货币正在被官方保卫",
    "panel": {
     "kind": "cmp",
     "cols": [
-     "Step",
-     "Question"
+     "先做什么",
+     "为什么"
     ],
     "rows": [
      {
-      "k": "First",
-      "a": "What is the claim?",
-      "b": "What could verify it?"
+      "k": "第一步",
+      "a": "写下要验证的判断",
+      "b": "避免先被故事带走"
      },
      {
-      "k": "Second",
-      "a": "What breaks it?",
-      "b": "What is the loss path?"
+      "k": "第二步",
+      "a": "写下判断失效的条件",
+      "b": "给自己留下改口的证据"
      }
     ]
    },
-   "question": "What is the strongest next move?",
+   "question": "最先查什么？",
    "options": [
     {
      "id": "a",
-     "t": "Write a falsifiable claim and a failure case",
+     "t": "查储备、利率、国内经济和维持承诺的成本",
      "ok": true
     },
     {
      "id": "b",
-     "t": "Use the famous investor as the thesis",
+     "t": "查政府官员说话是否足够强硬",
      "ok": false
     }
    ],
-   "fb": "A famous investor can give you a method. The evidence still has to be yours."
+   "fb": "强硬措辞说明意愿，储备、利率和国内代价决定能力。",
+   "narration": "你已经把这次事件里的方法带到了一个新现场。"
   }
  ],
  "x_prov": {
-  "drafted_by": "automated-rpg-seed",
-  "model": "frozen-historical-scaffold",
+  "drafted_by": "content-rewrite",
+  "model": "historical-rpg-zh",
   "drafted_at": "2026-09-20",
-  "reviewed_by": "content-migration-auto",
+  "reviewed_by": "automated-copy-migration",
   "reviewed_at": "2026-09-20",
-  "reviewed_hash": "06481500c40d8db0"
+  "reviewed_hash": "ee8f933f5306fc01"
  }
 }

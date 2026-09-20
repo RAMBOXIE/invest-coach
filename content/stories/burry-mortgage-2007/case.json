@@ -1,124 +1,172 @@
 {
  "case_id": "burry-mortgage-2007",
- "title": "评级背后的房贷",
- "subtitle": "2007 年 · Michael Burry 拆开次贷证券",
- "company": "Scion Capital / U.S. subprime mortgage market",
+ "title": "评级背后的那栋房子",
+ "subtitle": "2005—2007 年 · 迈克尔·伯里拆开次贷证券",
+ "company": "锡安资本与美国次级按揭市场",
  "era": "2007",
  "status": "settled",
- "hook": "评级只是标签，风险藏在底层借款人的现金流里。",
+ "hook": "债券写着高评级，最后还钱的却是一批两年后就要重定价的房贷。",
  "knowledge_node": "three-statements",
- "learning_goal": "穿透结构化产品，看到借款人、合同、现金流和激励。",
+ "learning_goal": "穿透证券名称和评级，找到借款人、合同条款、重定价时点和损失路径。",
  "skills": [
-  "look-through analysis",
-  "credit risk",
-  "model limits"
+  "穿透分析",
+  "信用风险",
+  "模型边界"
  ],
  "cast": [
   {
    "id": "burry",
-   "name": "Burry",
-   "avatar": "*",
-   "role": "historical decision maker",
-   "intro": "The story uses Burry's public record as context, not as an imitation performance.",
-   "rule": "The narrator explains choices and pressure without changing the historical record."
+   "name": "迈克尔·伯里",
+   "avatar": "人物",
+   "role": "锡安资本基金经理",
+   "intro": "故事依据其向金融危机调查委员会提供的公开记录，不模仿本人发言。",
+   "rule": "只引用公开记录；解释选择，不改写历史事实。"
   }
  ],
  "rpg": {
-  "title": "The House Behind the Security",
-  "premise": "A rating is a label. The real risk lives in the cash flows underneath.",
-  "learning_goal": "Learn to look through structured products to borrowers, contracts, cash flow, and incentives.",
+  "title": "评级背后的那栋房子",
+  "premise": "债券写着高评级，最后还钱的却是一批两年后就要重定价的房贷。",
+  "learning_goal": "穿透证券名称和评级，找到借款人、合同条款、重定价时点和损失路径。",
+  "learning_skills": [
+   "穿透分析",
+   "信用风险",
+   "模型边界"
+  ],
   "roles": [
    {
     "id": "researcher",
-    "title": "证据研究员",
-    "goal": "Test look-through analysis",
-    "pressure": "The room wants a fast answer."
+    "title": "抵押贷款研究员",
+    "goal": "把债券拆回一笔笔房贷",
+    "pressure": "模型已经给出漂亮的评级。"
    },
    {
     "id": "risk",
-    "title": "风险负责人",
-    "goal": "Define credit risk",
-    "pressure": "Conviction is being rewarded."
+    "title": "基金风控负责人",
+    "goal": "算清保费能撑多久",
+    "pressure": "客户开始质疑为什么一直在亏保费。"
    },
    {
     "id": "allocator",
-    "title": "资本配置人",
-    "goal": "Protect model limits",
-    "pressure": "The opportunity feels time-sensitive."
+    "title": "基金经理",
+    "goal": "让判断、催化时点和仓位匹配",
+    "pressure": "看对太早，也可能先被拖死。"
    }
   ],
-  "initial_scene": "decision-room",
+  "initial_scene": "opening",
   "narrator": {
-   "name": "Historical decision narrator",
-   "voice": "Dramatic but evidence-bound.",
-   "rule": "Explain the player's choice, pressure, and learning point without inventing facts."
+   "name": "画外音",
+   "voice": "中文，简短，像纪录片旁白。",
+   "rule": "只解释玩家选择、现场压力和证据边界，不编造事实。"
   },
   "scenes": [
    {
-    "id": "decision-room",
-    "eyebrow": "Before the decision",
-    "place": "Historical decision room",
-    "time": "The pressure is rising",
-    "title": "The House Behind the Security",
+    "id": "opening",
+    "eyebrow": "故事开始",
+    "place": "加州圣何塞 · 2005 年",
+    "time": "房地产还在上涨",
+    "title": "评级说安全，合同却说两年后见",
     "lines": [
-     "A structured security looks safe after layers of rating and diversification. Your job is to follow the payment.",
-     "Start with the borrower, the contract, and the trigger for loss."
+     "桌上是一只分散得很漂亮的抵押贷款证券。",
+     "把它拆开后，你看见大量浮动利率贷款：前两年还款很轻，重定价之后才开始承受压力。"
     ],
     "actions": [
      {
-      "id": "investigate",
-      "kind": "Evidence",
-      "label": "Build the evidence chain",
-      "prompt": "Turn the story into variables you can verify.",
-      "consequence": "You turn look-through analysis into a checklist. The next decision must answer what drives the business and what can break it.",
-      "result_title": "The story becomes a model",
-      "narration": "A useful story creates a question that can be falsified.",
-      "next": "pressure-room"
+      "id": "read-loans",
+      "kind": "拆到底层",
+      "label": "逐笔看借款人收入、首付和重定价日期",
+      "prompt": "别从评级开始，从谁在还钱开始。",
+      "consequence": "债券名称消失了，桌上剩下借款人的收入、合同和两年后的月供。风险第一次有了时间表。",
+      "result_title": "你找到了最后的付款人",
+      "narration": "证券可以切成很多层，现金最后仍要从某个人的账户里出来。",
+      "next": "development"
      },
      {
-      "id": "shortcut",
-      "kind": "Shortcut",
-      "label": "Trust the strongest narrative",
-      "prompt": "The story is popular, simple, and emotionally convincing.",
-      "consequence": "You gain speed but lose the evidence chain. The next pressure is to explain what your shortcut cannot see.",
-      "result_title": "The narrative goes first",
-      "narration": "Confidence is not evidence just because many people share it.",
-      "next": "pressure-room"
+      "id": "trust-rating",
+      "kind": "相信评级",
+      "label": "既然分散又有高评级，不必逐笔看",
+      "prompt": "把模型输出当成调查终点。",
+      "consequence": "分析很快完成。没人再问借款人能否承受重定价后的月供。",
+      "result_title": "整齐的模型关掉了调查",
+      "narration": "评级描述模型里的风险，不会替你检查模型漏掉了什么。",
+      "next": "development"
      }
     ]
    },
    {
-    "id": "pressure-room",
-    "eyebrow": "The second decision",
-    "place": "Investment committee",
-    "time": "The window is closing",
-    "title": "Separate model output from underlying cash flow.",
+    "id": "development",
+    "eyebrow": "故事发展",
+    "place": "锡安资本投资者电话会",
+    "time": "保费不断流出",
+    "title": "方向可能对，时间也可能把你耗死",
     "lines": [
-     "Do not let a clean model end the investigation."
+     "你买下信用违约互换后，房地产没有立刻下跌。",
+     "每个月都要付保费，投资者看到的只有亏损和一封越来越难解释的信。"
     ],
     "actions": [
      {
-      "id": "discipline",
-      "kind": "Risk budget",
-      "label": "Write the failure case first",
-      "prompt": "Define the evidence that would change your mind.",
-      "consequence": "You keep credit risk separate from the final price. The decision is now auditable even if the outcome is uncertain.",
-      "result_title": "The failure case gets a seat",
-      "narration": "Good decisions preserve the ability to make the next decision.",
-      "next": "final"
+      "id": "match-clock",
+      "kind": "对准时钟",
+      "label": "把仓位和贷款重定价时间排在一起",
+      "prompt": "算清最坏情况下还能付多久保费。",
+      "consequence": "你不再只讨论会不会出事，而是讨论自己能不能活到出事那天。",
+      "result_title": "判断终于和资金期限接上了",
+      "narration": "看对方向只是第一步，活到兑现那天才算完成。",
+      "next": "climax"
      },
      {
-      "id": "hero",
-      "kind": "Conviction",
-      "label": "Let the story decide",
-      "prompt": "The opportunity feels too obvious to delay.",
-      "consequence": "You turn uncertainty into a position before defining the loss path.",
-      "result_title": "Conviction outruns evidence",
-      "narration": "The most dangerous shortcut is the one that feels like courage.",
-      "next": "final"
+      "id": "add-more",
+      "kind": "只谈确信",
+      "label": "既然越来越确定，就继续加大仓位",
+      "prompt": "用确信压过持有成本。",
+      "consequence": "风险敞口继续扩大，保费也继续流出。现在即使判断正确，客户赎回也可能先结束游戏。",
+      "result_title": "正确观点开始威胁生存",
+      "narration": "仓位不是观点的音量，它决定你有没有下一次决策机会。",
+      "next": "climax"
      }
+    ]
+   },
+   {
+    "id": "climax",
+    "eyebrow": "故事高潮",
+    "place": "给投资人的最后一封解释",
+    "time": "赎回压力已经到门口",
+    "title": "你怎么让这笔逆向交易活下去？",
+    "lines": [
+     "你必须同时回答三件事：底层为什么会坏、什么时候开始坏、基金能承受多久。"
     ],
-    "final": true
+    "final": true,
+    "actions": [
+     {
+      "id": "a",
+      "kind": "守住期限",
+      "label": "缩到能活过重定价周期的仓位",
+      "prompt": "让保费、赎回和催化时点都在预算里。",
+      "consequence": "收益上限变小了，但基金保留了等到事实出现的能力。",
+      "result_title": "你先保证自己不会提前出局",
+      "narration": "风险预算给观点留下了足够的时间。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "b",
+      "kind": "押满观点",
+      "label": "把最确信的判断变成最大的仓位",
+      "prompt": "方向正确就应该集中。",
+      "consequence": "回报可能惊人，但赎回、保费和交易对手任何一项先出问题，都能让正确判断无法兑现。",
+      "result_title": "你把时间风险留给了运气",
+      "narration": "正确不等于可承受。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "c",
+      "kind": "放弃研究",
+      "label": "市场迟迟不动，承认自己错了",
+      "prompt": "用短期价格检验长期信用判断。",
+      "consequence": "你停止付保费，也在贷款开始重定价前离开了已经查清的证据链。",
+      "result_title": "价格替你推翻了合同",
+      "narration": "价格可以提醒你复核，不能单独证明底层现金流没有问题。",
+      "next": "__legacy_reveal"
+     }
+    ]
    }
   ]
  },
@@ -126,155 +174,173 @@
   {
    "id": "s0",
    "kind": "cold_open",
-   "eyebrow": "Historical decision room",
-   "title": "The Mortgage Behind the Rating",
+   "eyebrow": "故事开始",
+   "title": "评级背后的那栋房子",
    "lines": [
-    "A rating is a label. The real risk lives in the cash flows underneath.",
-    "You are not predicting a price. You are deciding what must be understood before capital is committed."
+    "债券写着高评级，最后还钱的却是一批两年后就要重定价的房贷。",
+    "你会先看到当时能看到的材料，做完决定以后，历史才会翻牌。"
    ]
   },
   {
    "id": "s1",
    "kind": "evidence",
-   "eyebrow": "Evidence table",
-   "title": "What must be verified?",
+   "eyebrow": "故事发展",
+   "title": "现在要盯住什么",
    "panel": {
     "kind": "cmp",
     "cols": [
-     "Narrative",
-     "Check"
+     "表面说法",
+     "继续追问"
     ],
     "rows": [
      {
-      "k": "look-through analysis",
-      "a": "Story",
-      "b": "Observable driver"
+      "k": "穿透分析",
+      "a": "故事怎么讲",
+      "b": "事实怎样支持"
      },
      {
-      "k": "credit risk",
-      "a": "Assumption",
-      "b": "Failure condition"
+      "k": "信用风险",
+      "a": "哪里最诱人",
+      "b": "哪里会失效"
      }
     ]
    },
    "derived": [
     {
-     "k": "Teaching point",
-     "v": "Learn to look through structured products to borrowers, contracts, cash flow, and incentives."
+     "k": "这一段要学会",
+     "v": "穿透证券名称和评级，找到借款人、合同条款、重定价时点和损失路径。"
     }
    ]
   },
   {
    "id": "s2",
    "kind": "decision",
-   "eyebrow": "Information available then",
-   "title": "Where do you start?",
-   "prompt": "The room wants a decision before every uncertainty is resolved.",
+   "eyebrow": "故事高潮",
+   "title": "你怎么让这笔逆向交易活下去？",
+   "prompt": "你必须同时回答三件事：底层为什么会坏、什么时候开始坏、基金能承受多久。",
    "options": [
     {
      "id": "a",
-     "kind": "Research",
-     "t": "Build the evidence chain before committing",
+     "kind": "守住期限",
+     "t": "缩到能活过重定价周期的仓位",
      "verdict": "prudent"
     },
     {
      "id": "b",
-     "kind": "Narrative",
-     "t": "Trust the strongest story and move quickly",
+     "kind": "押满观点",
+     "t": "把最确信的判断变成最大的仓位",
      "verdict": "risky"
     },
     {
      "id": "c",
-     "kind": "Impulse",
-     "t": "Commit first and explain the risk later",
+     "kind": "放弃研究",
+     "t": "市场迟迟不动，承认自己错了",
      "verdict": "hasty"
     }
-   ]
+   ],
+   "confidence": true
   },
   {
    "id": "s3",
    "kind": "reveal",
-   "eyebrow": "Historical record",
-   "title": "The result is not the lesson",
+   "eyebrow": "历史翻牌",
+   "title": "两年后的月供开始说话",
    "quote": {
-    "src": "Burry public letters and historical record",
-    "line": "archival excerpt",
-    "text": "The public record preserves the decision context, the evidence, and the consequences.",
-    "orig": "The public record preserves the decision context, the evidence, and the consequences."
+    "src": "美国金融危机调查委员会最终报告",
+    "line": "第 10 章 · 迈克尔·伯里段",
+    "text": "房价上涨几乎没有工资和收入增长支撑；当两年期浮动利率贷款需要再融资时，住房市场将迎来最后的检验。",
+    "orig": "房价上涨几乎没有工资和收入增长支撑；当两年期浮动利率贷款需要再融资时，住房市场将迎来最后的检验。"
    },
    "lines": [
-    "History lets you inspect the ending. The skill is learning what could have been known before the ending."
-   ]
+    "随着浮动利率贷款重定价，底层违约压力暴露，针对次贷证券的信用保护大幅升值。"
+   ],
+   "narration": "现在回头看你的选择。当时抓住决定局面的那条线，比猜中结局更重要。"
   },
   {
    "id": "s4",
    "kind": "contrast",
-   "eyebrow": "Debrief",
-   "title": "What the method adds",
+   "eyebrow": "收获",
+   "title": "回看你刚才的决定",
    "columns": {
-    "you": "Your choice",
-    "them": "Transferable method"
+    "you": "你的选择",
+    "them": "这次事件留下的方法",
+    "canon": "历史记录"
    },
-   "them": "Learn to look through structured products to borrowers, contracts, cash flow, and incentives.",
-   "canon": "Use look-through analysis, credit risk, and model limits as separate checks.",
-   "knowhow": "Make the decision explainable before you make it confident."
+   "them": {
+    "t": "看到结构化产品，先问最后是谁还钱。",
+    "detail": "把合同里的重定价日期变成风险时间表。"
+   },
+   "canon": {
+    "t": "随着浮动利率贷款重定价，底层违约压力暴露，针对次贷证券的信用保护大幅升值。",
+    "detail": "方向、催化时点和仓位必须一起成立。",
+    "src": "美国金融危机调查委员会最终报告"
+   },
+   "knowhow": [
+    "看到结构化产品，先问最后是谁还钱。",
+    "把合同里的重定价日期变成风险时间表。",
+    "方向、催化时点和仓位必须一起成立。"
+   ],
+   "narration": "这次不用记住结局。记住下一次遇到类似材料时，你先查什么。"
   },
   {
    "id": "s5",
    "kind": "abstract",
-   "eyebrow": "Method card",
-   "title": "A reusable decision loop",
-   "rule": "Turn an exciting story into a falsifiable question, then price the uncertainty.",
-   "label": "look-through analysis -> credit risk -> model limits",
-   "boundary": "No single ratio, headline, or reputation can replace the full chain.",
-   "formula": "Decision quality = evidence clarity x risk budget x reviewability"
+   "eyebrow": "收获",
+   "title": "从评级一路追到借款人",
+   "story_form": "债券写着高评级，最后还钱的却是一批两年后就要重定价的房贷。",
+   "rule": "谁在还钱？合同何时变贵？什么事件触发损失？持有成本能撑多久？",
+   "formula": "信用判断 = 偿付能力 × 合同条款 × 时间 × 仓位",
+   "label": "借款人 → 合同 → 重定价 → 违约 → 仓位",
+   "boundary": "底层收入稳定、首付充足，而且压力测试覆盖重定价后的月供时",
+   "narration": "方法不是一句口号。它要能告诉你下一步去哪找证据。"
   },
   {
    "id": "s6",
    "kind": "twin",
-   "eyebrow": "Transfer question",
-   "title": "A new case arrives",
+   "eyebrow": "尾声",
+   "title": "一只新的高评级产品摆上桌",
    "panel": {
     "kind": "cmp",
     "cols": [
-     "Step",
-     "Question"
+     "先做什么",
+     "为什么"
     ],
     "rows": [
      {
-      "k": "First",
-      "a": "What is the claim?",
-      "b": "What could verify it?"
+      "k": "第一步",
+      "a": "写下要验证的判断",
+      "b": "避免先被故事带走"
      },
      {
-      "k": "Second",
-      "a": "What breaks it?",
-      "b": "What is the loss path?"
+      "k": "第二步",
+      "a": "写下判断失效的条件",
+      "b": "给自己留下改口的证据"
      }
     ]
    },
-   "question": "What is the strongest next move?",
+   "question": "先看哪一页？",
    "options": [
     {
      "id": "a",
-     "t": "Write a falsifiable claim and a failure case",
+     "t": "先找底层付款人和触发损失的合同条款",
      "ok": true
     },
     {
      "id": "b",
-     "t": "Use the famous investor as the thesis",
+     "t": "先看评级机构给了多少颗星",
      "ok": false
     }
    ],
-   "fb": "A famous investor can give you a method. The evidence still has to be yours."
+   "fb": "评级可以当索引，不能当结论。第一步永远是找到现金从哪里来。",
+   "narration": "你已经把这次事件里的方法带到了一个新现场。"
   }
  ],
  "x_prov": {
-  "drafted_by": "automated-rpg-seed",
-  "model": "frozen-historical-scaffold",
+  "drafted_by": "content-rewrite",
+  "model": "historical-rpg-zh",
   "drafted_at": "2026-09-20",
-  "reviewed_by": "content-migration-auto",
+  "reviewed_by": "automated-copy-migration",
   "reviewed_at": "2026-09-20",
-  "reviewed_hash": "261a2695b3a45916"
+  "reviewed_hash": "617aff3b521e1466"
  }
 }

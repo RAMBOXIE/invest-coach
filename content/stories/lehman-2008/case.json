@@ -2,7 +2,7 @@
  "case_id": "lehman-2008",
  "title": "季末那五天",
  "subtitle": "2008 年 4 月 · 你在读一份刚报送的季报",
- "company": "Lehman Brothers Holdings Inc.",
+ "company": "雷曼兄弟控股公司",
  "era": "2008",
  "status": "settled",
  "hook": "上一个案例教你读到第 18 页。这个案例告诉你：有些东西，读到第几页都读不到。",
@@ -160,11 +160,11 @@
  "cast": [
   {
    "id": "callan",
-   "name": "Erin M. Callan",
+   "name": "艾琳·卡兰",
    "avatar": "👩‍💼",
    "role": "首席财务官 · 这份季报的签署人",
    "intro": "她在 2008 年 4 月 9 日签署了这份一季报，三周前刚在电话会上向分析师解释过杠杆为什么在降。她能说的，是这份季报里的数字，和她当时在电话会上说过的话。",
-   "rule": "她的陈述逐字来自这份季报，或 Valukas 审查人报告逐字引用的她 2008 年 3 月 18 日电话会原话。文件里没有的，她会直说。",
+   "rule": "她的陈述逐字来自这份季报，或 瓦卢卡斯 审查人报告逐字引用的她 2008 年 3 月 18 日电话会原话。文件里没有的，她会直说。",
    "note": "在世人物。姓名与职务由该份 10-Q 签署页记载（lbhi-10q-2008q1.html L43436 / L43447）。陈述全部为原档逐字或 Valukas Vol.3 逐字引用的当时公开发言，不含任何虚构言论。"
   }
  ],
@@ -177,7 +177,7 @@
    "lines": [
     "贝尔斯登刚在三月被摩根大通接走。市场在找下一个。",
     "所有人都盯着投行的杠杆率：资产除以权益，越低越安全。",
-    "雷曼兄弟刚报送季报，CFO Erin M. Callan 签的字，董事长兼 CEO 是 Richard S. Fuld, Jr.。杠杆率在下降。现金还在。看起来它在收缩风险。",
+    "雷曼兄弟刚报送季报，首席财务官 艾琳·卡兰 签的字，董事长兼 首席执行官 是 理查德·富尔德。杠杆率在下降。现金还在。看起来它在收缩风险。",
     "你把这份季报从头读到尾，读得比上一个案例认真得多。"
    ],
    "narration": "这一次，认真读没有用。先看看它给了你什么。",
@@ -185,30 +185,30 @@
     {
      "date": "2008-03",
      "t": "贝尔斯登濒临崩溃，市场开始逐家盘问投行的杠杆。",
-     "src": "Valukas Vol.3",
+     "src": "瓦卢卡斯 第 3 卷",
      "line": "p.107"
     },
     {
      "date": "2008-03-18",
-     "t": "雷曼一季度电话会：CFO Callan 称净杠杆已从 16.1 倍降到 15.4 倍。",
-     "src": "Valukas Vol.3 逐字引用",
+     "t": "雷曼一季度电话会：首席财务官 卡兰 称净杠杆已从 16.1 倍降到 15.4 倍。",
+     "src": "瓦卢卡斯 第 3 卷 逐字引用",
      "line": "p.129"
     },
     {
      "date": "2008-03-18",
-     "t": "同日业绩新闻稿里，董事长兼 CEO Fuld 说：这个环境仍然充满挑战，而结果体现了公司在管控风险、维持强健资本与流动性上的坚持。",
+     "t": "同日业绩新闻稿里，董事长兼 首席执行官 富尔德 说：这个环境仍然充满挑战，而结果体现了公司在管控风险、维持强健资本与流动性上的坚持。",
      "src": "随 8-K 报送的业绩新闻稿",
      "line": "L165"
     },
     {
      "date": "2008-04-01",
-     "t": "雷曼为 40 亿美元可转换优先股定价。Callan 称超额认购「说明投资者对雷曼的信心」。",
+     "t": "雷曼为 40 亿美元可转换优先股定价。卡兰 称超额认购「说明投资者对雷曼的信心」。",
      "src": "FWP 新闻稿",
      "line": "L151"
     },
     {
      "date": "2008-04-09",
-     "t": "一季报报送，Callan 签署。现金及等价物 75.64 亿美元。",
+     "t": "一季报报送，卡兰 签署。现金及等价物 75.64 亿美元。",
      "src": "10-Q 签署页",
      "line": "L43436"
     }
@@ -284,7 +284,7 @@
    "title": "季末那五天",
    "quote": {
     "text": "鉴于雷曼在 <b>2007 年第四季度末、2008 年第一季度末、2008 年第二季度末</b>分别进行了 <b>386 亿美元、491 亿美元、503.8 亿美元</b>的 Repo 105 交易……",
-    "src": "Valukas 审查人报告 Vol.3（破产法院指定，2010-03-11）",
+    "src": "瓦卢卡斯 审查人报告 第 3 卷（破产法院指定，2010-03-11）",
     "line": "p.16",
     "fact": "lb-repo105",
     "orig": "Given that Lehman undertook $38.6 billion, $49.1 billion, and $50.38 billion of Repo 105 transactions at quarter-end fourth quarter 2007, first quarter 2008, and second quarter 2008, respectively"
@@ -303,7 +303,7 @@
    "title": "它一个字都没写",
    "quote": {
     "text": "雷曼<b>从未公开披露</b>其对 Repo 105 交易的使用、对这些交易的会计处理、2007 年底至 2008 年间 Repo 105 使用量的大幅上升，也未披露这些交易对公司<b>公开报告的净杠杆率</b>所产生的实质影响。",
-    "src": "Valukas 审查人报告 Vol.3",
+    "src": "瓦卢卡斯 审查人报告 第 3 卷",
     "line": "p.17",
     "fact": "lb-nodisclosure",
     "orig": "Lehman never publicly disclosed its use of Repo 105 transactions, its accounting treatment for these transactions, the considerable escalation of its total Repo 105 usage in late 2007 and into 2008, or the material impact these transactions had on the firm's publicly reported net leverage ratio."
@@ -329,9 +329,9 @@
     "detail": "2008 年上半年，雷曼公开报告的净杠杆率是市场评估其风险的主要依据之一。审查人报告发布前，Repo 105 的使用规模不为外界所知。"
    },
    "canon": {
-    "t": "审查人认定：存在「colorable claims」，即有足够证据支持就雷曼未披露 Repo 105 做法、以及该不披露是否使其定期报告具有实质误导性提出可主张的诉求。",
+    "t": "审查人认定：现有证据足以支持提出可主张的诉求，争点是雷曼未披露 Repo 105 做法，以及这种不披露是否使定期报告具有实质误导性。",
     "detail": "注意审查人的措辞：报告明确表示<b>不对 Repo 105 交易是否在技术上符合当时的会计准则 SFAS 140 作出结论</b>。它指向的是「披露」，不是「合规」。",
-    "src": "Valukas 审查人报告 Vol.3（2010-03-11）",
+    "src": "瓦卢卡斯 审查人报告 第 3 卷（2010-03-11）",
     "fact": "lb-nodisclosure"
    },
    "knowhow": [
@@ -362,8 +362,8 @@
    "panel": {
     "kind": "cmp",
     "cols": [
-     "Sunbeam 1997",
-     "Lehman 2008"
+     "新光 1997",
+     "雷曼 2008"
     ],
     "rows": [
      {
@@ -402,11 +402,11 @@
     },
     {
      "id": "c",
-     "t": "因为 Sunbeam 被 SEC 认定了而雷曼没有",
+     "t": "因为新光被 SEC 认定了而雷曼没有",
      "ok": false
     }
    ],
-   "fb": "对。结论强度必须匹配材料强度，这是两个案例共同的判断依据。Sunbeam 的材料支撑「判定信号成立并去求证」；雷曼的材料只支撑「我不知道，我需要别的数据」。把后者说成前者是鲁莽，把前者说成后者是怠惰。",
+   "fb": "对。结论强度必须匹配材料强度，这是两个案例共同的判断依据。新光 的材料支撑「判定信号成立并去求证」；雷曼的材料只支撑「我不知道，我需要别的数据」。把后者说成前者是鲁莽，把前者说成后者是怠惰。",
    "narration": "两个案例并排比过之后，这条判断依据就不再只属于烧烤架，也不只属于季末那五天了。"
   }
  ],
@@ -453,7 +453,7 @@
      {
       "card": "c-none",
       "text": "「本报告披露的是报告日的财务状况。」",
-      "src": "2008 年一季报 10-Q · Consolidated Statement of Financial Condition",
+      "src": "2008 年一季报 10-Q · 合并财务状况表",
       "line": "L1874 附近（合并财务状况表表头）",
       "coach": "这个案例的突破点在这里：它没有说错什么，它只说报告日。两年后审查人查明：雷曼在 2007Q4 末、2008Q1 末、2008Q2 末分别做了 386 亿、491 亿、503.8 亿美元的 Repo 105 交易，并<b>从未公开披露</b>，包括对公开报告净杠杆率的实质影响。你手上这份材料，回答不了你要问的问题。",
       "unlock": null,
@@ -485,7 +485,7 @@
    {
     "id": "t2",
     "text": "「我们非常有意地在这个季度把杠杆降了下来。季末净杠杆 <b>15.4 倍</b>，去年年末是 <b>16.1 倍</b>。我们会继续以我们认为审慎、并且反映资产负债表流动性状况的方式在市场上配置资本。」",
-    "src": "2008-03-18 一季度电话会 · Valukas Vol.3 逐字引用",
+    "src": "2008-03-18 一季度电话会 · 瓦卢卡斯 第 3 卷 逐字引用",
     "line": "p.129",
     "anchors": [
      {
@@ -496,7 +496,7 @@
     "orig": "did, very deliberately, take leverage down for the quarter. We ended with a net leverage ratio of 15.4 times down from 16.1 at year end. And we will continue to allocate capital on the balance sheet in the market in a way that we consider prudent, and that reflects the liquidity profile of the balance sheet.",
     "press": {
      "text": "「我们的目标是继续把杠杆降下去。为此我们会在合适的定价环境下出售资产，达到这个结果。我看不出现在有什么理由偏离这条路。」",
-     "src": "2008-03-18 一季度电话会 · Valukas Vol.3 逐字引用",
+     "src": "2008-03-18 一季度电话会 · 瓦卢卡斯 第 3 卷 逐字引用",
      "line": "p.130",
      "coach": "她说的都是当时公开讲过的话。注意她描述的是「怎么把杠杆降下来」：卖资产。这个案例后面你会看到，季末那五天里还有另一种办法。",
      "orig": "goal is to continue to take that leverage down . . . . In order to do so . . . we will sell assets as appropriate and within the right pricing context, to get to that outcome . . . . I don't see why there's any reason at this point to change off that course"
@@ -506,7 +506,7 @@
    {
     "id": "t3",
     "text": "「自上个季度以来，我们一直在努力向各位分析师提供资产负债表的高度透明。」",
-    "src": "2008-03-18 一季度电话会 · Valukas Vol.3 逐字引用",
+    "src": "2008-03-18 一季度电话会 · 瓦卢卡斯 第 3 卷 逐字引用",
     "line": "p.129",
     "anchors": [
      {
@@ -554,8 +554,8 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "content-migration-auto",
+  "reviewed_by": "automated-copy-migration",
   "reviewed_at": "2026-09-20",
-  "reviewed_hash": "b4036846b224bc48"
+  "reviewed_hash": "37d22848d5fc0b3e"
  }
 }

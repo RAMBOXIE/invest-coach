@@ -33,7 +33,7 @@
 /* 幕体 */
 .sty-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
   padding:var(--space-4) var(--space-4) var(--space-5);
-  display:flex;flex-direction:column;justify-content:center;min-height:0}
+  display:flex;flex-direction:column;justify-content:flex-start;min-height:0}
 .sty-foot{flex:none;padding:var(--space-3) var(--space-4) calc(var(--space-4) + env(safe-area-inset-bottom))}
 
 .eyebrow{font-size:var(--size-13);letter-spacing:.22em;color:var(--gold);
@@ -209,7 +209,7 @@
    不改 DOM：叙事类子元素留在左栏，证据/原档类推到右栏，dense 让右栏回填前面的空位，
    所以阅读顺序（也是无障碍顺序）仍旧是 story.js 生成的那个顺序。 */
 @media(min-width:1024px){
-  .sty-body{display:grid;align-content:center;grid-auto-flow:row dense;
+  .sty-body{display:grid;align-content:start;grid-auto-flow:row dense;
     grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);
     column-gap:var(--space-5);
     width:100%;max-width:1040px;margin:0 auto;

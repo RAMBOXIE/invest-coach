@@ -1,124 +1,172 @@
 {
  "case_id": "buffett-coke-1988",
- "title": "买下一种伟大的品牌",
- "subtitle": "1988 年 · 巴菲特面对 Coca-Cola 的定价问题",
- "company": "The Coca-Cola Company",
+ "title": "等了五十二年的可口可乐",
+ "subtitle": "1988 年 · 巴菲特终于买下自己早就看懂的生意",
+ "company": "可口可乐公司",
  "era": "1988",
  "status": "settled",
- "hook": "伟大的生意，也可能因为买得太贵而成为糟糕的投资。",
+ "hook": "人人都知道可口可乐。难的是回答：为什么偏偏是 1988 年，它值这个价？",
  "knowledge_node": "moat",
- "learning_goal": "把品牌故事拆成定价权、资本回报、现金流和安全边际。",
+ "learning_goal": "把品牌好感拆成定价权、资本回报、现金流和买入价格。",
  "skills": [
-  "pricing power",
-  "capital returns",
-  "intrinsic value"
+  "定价权",
+  "资本回报",
+  "内在价值"
  ],
  "cast": [
   {
    "id": "buffett",
-   "name": "Buffett",
-   "avatar": "*",
-   "role": "historical decision maker",
-   "intro": "The story uses Buffett's public record as context, not as an imitation performance.",
-   "rule": "The narrator explains choices and pressure without changing the historical record."
+   "name": "沃伦·巴菲特",
+   "avatar": "人物",
+   "role": "伯克希尔董事长",
+   "intro": "他公开写下了这次买入的理由。故事只使用公开记录，不替他编造台词。",
+   "rule": "只引用公开记录；解释选择，不改写历史事实。"
   }
  ],
  "rpg": {
-  "title": "Atlanta: What Is the Brand Worth?",
-  "premise": "A famous brand can be a great business and still be a bad investment at the wrong price.",
-  "learning_goal": "Learn to turn brand stories into pricing power, returns on capital, cash flow, and a margin of safety.",
+  "title": "等了五十二年的可口可乐",
+  "premise": "人人都知道可口可乐。难的是回答：为什么偏偏是 1988 年，它值这个价？",
+  "learning_goal": "把品牌好感拆成定价权、资本回报、现金流和买入价格。",
+  "learning_skills": [
+   "定价权",
+   "资本回报",
+   "内在价值"
+  ],
   "roles": [
    {
     "id": "researcher",
-    "title": "证据研究员",
-    "goal": "Test pricing power",
-    "pressure": "The room wants a fast answer."
+    "title": "消费品研究员",
+    "goal": "把品牌魅力落到经营数字上",
+    "pressure": "大家都说这个品牌不需要解释。"
    },
    {
     "id": "risk",
     "title": "风险负责人",
-    "goal": "Define capital returns",
-    "pressure": "Conviction is being rewarded."
+    "goal": "找出好生意失灵的条件",
+    "pressure": "会议里没人愿意给传奇品牌泼冷水。"
    },
    {
     "id": "allocator",
     "title": "资本配置人",
-    "goal": "Protect intrinsic value",
-    "pressure": "The opportunity feels time-sensitive."
+    "goal": "判断好生意是否也有好价格",
+    "pressure": "市场刚经历崩盘，机会看起来稍纵即逝。"
    }
   ],
-  "initial_scene": "decision-room",
+  "initial_scene": "opening",
   "narrator": {
-   "name": "Historical decision narrator",
-   "voice": "Dramatic but evidence-bound.",
-   "rule": "Explain the player's choice, pressure, and learning point without inventing facts."
+   "name": "画外音",
+   "voice": "中文，简短，像纪录片旁白。",
+   "rule": "只解释玩家选择、现场压力和证据边界，不编造事实。"
   },
   "scenes": [
    {
-    "id": "decision-room",
-    "eyebrow": "Before the decision",
-    "place": "Historical decision room",
-    "time": "The pressure is rising",
-    "title": "Atlanta: What Is the Brand Worth?",
+    "id": "opening",
+    "eyebrow": "故事开始",
+    "place": "奥马哈 · 1988 年夏",
+    "time": "买单还没有递出去",
+    "title": "你认识它，不等于你看懂了它",
     "lines": [
-     "Management brings brand, distribution, and global growth. Your job is to translate applause into operating variables.",
-     "Start with the unit economics and ask what customers will keep paying for."
+     "巴菲特小时候就卖过可口可乐，五十二年后才第一次买它的股票。",
+     "会议桌上没人怀疑品牌。大家需要回答的是：这门生意靠什么把一瓶糖水卖遍世界，而且越卖越赚钱？"
     ],
     "actions": [
      {
-      "id": "investigate",
-      "kind": "Evidence",
-      "label": "Build the evidence chain",
-      "prompt": "Turn the story into variables you can verify.",
-      "consequence": "You turn pricing power into a checklist. The next decision must answer what drives the business and what can break it.",
-      "result_title": "The story becomes a model",
-      "narration": "A useful story creates a question that can be falsified.",
-      "next": "pressure-room"
+      "id": "follow-money",
+      "kind": "先看生意",
+      "label": "顺着一瓶可乐的钱往下查",
+      "prompt": "看提价、销量、渠道和维持增长需要的资本。",
+      "consequence": "会议从“大家都爱喝”转向“公司凭什么持续赚钱”。品牌第一次被拆成可以核对的东西。",
+      "result_title": "熟悉感被拆开了",
+      "narration": "喜欢产品只能让你注意到公司，不能替你完成估值。",
+      "next": "development"
      },
      {
-      "id": "shortcut",
-      "kind": "Shortcut",
-      "label": "Trust the strongest narrative",
-      "prompt": "The story is popular, simple, and emotionally convincing.",
-      "consequence": "You gain speed but lose the evidence chain. The next pressure is to explain what your shortcut cannot see.",
-      "result_title": "The narrative goes first",
-      "narration": "Confidence is not evidence just because many people share it.",
-      "next": "pressure-room"
+      "id": "follow-fame",
+      "kind": "先信品牌",
+      "label": "全球第一的品牌，还需要解释吗",
+      "prompt": "把知名度直接当成护城河。",
+      "consequence": "讨论很快结束。所有人都同意品牌强，却没人说得出它怎样变成现金，也没人写下什么情况会让判断失效。",
+      "result_title": "掌声盖过了问题",
+      "narration": "最容易买贵的，往往正是人人都能讲出优点的公司。",
+      "next": "development"
      }
     ]
    },
    {
-    "id": "pressure-room",
-    "eyebrow": "The second decision",
-    "place": "Investment committee",
-    "time": "The window is closing",
-    "title": "Separate business quality from purchase price.",
+    "id": "development",
+    "eyebrow": "故事发展",
+    "place": "伯克希尔投资会议",
+    "time": "品牌已经过关，价格还没有",
+    "title": "好生意，也可能是一笔坏买卖",
     "lines": [
-     "Ask how much can go wrong and still leave a durable return."
+     "海外销量正在加速，管理层把营销和资本配置拧到了一起。",
+     "现在轮到你回答更扫兴的问题：如果买得太贵，品牌再好能不能救你？"
     ],
     "actions": [
      {
-      "id": "discipline",
-      "kind": "Risk budget",
-      "label": "Write the failure case first",
-      "prompt": "Define the evidence that would change your mind.",
-      "consequence": "You keep capital returns separate from the final price. The decision is now auditable even if the outcome is uncertain.",
-      "result_title": "The failure case gets a seat",
-      "narration": "Good decisions preserve the ability to make the next decision.",
-      "next": "final"
+      "id": "price-it",
+      "kind": "算清代价",
+      "label": "先写下未来现金流，再谈愿意付多少钱",
+      "prompt": "把增长、回报和价格放在同一张纸上。",
+      "consequence": "你迫使会议写下假设：增长从哪里来、需要多少资本、哪一项低于预期就要重算。",
+      "result_title": "品牌有了价格边界",
+      "narration": "估值是在回答：这份正确判断，最多值得付出多少。",
+      "next": "climax"
      },
      {
-      "id": "hero",
-      "kind": "Conviction",
-      "label": "Let the story decide",
-      "prompt": "The opportunity feels too obvious to delay.",
-      "consequence": "You turn uncertainty into a position before defining the loss path.",
-      "result_title": "Conviction outruns evidence",
-      "narration": "The most dangerous shortcut is the one that feels like courage.",
-      "next": "final"
+      "id": "pay-up",
+      "kind": "抢先买入",
+      "label": "这样的公司不会便宜，先买再说",
+      "prompt": "用稀缺性替代价格讨论。",
+      "consequence": "仓位先建立起来，估值被推到以后。以后每一次上涨都会让原来的决定看起来更正确。",
+      "result_title": "价格问题被留在门外",
+      "narration": "好公司值得溢价，不等于任何溢价都值得。",
+      "next": "climax"
      }
+    ]
+   },
+   {
+    "id": "climax",
+    "eyebrow": "故事高潮",
+    "place": "签字前的最后一页",
+    "time": "资金今天就要拨出去",
+    "title": "你给这笔买入写什么理由？",
+    "lines": [
+     "历史不会在今天告诉你答案。你只能用手上的经营事实和自己愿意承担的价格做决定。"
     ],
-    "final": true
+    "final": true,
+    "actions": [
+     {
+      "id": "a",
+      "kind": "带条件买入",
+      "label": "买，但把增长假设和价格上限写清楚",
+      "prompt": "以后用经营结果复核，不用股价替自己辩护。",
+      "consequence": "你批准买入，同时留下三条复核线：定价权、资本回报和买入价格。",
+      "result_title": "你买的是一套可复核的判断",
+      "narration": "决定可以大胆，理由必须经得起以后逐条检查。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "b",
+      "kind": "追随名望",
+      "label": "巴菲特都看懂了，照着买就够了",
+      "prompt": "把决策人的名声当成自己的证据。",
+      "consequence": "仓位建立得很快，但这套判断离开巴菲特的名字就无法独立站立。",
+      "result_title": "你借来了结论，没有借到能力",
+      "narration": "可以学习高手怎样想，不能拿高手的名字代替自己的证据。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "c",
+      "kind": "等待完美",
+      "label": "等所有数字都确定以后再决定",
+      "prompt": "把不确定性全部消失当成出手条件。",
+      "consequence": "你避开了犯错，也把此刻能够判断的东西一并放弃。",
+      "result_title": "你把谨慎变成了停顿",
+      "narration": "投资不会给你完整答案，只会给你足够或不足的证据。",
+      "next": "__legacy_reveal"
+     }
+    ]
    }
   ]
  },
@@ -126,155 +174,173 @@
   {
    "id": "s0",
    "kind": "cold_open",
-   "eyebrow": "Historical decision room",
-   "title": "Buying a Wonderful Brand",
+   "eyebrow": "故事开始",
+   "title": "等了五十二年的可口可乐",
    "lines": [
-    "A famous brand can be a great business and still be a bad investment at the wrong price.",
-    "You are not predicting a price. You are deciding what must be understood before capital is committed."
+    "人人都知道可口可乐。难的是回答：为什么偏偏是 1988 年，它值这个价？",
+    "你会先看到当时能看到的材料，做完决定以后，历史才会翻牌。"
    ]
   },
   {
    "id": "s1",
    "kind": "evidence",
-   "eyebrow": "Evidence table",
-   "title": "What must be verified?",
+   "eyebrow": "故事发展",
+   "title": "现在要盯住什么",
    "panel": {
     "kind": "cmp",
     "cols": [
-     "Narrative",
-     "Check"
+     "表面说法",
+     "继续追问"
     ],
     "rows": [
      {
-      "k": "pricing power",
-      "a": "Story",
-      "b": "Observable driver"
+      "k": "定价权",
+      "a": "故事怎么讲",
+      "b": "事实怎样支持"
      },
      {
-      "k": "capital returns",
-      "a": "Assumption",
-      "b": "Failure condition"
+      "k": "资本回报",
+      "a": "哪里最诱人",
+      "b": "哪里会失效"
      }
     ]
    },
    "derived": [
     {
-     "k": "Teaching point",
-     "v": "Learn to turn brand stories into pricing power, returns on capital, cash flow, and a margin of safety."
+     "k": "这一段要学会",
+     "v": "把品牌好感拆成定价权、资本回报、现金流和买入价格。"
     }
    ]
   },
   {
    "id": "s2",
    "kind": "decision",
-   "eyebrow": "Information available then",
-   "title": "Where do you start?",
-   "prompt": "The room wants a decision before every uncertainty is resolved.",
+   "eyebrow": "故事高潮",
+   "title": "你给这笔买入写什么理由？",
+   "prompt": "历史不会在今天告诉你答案。你只能用手上的经营事实和自己愿意承担的价格做决定。",
    "options": [
     {
      "id": "a",
-     "kind": "Research",
-     "t": "Build the evidence chain before committing",
+     "kind": "带条件买入",
+     "t": "买，但把增长假设和价格上限写清楚",
      "verdict": "prudent"
     },
     {
      "id": "b",
-     "kind": "Narrative",
-     "t": "Trust the strongest story and move quickly",
+     "kind": "追随名望",
+     "t": "巴菲特都看懂了，照着买就够了",
      "verdict": "risky"
     },
     {
      "id": "c",
-     "kind": "Impulse",
-     "t": "Commit first and explain the risk later",
+     "kind": "等待完美",
+     "t": "等所有数字都确定以后再决定",
      "verdict": "hasty"
     }
-   ]
+   ],
+   "confidence": true
   },
   {
    "id": "s3",
    "kind": "reveal",
-   "eyebrow": "Historical record",
-   "title": "The result is not the lesson",
+   "eyebrow": "历史翻牌",
+   "title": "五十二年后，他终于买了",
    "quote": {
-    "src": "Buffett public letters and historical record",
-    "line": "archival excerpt",
-    "text": "The public record preserves the decision context, the evidence, and the consequences.",
-    "orig": "The public record preserves the decision context, the evidence, and the consequences."
+    "src": "伯克希尔 1988、1989 年致股东信",
+    "line": "1988—1989 年可口可乐段",
+    "text": "1988 年我们大量买入可口可乐。我们持有优秀企业的一部分时，最喜欢的持有期限是永远。",
+    "orig": "1988 年我们大量买入可口可乐。我们持有优秀企业的一部分时，最喜欢的持有期限是永远。"
    },
    "lines": [
-    "History lets you inspect the ending. The skill is learning what could have been known before the ending."
-   ]
+    "伯克希尔 1988 年开始大举买入可口可乐，并明确表示准备长期持有。"
+   ],
+   "narration": "现在回头看你的选择。当时抓住决定局面的那条线，比猜中结局更重要。"
   },
   {
    "id": "s4",
    "kind": "contrast",
-   "eyebrow": "Debrief",
-   "title": "What the method adds",
+   "eyebrow": "收获",
+   "title": "回看你刚才的决定",
    "columns": {
-    "you": "Your choice",
-    "them": "Transferable method"
+    "you": "你的选择",
+    "them": "这次事件留下的方法",
+    "canon": "历史记录"
    },
-   "them": "Learn to turn brand stories into pricing power, returns on capital, cash flow, and a margin of safety.",
-   "canon": "Use pricing power, capital returns, and intrinsic value as separate checks.",
-   "knowhow": "Make the decision explainable before you make it confident."
+   "them": {
+    "t": "品牌只是入口。要继续追问：它怎样提价、怎样扩张、需要多少新增资本。",
+    "detail": "把生意质量和买入价格分开写。两者都对，才是一笔好投资。"
+   },
+   "canon": {
+    "t": "伯克希尔 1988 年开始大举买入可口可乐，并明确表示准备长期持有。",
+    "detail": "高手的名字可以提示方向，不能代替你自己的证据链。",
+    "src": "伯克希尔 1988、1989 年致股东信"
+   },
+   "knowhow": [
+    "品牌只是入口。要继续追问：它怎样提价、怎样扩张、需要多少新增资本。",
+    "把生意质量和买入价格分开写。两者都对，才是一笔好投资。",
+    "高手的名字可以提示方向，不能代替你自己的证据链。"
+   ],
+   "narration": "这次不用记住结局。记住下一次遇到类似材料时，你先查什么。"
   },
   {
    "id": "s5",
    "kind": "abstract",
-   "eyebrow": "Method card",
-   "title": "A reusable decision loop",
-   "rule": "Turn an exciting story into a falsifiable question, then price the uncertainty.",
-   "label": "pricing power -> capital returns -> intrinsic value",
-   "boundary": "No single ratio, headline, or reputation can replace the full chain.",
-   "formula": "Decision quality = evidence clarity x risk budget x reviewability"
+   "eyebrow": "收获",
+   "title": "把品牌拆成四个问题",
+   "story_form": "人人都知道可口可乐。难的是回答：为什么偏偏是 1988 年，它值这个价？",
+   "rule": "客户为什么反复购买？公司为什么能提价？增长要不要持续砸钱？现在的价格已经预支了多少未来？",
+   "formula": "品牌价值 = 持续购买 × 定价权 × 低资本消耗",
+   "label": "定价权 → 资本回报 → 现金流 → 买入价格",
+   "boundary": "产品受欢迎，但提价后销量下滑、资本回报下降时",
+   "narration": "方法不是一句口号。它要能告诉你下一步去哪找证据。"
   },
   {
    "id": "s6",
    "kind": "twin",
-   "eyebrow": "Transfer question",
-   "title": "A new case arrives",
+   "eyebrow": "尾声",
+   "title": "另一家人人都爱的品牌来了",
    "panel": {
     "kind": "cmp",
     "cols": [
-     "Step",
-     "Question"
+     "先做什么",
+     "为什么"
     ],
     "rows": [
      {
-      "k": "First",
-      "a": "What is the claim?",
-      "b": "What could verify it?"
+      "k": "第一步",
+      "a": "写下要验证的判断",
+      "b": "避免先被故事带走"
      },
      {
-      "k": "Second",
-      "a": "What breaks it?",
-      "b": "What is the loss path?"
+      "k": "第二步",
+      "a": "写下判断失效的条件",
+      "b": "给自己留下改口的证据"
      }
     ]
    },
-   "question": "What is the strongest next move?",
+   "question": "你第一步做什么？",
    "options": [
     {
      "id": "a",
-     "t": "Write a falsifiable claim and a failure case",
+     "t": "先写下提价、销量和资本回报怎样互相验证",
      "ok": true
     },
     {
      "id": "b",
-     "t": "Use the famous investor as the thesis",
+     "t": "先问身边有多少人喜欢它",
      "ok": false
     }
    ],
-   "fb": "A famous investor can give you a method. The evidence still has to be yours."
+   "fb": "受欢迎是线索。能不能提价、要花多少钱增长，才决定它是不是一门好生意。",
+   "narration": "你已经把这次事件里的方法带到了一个新现场。"
   }
  ],
  "x_prov": {
-  "drafted_by": "automated-rpg-seed",
-  "model": "frozen-historical-scaffold",
+  "drafted_by": "content-rewrite",
+  "model": "historical-rpg-zh",
   "drafted_at": "2026-09-20",
-  "reviewed_by": "content-migration-auto",
+  "reviewed_by": "automated-copy-migration",
   "reviewed_at": "2026-09-20",
-  "reviewed_hash": "a1933c9e7e7abff8"
+  "reviewed_hash": "953cc0bc3a82e07c"
  }
 }

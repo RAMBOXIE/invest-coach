@@ -1,124 +1,172 @@
 {
  "case_id": "munger-costco-1999",
- "title": "一美元的问题",
- "subtitle": "1999 年 · 查理·芒格面对 Costco 的薄利模式",
- "company": "Costco Wholesale Corporation",
+ "title": "薄利仓库里的厚生意",
+ "subtitle": "1999 年 · 查理·芒格面对好市多的低毛利模式",
+ "company": "好市多公司",
  "era": "1999",
  "status": "settled",
- "hook": "当周转、会员和信任互相强化时，薄利本身也可以是一种战略。",
+ "hook": "毛利压得这么低，看起来不像好生意。可会员却一年又一年回来。",
  "knowledge_node": "gross-margin",
- "learning_goal": "看懂低利润率、高周转、会员费和资本回报如何组成一个系统。",
+ "learning_goal": "理解低毛利、高周转、会员费和顾客信任如何组成同一套系统。",
  "skills": [
-  "turnover",
-  "unit economics",
-  "quality versus price"
+  "周转效率",
+  "单位经济学",
+  "质量与价格"
  ],
  "cast": [
   {
    "id": "munger",
-   "name": "Munger",
-   "avatar": "*",
-   "role": "historical decision maker",
-   "intro": "The story uses Munger's public record as context, not as an imitation performance.",
-   "rule": "The narrator explains choices and pressure without changing the historical record."
+   "name": "查理·芒格",
+   "avatar": "人物",
+   "role": "伯克希尔副董事长",
+   "intro": "故事依据其公开谈论好市多的记录，不生成冒充本人的新台词。",
+   "rule": "只引用公开记录；解释选择，不改写历史事实。"
   }
  ],
  "rpg": {
-  "title": "The Warehouse Aisle",
-  "premise": "A thin margin can be a strategy when turnover, membership, and trust reinforce one another.",
-  "learning_goal": "Learn how low margin, high turnover, membership, and capital returns work as one system.",
+  "title": "薄利仓库里的厚生意",
+  "premise": "毛利压得这么低，看起来不像好生意。可会员却一年又一年回来。",
+  "learning_goal": "理解低毛利、高周转、会员费和顾客信任如何组成同一套系统。",
+  "learning_skills": [
+   "周转效率",
+   "单位经济学",
+   "质量与价格"
+  ],
   "roles": [
    {
     "id": "researcher",
-    "title": "证据研究员",
-    "goal": "Test turnover",
-    "pressure": "The room wants a fast answer."
+    "title": "零售研究员",
+    "goal": "看清低毛利如何换来周转和续费",
+    "pressure": "同业分析习惯先比较毛利率。"
    },
    {
     "id": "risk",
-    "title": "风险负责人",
-    "goal": "Define unit economics",
-    "pressure": "Conviction is being rewarded."
+    "title": "经营风控负责人",
+    "goal": "找出会员飞轮会在哪断掉",
+    "pressure": "所有人都爱这门生意，坏消息很难开口。"
    },
    {
     "id": "allocator",
     "title": "资本配置人",
-    "goal": "Protect quality versus price",
-    "pressure": "The opportunity feels time-sensitive."
+    "goal": "把经营质量和买入价格分开",
+    "pressure": "好公司正在被市场追捧。"
    }
   ],
-  "initial_scene": "decision-room",
+  "initial_scene": "opening",
   "narrator": {
-   "name": "Historical decision narrator",
-   "voice": "Dramatic but evidence-bound.",
-   "rule": "Explain the player's choice, pressure, and learning point without inventing facts."
+   "name": "画外音",
+   "voice": "中文，简短，像纪录片旁白。",
+   "rule": "只解释玩家选择、现场压力和证据边界，不编造事实。"
   },
   "scenes": [
    {
-    "id": "decision-room",
-    "eyebrow": "Before the decision",
-    "place": "Historical decision room",
-    "time": "The pressure is rising",
-    "title": "The Warehouse Aisle",
+    "id": "opening",
+    "eyebrow": "故事开始",
+    "place": "好市多仓库店 · 1999 年",
+    "time": "收银台前排着长队",
+    "title": "毛利这么薄，利润藏在哪里？",
     "lines": [
-     "The warehouse is full of low prices and fast-moving goods. A single margin ratio cannot explain the system.",
-     "Start with the customer value, turnover, and capital required."
+     "货架不花哨，商品种类不多，价格压得很低。",
+     "传统零售分析会嫌毛利率难看，可会员仍在续费，商品也转得飞快。"
     ],
     "actions": [
      {
-      "id": "investigate",
-      "kind": "Evidence",
-      "label": "Build the evidence chain",
-      "prompt": "Turn the story into variables you can verify.",
-      "consequence": "You turn turnover into a checklist. The next decision must answer what drives the business and what can break it.",
-      "result_title": "The story becomes a model",
-      "narration": "A useful story creates a question that can be falsified.",
-      "next": "pressure-room"
+      "id": "trace-system",
+      "kind": "看完整系统",
+      "label": "从低价一路追到周转、续费和资本占用",
+      "prompt": "别把毛利率单独拎出来。",
+      "consequence": "低毛利不再只是少赚一点，而是吸引会员、提高周转、强化信任的起点。",
+      "result_title": "四个零件咬在了一起",
+      "narration": "有些优势不在某个比率里，而在几个比率怎样互相推动。",
+      "next": "development"
      },
      {
-      "id": "shortcut",
-      "kind": "Shortcut",
-      "label": "Trust the strongest narrative",
-      "prompt": "The story is popular, simple, and emotionally convincing.",
-      "consequence": "You gain speed but lose the evidence chain. The next pressure is to explain what your shortcut cannot see.",
-      "result_title": "The narrative goes first",
-      "narration": "Confidence is not evidence just because many people share it.",
-      "next": "pressure-room"
+      "id": "judge-margin",
+      "kind": "只比毛利",
+      "label": "毛利率低，说明议价能力弱",
+      "prompt": "用一个比率完成定性。",
+      "consequence": "分析表很整齐，但续费、周转和顾客信任全部被留在表外。",
+      "result_title": "你看见了薄，没看见快",
+      "narration": "比率没有错，错的是让一个比率替整个商业模式发言。",
+      "next": "development"
      }
     ]
    },
    {
-    "id": "pressure-room",
-    "eyebrow": "The second decision",
-    "place": "Investment committee",
-    "time": "The window is closing",
-    "title": "Separate operating quality from valuation.",
+    "id": "development",
+    "eyebrow": "故事发展",
+    "place": "董事会材料室",
+    "time": "竞争对手开始模仿低价",
+    "title": "低价谁都能学，为什么系统不容易复制？",
     "lines": [
-     "A great system is not an exemption from price discipline."
+     "把价格降下来并不难。难的是在低价下仍保持周转、续费和供应商效率。",
+     "一旦为了季度利润抬高毛利，会员对价格的信任也可能开始松动。"
     ],
     "actions": [
      {
-      "id": "discipline",
-      "kind": "Risk budget",
-      "label": "Write the failure case first",
-      "prompt": "Define the evidence that would change your mind.",
-      "consequence": "You keep unit economics separate from the final price. The decision is now auditable even if the outcome is uncertain.",
-      "result_title": "The failure case gets a seat",
-      "narration": "Good decisions preserve the ability to make the next decision.",
-      "next": "final"
+      "id": "protect-loop",
+      "kind": "守住飞轮",
+      "label": "把会员信任当成需要复核的资产",
+      "prompt": "看续费、周转和单位资本回报是否一起稳定。",
+      "consequence": "你给系统画出了断点：提价过度、续费下降、周转放慢，任何一项都能让飞轮失速。",
+      "result_title": "优势终于有了失效条件",
+      "narration": "说得出护城河会在哪里塌，才算真的看懂它。",
+      "next": "climax"
      },
      {
-      "id": "hero",
-      "kind": "Conviction",
-      "label": "Let the story decide",
-      "prompt": "The opportunity feels too obvious to delay.",
-      "consequence": "You turn uncertainty into a position before defining the loss path.",
-      "result_title": "Conviction outruns evidence",
-      "narration": "The most dangerous shortcut is the one that feels like courage.",
-      "next": "final"
+      "id": "raise-margin",
+      "kind": "追求利润",
+      "label": "既然顾客忠诚，就把毛利提上去",
+      "prompt": "先兑现眼前利润。",
+      "consequence": "短期利润会更好看，但“永远占便宜”的会员感受开始被拿去变现。",
+      "result_title": "你用飞轮换了一个漂亮季度",
+      "narration": "商业模式最值钱的地方，往往也是管理层最容易提前兑现的地方。",
+      "next": "climax"
      }
+    ]
+   },
+   {
+    "id": "climax",
+    "eyebrow": "故事高潮",
+    "place": "投资委员会",
+    "time": "所有人都承认公司优秀",
+    "title": "好公司要不要不计价格地买？",
+    "lines": [
+     "你已经看懂经营系统。最后一个问题与经营无关：市场给它的价格，是否已经把未来都写满了？"
     ],
-    "final": true
+    "final": true,
+    "actions": [
+     {
+      "id": "a",
+      "kind": "质量与价格",
+      "label": "先估飞轮能转多久，再决定最高买价",
+      "prompt": "经营判断和价格判断各写一页。",
+      "consequence": "你保留了对公司的欣赏，也保留了拒绝过高价格的权利。",
+      "result_title": "好公司没有得到免检证",
+      "narration": "质量决定你愿意持有多久，价格决定你能承受多少判断误差。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "b",
+      "kind": "质量崇拜",
+      "label": "系统这么好，贵一点无所谓",
+      "prompt": "让商业模式替价格辩护。",
+      "consequence": "你买下了优秀公司，也把很大一部分未来回报提前付给了卖方。",
+      "result_title": "好生意吃掉了安全边界",
+      "narration": "“长期持有”不能修复买入时已经透支的回报。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "c",
+      "kind": "比率否决",
+      "label": "毛利太低，直接排除",
+      "prompt": "回到单一比率。",
+      "consequence": "你避开了估值问题，也错过了理解系统为什么成立的机会。",
+      "result_title": "你用一个数字关掉了研究",
+      "narration": "筛选可以从比率开始，判断不能停在那里。",
+      "next": "__legacy_reveal"
+     }
+    ]
    }
   ]
  },
@@ -126,155 +174,173 @@
   {
    "id": "s0",
    "kind": "cold_open",
-   "eyebrow": "Historical decision room",
-   "title": "The One Dollar Question",
+   "eyebrow": "故事开始",
+   "title": "薄利仓库里的厚生意",
    "lines": [
-    "A thin margin can be a strategy when turnover, membership, and trust reinforce one another.",
-    "You are not predicting a price. You are deciding what must be understood before capital is committed."
+    "毛利压得这么低，看起来不像好生意。可会员却一年又一年回来。",
+    "你会先看到当时能看到的材料，做完决定以后，历史才会翻牌。"
    ]
   },
   {
    "id": "s1",
    "kind": "evidence",
-   "eyebrow": "Evidence table",
-   "title": "What must be verified?",
+   "eyebrow": "故事发展",
+   "title": "现在要盯住什么",
    "panel": {
     "kind": "cmp",
     "cols": [
-     "Narrative",
-     "Check"
+     "表面说法",
+     "继续追问"
     ],
     "rows": [
      {
-      "k": "turnover",
-      "a": "Story",
-      "b": "Observable driver"
+      "k": "周转效率",
+      "a": "故事怎么讲",
+      "b": "事实怎样支持"
      },
      {
-      "k": "unit economics",
-      "a": "Assumption",
-      "b": "Failure condition"
+      "k": "单位经济学",
+      "a": "哪里最诱人",
+      "b": "哪里会失效"
      }
     ]
    },
    "derived": [
     {
-     "k": "Teaching point",
-     "v": "Learn how low margin, high turnover, membership, and capital returns work as one system."
+     "k": "这一段要学会",
+     "v": "理解低毛利、高周转、会员费和顾客信任如何组成同一套系统。"
     }
    ]
   },
   {
    "id": "s2",
    "kind": "decision",
-   "eyebrow": "Information available then",
-   "title": "Where do you start?",
-   "prompt": "The room wants a decision before every uncertainty is resolved.",
+   "eyebrow": "故事高潮",
+   "title": "好公司要不要不计价格地买？",
+   "prompt": "你已经看懂经营系统。最后一个问题与经营无关：市场给它的价格，是否已经把未来都写满了？",
    "options": [
     {
      "id": "a",
-     "kind": "Research",
-     "t": "Build the evidence chain before committing",
+     "kind": "质量与价格",
+     "t": "先估飞轮能转多久，再决定最高买价",
      "verdict": "prudent"
     },
     {
      "id": "b",
-     "kind": "Narrative",
-     "t": "Trust the strongest story and move quickly",
+     "kind": "质量崇拜",
+     "t": "系统这么好，贵一点无所谓",
      "verdict": "risky"
     },
     {
      "id": "c",
-     "kind": "Impulse",
-     "t": "Commit first and explain the risk later",
+     "kind": "比率否决",
+     "t": "毛利太低，直接排除",
      "verdict": "hasty"
     }
-   ]
+   ],
+   "confidence": true
   },
   {
    "id": "s3",
    "kind": "reveal",
-   "eyebrow": "Historical record",
-   "title": "The result is not the lesson",
+   "eyebrow": "历史翻牌",
+   "title": "低毛利原来是主动选择",
    "quote": {
-    "src": "Munger public letters and historical record",
-    "line": "archival excerpt",
-    "text": "The public record preserves the decision context, the evidence, and the consequences.",
-    "orig": "The public record preserves the decision context, the evidence, and the consequences."
+    "src": "好市多年报与查理·芒格公开记录",
+    "line": "会员制与经营模式节选",
+    "text": "低价吸引会员，续费积累信任，快速周转减少资本占用；三者组成同一套经营系统。",
+    "orig": "低价吸引会员，续费积累信任，快速周转减少资本占用；三者组成同一套经营系统。"
    },
    "lines": [
-    "History lets you inspect the ending. The skill is learning what could have been known before the ending."
-   ]
+    "好市多长期坚持有限加价和会员制，续费与周转共同支撑这套低毛利模式。"
+   ],
+   "narration": "现在回头看你的选择。当时抓住决定局面的那条线，比猜中结局更重要。"
   },
   {
    "id": "s4",
    "kind": "contrast",
-   "eyebrow": "Debrief",
-   "title": "What the method adds",
+   "eyebrow": "收获",
+   "title": "回看你刚才的决定",
    "columns": {
-    "you": "Your choice",
-    "them": "Transferable method"
+    "you": "你的选择",
+    "them": "这次事件留下的方法",
+    "canon": "历史记录"
    },
-   "them": "Learn how low margin, high turnover, membership, and capital returns work as one system.",
-   "canon": "Use turnover, unit economics, and quality versus price as separate checks.",
-   "knowhow": "Make the decision explainable before you make it confident."
+   "them": {
+    "t": "不要把低毛利自动翻译成差生意。先看它换来了什么。",
+    "detail": "续费率、周转和资本回报要一起看。"
+   },
+   "canon": {
+    "t": "好市多长期坚持有限加价和会员制，续费与周转共同支撑这套低毛利模式。",
+    "detail": "看懂好公司之后，仍要单独回答价格问题。",
+    "src": "好市多年报与查理·芒格公开记录"
+   },
+   "knowhow": [
+    "不要把低毛利自动翻译成差生意。先看它换来了什么。",
+    "续费率、周转和资本回报要一起看。",
+    "看懂好公司之后，仍要单独回答价格问题。"
+   ],
+   "narration": "这次不用记住结局。记住下一次遇到类似材料时，你先查什么。"
   },
   {
    "id": "s5",
    "kind": "abstract",
-   "eyebrow": "Method card",
-   "title": "A reusable decision loop",
-   "rule": "Turn an exciting story into a falsifiable question, then price the uncertainty.",
-   "label": "turnover -> unit economics -> quality versus price",
-   "boundary": "No single ratio, headline, or reputation can replace the full chain.",
-   "formula": "Decision quality = evidence clarity x risk budget x reviewability"
+   "eyebrow": "收获",
+   "title": "先画系统，再看单个比率",
+   "story_form": "毛利压得这么低，看起来不像好生意。可会员却一年又一年回来。",
+   "rule": "低价带来什么？会员为什么续费？周转如何减少资本占用？哪一环先坏？",
+   "formula": "零售飞轮 = 低价 × 信任 × 续费 × 周转",
+   "label": "低价 → 信任 → 续费 → 周转 → 回报",
+   "boundary": "低价没有带来复购和周转，或者扩张持续吞噬资本时",
+   "narration": "方法不是一句口号。它要能告诉你下一步去哪找证据。"
   },
   {
    "id": "s6",
    "kind": "twin",
-   "eyebrow": "Transfer question",
-   "title": "A new case arrives",
+   "eyebrow": "尾声",
+   "title": "另一家低毛利零售商出现了",
    "panel": {
     "kind": "cmp",
     "cols": [
-     "Step",
-     "Question"
+     "先做什么",
+     "为什么"
     ],
     "rows": [
      {
-      "k": "First",
-      "a": "What is the claim?",
-      "b": "What could verify it?"
+      "k": "第一步",
+      "a": "写下要验证的判断",
+      "b": "避免先被故事带走"
      },
      {
-      "k": "Second",
-      "a": "What breaks it?",
-      "b": "What is the loss path?"
+      "k": "第二步",
+      "a": "写下判断失效的条件",
+      "b": "给自己留下改口的证据"
      }
     ]
    },
-   "question": "What is the strongest next move?",
+   "question": "怎样判断它是不是同一种生意？",
    "options": [
     {
      "id": "a",
-     "t": "Write a falsifiable claim and a failure case",
+     "t": "看低价是否同时带来复购、周转和资本效率",
      "ok": true
     },
     {
      "id": "b",
-     "t": "Use the famous investor as the thesis",
+     "t": "只要毛利率同样低，就按好市多估值",
      "ok": false
     }
    ],
-   "fb": "A famous investor can give you a method. The evidence still has to be yours."
+   "fb": "相同的毛利率可以来自竞争力，也可以来自卖不动。要看整个系统。",
+   "narration": "你已经把这次事件里的方法带到了一个新现场。"
   }
  ],
  "x_prov": {
-  "drafted_by": "automated-rpg-seed",
-  "model": "frozen-historical-scaffold",
+  "drafted_by": "content-rewrite",
+  "model": "historical-rpg-zh",
   "drafted_at": "2026-09-20",
-  "reviewed_by": "content-migration-auto",
+  "reviewed_by": "automated-copy-migration",
   "reviewed_at": "2026-09-20",
-  "reviewed_hash": "178e5fc73bd3013a"
+  "reviewed_hash": "e05a0be847b23aa9"
  }
 }

@@ -2,7 +2,7 @@
  "case_id": "buffett-1993",
  "title": "用什么付钱",
  "subtitle": "1993 年 11 月 · 一笔看起来很像好生意的收购",
- "company": "Dexter Shoe Company / Berkshire Hathaway",
+ "company": "德克斯特鞋业与伯克希尔·哈撒韦",
  "era": "1993",
  "status": "settled",
  "hook": "前两个案例讲识别造假，这个案例讲的是另一件事：一个连他自己都算错过的东西。",
@@ -10,7 +10,7 @@
  "twin_case_ref": "sunbeam-1998",
  "rpg": {
   "title": "一笔看似稳妥的收购，谁来承担代价？",
-  "premise": "1993 年 11 月，Dexter 是一家盈利、有品牌、有渠道的鞋业公司。你要在交易签字前，决定自己究竟交出什么。",
+  "premise": "1993 年 11 月，德克斯特 是一家盈利、有品牌、有渠道的鞋业公司。你要在交易签字前，决定自己究竟交出什么。",
   "initial_scene": "deal-room",
   "roles": [
    {
@@ -45,7 +45,7 @@
     "time": "下午四点",
     "title": "一门看起来很稳的生意",
     "lines": [
-     "Dexter 有四个缅因工厂、两个波多黎各工厂，产品进入大型连锁和军方 PX。",
+     "德克斯特 有四个缅因工厂、两个波多黎各工厂，产品进入大型连锁和军方商店。",
      "桌上尚未落笔的地方，是支付方式。"
     ],
     "role_lines": {
@@ -159,7 +159,7 @@
  "cast": [
   {
    "id": "buffett",
-   "name": "Warren E. Buffett",
+   "name": "沃伦·巴菲特",
    "avatar": "🎩",
    "role": "买方 · 伯克希尔·哈撒韦董事长",
    "intro": "他不为自己辩护。14 年后他自己把这笔交易写成了反面教材。你听到的每句话，都是他公开写下的。",
@@ -175,7 +175,7 @@
    "title": "一门看起来很稳的生意",
    "lines": [
     "缅因州，一家做男女休闲鞋的制造商。四个工厂在缅因，两个在波多黎各。",
-    "77 家自营门店，产品还卖进 Famous Footwear 这样的大型连锁和军方 PX。",
+    "77 家自营门店，产品还卖进 费默斯鞋店 这样的大型连锁和军方商店。",
     "它盈利、有品牌、有渠道。买家是当时已经被称为最好的投资者的那个人。",
     "他决定买下它的 100%。"
    ],
@@ -183,26 +183,26 @@
    "context": [
     {
      "date": "1956",
-     "t": "Harold Alfond 以一万美元资本在缅因州创办 Dexter，此前他是制鞋厂的计时工。",
+     "t": "哈罗德·阿尔方德 以一万美元资本在缅因州创办 德克斯特，此前他是制鞋厂的计时工。",
      "src": "1993 年致股东信",
      "line": "L193–L195"
     },
     {
      "date": "1991",
-     "t": "伯克希尔收购做工作鞋的 H. H. Brown。这笔买卖成了赢家，结果远超当初的期望。",
+     "t": "伯克希尔收购做工作鞋的 布朗鞋业。这笔买卖成了赢家，结果远超当初的期望。",
      "src": "1993 年致股东信",
      "line": "L177–L182"
     },
     {
      "date": "1992 年底",
-     "t": "又收购了女鞋与护士鞋厂 Lowell Shoe。同样，结果超出预期。",
+     "t": "又收购了女鞋与护士鞋厂 洛厄尔鞋业。同样，结果超出预期。",
      "src": "1993 年致股东信",
      "line": "L183–L186"
     },
     {
      "date": "1993-11-07",
-     "t": "伯克希尔以重新发行的 25,203 股库存普通股换取 Dexter 100% 股权，合并完成。",
-     "src": "老 Berkshire FY1993 10-K",
+     "t": "伯克希尔以重新发行的 25,203 股库存普通股换取 德克斯特 100% 股权，合并完成。",
+     "src": "老伯克希尔 1993 财年 10-K",
      "line": "L378–L380"
     }
    ]
@@ -240,7 +240,7 @@
      },
      {
       "k": "取得",
-      "a": "Dexter 100% 已发行普通股",
+      "a": "德克斯特 100% 已发行普通股",
       "b": ""
      }
     ]
@@ -282,15 +282,16 @@
    "eyebrow": "14 年后，买家自己写道",
    "title": "「我做过的最差的一笔交易」",
    "quote": {
-    "text": "Finally, I made an even worse mistake when I said \"yes\" to Dexter, a shoe business I bought in 1993 for <b>$433 million in Berkshire stock (25,203 shares of A)</b>. What I had assessed as durable competitive advantage vanished within a few years. But that's just the beginning: <b>By using Berkshire stock, I compounded this error hugely.</b> That move made the cost to Berkshire shareholders not $400 million, but rather <b>$3.5 billion</b>. In essence, I gave away 1.6% of a wonderful business — one now valued at $220 billion — to buy a worthless business.",
+    "text": "最后，我还犯了一个更糟的错误：我答应收购德克斯特，以<b>价值 4.33 亿美元的伯克希尔股票，也就是 25,203 股 A 类股</b>支付对价。我以为它拥有持久的竞争优势，没过几年，这项优势就消失了。但这还只是开始：<b>用伯克希尔股票支付，让这个错误被大幅放大。</b>这笔交易给伯克希尔股东造成的代价从 4 亿美元放大到<b>35 亿美元</b>。说到底，我拿一家优秀企业的 1.6% 去换了一门毫无价值的生意，而那家优秀企业如今价值 2,200 亿美元。",
+    "orig": "Finally, I made an even worse mistake when I sa id “yes” to Dexter, a shoe business I bought in 1993 for $433 million in Berkshire stock (25,203 shares of A). What I had assessed as durable competitive advantage vanished within a few years. But that’s just the beginning: By using Berkshire stock, I compounded this error hugely. That move made the cost to Berkshire shareholders not $400 million, but rather $3.5 billion. In essence, I gave away 1.6% of a wonderful business – one now valued at $220 billion – to buy a worthless business.",
     "src": "伯克希尔·哈撒韦 2007 年致股东信（原文英文，逐字引用）",
-    "line": "p.8（Mistakes 段）",
+    "line": "p.8（“失误”一节）",
     "fact": "brk-dexter-2007"
    },
    "lines": [
     "生意判断错了，代价是 4.33 亿。",
     "用股票付钱这个决定，把代价放大到了 35 亿。",
-    "同一封信里他还写：「To date, Dexter is the worst deal that I've made.」"
+    "同一封信里他还写：“到今天为止，德克斯特是我做过最差的一笔交易。”"
    ],
    "narration": "他没有被骗，没有人对他造假。他只是在两件事上算错了，而第二件多数人根本不会去算。"
   },
@@ -306,12 +307,12 @@
    },
    "them": {
     "t": "用股票。",
-    "detail": "1993 年 11 月 7 日，重新发行 25,203 股库存 A 类普通股，换取 Dexter 100% 股权，对价记为 433,012 千美元。当年年报把这门生意描述为盈利、有品牌、有自营渠道。"
+    "detail": "1993 年 11 月 7 日，重新发行 25,203 股库存 A 类普通股，换取 德克斯特 100% 股权，对价记为 433,012 千美元。当年年报把这门生意描述为盈利、有品牌、有自营渠道。"
    },
    "canon": {
     "t": "他把这笔交易称为自己做过的最差的一笔，并指出让错误被放大的是用股票而不是现金支付。",
     "detail": "生意误判的代价约 4.33 亿；支付方式误判把代价推到约 35 亿：交出去的那部分股权，后来变得远比当初值钱。他给出的失误原因是：他评估中的「持久竞争优势」在几年内消失了。",
-    "src": "伯克希尔 2007 年致股东信；交易条款见老 Berkshire FY1993 10-K（EDGAR acc 0000950150-94-000443）",
+    "src": "伯克希尔 2007 年致股东信；交易条款见老伯克希尔 1993 财年 10-K（EDGAR 归档号 0000950150-94-000443）",
     "fact": "brk-dexter-2007"
    },
    "knowhow": [
@@ -342,8 +343,8 @@
    "panel": {
     "kind": "cmp",
     "cols": [
-     "Sunbeam 1997",
-     "Dexter 1993"
+     "新光 1997",
+     "德克斯特 1993"
     ],
     "rows": [
      {
@@ -391,7 +392,7 @@
   }
  ],
  "interrogation": {
-  "opening": "「Dexter 不需要修补。它是我见过管理最好的公司之一。」",
+  "opening": "「德克斯特 不需要修补。它是我见过管理最好的公司之一。」",
   "howto": "他会先讲当年的判断。用你手上的卡去问那个当年没人问的问题。",
   "cards": [
    {
@@ -413,12 +414,12 @@
   "testimony": [
    {
     "id": "t1",
-    "text": "「1993 年 11 月 7 日，Berkshire Hathaway Inc. 完成与 Dexter 的合并，方式为<b>重新发行其持有的 25,203 股库存普通股</b>，以换取 Dexter 100% 的已发行普通股。」",
-    "src": "老 Berkshire FY1993 10-K",
+    "text": "「1993 年 11 月 7 日，伯克希尔·哈撒韦 完成与 德克斯特 的合并，方式为<b>重新发行其持有的 25,203 股库存普通股</b>，以换取 德克斯特 100% 的已发行普通股。」",
+    "src": "老伯克希尔 1993 财年 10-K",
     "line": "L378–L380（对价 433,012 千美元见 L2661）",
     "press": {
-     "text": "「Dexter 制造并销售男女休闲鞋，在缅因州有四个生产设施、波多黎各有两个，并在全美经营 77 家零售门店；主要客户为 Famous Footwear 等大型连锁与军方 PX。」",
-     "src": "老 Berkshire FY1993 10-K",
+     "text": "「德克斯特 制造并销售男女休闲鞋，在缅因州有四个生产设施、波多黎各有两个，并在全美经营 77 家零售门店；主要客户为 费默斯鞋店 等大型连锁与军方商店。」",
+     "src": "老伯克希尔 1993 财年 10-K",
      "line": "L380–L396",
      "coach": "一门扎实的生意。1993 年的判断没有明显破绽，<b>这个案例的问题不在「买什么」。</b>",
      "orig": "Dexter manufactures and markets men's and women's casual footwear. All products are manufactured and sold under the trademark Dexter. The company specializes in the construction of Handsewns, Welts and Cements."
@@ -426,10 +427,11 @@
     "breaks": [
      {
       "card": "c-later",
-      "text": "「By using Berkshire stock, I compounded this error hugely. That move made the cost to Berkshire shareholders <b>not $400 million, but rather $3.5 billion</b>. In essence, I gave away 1.6% of a wonderful business — one now valued at $220 billion — to buy a worthless business.」",
+      "text": "“用伯克希尔股票支付，让这个错误被大幅放大。表面代价是 4 亿美元，最终给伯克希尔股东造成了<b>35 亿美元</b>的损失。说到底，我拿一家优秀企业的 1.6% 去换了一门毫无价值的生意，而那家优秀企业如今价值 2,200 亿美元。”",
+      "orig": "By using Berkshire stock, I compounded this error hugely. That move made the cost to Berkshire shareholders not $400 million, but rather $3.5 billion. In essence, I gave away 1.6% of a wonderful business — one now valued at $220 billion — to buy a worthless business.",
       "src": "伯克希尔 2007 年致股东信（逐字）",
-      "line": "p.8（Mistakes 段）",
-      "coach": "你问到了那个 1993 年没人问的问题。生意判断错了，代价 4.33 亿；用股票支付这个决定，把代价变成 35 亿。他同一封信里写：「To date, Dexter is the worst deal that I've made.」<b>没有人骗他。他自己算错了两次，而第二次多数人根本不会去算。</b>",
+      "line": "第 8 页“失误”一节",
+      "coach": "你问到了那个 1993 年没人问的问题。生意判断错了，代价 4.33 亿；用股票支付这个决定，把代价变成 35 亿。他同一封信里写：“到今天为止，德克斯特是我做过最差的一笔交易。”<b>没有人骗他。他自己算错了两次，而第二次多数人根本不会去算。</b>",
       "unlock": null,
       "anchors": [
        {
@@ -453,7 +455,7 @@
    },
    {
     "id": "b2",
-    "text": "「去年我们抓住机会收购了缅因州德克斯特的 Dexter 鞋业，它生产平价的男鞋和女鞋。我可以向你保证，Dexter 不需要任何修补：它是查理和我在职业生涯里见过的管理最好的公司之一。」",
+    "text": "「去年我们抓住机会收购了缅因州德克斯特的 德克斯特 鞋业，它生产平价的男鞋和女鞋。我可以向你保证，德克斯特 不需要任何修补：它是查理和我在职业生涯里见过的管理最好的公司之一。」",
     "src": "1993 年致股东信（1994-03-01 落款，收购四个月后）",
     "line": "L187–L191",
     "anchors": [
@@ -464,7 +466,7 @@
     ],
     "orig": "at the chance last year to acquire Dexter Shoe of Dexter, Maine, which manufactures popular-priced men's and women's shoes. Dexter, I can assure you, needs no fixing: It is one of the best-managed companies Charlie and I have seen in our business lifetimes.",
     "press": {
-     "text": "「大家都说美国本土制鞋业竞争不过低工资国家的进口货。但有人忘了把这件事告诉 Dexter 和 H. H. Brown 那些足智多谋的管理层，以及他们熟练的工人，两家公司的美国工厂对所有对手都极具竞争力。」",
+     "text": "「大家都说美国本土制鞋业竞争不过低工资国家的进口货。但有人忘了把这件事告诉 德克斯特 和 布朗鞋业 那些足智多谋的管理层，以及他们熟练的工人，两家公司的美国工厂对所有对手都极具竞争力。」",
      "src": "1993 年致股东信（1994-03-01 落款）",
      "line": "L198–L204",
      "coach": "这是他当时给「持久竞争优势」下的判断。记住这句话，揭晓之后回来对照。",
@@ -474,7 +476,7 @@
    },
    {
     "id": "b3",
-    "text": "「我们相信 Harold 和 Peter（他们对现金不感兴趣）用 Dexter 股票换伯克希尔股份是一个明智的决定。他们实际上是用一家极好生意的全部权益，换取了一大批极好生意的较小份额。」",
+    "text": "「我们相信 哈罗德 和 彼得（他们对现金不感兴趣）用 德克斯特 股票换伯克希尔股份是一个明智的决定。他们实际上是用一家极好生意的全部权益，换取了一大批极好生意的较小份额。」",
     "src": "1993 年致股东信（1994-03-01 落款，收购四个月后）",
     "line": "L234–L239",
     "anchors": [
@@ -485,7 +487,7 @@
     ],
     "orig": "we believe that Harold and Peter (who were not interested in cash) made a sound decision in exchanging their Dexter stock for shares of Berkshire. What they did, in effect, was trade a 100% interest in a single terrific business for a smaller interest in a large group of terrific businesses.",
     "press": {
-     "text": "「在伯克希尔，我们对未来没有任何一种会决定我们进入哪些行业的看法。我们更愿意聚焦于我们想拥有的生意的经济特征、以及我们想与之共事的经理人的个人品质，然后指望运气好，两样同时碰上。在 Dexter，我们碰上了。」",
+     "text": "「在伯克希尔，我们对未来没有任何一种会决定我们进入哪些行业的看法。我们更愿意聚焦于我们想拥有的生意的经济特征、以及我们想与之共事的经理人的个人品质，然后指望运气好，两样同时碰上。在 德克斯特，我们碰上了。」",
      "src": "1993 年致股东信（1994-03-01 落款）",
      "line": "L223–L230",
      "coach": "注意这一段讲的是<b>他为什么愿意付</b>，没有讲<b>用什么付</b>。用股票还是用现金，那是另一个决定。",
@@ -503,8 +505,8 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "content-migration-auto",
+  "reviewed_by": "automated-copy-migration",
   "reviewed_at": "2026-09-20",
-  "reviewed_hash": "d8656f21aeeb60b9"
+  "reviewed_hash": "a1fbb29031a76b45"
  }
 }

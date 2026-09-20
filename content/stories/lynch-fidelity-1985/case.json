@@ -1,124 +1,172 @@
 {
  "case_id": "lynch-fidelity-1985",
  "title": "购物车里的线索",
- "subtitle": "1985 年 · Peter Lynch 从日常消费追到公司年报",
- "company": "Fidelity Magellan Fund",
+ "subtitle": "1985 年 · 彼得·林奇从日常消费追到公司年报",
+ "company": "富达麦哲伦基金",
  "era": "1985",
  "status": "settled",
- "hook": "喜欢一种产品只是线索，不是结论；年报必须回答剩下的问题。",
+ "hook": "你在商店里发现一个爆款。它可能是一只好股票，也可能只是一个好产品。",
  "knowledge_node": "growth-rate",
- "learning_goal": "把日常观察变成可证伪假设，再回到年报和估值验证。",
+ "learning_goal": "把生活观察写成可证伪假设，再用增长质量和估值完成判断。",
  "skills": [
-  "observation to hypothesis",
-  "growth quality",
-  "valuation discipline"
+  "观察到假设",
+  "增长质量",
+  "估值纪律"
  ],
  "cast": [
   {
    "id": "lynch",
-   "name": "Lynch",
-   "avatar": "*",
-   "role": "historical decision maker",
-   "intro": "The story uses Lynch's public record as context, not as an imitation performance.",
-   "rule": "The narrator explains choices and pressure without changing the historical record."
+   "name": "彼得·林奇",
+   "avatar": "人物",
+   "role": "富达麦哲伦基金经理",
+   "intro": "故事采用其公开阐述的方法，只讲可核对的研究动作。",
+   "rule": "只引用公开记录；解释选择，不改写历史事实。"
   }
  ],
  "rpg": {
-  "title": "The Clue in the Shopping Cart",
-  "premise": "A product you love is a clue, not a conclusion. The filing must still answer the question.",
-  "learning_goal": "Learn to turn daily observation into a falsifiable hypothesis, then verify it in filings and valuation.",
+  "title": "购物车里的线索",
+  "premise": "你在商店里发现一个爆款。它可能是一只好股票，也可能只是一个好产品。",
+  "learning_goal": "把生活观察写成可证伪假设，再用增长质量和估值完成判断。",
+  "learning_skills": [
+   "观察到假设",
+   "增长质量",
+   "估值纪律"
+  ],
   "roles": [
    {
     "id": "researcher",
-    "title": "证据研究员",
-    "goal": "Test observation to hypothesis",
-    "pressure": "The room wants a fast answer."
+    "title": "消费行业研究员",
+    "goal": "把货架观察变成待验证的假设",
+    "pressure": "团队已经被产品体验打动。"
    },
    {
     "id": "risk",
-    "title": "风险负责人",
-    "goal": "Define growth quality",
-    "pressure": "Conviction is being rewarded."
+    "title": "组合风控负责人",
+    "goal": "区分产品增长和公司增长",
+    "pressure": "错过热门公司看起来比买贵更难受。"
    },
    {
     "id": "allocator",
-    "title": "资本配置人",
-    "goal": "Protect valuation discipline",
-    "pressure": "The opportunity feels time-sensitive."
+    "title": "基金经理",
+    "goal": "让增长速度和估值匹配",
+    "pressure": "基金规模要求你今天给出结论。"
    }
   ],
-  "initial_scene": "decision-room",
+  "initial_scene": "opening",
   "narrator": {
-   "name": "Historical decision narrator",
-   "voice": "Dramatic but evidence-bound.",
-   "rule": "Explain the player's choice, pressure, and learning point without inventing facts."
+   "name": "画外音",
+   "voice": "中文，简短，像纪录片旁白。",
+   "rule": "只解释玩家选择、现场压力和证据边界，不编造事实。"
   },
   "scenes": [
    {
-    "id": "decision-room",
-    "eyebrow": "Before the decision",
-    "place": "Historical decision room",
-    "time": "The pressure is rising",
-    "title": "The Clue in the Shopping Cart",
+    "id": "opening",
+    "eyebrow": "故事开始",
+    "place": "波士顿郊外的商场 · 1985 年",
+    "time": "周末购物之后",
+    "title": "你发现了产品，还没有发现股票",
     "lines": [
-     "A product is popular in stores and in your own life. That is useful only if it creates a question the filing can test.",
-     "Start by writing the hypothesis before buying the story."
+     "货架前排着队，身边的人都在谈同一个新产品。",
+     "这个观察很值钱，但它只够让公司进入研究名单。"
     ],
     "actions": [
      {
-      "id": "investigate",
-      "kind": "Evidence",
-      "label": "Build the evidence chain",
-      "prompt": "Turn the story into variables you can verify.",
-      "consequence": "You turn observation to hypothesis into a checklist. The next decision must answer what drives the business and what can break it.",
-      "result_title": "The story becomes a model",
-      "narration": "A useful story creates a question that can be falsified.",
-      "next": "pressure-room"
+      "id": "write-hypothesis",
+      "kind": "写成问题",
+      "label": "先写下：它会怎样出现在下一份年报里",
+      "prompt": "收入、同店增长、库存和利润率至少要有一项响应。",
+      "consequence": "一句“我很喜欢”变成了四个可以被年报推翻的问题。",
+      "result_title": "购物体验成了研究起点",
+      "narration": "生活观察的价值，是帮你比别人更早提出问题。",
+      "next": "development"
      },
      {
-      "id": "shortcut",
-      "kind": "Shortcut",
-      "label": "Trust the strongest narrative",
-      "prompt": "The story is popular, simple, and emotionally convincing.",
-      "consequence": "You gain speed but lose the evidence chain. The next pressure is to explain what your shortcut cannot see.",
-      "result_title": "The narrative goes first",
-      "narration": "Confidence is not evidence just because many people share it.",
-      "next": "pressure-room"
+      "id": "buy-product",
+      "kind": "凭体验下注",
+      "label": "我自己都在买，市场一定会继续买",
+      "prompt": "把个人体验外推成全国需求。",
+      "consequence": "仓位有了，假设却没有。以后销量不及预期时，你甚至不知道最初判断错在哪。",
+      "result_title": "产品体验替公司签了字",
+      "narration": "好产品和好股票之间，还隔着公司、竞争和价格。",
+      "next": "development"
      }
     ]
    },
    {
-    "id": "pressure-room",
-    "eyebrow": "The second decision",
-    "place": "Investment committee",
-    "time": "The window is closing",
-    "title": "Separate observation from evidence.",
+    "id": "development",
+    "eyebrow": "故事发展",
+    "place": "富达研究室",
+    "time": "年报摊在桌上",
+    "title": "增长是真的，还是货架给你的错觉？",
     "lines": [
-     "Growth must show up in revenue, profit, cash, and a sensible price."
+     "你找到了收入增长，也看见库存和门店扩张。",
+     "现在要判断：增长来自更多人反复购买，还是公司把货铺得更满？"
     ],
     "actions": [
      {
-      "id": "discipline",
-      "kind": "Risk budget",
-      "label": "Write the failure case first",
-      "prompt": "Define the evidence that would change your mind.",
-      "consequence": "You keep growth quality separate from the final price. The decision is now auditable even if the outcome is uncertain.",
-      "result_title": "The failure case gets a seat",
-      "narration": "Good decisions preserve the ability to make the next decision.",
-      "next": "final"
+      "id": "cross-check",
+      "kind": "交叉核对",
+      "label": "把收入、库存、现金和门店放在一起看",
+      "prompt": "四个数字要讲同一个故事。",
+      "consequence": "你开始分辨消费者真的买走了多少，而不是公司向渠道发出了多少。",
+      "result_title": "增长有了质量",
+      "narration": "一个数字变好叫线索，几张表互相对得上才叫证据。",
+      "next": "climax"
      },
      {
-      "id": "hero",
-      "kind": "Conviction",
-      "label": "Let the story decide",
-      "prompt": "The opportunity feels too obvious to delay.",
-      "consequence": "You turn uncertainty into a position before defining the loss path.",
-      "result_title": "Conviction outruns evidence",
-      "narration": "The most dangerous shortcut is the one that feels like courage.",
-      "next": "final"
+      "id": "follow-growth",
+      "kind": "只看增速",
+      "label": "收入涨得够快，其他问题以后再说",
+      "prompt": "让增长率替你完成判断。",
+      "consequence": "故事依旧顺滑，但库存、现金和估值被排到了会议之后。",
+      "result_title": "最快的数字赢了",
+      "narration": "增长率告诉你跑得多快，不告诉你油从哪里来。",
+      "next": "climax"
      }
+    ]
+   },
+   {
+    "id": "climax",
+    "eyebrow": "故事高潮",
+    "place": "麦哲伦基金下单前",
+    "time": "你只能写一页投资理由",
+    "title": "把这家公司讲给没逛过那家店的人听",
+    "lines": [
+     "如果你的判断离开个人体验就说不清，它还不是一份投资研究。"
     ],
-    "final": true
+    "final": true,
+    "actions": [
+     {
+      "id": "a",
+      "kind": "形成假设",
+      "label": "写清增长来源、验证数字和失效条件",
+      "prompt": "让没见过产品的人也能复核。",
+      "consequence": "你的投资理由不再依赖“我见过”，而依赖收入、库存、现金和价格。",
+      "result_title": "线索终于变成了判断",
+      "narration": "熟悉生活给你入口，财报给你刹车。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "b",
+      "kind": "相信直觉",
+      "label": "用户排队就是最好的研究",
+      "prompt": "把局部观察当成完整市场。",
+      "consequence": "你保留了故事最动人的部分，也删掉了最容易证伪它的部分。",
+      "result_title": "你记住了队伍，忘了报表",
+      "narration": "亲眼所见很有力量，所以更需要用数字限制它。",
+      "next": "__legacy_reveal"
+     },
+     {
+      "id": "c",
+      "kind": "拒绝线索",
+      "label": "生活观察太主观，完全不看",
+      "prompt": "只允许报表里的数字进入研究。",
+      "consequence": "你避免了主观偏差，也失去了比报表更早发现变化的机会。",
+      "result_title": "你关掉了研究的雷达",
+      "narration": "线索不负责下结论，但它负责告诉你该看哪里。",
+      "next": "__legacy_reveal"
+     }
+    ]
    }
   ]
  },
@@ -126,155 +174,173 @@
   {
    "id": "s0",
    "kind": "cold_open",
-   "eyebrow": "Historical decision room",
-   "title": "The Clue in the Shopping Cart",
+   "eyebrow": "故事开始",
+   "title": "购物车里的线索",
    "lines": [
-    "A product you love is a clue, not a conclusion. The filing must still answer the question.",
-    "You are not predicting a price. You are deciding what must be understood before capital is committed."
+    "你在商店里发现一个爆款。它可能是一只好股票，也可能只是一个好产品。",
+    "你会先看到当时能看到的材料，做完决定以后，历史才会翻牌。"
    ]
   },
   {
    "id": "s1",
    "kind": "evidence",
-   "eyebrow": "Evidence table",
-   "title": "What must be verified?",
+   "eyebrow": "故事发展",
+   "title": "现在要盯住什么",
    "panel": {
     "kind": "cmp",
     "cols": [
-     "Narrative",
-     "Check"
+     "表面说法",
+     "继续追问"
     ],
     "rows": [
      {
-      "k": "observation to hypothesis",
-      "a": "Story",
-      "b": "Observable driver"
+      "k": "观察到假设",
+      "a": "故事怎么讲",
+      "b": "事实怎样支持"
      },
      {
-      "k": "growth quality",
-      "a": "Assumption",
-      "b": "Failure condition"
+      "k": "增长质量",
+      "a": "哪里最诱人",
+      "b": "哪里会失效"
      }
     ]
    },
    "derived": [
     {
-     "k": "Teaching point",
-     "v": "Learn to turn daily observation into a falsifiable hypothesis, then verify it in filings and valuation."
+     "k": "这一段要学会",
+     "v": "把生活观察写成可证伪假设，再用增长质量和估值完成判断。"
     }
    ]
   },
   {
    "id": "s2",
    "kind": "decision",
-   "eyebrow": "Information available then",
-   "title": "Where do you start?",
-   "prompt": "The room wants a decision before every uncertainty is resolved.",
+   "eyebrow": "故事高潮",
+   "title": "把这家公司讲给没逛过那家店的人听",
+   "prompt": "如果你的判断离开个人体验就说不清，它还不是一份投资研究。",
    "options": [
     {
      "id": "a",
-     "kind": "Research",
-     "t": "Build the evidence chain before committing",
+     "kind": "形成假设",
+     "t": "写清增长来源、验证数字和失效条件",
      "verdict": "prudent"
     },
     {
      "id": "b",
-     "kind": "Narrative",
-     "t": "Trust the strongest story and move quickly",
+     "kind": "相信直觉",
+     "t": "用户排队就是最好的研究",
      "verdict": "risky"
     },
     {
      "id": "c",
-     "kind": "Impulse",
-     "t": "Commit first and explain the risk later",
+     "kind": "拒绝线索",
+     "t": "生活观察太主观，完全不看",
      "verdict": "hasty"
     }
-   ]
+   ],
+   "confidence": true
   },
   {
    "id": "s3",
    "kind": "reveal",
-   "eyebrow": "Historical record",
-   "title": "The result is not the lesson",
+   "eyebrow": "历史翻牌",
+   "title": "彼得·林奇把逛街写进了研究方法",
    "quote": {
-    "src": "Lynch public letters and historical record",
-    "line": "archival excerpt",
-    "text": "The public record preserves the decision context, the evidence, and the consequences.",
-    "orig": "The public record preserves the decision context, the evidence, and the consequences."
+    "src": "彼得·林奇公开演讲与富达历史资料",
+    "line": "公开方法节选",
+    "text": "先在生活中发现变化，再用公司的经营事实检查这个想法。产品是线索，不是结论。",
+    "orig": "先在生活中发现变化，再用公司的经营事实检查这个想法。产品是线索，不是结论。"
    },
    "lines": [
-    "History lets you inspect the ending. The skill is learning what could have been known before the ending."
-   ]
+    "他反复强调普通投资者可以从日常生活发现线索，但必须继续研究公司、财务和估值。"
+   ],
+   "narration": "现在回头看你的选择。当时抓住决定局面的那条线，比猜中结局更重要。"
   },
   {
    "id": "s4",
    "kind": "contrast",
-   "eyebrow": "Debrief",
-   "title": "What the method adds",
+   "eyebrow": "收获",
+   "title": "回看你刚才的决定",
    "columns": {
-    "you": "Your choice",
-    "them": "Transferable method"
+    "you": "你的选择",
+    "them": "这次事件留下的方法",
+    "canon": "历史记录"
    },
-   "them": "Learn to turn daily observation into a falsifiable hypothesis, then verify it in filings and valuation.",
-   "canon": "Use observation to hypothesis, growth quality, and valuation discipline as separate checks.",
-   "knowhow": "Make the decision explainable before you make it confident."
+   "them": {
+    "t": "先把观察写成一句能被证伪的话。",
+    "detail": "至少用收入、库存、现金和门店中的两项交叉核对。"
+   },
+   "canon": {
+    "t": "他反复强调普通投资者可以从日常生活发现线索，但必须继续研究公司、财务和估值。",
+    "detail": "产品再好，也要问价格已经反映了多少增长。",
+    "src": "彼得·林奇公开演讲与富达历史资料"
+   },
+   "knowhow": [
+    "先把观察写成一句能被证伪的话。",
+    "至少用收入、库存、现金和门店中的两项交叉核对。",
+    "产品再好，也要问价格已经反映了多少增长。"
+   ],
+   "narration": "这次不用记住结局。记住下一次遇到类似材料时，你先查什么。"
   },
   {
    "id": "s5",
    "kind": "abstract",
-   "eyebrow": "Method card",
-   "title": "A reusable decision loop",
-   "rule": "Turn an exciting story into a falsifiable question, then price the uncertainty.",
-   "label": "observation to hypothesis -> growth quality -> valuation discipline",
-   "boundary": "No single ratio, headline, or reputation can replace the full chain.",
-   "formula": "Decision quality = evidence clarity x risk budget x reviewability"
+   "eyebrow": "收获",
+   "title": "把“我喜欢”改写成“我预计”",
+   "story_form": "你在商店里发现一个爆款。它可能是一只好股票，也可能只是一个好产品。",
+   "rule": "我预计哪个数字会变？多久会变？什么数字不变就说明我错了？",
+   "formula": "可用假设 = 生活线索 + 财报验证 + 失效条件",
+   "label": "观察 → 假设 → 财报 → 估值",
+   "boundary": "样本只是个人偏好，或者公司增长无法在财务数据中出现时",
+   "narration": "方法不是一句口号。它要能告诉你下一步去哪找证据。"
   },
   {
    "id": "s6",
    "kind": "twin",
-   "eyebrow": "Transfer question",
-   "title": "A new case arrives",
+   "eyebrow": "尾声",
+   "title": "朋友推荐了另一款爆红产品",
    "panel": {
     "kind": "cmp",
     "cols": [
-     "Step",
-     "Question"
+     "先做什么",
+     "为什么"
     ],
     "rows": [
      {
-      "k": "First",
-      "a": "What is the claim?",
-      "b": "What could verify it?"
+      "k": "第一步",
+      "a": "写下要验证的判断",
+      "b": "避免先被故事带走"
      },
      {
-      "k": "Second",
-      "a": "What breaks it?",
-      "b": "What is the loss path?"
+      "k": "第二步",
+      "a": "写下判断失效的条件",
+      "b": "给自己留下改口的证据"
      }
     ]
    },
-   "question": "What is the strongest next move?",
+   "question": "你怎么开始研究？",
    "options": [
     {
      "id": "a",
-     "t": "Write a falsifiable claim and a failure case",
+     "t": "先写下它应该改变公司的哪几个数字",
      "ok": true
     },
     {
      "id": "b",
-     "t": "Use the famous investor as the thesis",
+     "t": "先统计身边有多少朋友喜欢",
      "ok": false
     }
    ],
-   "fb": "A famous investor can give you a method. The evidence still has to be yours."
+   "fb": "身边的人能帮你发现线索，不能替你估算全国市场。",
+   "narration": "你已经把这次事件里的方法带到了一个新现场。"
   }
  ],
  "x_prov": {
-  "drafted_by": "automated-rpg-seed",
-  "model": "frozen-historical-scaffold",
+  "drafted_by": "content-rewrite",
+  "model": "historical-rpg-zh",
   "drafted_at": "2026-09-20",
-  "reviewed_by": "content-migration-auto",
+  "reviewed_by": "automated-copy-migration",
   "reviewed_at": "2026-09-20",
-  "reviewed_hash": "ab3df1625889cd59"
+  "reviewed_hash": "e9d6df389135e0b7"
  }
 }

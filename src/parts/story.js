@@ -153,9 +153,9 @@
   }
   function rpgDecisionGuide(s, available) {
     if (!available.length) return '';
-    const prompt = rpgText(s.prompt) || '这一刻要先决定：你准备验证哪一条证据链？';
-    return `<div class="rpg-guide"><div class="rpg-kicker">此刻要判断</div><p>${md(prompt)}</p>
-      <small>先看证据，再选行动。选择之后，你会看到它怎样改变现场，以及它遗漏了什么。</small></div>`;
+    const prompt = rpgText(s.prompt) || '如果这场会议由你拍板，你先做哪一步？';
+    return `<div class="rpg-guide"><div class="rpg-kicker">轮到你了</div><p>${md(prompt)}</p>
+      <small>按此刻的判断选。结果出现后，再看自己漏了什么。</small></div>`;
   }
   const RPG_SCENE_ZH = {
     'buffett-coke-1988': ['管理层把品牌、渠道和全球增长摆上桌面。你的任务，是把掌声拆成可以核对的经营变量。','先从单位经济学开始：客户愿意持续为哪一部分付钱？'],
@@ -213,7 +213,14 @@
     const conf = final && action ? `<div class="eyebrow rpg-conf-label">你对这个判断有多大把握？</div>
       <div class="seg2">${CONF.map(c => `<button data-rpg-conf="${c.v}" class="${ST.conf === c.v ? 'on' : ''}">${c.t}</button>`).join('')}</div>` : '';
     const nextDisabled = final ? !action || ST.conf == null : !action;
-    bodyEl.innerHTML = `<div class="eyebrow">${esc(rpgText(s.eyebrow || '现场'))}</div>
+    const nextScene = action && (r.scenes || []).find(x => x.id === action.next);
+    const nextLabel = final ? '揭开历史结果' : (nextScene?.eyebrow === '故事高潮' ? '进入最后决定' : '继续看局势怎么变');
+    const sceneIndex = (r.scenes || []).findIndex(x => x.id === s.id);
+    const basePhase = sceneIndex === 0 ? '故事开始' : (final ? '故事高潮' : '故事发展');
+    const ownPhase = rpgText(s.eyebrow || '');
+    const scenePhase = ownPhase && !['故事开始', '故事发展', '故事高潮'].includes(ownPhase)
+      ? `${basePhase} · ${ownPhase}` : (ownPhase || basePhase);
+    bodyEl.innerHTML = `<div class="eyebrow">${esc(rpgText(scenePhase))}</div>
       <div class="rpg-scene-meta"><span>${esc(rpgText(s.place || ''))}</span><span>${esc(rpgText(s.time || ''))}</span></div>
       <h2>${esc(s.id === 'pressure-room' && RPG_SECOND_ZH[STORY.case_id] ? RPG_SECOND_ZH[STORY.case_id][0] : (RPG_TITLE_ZH[STORY.case_id] && s.id === 'decision-room' ? RPG_TITLE_ZH[STORY.case_id] : rpgText(s.title)))}</h2>${rpgRoleCard()}
       ${(s.path_lines?.[ST.rpgPath] || s.role_lines?.[ST.role] || rpgLines(s)).map(x => `<p class="ln">${md(rpgText(x))}</p>`).join('')}
@@ -221,7 +228,7 @@
       ${action ? `<div class="rpg-result"><div class="rpg-kicker">发生了什么</div><div class="rpg-result-title">${esc(rpgText(action.result_title || '行动结果'))}</div>
         <p class="ln">${md(rpgText(action.consequence || ''))}</p>
         <p class="rpg-pressure" id="rpg-voice-${STORY.case_id}"><b>画外音</b>${md(voice)}</p></div>` : `${rpgDecisionGuide(s, available)}<div class="rpg-actions">${actions}</div>`}`;
-    footEl.innerHTML = action ? `${final ? conf : ''}<button class="sty-cta" id="rpg-next" ${nextDisabled ? 'disabled' : ''}>${final ? '进入原档揭示' : '继续'}</button>` : '';
+    footEl.innerHTML = action ? `${final ? conf : ''}<button class="sty-cta" id="rpg-next" ${nextDisabled ? 'disabled' : ''}>${nextLabel}</button>` : '';
     dotsEl.innerHTML = (r.scenes || []).map(x => `<i class="${x.id === s.id ? 'on' : ''}"></i>`).join('');
     if (action) narrateChoice(action, 'rpg-voice-' + STORY.case_id);
     bindRpg(s);
@@ -232,7 +239,7 @@
     const pressure = { researcher:'现场催你先给出依据。', risk:'大家都在奖励确信。', allocator:'机会看起来正在消失。' };
     bodyEl.innerHTML = `<div class="eyebrow">角色选择</div><h2>${esc(STORY.title || '选择你的身份')}</h2>
       <p class="ln">${md(STORY.hook || r.premise || '')}</p><div class="rpg-role-list">${(r.roles || []).map(x =>
-        `<button class="rpg-role-choice" data-rpg-role="${esc(x.id)}"><b>${esc(rpgText(x.title))}</b><span>${esc(goals[x.id] || rpgText(x.goal))}</span><small>${esc(pressure[x.id] || rpgText(x.pressure || ''))}</small></button>`).join('')}</div>`;
+        `<button class="rpg-role-choice" data-rpg-role="${esc(x.id)}"><b>${esc(rpgText(x.title))}</b><span>${esc(rpgText(x.goal) || goals[x.id])}</span><small>${esc(rpgText(x.pressure || '') || pressure[x.id])}</small></button>`).join('')}</div>`;
     bodyEl.insertAdjacentHTML('afterbegin', learningCard(STORY.rpg.learning_goal || STORY.learning_goal, STORY.rpg.learning_skills || STORY.skills));
     footEl.innerHTML = '';
     dotsEl.innerHTML = `<i class="on"></i>${(r.scenes || []).map(() => '<i></i>').join('')}`;
@@ -266,11 +273,7 @@
         ST.mode = 'legacy'; ST.i = STORY.beats.findIndex(x => x.kind === 'reveal');
         if (ST.i < 0) ST.i = 0;
       } else {
-        ST.rpgPath = ST.rpgAction; ST.rpgReturn = a.next; ST.rpgAction = 'continue'; ST.rpgVoice = null;
-        ST.rpgPressure = { place: s.place, time: s.time, title: a.result_title || '选择的后果',
-          lines: [`${a.label}之后，房间里的压力改变了。`],
-          consequence: a.consequence, result_title: a.result_title, narration: a.narration };
-        ST.sceneId = '__rpg_pressure__';
+        ST.rpgPath = ST.rpgAction; ST.sceneId = a.next; ST.rpgAction = null; ST.rpgVoice = null;
       }
       draw();
     };
@@ -292,6 +295,17 @@
       <div class="rpg-goal"><b>约束</b>${esc(r.role.constraint)}</div></div>`;
   }
 
+  function beatPhase(b) {
+    const phase = {
+      cold_open: '故事开始', evidence: '故事发展', consequence: '故事发展',
+      decision: '故事高潮', reveal: '历史翻牌', contrast: '收获',
+      abstract: '收获', twin: '尾声'
+    }[b.kind] || '故事发展';
+    const own = (b.eyebrow || '').trim();
+    const standard = new Set(['故事开始', '故事发展', '故事高潮', '历史翻牌', '收获', '尾声']);
+    return own && !standard.has(own) ? `${phase} · ${own}` : phase;
+  }
+
   /* ????????owner ??????????????????????????
      ?????????????????????????????????????? */
   function ctxStrip(items) {
@@ -303,12 +317,12 @@
   /* S0 ??? */
   function bCold(b) {
     return {
-      body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
+      body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${b.title}</h2>
         ${roleCard()}
         ${ctxStrip(b.context)}
         ${b.lines.map((l, i) => `<p class="ln${i === b.lines.length - 1 ? '' : ' dim'}">${md(l)}</p>`).join('')}
         ${vo(b.narration)}`,
-      foot: `<button class="sty-cta" id="sty-next">继续</button>`
+      foot: `<button class="sty-cta" id="sty-next">看看局势怎么变</button>`
     };
   }
 
@@ -317,7 +331,7 @@
     const path = (b.paths || {})[ST.pick] || {};
     const voiceId = 'rpg-voice-' + STORY.case_id;
     return {
-      body: `<div class="eyebrow">${b.eyebrow}</div><h2>${path.title || b.title}</h2>
+      body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${path.title || b.title}</h2>
         <div class="rpg-consequence"><p class="ln">${md(path.body || '')}</p>
           <p class="rpg-pressure"><b>画外音</b>${md(path.pressure || '')}</p></div>
         <div id="${voiceId}">${vo(path.narration || '')}</div>`,
@@ -329,7 +343,7 @@
   function narrateChoice(path, targetId) {
     const r = STORY.rpg, target = document.getElementById(targetId);
     if (!r || !r.narrator || !target || typeof BACKEND === 'undefined' || !BACKEND) return;
-    target.innerHTML = vo('The narrator is connecting your choice to the pressure in this event...');
+    target.innerHTML = vo('先别急着往下翻。画外音正在把你的选择放回当时的处境里。');
     const ctl = new AbortController();
     const tm = setTimeout(() => ctl.abort(), 12000);
     fetch(BACKEND + '/api/v1/story-narrate', {
@@ -346,7 +360,7 @@
   /* S1/S2 ??? */
   function bEvid(b) {
     return {
-      body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
+      body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${b.title}</h2>
         ${evPanel(b.panel)}${derived(b.derived)}
         <div class="qchips">${(b.panel.rows || []).filter(r => r.fact).map(r =>
           `<button data-f="${r.fact}">${ic('link')} ${r.k}</button>`).join('')}</div>
@@ -370,7 +384,7 @@
   function bDec(b) {
     const picked = ST.pick != null, conf = ST.conf != null;
     return {
-      body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
+      body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${b.title}</h2>
         <p class="ln">${b.prompt}</p>
         ${b.ask_enabled && STORY.interrogation ? (() => {
           const c = window.__court && window.__court.story === STORY ? window.__court.stats : null;
@@ -396,13 +410,14 @@
 
   /* S4 ?? */
   function bReveal(b) {
+    const factButton = b.quote.fact ? `<div class="qchips"><button data-f="${b.quote.fact}">${ic('link')} 查看原档</button></div>` : '';
     return {
-      body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
+      body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${b.title}</h2>
         ${docQuote(b.quote)}
         ${b.lines.map(l => `<p class="ln">${md(l)}</p>`).join('')}
-        <div class="qchips"><button data-f="${b.quote.fact}">${ic('link')} 查看原档</button></div>
+        ${factButton}
         ${vo(b.narration)}`,
-      foot: `<button class="sty-cta" id="sty-next">进入下一段</button>`,
+      foot: `<button class="sty-cta" id="sty-next">回看我的决定</button>`,
       bind() { bindFacts(); }
     };
   }
@@ -433,7 +448,7 @@
       save();
     }
     return {
-      body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
+      body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${b.title}</h2>
         <div class="trio">
           <div class="c you"><div class="lbl">${b.columns.you}</div>
             <div class="hd2">${mine.t}</div>
@@ -446,23 +461,25 @@
         ${readingHTML(mine)}
         <div class="kn"><h3>带走的方法</h3><ul>${b.knowhow.map(k => `<li>${md(k)}</li>`).join('')}</ul></div>
         ${vo(b.narration)}`,
-      foot: `<button class="sty-cta" id="sty-next">继续</button>`
+      foot: `<button class="sty-cta" id="sty-next">把方法说清楚</button>`
     };
   }
 
   /* S6 ???? */
   function bAbstract(b) {
+    const story = b.story_form ? `<div class="f"><div class="t">这次的故事</div><div class="b">${b.story_form}</div></div>` : '';
+    const boundary = b.boundary ? `<p class="ln dim">什么时候不能这么用：${b.boundary}</p>` : '';
     return {
-      body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
+      body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${b.title}</h2>
         <div class="fade3">
-          <div class="f"><div class="t">故事</div><div class="b">${b.story_form}</div></div>
-          <div class="f"><div class="t">规则</div><div class="b">${b.rule}</div></div>
-          <div class="f"><div class="t">公式</div><div class="b">${b.formula}</div></div>
-          <div class="f tag"><div class="t">适用边界</div><div class="b">${b.label}</div></div>
+          ${story}
+          <div class="f"><div class="t">下次先问</div><div class="b">${b.rule}</div></div>
+          <div class="f"><div class="t">记住这条关系</div><div class="b">${b.formula}</div></div>
+          <div class="f tag"><div class="t">检查顺序</div><div class="b">${b.label}</div></div>
         </div>
-        <p class="ln dim">边界：${b.boundary}</p>
+        ${boundary}
         ${vo(b.narration)}`,
-      foot: `<button class="sty-cta" id="sty-next">继续</button>`
+      foot: `<button class="sty-cta" id="sty-next">换个现场试一次</button>`
     };
   }
 
@@ -470,15 +487,15 @@
   function bTwin(b) {
     const answered = ST.twinOk != null;
     return {
-      body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
+      body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${b.title}</h2>
         ${evPanel(b.panel)}
         <p class="ln">${b.question}</p>
         ${b.options.map((o, i) => `<button class="choice${ST.twinPick === i ? ' on' : ''}" data-t="${i}" ${answered ? 'disabled' : ''}>${o.t}</button>`).join('')}
         ${answered ? `<div class="kn"><p style="font-size:17px;line-height:1.85;margin:0">${b.fb}</p></div>` : ''}
         ${answered ? vo(b.narration) : ''}`,
       foot: answered
-        ? `<button class="sty-cta" id="sty-done">完成案例</button>`
-        : `<button class="sty-cta" disabled>先选择一个答案</button>`,
+        ? `<button class="sty-cta" id="sty-done">收下这次判断</button>`
+        : `<button class="sty-cta" disabled>先做出你的选择</button>`,
       bind() {
         bodyEl.querySelectorAll('[data-t]').forEach(x => x.onclick = () => {
           const i = +x.dataset.t;
