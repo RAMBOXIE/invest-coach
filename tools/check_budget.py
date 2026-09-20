@@ -8,7 +8,7 @@
   B4 预算一致：tokens.json 的 dist_kb 必须和 SPEC_DEV §4 表里写的数字一致
 用法: python tools/check_budget.py [dist/index.html]
 """
-import json, re, sys, pathlib
+import json, re, sys, pathlib, gzip
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TOK = json.loads((ROOT / "design" / "tokens.json").read_text(encoding="utf-8"))
@@ -28,6 +28,16 @@ def main(path):
     cap = TOK["budget"]["dist_kb"]
     msg = f"B1 产物体积 {kb:.1f}KB / 预算 {cap}KB"
     (infos if kb <= cap else errors).append(msg)
+
+    # B1b 首屏 gzip —— 才是真正决定移动端首屏成本的数（托管走 gzip；file:// 是本地磁盘，多大都瞬开）。
+    # D12 裁决(2026-09-15，数据见 DEBT.md)：单文件不靠一直抬原始预算，而是盯 gzip;到触发线才改交付。
+    gz_kb = len(gzip.compress(p.read_bytes(), 9)) / 1024
+    trig = TOK["budget"].get("gzip_trigger_kb", 250)
+    if gz_kb <= trig:
+        infos.append(f"B1b 首屏 gzip {gz_kb:.1f}KB / 触发线 {trig}KB（真实传输量；到线再上「离线单文件 + 托管按章懒加载」双目标构建）")
+    else:
+        errors.append(f"B1b 首屏 gzip {gz_kb:.1f}KB 超过触发线 {trig}KB —— 单文件到顶了，"
+                      "该实现 D12 的双目标构建(离线仍单文件，托管改按章懒加载)，而不是再抬原始预算")
 
     # B4 预算一致。300 → 320 的放宽最初是**静默发生**的：文档写着「≤300KB（已裁决）」，
     # tokens.json 是 320，门禁按 320 跑，三份文档谁都没改。裁决被一个 json 字段悄悄推翻，
