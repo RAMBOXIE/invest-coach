@@ -72,9 +72,13 @@
 
 | 字段 | 层级 | 说明 | 状态 |
 |---|---|---|---|
-| `rpg` | 故事顶层 | `{premise, roles[], initial_scene, scenes[], narrator}`。定义玩家进入真实金融事件时的身份、目标、压力和场景图；不写真实结局 | 在用 |
-| `rpg.roles[]` | RPG 身份 | `{id, title, goal, pressure}`。同一金融事件允许从分析师、记者、审计等不同参与者进入；身份先于知识点出现 | 在用 |
-| `rpg.scenes[]` | RPG 场景 | `{id, eyebrow, place, time, title, lines[], role_lines?, evidence[], actions[], final?}`。场景串联证据、叙事和可行动节点；`role_lines[role_id]` 让同一事件从不同责任位置发声；`actions[].next` 决定下一幕 | 在用 |
-| `rpg.scenes[].actions[]` | RPG 行动 | `{id, roles?, kind, label, prompt, consequence, result_title, narration, next}`。`roles` 限定可见身份；行动必须带来可见后果或压力变化；不得改写历史事实 | 在用 |
-| `rpg.narrator` | 故事顶层 | LLM 画外音的声音设定。运行时只接收固定选择、后果和本地旁白种子；失败回落本地 `narration` | 在用 |
+| `rpg` | 故事顶层 | `{premise, roles[], timeline[], glossary[], dialogue?, initial_scene, scenes[]}`。定义玩家进入真实金融事件时的身份、当时能看到的事实和场景图；真实结局只在 reveal 后出现 | 在用 |
+| `rpg.roles[]` | RPG 身份 | `{id, title, goal, pressure, brief?, win_condition?, risk?}`。`brief` 说明这一席位实际负责什么，`win_condition` 是本幕交付物，`risk` 是该角色最容易漏掉的风险 | 在用 |
+| `rpg.timeline[]` | 当时时间线 | `{date,title,text,fact?}`。只写该决策时点已经发生的事；`fact` 可点回数字账本 | 在用 |
+| `rpg.glossary[]` | 术语 | `{id,term,plain,example?}`。`plain` 必须用非专业读者能复述的话解释；场景以 `terms:[id]` 引用 | 在用 |
+| `rpg.scenes[]` | RPG 场景 | `{id, eyebrow, place, time, title, lines[], role_lines?, briefings?, known?, unknown?, decision?, terms?, evidence[], actions[], final?}`。先呈现角色责任和数据，再呈现已知/未知/必须决定，最后才给行动 | 在用 |
+| `rpg.scenes[].briefings[]` | 数据账本 | `{label,value,note?,fact?,roles?}`。`roles` 控制哪些席位能先看到该材料；真实数字必须先进入 `facts.json` | 在用 |
+| `rpg.scenes[].actions[]` | RPG 行动 | `{id, roles?, kind, label, prompt, consequence, result_title, evidence_used?, evidence_missed?, tradeoff?, narration, next}`。结果页必须解释用了什么、漏了什么、付出什么代价；不得只给口号 | 在用 |
+| `rpg.dialogue` | 人物推演 | `{name,role,notice,material[],prompts[],no_record}`。LLM 只能读取 `material`，输出受数字、时代、建议与出戏词出口闸约束；界面必须标明“AI 推演，不是本人原话” | 在用 |
+| `rpg.narrator` | 兼容字段 | 旧画外音设定。RPG v2 不再调用生成式画外音；选择后改为确定性的证据复盘 | 兼容 |
 | `beats[].kind=consequence` | 兼容字段 | 旧线性播放器的决策后果拍。新 RPG 故事优先使用 `rpg.scenes[].actions[]`，该字段仅为未迁移故事保留 | 兼容 |

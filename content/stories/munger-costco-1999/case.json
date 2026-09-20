@@ -32,24 +32,34 @@
    "单位经济学",
    "质量与价格"
   ],
+  "timeline":[
+   {"date":"1999 财年","title":"低价没有等于低效率","text":"好市多净销售额 269.76 亿美元，同店销售增长 10%。","fact":"costco-1999-economics"},
+   {"date":"1999 财年","title":"会员费单独出现","text":"会员费 4.79578 亿美元，相当于净销售额 1.78%。","fact":"costco-1999-economics"},
+   {"date":"1999 财年","title":"毛利被刻意压低","text":"毛利率 10.40%，要与周转、会员费和损耗一起读。","fact":"costco-1999-economics"}
+  ],
+  "glossary":[
+   {"id":"gross-margin","term":"毛利率","plain":"卖出商品后，扣掉商品采购成本还剩下的比例。","example":"低毛利可能来自竞争无力，也可能是主动低价；要看它换来了什么。"},
+   {"id":"turnover","term":"库存周转","plain":"商品从进仓到卖出的速度。转得快，同样的资金一年能做更多次生意。","example":"低毛利若换来更快周转，资本回报未必低。"},
+   {"id":"membership-economics","term":"会员经济","plain":"顾客先付会员费，再获得持续低价；商家用续费检验信任是否仍在。","example":"会员费不是白赚的钱，它建立在持续给会员便宜的承诺上。"}
+  ],
   "roles": [
    {
     "id": "researcher",
     "title": "零售研究员",
     "goal": "看清低毛利如何换来周转和续费",
-    "pressure": "同业分析习惯先比较毛利率。"
+    "pressure": "同业分析习惯先比较毛利率。","brief":"你要把毛利、会员费、同店增长、周转和损耗拼成一套经营系统。","win_condition":"解释低毛利怎样仍能产生好回报","risk":"看到 10.40% 毛利率就停止研究"
    },
    {
     "id": "risk",
     "title": "经营风控负责人",
     "goal": "找出会员飞轮会在哪断掉",
-    "pressure": "所有人都爱这门生意，坏消息很难开口。"
+    "pressure": "所有人都爱这门生意，坏消息很难开口。","brief":"你负责找飞轮的断点：续费、周转、损耗或供应商效率哪项先恶化。","win_condition":"定义三条可量化警戒线","risk":"把顾客信任当成不会折旧的资产"
    },
    {
     "id": "allocator",
     "title": "资本配置人",
     "goal": "把经营质量和买入价格分开",
-    "pressure": "好公司正在被市场追捧。"
+    "pressure": "好公司正在被市场追捧。","brief":"你把经营质量与支付价格分开，不让喜欢公司变成任何价格都能买。","win_condition":"给长期优势设置买价边界","risk":"把未来回报提前支付给卖方"
    }
   ],
   "initial_scene": "opening",
@@ -57,6 +67,15 @@
    "name": "画外音",
    "voice": "中文，简短，像纪录片旁白。",
    "rule": "只解释玩家选择、现场压力和证据边界，不编造事实。"
+  },
+  "dialogue":{
+   "name":"查理·芒格","role":"好市多长期观察者与董事","notice":"这是受好市多当年经营数据约束的 AI 人物推演，不是芒格原话；不会生成买卖指令。",
+   "material":["1999 财年净销售额 269.76 亿美元。","会员费 4.79578 亿美元，相当于净销售额 1.78%。","毛利率 10.40%，同店销售增长 10%。","好市多通过低价、有限品类、高销量与快速周转形成经营系统。","材料没有提供当年股价或估值倍数。"],
+   "prompts":[
+    {"q":"毛利率这么低，为什么还能是好生意？","a":"我会先看低毛利换来了什么。材料显示同店销售增长、会员费和快速周转同时存在，这说明低价可能是系统的输入。材料没有给出完整资本回报，仍要继续核对。"},
+    {"q":"既然模式好，是否任何价格都可以买？","a":"这份材料只解释经营系统，没有给出当年股价或估值倍数。没有价格，就不能完成投资回报判断。"}
+   ],
+   "no_record":"这份当年材料没有写到这个问题，我不能替历史补答案。"
   },
   "scenes": [
    {
@@ -69,9 +88,16 @@
      "货架不花哨，商品种类不多，价格压得很低。",
      "传统零售分析会嫌毛利率难看，可会员仍在续费，商品也转得飞快。"
     ],
+    "role_lines":{"researcher":["同业表格把 10.40% 毛利率标成弱项。你要解释它是否换来了更高销量、更快周转和更稳定会员费。"],"risk":["会员还在排队，但你的工作是找队伍何时会变短：价格不再便宜、续费下降，还是损耗先上升。"],"allocator":["你承认商业模式优秀。现在必须把优秀能持续多久与愿意支付多少分开写。"]},
+    "briefings":[{"label":"净销售额","value":"269.76 亿美元","fact":"costco-1999-economics","roles":["researcher","allocator"]},{"label":"毛利率","value":"10.40%","note":"不能脱离周转与会员费单独下结论。","fact":"costco-1999-economics"},{"label":"会员费","value":"4.79578 亿美元","note":"相当于净销售额 1.78%。","fact":"costco-1999-economics"},{"label":"同店销售增长","value":"10%","fact":"costco-1999-economics","roles":["researcher","risk"]},{"label":"存货损失","value":"低于销售额 0.2%","note":"会员与入口控制降低损耗。","fact":"costco-1999-economics","roles":["risk"]}],
+    "terms":["gross-margin","turnover","membership-economics"],
+    "known":{"researcher":"毛利率低，但销售、会员费与同店增长同时存在。","risk":"低价承诺维系信任，系统也依赖周转与低损耗。","allocator":"经营系统有吸引力，价格判断仍未完成。"},
+    "unknown":{"researcher":"低毛利换来的周转和资本效率是否足够高。","risk":"哪一项恶化会最先传导到续费。","allocator":"市场价格预支了多少年的扩张。"},
+    "decision":{"researcher":"先画经营飞轮，还是先用毛利率筛掉它？","risk":"先给哪三个指标设警戒线？","allocator":"先研究买价边界，还是因为质量稀缺立即买入？"},
     "actions": [
      {
       "id": "trace-system",
+      "roles":["researcher"],
       "kind": "看完整系统",
       "label": "从低价一路追到周转、续费和资本占用",
       "prompt": "别把毛利率单独拎出来。",
@@ -82,6 +108,7 @@
      },
      {
       "id": "judge-margin",
+      "roles":["researcher"],
       "kind": "只比毛利",
       "label": "毛利率低，说明议价能力弱",
       "prompt": "用一个比率完成定性。",
@@ -89,7 +116,11 @@
       "result_title": "你看见了薄，没看见快",
       "narration": "比率没有错，错的是让一个比率替整个商业模式发言。",
       "next": "development"
-     }
+     },
+     {"id":"watch-renewal","roles":["risk"],"kind":"定义断点","label":"同时盯续费、周转与存货损失","prompt":"任何一项持续恶化都触发复核。","consequence":"顾客信任不再是抽象资产，它被拆成可以每年检查的经营结果。","result_title":"飞轮有了报警器","evidence_used":"会员费、同店增长和低损耗共同支撑系统。","tradeoff":"你会更早提出难听的问题。","narration":"护城河能被监测，才有资格进入风险预算。","next":"development"},
+     {"id":"trust-members","roles":["risk"],"kind":"相信黏性","label":"会员已经形成习惯，短期波动不必解释","prompt":"让历史续费替未来担保。","consequence":"警戒线没有落笔。若低价优势开始被侵蚀，团队会先把变化解释成短期噪音。","result_title":"信任变成了免检理由","evidence_missed":"续费依赖持续价值，并非永久合同。","tradeoff":"少了争论，也少了预警。","narration":"长期优势最危险的时刻，是所有人都认为它无需再证。","next":"development"},
+     {"id":"separate-price","roles":["allocator"],"kind":"质量与价格分开","label":"先估飞轮能持续多久，再设最高买价","prompt":"让优秀公司也通过价格纪律。","consequence":"你保留了对公司的欣赏，也保留了等待的权利。","result_title":"好公司没有拿到价格豁免","evidence_used":"经营质量来自系统，不代表未来增长没有上限。","tradeoff":"可能错过一段上涨。","narration":"质量决定值得研究多久，价格决定错误空间有多大。","next":"development"},
+     {"id":"pay-for-quality","roles":["allocator"],"kind":"为质量付价","label":"系统难复制，贵一点也值得","prompt":"让商业模式替价格辩护。","consequence":"你买下了优秀公司，也可能把相当一部分未来回报提前交给卖方。","result_title":"质量吃掉了安全边界","evidence_missed":"没有写下价格对应的增长要求。","tradeoff":"更早持有，回报更依赖估值继续维持。","narration":"伟大公司仍然可能是一笔回报普通的投资。","next":"development"}
     ]
    },
    {
@@ -102,6 +133,11 @@
      "把价格降下来并不难。难的是在低价下仍保持周转、续费和供应商效率。",
      "一旦为了季度利润抬高毛利，会员对价格的信任也可能开始松动。"
     ],
+    "briefings":[{"label":"系统输入","value":"低价 + 有限品类","note":"促进销量与周转。","fact":"costco-1999-economics"},{"label":"系统输出","value":"续费 + 资本效率","note":"两者必须持续相互支持。","fact":"costco-1999-economics"}],
+    "terms":["turnover","membership-economics"],
+    "known":"低价、有限品类、会员费和快速周转是一套相互依赖的系统。",
+    "unknown":"竞争者能否复制，以及市场价格是否已经写满未来增长。",
+    "decision":{"researcher":"怎样证明低毛利确实换来更高资本效率？","risk":"飞轮哪一环最值得先监测？","allocator":"多好的生意，才值得多高的价格？"},
     "actions": [
      {
       "id": "protect-loop",

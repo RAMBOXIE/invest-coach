@@ -142,6 +142,31 @@ def strip_dev(o):
     return o
 
 
+def strip_story_runtime(story):
+    """剥掉 RPG v2 已经替代、运行时永远走不到的旧拍。
+
+    源 case.json 保留完整编辑史；交付物从 RPG 终幕直接跳到 reveal，所以旧 cold_open、
+    decision 以及未被场景引用的 evidence 不应继续让每个用户下载。reveal 之后的历史记录、
+    复盘与迁移题全部保留。旧 narrator 配置也已退出运行路径。
+    """
+    rpg = story.get("rpg") or {}
+    used = {bid for scene in rpg.get("scenes") or [] for bid in scene.get("evidence") or []}
+    story["beats"] = [b for b in story.get("beats") or []
+                      if b.get("id") in used or b.get("kind") in ("reveal", "contrast", "consequence")]
+    for b in story["beats"]:
+        b.pop("narration", None)
+    rpg.pop("narrator", None)
+    if rpg.get("title") == story.get("title"):
+        rpg.pop("title", None)
+    if rpg.get("premise") == story.get("hook"):
+        rpg.pop("premise", None)
+    if rpg.get("learning_goal") == story.get("learning_goal"):
+        rpg.pop("learning_goal", None)
+    if rpg.get("learning_skills") == story.get("skills"):
+        rpg.pop("learning_skills", None)
+    return story
+
+
 # 教练对象里只有 id 与 style_lines 被用到。name / intro 从不渲染——
 # 而 ADR-0002 §1 写的是「全站不出现教练的人名，coachName() 恒返回『你的教练』」。
 #
@@ -255,7 +280,7 @@ def main(argv):
     if fp2.exists():
         facts.update({f["id"]: f for f in json.loads(fp2.read_text(encoding="utf-8")).get("facts", [])})
     data["x_facts"] = facts
-    st = [strip_dev(x) for x in load_stories()]
+    st = [strip_story_runtime(strip_dev(x)) for x in load_stories()]
     if st:
         data["x_stories"] = st
         print(f"故事幕: {len(st)} 个（{', '.join(s['case_id'] for s in st)}）")

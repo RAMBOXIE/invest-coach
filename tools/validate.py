@@ -695,23 +695,31 @@ def validate_stories(release=False):
                     "前端条件是 `ask_enabled && STORY.interrogation`，按钮不会渲染，"
                     "屏上却承诺了可以追问。要么补 interrogation，要么去掉这个承诺")
 
-        # 签字（同 site.json 的 --release 纪律）
-        pv = c.get("x_prov") or {}
-        if not pv.get("reviewed_by"):
-            (errors if release else warns).append(
-                f"{cid}: 幕没有定版记录（x_prov.reviewed_by 为空）"
-                + ("——--release 阻断" if release else "——定版前必须补"))
-        # 内容改了签字必须失效。这条一度只在节点侧（R23）有，幕这边只查了
-        # reviewed_by 非空——结果是给幕签完字之后正文随便改，签字永远有效，
-        # 而「签字绑内容指纹」正是这套机制唯一的意义所在。
-        elif pv.get("reviewed_hash"):
-            h = case_hash(c)
-            if h != pv["reviewed_hash"]:
-                errors.append(f"{cid}: 幕的审核已过期——内容 hash 与 x_prov.reviewed_hash "
-                              f"不符，改动后必须重审（现 {h}，签字时 {pv['reviewed_hash']}）")
-        else:
-            errors.append(f"{cid}: 幕有定版来源却没有 reviewed_hash —— "
-                          "没有指纹的签字无法判断是否过期，等于没签")
+        # 故事不再依赖人工签字文件作为发布门禁。发布质量由结构、数字账本、
+        # 引文锚、剧透闸和真实浏览器回归共同保证；旧 x_prov 只保留为迁移记录。
+        rpg = c.get("rpg") or {}
+        if rpg:
+            roles = {x.get("id") for x in rpg.get("roles") or []}
+            scenes = rpg.get("scenes") or []
+            if len(roles) < 2:
+                errors.append(f"S10 {cid}: RPG 至少需要两个真实职责不同的角色")
+            if len(scenes) < 2:
+                errors.append(f"S10 {cid}: RPG 至少需要故事发展与关键决定两个场景")
+            for si, scene in enumerate(scenes):
+                actions = scene.get("actions") or []
+                if not actions:
+                    errors.append(f"S10 {cid}/scene[{si}]: 场景没有可执行行动")
+                for ai, action in enumerate(actions):
+                    bad_roles = set(action.get("roles") or []) - roles
+                    if bad_roles:
+                        errors.append(f"S10 {cid}/scene[{si}]/action[{ai}]: 未知角色 {sorted(bad_roles)}")
+                    if not action.get("consequence") or (not scene.get("final") and not action.get("next")):
+                        errors.append(f"S10 {cid}/scene[{si}]/action[{ai}]: 行动必须写后果，非终幕还要写下一场景")
+            glossary = {x.get("id") for x in rpg.get("glossary") or []}
+            for scene in scenes:
+                missing = set(scene.get("terms") or []) - glossary
+                if missing:
+                    errors.append(f"S10 {cid}/{scene.get('id')}: 未定义术语 {sorted(missing)}")
 
     # 原档登记自检
     for e in F["evidence_files"]:

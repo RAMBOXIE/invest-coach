@@ -1,6 +1,5 @@
-/* ????? ? ????
-   ???????????? STORY ??????case.json?????????????
-   ????????????????????LLM ???????????? */
+/* 真实事件故事播放器。
+   叙事、数据与角色约束来自 case.json；历史原话、史实摘要和 AI 推演必须明确分层。 */
 (function () {
   'use strict';
 
@@ -22,14 +21,13 @@
     ST = { i: 0, pick: null, conf: null, twinOk: null, asked: [], seen: new Set(),
       mode: STORY.rpg && STORY.rpg.scenes ? 'rpg' : 'legacy',
       role: null, sceneId: STORY.rpg && STORY.rpg.initial_scene || null, rpgPath: null,
-      rpgAction: null, rpgVoice: null, rpgReturn: null, rpgPressure: null };
+      rpgAction: null, rpgReturn: null, rpgPressure: null, rpgHistory: [] };
     el.classList.add('show');
     track('story_open', { case: STORY.case_id });
     draw();
   };
   function close() {
-    // ????????????z-index 79/80 ??????????????????
-    // ??????????????? closeSheet ???????? onClose?
+    // 先关闭证据抽屉，再退出故事，避免遮罩残留拦住首页交互。
     window.__sheetClose = null;
     if (typeof closeSheet === 'function') closeSheet();
     el.classList.remove('show'); ST = null;
@@ -48,6 +46,11 @@
 
   function evPanel(p) {
     if (!p) return '';
+    if (p.kind === 'list' || !Array.isArray(p.cols)) {
+      return `<div class="ev ev-list">${p.title ? `<div class="ev-list-title">${esc(p.title)}</div>` : ''}${(p.rows || []).map(r =>
+        `<div class="ev-list-row"><span>${esc(r.k || '')}</span><strong>${md(r.v || r.a || '')}</strong>${r.fact ? factButton(r.fact, '核对来源') : ''}</div>`
+      ).join('')}</div>`;
+    }
     let h = `<div class="ev"><div class="hd"><span></span><span>${p.cols[0]}</span><span>${p.cols[1]}</span></div>`;
     for (const r of p.rows) {
       h += `<div class="rw"><span>${r.k}</span>` +
@@ -58,6 +61,7 @@
   }
   function derived(list) {
     if (!list || !list.length) return '';
+    if (typeof list === 'string') return `<div class="derv text"><div class="d"><div class="v">${md(list)}</div></div></div>`;
     return `<div class="derv">` + list.map(d =>
       `<div class="d"><div class="k">${d.k}</div><div class="v${d.flag ? ' flag' : ''}">${d.v}</div></div>`).join('') + `</div>`;
   }
@@ -80,7 +84,7 @@
   }
 
   function draw() {
-    if (!ST) return;   // ??????????????ST ? null
+    if (!ST) return;
     if (ST.mode === 'rpg') return drawRpg();
     const b = STORY.beats[ST.i];
     ST.seen.add(b.id);
@@ -94,191 +98,186 @@
     bodyEl.scrollTop = 0;
     R.bind && R.bind();
     const n = document.getElementById('sty-next');
-    if (n) n.onclick = () => { ST.i++; track('story_beat', { case: STORY.case_id, beat: b.id }); draw(); };
+    if (n) n.onclick = () => {
+      track('story_beat', { case: STORY.case_id, beat: b.id });
+      if (ST.i + 1 >= STORY.beats.length) return close();
+      ST.i++; draw();
+    };
   }
 
-  /* ===== ???? RPG ?? =====
-     rpg.scenes ??????????????????????????????
-     ????????????????????????? reveal beat ??? */
-  function rpgScene() {
-    if (ST.sceneId === '__rpg_pressure__') {
-      const p = ST.rpgPressure || {};
-      return { id: '__rpg_pressure__', eyebrow: '选择之后', place: p.place || '事件现场', time: p.time || '此刻',
-        title: p.title || '后果正在发生', lines: p.lines || [], evidence: p.evidence || [],
-        actions: [{ id: 'continue', kind: '后果', label: '继续前进', prompt: '看看你的选择如何改变局面',
-          consequence: p.consequence || '', result_title: p.result_title || '选择的代价', narration: p.narration || '', next: ST.rpgReturn }] };
-    }
-    return (STORY.rpg.scenes || []).find(s => s.id === ST.sceneId);
-  }
-  const RPG_ZH = {
-    'Before the decision':'决定之前','Historical decision room':'历史决策现场','The pressure is rising':'压力正在上升',
-    'The second decision':'第二个决定','Investment committee':'投资委员会','The window is closing':'窗口正在关闭',
-    'Build the evidence chain':'建立证据链','Evidence':'证据','Shortcut':'捷径','Risk budget':'风险预算','Conviction':'确信',
-    'Research':'研究','Narrative':'叙事','Impulse':'冲动','Build the evidence chain before committing':'先建立证据链，再投入资金',
-    'Trust the strongest narrative':'相信最有说服力的故事','Write the failure case first':'先写失败情形','Let the story decide':'让故事替你决定',
-    'Test pricing power':'检验定价权','Define capital returns':'界定资本回报','Protect intrinsic value':'保护内在价值',
-    'Test look-through analysis':'检验穿透分析','Define credit risk':'界定信用风险','Protect model limits':'守住模型边界',
-    'Test observation to hypothesis':'检验从观察到假设的链条','Define growth quality':'界定增长质量','Protect valuation discipline':'守住估值纪律',
-    'Test turnover':'检验周转效率','Define unit economics':'界定单位经济学','Protect quality versus price':'守住质量与价格的边界',
-    'Test macro constraints':'检验宏观约束','Define catalysts':'界定催化因素','Protect risk budget':'守住风险预算',
-    'Turn the story into variables you can verify.':'把故事拆成可以核对的变量。','The story is popular, simple, and emotionally convincing.':'这个故事流行、简单，而且很有感染力。',
-    'Define the evidence that would change your mind.':'先定义什么证据会让你改变判断。','The opportunity feels too obvious to delay.':'机会看起来太明显，已经不容拖延。',
-    'The story becomes a model':'故事变成了模型','The narrative goes first':'叙事抢在证据之前','The failure case gets a seat':'失败情形也坐上了桌面',
-    'Conviction outruns evidence':'确信跑在证据前面','A useful story creates a question that can be falsified.':'有用的故事会变成一个可以被证伪的问题。',
-    'Good decisions preserve the ability to make the next decision.':'好的决定会保留做出下一次决定的能力。','The most dangerous shortcut is the one that feels like courage.':'最危险的捷径，往往感觉最像勇气。',
-    'You gain speed but lose the evidence chain. The next pressure is to explain what your shortcut cannot see.':'你获得了速度，却失去了证据链。接下来的压力，是解释这条捷径看不见什么。',
-    'Confidence is not evidence just because many people share it.':'很多人相信，不会让确信变成证据。',
-    'You turn pricing power into a checklist. The next decision must answer what drives the business and what can break it.':'你把定价权拆成核查清单。下一步必须回答：什么驱动这门生意，又有什么会击穿它。',
-    'You turn look-through analysis into a checklist. The next decision must answer what drives the business and what can break it.':'你把穿透分析拆成核查清单。下一步必须回答：什么驱动这门生意，又有什么会击穿它。',
-    'You turn observation to hypothesis into a checklist. The next decision must answer what drives the business and what can break it.':'你把从观察到假设的过程拆成核查清单。下一步必须回答：什么驱动这门生意，又有什么会击穿它。',
-    'You turn turnover into a checklist. The next decision must answer what drives the business and what can break it.':'你把周转效率拆成核查清单。下一步必须回答：什么驱动这门生意，又有什么会击穿它。',
-    'You turn macro constraints into a checklist. The next decision must answer what drives the business and what can break it.':'你把宏观约束拆成核查清单。下一步必须回答：什么驱动这门生意，又有什么会击穿它。',
-    'You keep capital returns separate from the final price. The decision is now auditable even if the outcome is uncertain.':'你把资本回报和最终价格分开。即使结果不确定，这个决定也已经可以复核。',
-    'You keep credit risk separate from the final price. The decision is now auditable even if the outcome is uncertain.':'你把信用风险和最终价格分开。即使结果不确定，这个决定也已经可以复核。',
-    'You keep growth quality separate from the final price. The decision is now auditable even if the outcome is uncertain.':'你把增长质量和最终价格分开。即使结果不确定，这个决定也已经可以复核。',
-    'You keep unit economics separate from the final price. The decision is now auditable even if the outcome is uncertain.':'你把单位经济学和最终价格分开。即使结果不确定，这个决定也已经可以复核。',
-    'You keep catalysts separate from the final price. The decision is now auditable even if the outcome is uncertain.':'你把催化因素和最终价格分开。即使结果不确定，这个决定也已经可以复核。',
-    'Evidence table':'证据表','What must be verified?':'哪些内容必须核对？','Information available then':'当时能看到的信息',
-    'Historical record':'历史原档','The result is not the lesson':'结果不是要点','Debrief':'复盘','What the method adds':'这套方法多做了什么',
-    'Transferable method':'可以迁移的方法','Method card':'方法卡','A reusable decision loop':'一套可以复用的判断循环',
-    'Turn an exciting story into a falsifiable question, then price the uncertainty.':'把令人兴奋的故事变成可证伪的问题，再给不确定性定价。',
-    'The room wants a decision before every uncertainty is resolved.':'现场要求现在就决定，所有不确定性还没有消失。',
-    'Your choice':'你的选择','The public record preserves the decision context, the evidence, and the consequences.':'公开原档保留了决策背景、证据和后果。',
-    'History lets you inspect the ending. The skill is learning what could have been known before the ending.':'历史让你看见结局；关键训练是，结局发生前你本来能知道什么。'
-  };
-  function rpgText(value) { return typeof value === 'string' ? (RPG_ZH[value] || value) : value; }
+  function rpgText(value) { return value; }
   function rpgBeat(id) { return STORY.beats.find(b => b.id === id); }
-  function rpgActions(s) {
-    return (s.actions || []).filter(a => !a.roles || a.roles.includes(ST.role));
+  function drawRpgFinish() {
+    ST.mode = 'legacy';
+    ST.i = STORY.beats.findIndex(x => x.kind === 'reveal');
+    if (ST.i < 0) ST.i = 0;
+    draw();
   }
-  function rpgDecisionGuide(s, available) {
-    if (!available.length) return '';
-    const prompt = rpgText(s.prompt) || '如果这场会议由你拍板，你先做哪一步？';
-    return `<div class="rpg-guide"><div class="rpg-kicker">轮到你了</div><p>${md(prompt)}</p>
-      <small>按此刻的判断选。结果出现后，再看自己漏了什么。</small></div>`;
+
+  /* ===== 史料驱动 RPG v2 =====
+     旧播放器保留给已经进入「历史翻牌」的兼容拍；进入事件后的体验只读 case.json，
+     不再用前端翻译表改写故事，也不再让生成式画外音替代证据。 */
+  function rpgScene() { return (STORY.rpg.scenes || []).find(s => s.id === ST.sceneId); }
+  function activeRole() { return (STORY.rpg.roles || []).find(r => r.id === ST.role) || {}; }
+  function rpgActions(s) { return (s.actions || []).filter(a => !a.roles || a.roles.includes(ST.role)); }
+  function roleValue(v) { return v && typeof v === 'object' && !Array.isArray(v) ? (v[ST.role] || v.default || '') : (v || ''); }
+  function sceneLines(s) {
+    const byPath = s.path_lines && ST.rpgPath ? s.path_lines[ST.rpgPath] : null;
+    return byPath || (s.role_lines && s.role_lines[ST.role]) || s.lines || [];
   }
-  const RPG_SCENE_ZH = {
-    'buffett-coke-1988': ['管理层把品牌、渠道和全球增长摆上桌面。你的任务，是把掌声拆成可以核对的经营变量。','先从单位经济学开始：客户愿意持续为哪一部分付钱？'],
-    'burry-mortgage-2007': ['一只结构化证券经过评级和分散化，看起来很安全。你的任务，是沿着现金流找到实际的付款人。','先看借款人、合同条款，以及损失会从哪里开始。'],
-    'lynch-fidelity-1985': ['货架上的产品很受欢迎，自己的生活也能感受到它。这个观察只有变成可检验的问题，才有投资价值。','先写下假设，再去年报里找能支持或推翻它的数字。'],
-    'munger-costco-1999': ['仓库里堆着低价、快周转的商品。单看毛利率，解释不了这套生意如何运转。','先看顾客得到的价值、周转速度，以及维持规模需要多少资本。'],
-    'soros-gbp-1992': ['市场听见政府要守住一种货币。你的任务，是找出承诺背后的工具、约束和代价。','先看制度约束，不要先跟着最响亮的标题走。']
-  };
-  const RPG_TITLE_ZH = {
-    'buffett-coke-1988':'亚特兰大：品牌到底值多少钱？','burry-mortgage-2007':'评级背后的住房贷款','lynch-fidelity-1985':'购物车里的线索',
-    'munger-costco-1999':'仓库里那个一美元的问题','soros-gbp-1992':'伦敦：哪一种约束会赢？'
-  };
-  const RPG_SECOND_ZH = {
-    'buffett-coke-1988':['把好生意和买入价格分开。','再好的系统，也不能替你免除价格纪律。'],
-    'burry-mortgage-2007':['把模型结果和底层现金流分开。','模型可以整洁，调查不能因此结束。'],
-    'lynch-fidelity-1985':['把日常观察和原始证据分开。','增长必须同时出现在收入、利润、现金和合理价格里。'],
-    'munger-costco-1999':['把经营质量和估值分开。','一套优秀的系统，也不能成为忽略价格的理由。'],
-    'soros-gbp-1992':['把方向判断和仓位大小分开。','观点正确，也可能因为没有定义亏损预算而失败。']
-  };
-  function rpgLines(s) {
-    const lines = s.lines || [];
-    const translated = RPG_SCENE_ZH[STORY.case_id];
-    if (translated && s.id === 'decision-room') return translated;
-    const second = RPG_SECOND_ZH[STORY.case_id];
-    return second && s.id === 'pressure-room' ? [second[1]] : lines.map(rpgText);
+  function factButton(id, label) {
+    return id ? `<button class="rpg-source" data-f="${esc(id)}">${ic('link')} ${esc(label || '查看原始材料')}</button>` : '';
   }
-  function rpgEvidence(ids) {
+  function timelineHTML(items) {
+    if (!items || !items.length) return '';
+    return `<section class="rpg-timeline"><div class="rpg-section-label">事情走到这里</div>${items.map(x =>
+      `<div class="rpg-time"><time>${esc(x.date)}</time><div><b>${esc(x.title || '')}</b><p>${md(x.text || '')}</p>${factButton(x.fact, '核对来源')}</div></div>`).join('')}</section>`;
+  }
+  function briefingHTML(items) {
+    const visible = (items || []).filter(x => !x.roles || x.roles.includes(ST.role));
+    if (!visible.length) return '';
+    return `<section class="rpg-ledger"><div class="rpg-section-label">你手里的数据</div>${visible.map(x =>
+      `<article class="rpg-number"><span>${esc(x.label)}</span><strong>${esc(x.value)}</strong>${x.note ? `<p>${md(x.note)}</p>` : ''}${factButton(x.fact, '查看口径与出处')}</article>`).join('')}</section>`;
+  }
+  function termsHTML(ids) {
+    const all = STORY.rpg.glossary || [];
+    const items = (ids || []).map(id => all.find(x => x.id === id)).filter(Boolean);
+    return items.length ? `<div class="rpg-terms"><span>本节术语</span>${items.map(x => `<button data-term="${esc(x.id)}">${esc(x.term)}？</button>`).join('')}</div>` : '';
+  }
+  function decisionFrame(s) {
+    const known = roleValue(s.known), unknown = roleValue(s.unknown), decision = roleValue(s.decision) || s.prompt;
+    if (!known && !unknown && !decision) return '';
+    return `<section class="rpg-frame"><div><span>已经知道</span><p>${md(known || '材料已经列在上方。')}</p></div>
+      <div><span>仍不知道</span><p>${md(unknown || '结果尚未发生。')}</p></div>
+      <div class="ask"><span>你必须决定</span><p>${md(decision || '下一步做什么？')}</p></div></section>`;
+  }
+  function roleBrief() {
+    const r = activeRole();
+    return `<section class="rpg-mission"><div class="rpg-section-label">你的席位 · ${esc(r.title || '')}</div>
+      <p>${md(r.brief || r.goal || '')}</p><dl><div><dt>交付</dt><dd>${esc(r.win_condition || r.goal || '')}</dd></div><div><dt>最怕漏掉</dt><dd>${esc(r.risk || r.pressure || '')}</dd></div></dl></section>`;
+  }
+  function rpgEvidenceV2(ids) {
     return (ids || []).map(rpgBeat).filter(Boolean).map(b => {
-      if (b.panel && b.panel.kind === 'list') {
-        const rows = (b.panel.rows || []).map(r => `<div class="rpg-role"><div class="rpg-kicker">${esc(rpgText(r.k || ''))}</div><div class="rpg-title">${esc(rpgText(r.v || ''))}</div></div>`).join('');
-        const note = typeof b.derived === 'string' ? `<p class="rpg-pressure">${md(b.derived)}</p>` : derived(b.derived);
-        return `<div class="rpg-evidence-list">${b.panel.title ? `<div class="eyebrow">${esc(rpgText(b.panel.title))}</div>` : ''}${rows}</div>${note}`;
-      }
-      if (b.panel) return `${evPanel(b.panel)}${derived(b.derived)}`;
+      if (b.panel) return `<section class="rpg-legacy-evidence"><div class="rpg-section-label">当时的材料</div>${evPanel(b.panel)}${derived(b.derived)}</section>`;
       if (b.quote) return docQuote(b.quote);
       return '';
     }).join('');
   }
-  function rpgRoleCard() {
-    const role = (STORY.rpg.roles || []).find(r => r.id === ST.role);
-    const goals = { researcher:'核对证据链', risk:'定义失败边界', allocator:'保护资本安全边界' };
-    return role ? `<div class="rpg-active-role"><span>当前身份</span><b>${esc(rpgText(role.title))}</b><small>${esc(rpgText(role.goal) || goals[role.id] || '把判断落到证据上')}</small></div>` : '';
+  function resultHTML(a) {
+    const used = roleValue(a.evidence_used), missed = roleValue(a.evidence_missed), tradeoff = roleValue(a.tradeoff);
+    return `<section class="rpg-audit"><div class="rpg-section-label">决策复盘</div><h3>${esc(a.result_title || '局面改变了')}</h3>
+      <p class="rpg-outcome">${md(a.consequence || '')}</p><dl>
+      ${used ? `<div><dt>你用到的证据</dt><dd>${md(used)}</dd></div>` : ''}${missed ? `<div><dt>你漏掉的证据</dt><dd>${md(missed)}</dd></div>` : ''}${tradeoff ? `<div><dt>这一步的代价</dt><dd>${md(tradeoff)}</dd></div>` : ''}</dl>
+      ${a.narration ? `<p class="rpg-takeaway"><b>此刻该记住</b>${md(a.narration)}</p>` : ''}</section>`;
+  }
+  function dialogueButton(s) {
+    if ((!STORY.interrogation && !STORY.rpg.dialogue) || s.dialogue === false) return '';
+    const who = STORY.rpg.dialogue || (STORY.cast && STORY.cast[0]);
+    return `<button class="rpg-dialogue" id="rpg-dialogue">${ic('me')} 向${esc(who?.name || '当事人')}追问
+      <small>原话带出处；自由回答会标明为受材料约束的 AI 推演</small></button>`;
+  }
+  function openRpgDialogue() {
+    if (STORY.interrogation) return Court.open(STORY, drawRpg);
+    const d = STORY.rpg.dialogue; if (!d) return;
+    ST.dialogueHistory = ST.dialogueHistory || [];
+    const renderTalk = () => {
+      sheet(`<div class="term-sheet"><div class="eyebrow">受史料约束的人物推演</div><h3>${esc(d.name)}</h3>
+        <p class="tip">${esc(d.notice || '以下回答是 AI 根据本故事列出的当年材料进行的人物推演，不是本人原话。材料没有写的内容，人物应明确说不知道。')}</p>
+        <div class="rpg-talk-log">${ST.dialogueHistory.map(x => `<div><b>${x.who === 'you' ? '你' : esc(d.name)}</b><p>${esc(x.text)}</p></div>`).join('')}</div>
+        <div class="qchips">${(d.prompts || []).map((x, i) => `<button data-talk-prompt="${i}">${esc(x.q)}</button>`).join('')}</div>
+        <div class="askin"><input id="rpg-talk-in" placeholder="继续追问……" autocomplete="off"><button id="rpg-talk-go">问</button></div></div>`, true);
+      const box = document.getElementById('sheet');
+      box.querySelectorAll('[data-talk-prompt]').forEach(b => b.onclick = () => askRpgDialogue((d.prompts[+b.dataset.talkPrompt] || {}).q, renderTalk));
+      const input = document.getElementById('rpg-talk-in'), go = document.getElementById('rpg-talk-go');
+      go.onclick = () => input.value.trim() && askRpgDialogue(input.value.trim(), renderTalk);
+      input.onkeydown = e => { if (e.key === 'Enter' && input.value.trim()) askRpgDialogue(input.value.trim(), renderTalk); };
+    };
+    renderTalk();
+  }
+  function askRpgDialogue(question, redraw) {
+    const d = STORY.rpg.dialogue, exact = (d.prompts || []).find(x => x.q === question);
+    const rerender = redraw;
+    ST.dialogueHistory.push({ who: 'you', text: question });
+    const fallback = () => { ST.dialogueHistory.push({ who: 'persona', text: exact?.a || d.no_record || '这份材料没有写到这个问题。' }); rerender(); };
+    if (typeof BACKEND === 'undefined' || !BACKEND) return fallback();
+    const material = (d.material || []).join('\n');
+    const history = ST.dialogueHistory.slice(0, -1).map(x => ({ role: x.who === 'you' ? 'user' : 'assistant', content: x.text }));
+    fetch(BACKEND + '/api/v1/discuss', { method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ device:S.device, case_id:STORY.case_id, persona:{name:d.name,role:d.role}, era:STORY.era, material, history, question })
+    }).then(x => x.json()).then(x => { ST.dialogueHistory.push({ who:'persona', text:x.text || exact?.a || d.no_record || '这份材料没有写到这个问题。' }); rerender(); }).catch(fallback);
   }
   function drawRpg() {
     const r = STORY.rpg;
     if (!ST.role) return drawRpgRoles();
     const s = rpgScene();
     if (!s) return drawRpgFinish();
-    const available = rpgActions(s);
-    const action = available.find(a => a.id === ST.rpgAction);
-    const final = s.final === true;
-    const voice = action ? (ST.rpgVoice || rpgText(action.narration) || '') : '';
-    const actions = action ? '' : available.map(a =>
-      `<button class="rpg-action" data-rpg-action="${esc(a.id)}"><span class="rpg-action-kind">${esc(rpgText(a.kind || '行动'))}</span><b>${esc(rpgText(a.label))}</b><small>${esc(rpgText(a.prompt || ''))}</small></button>`).join('');
-    const conf = final && action ? `<div class="eyebrow rpg-conf-label">你对这个判断有多大把握？</div>
-      <div class="seg2">${CONF.map(c => `<button data-rpg-conf="${c.v}" class="${ST.conf === c.v ? 'on' : ''}">${c.t}</button>`).join('')}</div>` : '';
+    const available = rpgActions(s), action = available.find(a => a.id === ST.rpgAction), final = s.final === true;
+    const actions = action ? '' : available.map(a => `<button class="rpg-action" data-rpg-action="${esc(a.id)}">
+      <span class="rpg-action-kind">${esc(a.kind || '行动')}</span><b>${esc(a.label)}</b><small>${esc(a.prompt || '')}</small></button>`).join('');
+    const conf = final && action ? `<div class="rpg-confidence"><span>你对这个判断有多大把握？</span><div class="seg2">${CONF.map(c => `<button data-rpg-conf="${c.v}" class="${ST.conf === c.v ? 'on' : ''}">${c.t}</button>`).join('')}</div></div>` : '';
     const nextDisabled = final ? !action || ST.conf == null : !action;
-    const nextScene = action && (r.scenes || []).find(x => x.id === action.next);
-    const nextLabel = final ? '揭开历史结果' : (nextScene?.eyebrow === '故事高潮' ? '进入最后决定' : '继续看局势怎么变');
     const sceneIndex = (r.scenes || []).findIndex(x => x.id === s.id);
-    const basePhase = sceneIndex === 0 ? '故事开始' : (final ? '故事高潮' : '故事发展');
-    const ownPhase = rpgText(s.eyebrow || '');
-    const scenePhase = ownPhase && !['故事开始', '故事发展', '故事高潮'].includes(ownPhase)
-      ? `${basePhase} · ${ownPhase}` : (ownPhase || basePhase);
-    bodyEl.innerHTML = `<div class="eyebrow">${esc(rpgText(scenePhase))}</div>
-      <div class="rpg-scene-meta"><span>${esc(rpgText(s.place || ''))}</span><span>${esc(rpgText(s.time || ''))}</span></div>
-      <h2>${esc(s.id === 'pressure-room' && RPG_SECOND_ZH[STORY.case_id] ? RPG_SECOND_ZH[STORY.case_id][0] : (RPG_TITLE_ZH[STORY.case_id] && s.id === 'decision-room' ? RPG_TITLE_ZH[STORY.case_id] : rpgText(s.title)))}</h2>${rpgRoleCard()}
-      ${(s.path_lines?.[ST.rpgPath] || s.role_lines?.[ST.role] || rpgLines(s)).map(x => `<p class="ln">${md(rpgText(x))}</p>`).join('')}
-      ${rpgEvidence(s.evidence)}
-      ${action ? `<div class="rpg-result"><div class="rpg-kicker">发生了什么</div><div class="rpg-result-title">${esc(rpgText(action.result_title || '行动结果'))}</div>
-        <p class="ln">${md(rpgText(action.consequence || ''))}</p>
-        <p class="rpg-pressure" id="rpg-voice-${STORY.case_id}"><b>画外音</b>${md(voice)}</p></div>` : `${rpgDecisionGuide(s, available)}<div class="rpg-actions">${actions}</div>`}`;
-    footEl.innerHTML = action ? `${final ? conf : ''}<button class="sty-cta" id="rpg-next" ${nextDisabled ? 'disabled' : ''}>${nextLabel}</button>` : '';
-    dotsEl.innerHTML = (r.scenes || []).map(x => `<i class="${x.id === s.id ? 'on' : ''}"></i>`).join('');
-    if (action) narrateChoice(action, 'rpg-voice-' + STORY.case_id);
+    const phase = s.eyebrow || (sceneIndex === 0 ? '故事开始' : final ? '故事高潮' : '故事发展');
+    const lines = sceneLines(s);
+    bodyEl.innerHTML = `<header class="rpg-scene-head"><div class="eyebrow">${esc(phase)}</div><div class="rpg-scene-meta"><span>${esc(s.place || '')}</span><span>${esc(s.time || '')}</span></div><h2>${esc(s.title)}</h2></header>
+      ${roleBrief()}${(Array.isArray(lines) ? lines : [lines]).map(x => `<p class="ln">${md(x)}</p>`).join('')}
+      ${sceneIndex === 0 ? timelineHTML(r.timeline) : ''}${briefingHTML(s.briefings)}${rpgEvidenceV2(s.evidence)}${termsHTML(s.terms || (sceneIndex === 0 ? (r.glossary || []).map(x => x.id) : []))}
+      ${dialogueButton(s)}${action ? resultHTML(action) : `${decisionFrame(s)}<div class="rpg-actions">${actions}</div>`}`;
+    const nextScene = action && (r.scenes || []).find(x => x.id === action.next);
+    const nextLabel = final ? '翻开历史记录' : (nextScene?.final ? '进入关键时刻' : '让时间继续');
+    footEl.innerHTML = action ? `${conf}<button class="sty-cta" id="rpg-next" ${nextDisabled ? 'disabled' : ''}>${nextLabel}</button>` : '';
+    dotsEl.innerHTML = (r.scenes || []).map((x, i) => `<i class="${i < sceneIndex ? 'done' : x.id === s.id ? 'on' : ''}"></i>`).join('');
     bindRpg(s);
   }
   function drawRpgRoles() {
     const r = STORY.rpg;
-    const goals = { researcher:'核对证据链', risk:'定义失败边界', allocator:'保护资本安全边界' };
-    const pressure = { researcher:'现场催你先给出依据。', risk:'大家都在奖励确信。', allocator:'机会看起来正在消失。' };
-    bodyEl.innerHTML = `<div class="eyebrow">角色选择</div><h2>${esc(STORY.title || '选择你的身份')}</h2>
-      <p class="ln">${md(STORY.hook || r.premise || '')}</p><div class="rpg-role-list">${(r.roles || []).map(x =>
-        `<button class="rpg-role-choice" data-rpg-role="${esc(x.id)}"><b>${esc(rpgText(x.title))}</b><span>${esc(rpgText(x.goal) || goals[x.id])}</span><small>${esc(rpgText(x.pressure || '') || pressure[x.id])}</small></button>`).join('')}</div>`;
-    bodyEl.insertAdjacentHTML('afterbegin', learningCard(STORY.rpg.learning_goal || STORY.learning_goal, STORY.rpg.learning_skills || STORY.skills));
+    bodyEl.innerHTML = `<header class="rpg-role-head"><div class="eyebrow">进入真实事件</div><h2>${esc(STORY.title)}</h2><p>${md(STORY.hook || r.premise || '')}</p></header>
+      <div class="rpg-role-list">${(r.roles || []).map(x => `<button class="rpg-role-choice" data-rpg-role="${esc(x.id)}"><span>扮演</span><b>${esc(x.title)}</b><p>${esc(x.brief || x.goal || '')}</p><small>${esc(x.win_condition || x.pressure || '')}</small></button>`).join('')}</div>
+      <p class="rpg-truth-note">历史结果不会因你改变；你改变的是进入事件的席位、能先看到的材料，以及必须承担的决策责任。</p>`;
     footEl.innerHTML = '';
     dotsEl.innerHTML = `<i class="on"></i>${(r.scenes || []).map(() => '<i></i>').join('')}`;
     bodyEl.querySelectorAll('[data-rpg-role]').forEach(x => x.onclick = () => {
-      ST.role = x.dataset.rpgRole; ST.sceneId = r.initial_scene; ST.rpgAction = null; ST.rpgPath = null;
+      ST.role = x.dataset.rpgRole; ST.sceneId = r.initial_scene; ST.rpgAction = null; ST.rpgPath = null; ST.rpgHistory = [];
       track('story_role', { case: STORY.case_id, role: ST.role }); draw();
     });
   }
   function bindRpg(s) {
+    bindFacts();
+    bodyEl.querySelectorAll('[data-term]').forEach(x => x.onclick = () => {
+      const g = (STORY.rpg.glossary || []).find(y => y.id === x.dataset.term);
+      if (g) sheet(`<div class="term-sheet"><div class="eyebrow">说人话</div><h3>${esc(g.term)}</h3><p>${md(g.plain)}</p>${g.example ? `<p class="tip">放进这次事件：${md(g.example)}</p>` : ''}</div>`);
+    });
+    const talk = document.getElementById('rpg-dialogue');
+    if (talk) talk.onclick = openRpgDialogue;
     bodyEl.querySelectorAll('[data-rpg-action]').forEach(x => x.onclick = () => {
       ST.rpgAction = x.dataset.rpgAction;
       const a = rpgActions(s).find(y => y.id === ST.rpgAction);
       if (s.final && a && ['a', 'b', 'c'].includes(a.id)) ST.pick = a.id;
-      track('story_action', { case: STORY.case_id, scene: s.id, action: ST.rpgAction, role: ST.role });
-      draw();
+      track('story_action', { case: STORY.case_id, scene: s.id, action: ST.rpgAction, role: ST.role }); draw();
     });
     footEl.querySelectorAll('[data-rpg-conf]').forEach(x => x.onclick = () => { ST.conf = +x.dataset.rpgConf; draw(); });
     const next = document.getElementById('rpg-next');
     if (next) next.onclick = () => {
-      const a = rpgActions(s).find(y => y.id === ST.rpgAction);
-      if (!a) return;
-      if (s.id === '__rpg_pressure__') {
-        ST.sceneId = a.next; ST.rpgAction = null; ST.rpgPressure = null;
-      } else if (s.final || a.next === '__legacy_reveal') {
-        if (STORY.rpg && (STORY.rpg.learning_goal || STORY.learning_goal || STORY.skills)) {
-          S.storyLearning = S.storyLearning || {};
-          S.storyLearning[STORY.case_id] = { goal: STORY.rpg.learning_goal || STORY.learning_goal, skills: STORY.rpg.learning_skills || STORY.skills || [], at: Date.now() };
-          save();
-          track('story_learning_checkpoint', { case: STORY.case_id, skills: (STORY.rpg.learning_skills || STORY.skills || []).length });
-        }
-        ST.mode = 'legacy'; ST.i = STORY.beats.findIndex(x => x.kind === 'reveal');
-        if (ST.i < 0) ST.i = 0;
-      } else {
-        ST.rpgPath = ST.rpgAction; ST.sceneId = a.next; ST.rpgAction = null; ST.rpgVoice = null;
-      }
+      const a = rpgActions(s).find(y => y.id === ST.rpgAction); if (!a) return;
+      ST.rpgHistory.push({ scene: s.id, action: a.id, label: a.label });
+      if (s.final || a.next === '__legacy_reveal') {
+        S.storyLearning = S.storyLearning || {};
+        S.storyLearning[STORY.case_id] = { goal: STORY.rpg.learning_goal || STORY.learning_goal, skills: STORY.rpg.learning_skills || STORY.skills || [], role: ST.role, path: ST.rpgHistory, at: Date.now() };
+        save(); track('story_learning_checkpoint', { case: STORY.case_id, skills: (STORY.rpg.learning_skills || STORY.skills || []).length });
+        ST.mode = 'legacy'; ST.i = STORY.beats.findIndex(x => x.kind === 'reveal'); if (ST.i < 0) ST.i = 0;
+      } else { ST.rpgPath = ST.rpgAction; ST.sceneId = a.next; ST.rpgAction = null; }
       draw();
     };
   }
-  function drawRpgFinish() { ST.mode = 'legacy'; draw(); }
+
+  window.render_game_to_text = function () {
+    if (!ST) return JSON.stringify({ screen: 'story-list' });
+    const s = ST.mode === 'rpg' ? rpgScene() : STORY.beats[ST.i];
+    return JSON.stringify({ case_id: STORY.case_id, mode: ST.mode, role: ST.role,
+      scene: s && s.id, title: s && s.title, action: ST.rpgAction,
+      options: ST.mode === 'rpg' && s ? rpgActions(s).map(a => ({ id: a.id, label: a.label })) : [] });
+  };
+  window.advanceTime = function () {};
 
   function learningCard(goal, skills) {
     if (!goal && !(skills || []).length) return '';
@@ -306,15 +305,14 @@
     return own && !standard.has(own) ? `${phase} · ${own}` : phase;
   }
 
-  /* ????????owner ??????????????????????????
-     ?????????????????????????????????????? */
+  /* 历史时间线只陈列当时可知信息；来源与行号跟在事件后面。 */
   function ctxStrip(items) {
     if (!items || !items.length) return '';
     return `<div class="ctx"><div class="ctx-h">当时</div>${items.map(c =>
-      `<div class="ctx-i"><span class="ctx-d">${c.date}</span><span class="ctx-t">${md(c.t)}</span>${c.src ? `<span class="ctx-s">${c.src}${c.line ? ' ? ' + c.line : ''}</span>` : ''}</div>`).join('')}</div>`;
+      `<div class="ctx-i"><span class="ctx-d">${c.date}</span><span class="ctx-t">${md(c.t)}</span>${c.src ? `<span class="ctx-s">${c.src}${c.line ? ' · ' + c.line : ''}</span>` : ''}</div>`).join('')}</div>`;
   }
 
-  /* S0 ??? */
+  /* S0 冷开场 */
   function bCold(b) {
     return {
       body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${b.title}</h2>
@@ -326,7 +324,7 @@
     };
   }
 
-  /* ???????????????????????????????????? */
+  /* 旧故事兼容拍：展示决策后的直接后果。 */
   function bConsequence(b) {
     const path = (b.paths || {})[ST.pick] || {};
     const voiceId = 'rpg-voice-' + STORY.case_id;
@@ -357,7 +355,7 @@
     }).catch(() => clearTimeout(tm));
   }
 
-  /* S1/S2 ??? */
+  /* S1/S2 证据页 */
   function bEvid(b) {
     return {
       body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${b.title}</h2>
@@ -380,7 +378,7 @@
     });
   }
 
-  /* S3 ?? ?? ???????? */
+  /* S3 决策与信心记录 */
   function bDec(b) {
     const picked = ST.pick != null, conf = ST.conf != null;
     return {
@@ -408,7 +406,7 @@
     };
   }
 
-  /* S4 ?? */
+  /* S4 历史翻牌 */
   function bReveal(b) {
     const q = b.quote || b.record_summary;
     const sourceCard = b.quote ? docQuote(q)
@@ -425,27 +423,24 @@
     };
   }
 
-  /* S5 ???? + knowhow */
+  /* S5 对照复盘与方法提炼 */
   function bContrast(b) {
     const dec = STORY.beats.find(x => x.kind === 'decision');
-    const mine = (dec.options || []).find(o => o.id === ST.pick) || { t: '未选择', kind: '?' };
-    const confT = (CONF.find(c => c.v === ST.conf) || {}).t || '?';
+    const mine = (dec.options || []).find(o => o.id === ST.pick) || { t: '未选择', kind: '未记录' };
+    const confT = (CONF.find(c => c.v === ST.conf) || {}).t || '未记录';
     if (!ST.logged) {
       ST.logged = true;
       track('story_decision', { case: STORY.case_id, pick: ST.pick, verdict: mine.verdict, conf: ST.conf });
       const cs = (window.__court && window.__court.story === STORY) ? window.__court.stats : { pressed: 0, broke: 0, noRecord: 0 };
       ST.stats = cs;
-      ST.prior = JSON.parse(JSON.stringify(profile()));   // ????????????????
-      // ???????**???**??? contrast ???????????? S ??
-      // ST ?? openStory ?????? ST ????????????????????
-      // ??????????????
+      ST.prior = JSON.parse(JSON.stringify(profile()));
+      // 同一故事只更新一次判断画像；重玩仍保留当次复盘状态。
       S.storySeen = S.storySeen || {};
       if (!S.storySeen[STORY.case_id]) {
         S.storySeen[STORY.case_id] = true;
         updateProfile(STORY.case_id, mine, ST.conf, cs);
       }
-      // ??????????????????**?????????**??
-      // ????? finish() ? S.story[cid]????????
+      // 此处先存选择，完成标记由 finish() 统一写入。
       S.storyPick = S.storyPick || {};
       S.storyPick[STORY.case_id] = { pick: ST.pick, verdict: mine.verdict, conf: ST.conf, at: Date.now() };
       save();
@@ -468,7 +463,7 @@
     };
   }
 
-  /* S6 ???? */
+  /* S6 方法抽象 */
   function bAbstract(b) {
     const story = b.story_form ? `<div class="f"><div class="t">这次的故事</div><div class="b">${b.story_form}</div></div>` : '';
     const boundary = b.boundary ? `<p class="ln dim">什么时候不能这么用：${b.boundary}</p>` : '';
@@ -486,7 +481,7 @@
     };
   }
 
-  /* S7 ?????????????????? */
+  /* S7 迁移题：保留旧故事的兼容渲染。 */
   function bTwin(b) {
     const answered = ST.twinOk != null;
     return {
@@ -523,23 +518,20 @@
     footEl.innerHTML = `<button class="sty-cta" id="sty-toprac">回到现场</button>
       <div style="height:8px"></div>
       <button class="sty-cta ghost" id="sty-back">查看档案</button>`;
-    // ???? ? ???????????????????
+    // 完成故事后，把对应易混概念加入复习队列。
     if (typeof ensurePair === 'function') {
       const n = byId[node];
       let pairs = (n && n.x_pairs || []).filter(p => p.id);
       if (!pairs.length) {
-        // ??????base-rate / falsification?????????
-        // ????? cross ????????????????????????????
+        // 若当前节点没有直接配对题，向下一层节点寻找可迁移的复习题。
         const down = (SITE.edges || []).filter(e => e.from === node).map(e => byId[e.to]).filter(Boolean);
         pairs = down.flatMap(d => (d.x_pairs || []).filter(p => p.id)).slice(0, 2);
       }
       pairs.forEach(p => ensurePair(p.id));
-      if (!pairs.length) console.warn('??', STORY.case_id, '???????', node, '???????');
+      if (!pairs.length) console.warn('故事没有可加入复习队列的配对题', STORY.case_id, node);
       save();
     }
-    // ?????????????????????contrast ?????????
-    // ??? abstract / twin ???????????????????????
-    // ?????????????????????????????????????????
+    // RPG v2 在历史对照页后即可完成；旧方法页仍由兼容播放器处理。
     S.story = S.story || {};
     S.story[STORY.case_id] = Object.assign(
       { at: Date.now() }, (S.storyPick || {})[STORY.case_id], { done: 1 });
@@ -547,16 +539,11 @@
     track('story_finish', { case: STORY.case_id });
     document.getElementById('sty-toprac').onclick = () => {
       close();
-      // ??????????? openNode?????????????????????
-      // ??????????????????????????? openNode ????
+      // 回到与本故事关联的知识节点。
       if (typeof openNode === 'function') openNode(node);
     };
     document.getElementById('sty-back').onclick = close;
   }
 
-  /* ===== ????????????? ===== */
-  /* ?????????openAsk / drawAsk / turnHTML / ask / resolveQA / matchQA?????
-     ??????????case.json ? ask ??????????????????
-     ?court.js?????????????????????????????????????
-     ????????????????????????? 2026-08-26? */
+  /* 人物追问由 court.js 统一负责；本文件只保留故事进入点与回调。 */
 })();

@@ -1,0 +1,10 @@
+SOURCE: Bank of England Quarterly Bulletin, Operation of monetary policy, 1992 Q4; ERM explainer, 1990 Q4.
+URL: https://www.bankofengland.co.uk/quarterly-bulletin/1992/q4/operation-of-monetary-policy
+URL: https://www.bankofengland.co.uk/quarterly-bulletin/1990/q4/the-exchange-rate-mechanism-of-the-european-monetary-system
+
+L1 Sterling joined the exchange rate mechanism with a bilateral central rate against the deutschemark of £1 = DM 2.95 and initially operated in the wider 6% band.
+L2 For the first eighteen months, ERM membership enabled base rates to be reduced from 15% to 10%.
+L3 Domestic recovery continued to prove elusive while German interest rates showed little near-term prospect of easing.
+L4 Maintaining sterling's ERM position constrained the scope for cutting nominal interest rates below those in Germany.
+L5 On 16 September, after heavy official purchases of sterling, the United Kingdom suspended sterling's membership of the ERM.
+L6 The expected cost of maintaining the existing exchange rate had become too high to bear.

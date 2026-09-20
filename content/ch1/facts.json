@@ -150,6 +150,36 @@
    "sha256": "5c1539ef789f235118cb56c4240374c0d0e674b41489b7f5b73bc98a74f9c6b9",
    "source": "Luckin Coffee F-1 招股书（2019-04-22 报送，IPO 前，EDGAR acc. 0001047469-19-002450，公有领域）",
    "accession": "0001047469-19-002450"
+  },
+  {
+   "file": "evidence/berkshire-coke-official-excerpts.txt",
+   "sha256": "a6101e9c781b6203d6c0684913b96c968766186ea08b0f492a59e12504670f2f",
+   "source": "伯克希尔 1988、1989 年股东信与 2022 年年报官方节选",
+   "accession": "BRK-COKE-OFFICIAL"
+  },
+  {
+   "file": "evidence/fcic-burry-official-excerpts.txt",
+   "sha256": "eecb21bb9ee8334eaeaa1fd3f63cf464a76c3e94320e9a0da3a93bea7322c8b2",
+   "source": "美国金融危机调查委员会报告与证词官方节选",
+   "accession": "FCIC-BURRY-OFFICIAL"
+  },
+  {
+   "file": "evidence/fidelity-lynch-leggs-excerpts.txt",
+   "sha256": "647bedf33f67d6b047960b08ba9dc9901d3fb8daa389784c2960f5fd56281e57",
+   "source": "富达彼得·林奇访谈文字稿官方节选",
+   "accession": "FIDELITY-LYNCH-LEGGS"
+  },
+  {
+   "file": "evidence/costco-2000-10k-excerpts.txt",
+   "sha256": "14f955b072a4657094b5d1c5dc79a5805bfdb8d9717ec23acdeeda3f1ce8556c",
+   "source": "好市多 2000 财年 10-K（含 1999 财年对比数据）官方节选",
+   "accession": "COSTCO-2000-10K"
+  },
+  {
+   "file": "evidence/boe-erm-1992-excerpts.txt",
+   "sha256": "61a936a8e68327d2388038ddbfa71709c5f9436e7d1633382542c1ead8d3509d",
+   "source": "英格兰银行 1990、1992 年季度公报官方节选",
+   "accession": "BOE-ERM-1992"
   }
  ],
  "facts": [
@@ -647,6 +677,60 @@
    "basis": "F-1 招股书自证",
    "accession": "0001047469-19-002450",
    "line": "16.8 million 段"
+  },
+  {
+   "id": "coke-position-build",
+   "company": "可口可乐公司",
+   "item": "伯克希尔建仓过程",
+   "value": "1988 年末 14,172,500 股；1989 年末 23,350,000 股，成本 10.2392 亿美元，市值 18.03787 亿美元；1994 年 8 月完成七年买入，拆股调整后共 4 亿股，总成本 13 亿美元",
+   "basis": "伯克希尔 1988、1989 年股东信与 2022 年年报",
+   "accession": "BRK-COKE-OFFICIAL",
+   "line": "L1-L7"
+  },
+  {
+   "id": "coke-dividend-growth",
+   "company": "可口可乐公司",
+   "item": "伯克希尔收到的年度现金股息",
+   "value": "1994 年 7,500 万美元；2022 年 7.04 亿美元",
+   "basis": "伯克希尔 2022 年年报",
+   "accession": "BRK-COKE-OFFICIAL",
+   "line": "L8"
+  },
+  {
+   "id": "burry-reset-evidence",
+   "company": "美国次级按揭市场",
+   "item": "伯里锁定的底层风险与时间表",
+   "value": "2005 年上半年近四分之一新增房贷为只付息贷款；Countrywide 与 Washington Mutual 发放的选择权浮息贷款中 68% 采用低文件或无文件审核；两年期浮息贷款重定价是关键检验",
+   "basis": "美国金融危机调查委员会报告与证词",
+   "accession": "FCIC-BURRY-OFFICIAL",
+   "line": "L1-L7"
+  },
+  {
+   "id": "lynch-leggs-channel",
+   "company": "Hanes / L'eggs",
+   "item": "彼得·林奇从产品观察转向渠道研究",
+   "value": "当时约 95% 袜类产品通过百货与专卖店销售；L'eggs 将强调合身度的高质量产品带入超市渠道",
+   "basis": "富达彼得·林奇访谈文字稿",
+   "accession": "FIDELITY-LYNCH-LEGGS",
+   "line": "L1-L6"
+  },
+  {
+   "id": "costco-1999-economics",
+   "company": "好市多公司",
+   "item": "1999 财年会员制与低毛利经营数据",
+   "value": "净销售额 269.76 亿美元；会员费 4.79578 亿美元，相当于净销售额 1.78%；毛利 28.06254 亿美元，毛利率 10.40%；同店销售增长 10%；存货损失低于净销售额 0.2%",
+   "basis": "好市多 2000 财年 10-K（1999 财年对比列）",
+   "accession": "COSTCO-2000-10K",
+   "line": "L1-L7"
+  },
+  {
+   "id": "boe-erm-constraints",
+   "company": "英格兰银行与英镑",
+   "item": "欧洲汇率机制约束与退出",
+   "value": "英镑兑德国马克中央汇率为 1 英镑兑 2.95 马克，波动带宽 6%；基础利率曾由 15% 降至 10%；1992 年 9 月 16 日英国暂停英镑参与欧洲汇率机制",
+   "basis": "英格兰银行 1990、1992 年季度公报",
+   "accession": "BOE-ERM-1992",
+   "line": "L1-L6"
   }
  ],
  "approved_tokens": {

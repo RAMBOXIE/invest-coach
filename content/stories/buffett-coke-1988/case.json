@@ -32,24 +32,44 @@
    "资本回报",
    "内在价值"
   ],
+  "timeline": [
+   {"date":"1936 年","title":"奥马哈街头","text":"巴菲特六瓶一组买入可口可乐，再逐瓶卖出。产品很熟，股票却还没买。"},
+   {"date":"1988 年末","title":"第一年建仓","text":"伯克希尔已持有 14,172,500 股。","fact":"coke-position-build"},
+   {"date":"1989 年末","title":"继续加仓","text":"持股增至 23,350,000 股，累计成本 10.2392 亿美元。","fact":"coke-position-build"},
+   {"date":"1994 年 8 月","title":"七年买入完成","text":"拆股调整后共 4 亿股，总成本 13 亿美元。","fact":"coke-position-build"}
+  ],
+  "glossary": [
+   {"id":"pricing-power","term":"定价权","plain":"提价后，顾客仍愿意买，而且销量与利润没有被提价反噬。","example":"品牌知名度只是线索；要看提价、销量和利润能否同时成立。"},
+   {"id":"capital-return","term":"资本回报","plain":"公司每多投入一元经营资本，能长期多赚多少钱。","example":"如果增长必须不断重建工厂和渠道，账面增长未必能留下同样多的现金。"},
+   {"id":"position-build","term":"分批建仓","plain":"在判断仍成立时，分阶段增加持股。","example":"伯克希尔从 1988 年末的 14,172,500 股增加到 1989 年末的 23,350,000 股。"}
+  ],
   "roles": [
    {
     "id": "researcher",
     "title": "消费品研究员",
     "goal": "把品牌魅力落到经营数字上",
-    "pressure": "大家都说这个品牌不需要解释。"
+    "pressure": "大家都说这个品牌不需要解释。",
+    "brief": "你不替品牌写赞美词。你要证明一瓶可乐如何穿过渠道，最后变成可持续的利润。",
+    "win_condition": "交出一页经营证据链",
+    "risk": "把熟悉感误当成理解"
    },
    {
     "id": "risk",
     "title": "风险负责人",
     "goal": "找出好生意失灵的条件",
-    "pressure": "会议里没人愿意给传奇品牌泼冷水。"
+    "pressure": "会议里没人愿意给传奇品牌泼冷水。",
+    "brief": "你专门寻找这套判断会在哪里失效：提价伤害销量、渠道变弱，或增长开始吞噬资本。",
+    "win_condition": "写出三条可观察的失效条件",
+    "risk": "只说风险很大，却说不出先看哪个指标"
    },
    {
     "id": "allocator",
     "title": "资本配置人",
     "goal": "判断好生意是否也有好价格",
-    "pressure": "市场刚经历崩盘，机会看起来稍纵即逝。"
+    "pressure": "市场刚经历崩盘，机会看起来稍纵即逝。",
+    "brief": "你决定买多少、分几次买，以及什么价格会把好生意变成坏投资。",
+    "win_condition": "给出建仓节奏与价格上限",
+    "risk": "判断公司正确，却在价格和仓位上失败"
    }
   ],
   "initial_scene": "opening",
@@ -64,32 +84,60 @@
     "eyebrow": "故事开始",
     "place": "奥马哈 · 1988 年夏",
     "time": "买单还没有递出去",
-    "title": "你认识它，不等于你看懂了它",
+   "title": "你认识它，不等于你看懂了它",
     "lines": [
      "巴菲特小时候就卖过可口可乐，五十二年后才第一次买它的股票。",
-     "会议桌上没人怀疑品牌。大家需要回答的是：这门生意靠什么把一瓶糖水卖遍世界，而且越卖越赚钱？"
-    ],
+    "会议桌上没人怀疑品牌。大家需要回答的是：这门生意靠什么把一瓶糖水卖遍世界，而且越卖越赚钱？"
+   ],
+   "role_lines": {
+    "researcher":["一瓶可乐放在桌上。你要沿着浓缩液、装瓶商、零售终端和消费者，把利润究竟留在哪里画出来。"],
+    "risk":["所有人都能背出品牌故事。你面前的空白纸只写了一个问题：什么变化会让消费者不再接受提价？"],
+    "allocator":["公司很好已经不是争议。你要回答的是：第一笔买多少，什么证据出现后再加第二笔。"]
+   },
+   "briefings": [
+    {"label":"1988 年末持股","value":"14,172,500 股","note":"这是第一年末的已建仓数量。","fact":"coke-position-build","roles":["allocator"]},
+    {"label":"观察期","value":"52 年","note":"熟悉产品很久，不等于早已完成投资判断。","fact":"coke-position-build","roles":["researcher","risk"]},
+    {"label":"持有前提","value":"经营优势持续","note":"长期持有是结论，前提仍要逐年验证。","roles":["risk","allocator"]}
+   ],
+   "terms":["pricing-power","position-build"],
+   "known":{"researcher":"产品被反复购买，品牌与渠道覆盖很强。","risk":"市场普遍认同品牌，但失效条件还没人写。","allocator":"伯克希尔已经开始买入，但完整仓位并非一天形成。"},
+   "unknown":{"researcher":"消费者愿意为品牌多付多少钱，利润主要留在哪一环。","risk":"提价、汇率、渠道或口味变化中，哪一项会先伤到现金流。","allocator":"合理价格上限，以及下一笔加仓要等待什么证据。"},
+   "decision":{"researcher":"先把哪条经营链算清？","risk":"先把哪一种失效情形放进会议？","allocator":"第一笔仓位怎样留下继续判断的余地？"},
     "actions": [
      {
-      "id": "follow-money",
+     "id": "follow-money",
+     "roles":["researcher"],
       "kind": "先看生意",
       "label": "顺着一瓶可乐的钱往下查",
       "prompt": "看提价、销量、渠道和维持增长需要的资本。",
       "consequence": "会议从“大家都爱喝”转向“公司凭什么持续赚钱”。品牌第一次被拆成可以核对的东西。",
       "result_title": "熟悉感被拆开了",
       "narration": "喜欢产品只能让你注意到公司，不能替你完成估值。",
-      "next": "development"
+     "next": "development"
      },
      {
-      "id": "follow-fame",
+     "id": "follow-fame",
+     "roles":["researcher"],
       "kind": "先信品牌",
       "label": "全球第一的品牌，还需要解释吗",
       "prompt": "把知名度直接当成护城河。",
       "consequence": "讨论很快结束。所有人都同意品牌强，却没人说得出它怎样变成现金，也没人写下什么情况会让判断失效。",
       "result_title": "掌声盖过了问题",
       "narration": "最容易买贵的，往往正是人人都能讲出优点的公司。",
-      "next": "development"
-     }
+     "next": "development"
+    },
+    {
+     "id":"write-failure-lines","roles":["risk"],"kind":"先写失效条件","label":"把提价、销量与资本投入列成三条警戒线","prompt":"每条线都必须能从以后披露的数据里观察。","consequence":"品牌不再是一张免检证。会议同意：一旦提价伴随销量持续走弱，或增长需要明显更多资本，就重做判断。","result_title":"风险终于可以被观察","evidence_used":"品牌强度必须落在提价后的销量与现金上。","tradeoff":"你延长了讨论，却保住了以后改口的依据。","narration":"风险负责人负责让错误能够被及时看见。","next":"development"
+    },
+    {
+     "id":"trust-the-name","roles":["risk"],"kind":"接受共识","label":"品牌经历过几十年考验，不另设警戒线","prompt":"把历史声誉当成未来安全边界。","consequence":"会议很快通过。以后即使经营变弱，团队也更容易把坏数据解释成短期波动。","result_title":"品牌拿到了免检证","evidence_missed":"没有定义哪项经营数据会推翻判断。","tradeoff":"决策更快，纠错会更慢。","narration":"没有失效条件的长期主义，很容易变成拒绝更新。","next":"development"
+    },
+    {
+     "id":"stage-entry","roles":["allocator"],"kind":"分批建仓","label":"先建立可承受的首笔仓位，再用经营结果决定是否加仓","prompt":"把判断、价格与后续行动写在同一页。","consequence":"你没有等到所有问题消失，也没有一次押满。第一笔买入为继续研究保留了主动权。","result_title":"仓位成了判断流程的一部分","evidence_used":"伯克希尔的持股是在多年内增加，不是一笔完成。","tradeoff":"若价格迅速上涨，后续买入会更贵。","narration":"分批建仓不是拖延，它要求每一笔都有新的证据。","next":"development"
+    },
+    {
+     "id":"full-entry","roles":["allocator"],"kind":"一次买足","label":"机会难得，按目标仓位一次买足","prompt":"让确信程度直接决定仓位。","consequence":"如果判断正确，你更早获得全部敞口；如果估值或经营假设有误，也失去了用新信息调整的空间。","result_title":"观点和仓位绑在了一起","evidence_missed":"没有为后续验证和价格变化留下预算。","tradeoff":"收益更集中，错误也更集中。","narration":"公司质量回答买不买，仓位还要回答错了能不能继续活着。","next":"development"
+    }
     ]
    },
    {
@@ -97,32 +145,45 @@
     "eyebrow": "故事发展",
     "place": "伯克希尔投资会议",
     "time": "品牌已经过关，价格还没有",
-    "title": "好生意，也可能是一笔坏买卖",
+   "title": "好生意，也可能是一笔坏买卖",
     "lines": [
      "海外销量正在加速，管理层把营销和资本配置拧到了一起。",
-     "现在轮到你回答更扫兴的问题：如果买得太贵，品牌再好能不能救你？"
-    ],
+    "现在轮到你回答更扫兴的问题：如果买得太贵，品牌再好能不能救你？"
+   ],
+   "briefings":[
+    {"label":"1989 年末持股","value":"23,350,000 股","note":"较上一年末继续增加。","fact":"coke-position-build"},
+    {"label":"累计成本","value":"10.2392 亿美元","note":"这是当时已经付出的资本。","fact":"coke-position-build"},
+    {"label":"年末市值","value":"18.03787 亿美元","note":"市值上涨是结果，不能倒过来证明买入理由。","fact":"coke-position-build"}
+   ],
+   "terms":["capital-return","position-build"],
+   "known":"持股继续增加，市场价格已经高于累计成本。",
+   "unknown":"未来增长能否兑现，以及当前价格预支了多少年增长。",
+   "decision":{"researcher":"哪组经营数据能证明利润增长来自生意本身？","risk":"上涨之后，哪条警戒线仍然有效？","allocator":"继续加仓时，怎样不让已有浮盈替新价格辩护？"},
     "actions": [
      {
-      "id": "price-it",
+     "id": "price-it",
+     "roles":["researcher","allocator"],
       "kind": "算清代价",
       "label": "先写下未来现金流，再谈愿意付多少钱",
       "prompt": "把增长、回报和价格放在同一张纸上。",
       "consequence": "你迫使会议写下假设：增长从哪里来、需要多少资本、哪一项低于预期就要重算。",
       "result_title": "品牌有了价格边界",
       "narration": "估值是在回答：这份正确判断，最多值得付出多少。",
-      "next": "climax"
+     "next": "climax"
      },
      {
-      "id": "pay-up",
+     "id": "pay-up",
+     "roles":["researcher","allocator"],
       "kind": "抢先买入",
       "label": "这样的公司不会便宜，先买再说",
       "prompt": "用稀缺性替代价格讨论。",
       "consequence": "仓位先建立起来，估值被推到以后。以后每一次上涨都会让原来的决定看起来更正确。",
       "result_title": "价格问题被留在门外",
       "narration": "好公司值得溢价，不等于任何溢价都值得。",
-      "next": "climax"
-     }
+     "next": "climax"
+    },
+    {"id":"stress-thesis","roles":["risk"],"kind":"压力测试","label":"假设销量停滞、提价受阻，再算一次可承受价格","prompt":"先看坏情形会损失什么。","consequence":"估值表不再只有一条向上的曲线。团队看见，即使公司仍优秀，预期过满也会压缩安全边界。","result_title":"坏情形进入了价格","evidence_used":"市场价格已明显高于累计成本。","tradeoff":"你可能因此少赚一段上涨，但不会把上涨本身当成证据。","narration":"压力测试用来确认坏情形发生时你是否付得起。","next":"climax"},
+    {"id":"protect-winner","roles":["risk"],"kind":"保护赢家","label":"股价已经证明判断正确，暂不重做风险预算","prompt":"让已有收益替未来风险背书。","consequence":"风险讨论被浮盈终止。此后每一次上涨，都会进一步提高团队承认错误的心理成本。","result_title":"结果开始替过程辩护","evidence_missed":"新的买入价格对应的是新的风险收益，不是原始成本。","tradeoff":"会议更轻松，判断更难更新。","narration":"旧仓位的成功，不能自动批准新仓位。","next":"climax"}
     ]
    },
    {
@@ -169,6 +230,26 @@
     ]
    }
   ]
+ },
+ "interrogation": {
+  "opening":"桌上放着伯克希尔当年的持仓记录。你可以问巴菲特：为什么熟悉了几十年，直到这时才动手？",
+  "howto":"带行号的是公开原话译文；自由提问只有在连接后端时才由 AI 按当年材料推演，并会明确标注。",
+  "cards":[
+   {"id":"c-build","t":"1988—1989 年持股从 14,172,500 股增至 23,350,000 股","fact":"coke-position-build"},
+   {"id":"c-cost","t":"1989 年末累计成本 10.2392 亿美元","fact":"coke-position-build"},
+   {"id":"c-dividend","t":"年度现金股息从 7,500 万美元增至 7.04 亿美元","fact":"coke-dividend-growth"}
+  ],
+  "testimony":[
+   {
+    "id":"t1","text":"「1988 年，我们大量买入了可口可乐。」","src":"伯克希尔 1988 年致股东信","line":"L1","anchors":[{"accession":"BRK-COKE-OFFICIAL","line":"L1"}],"orig":"In 1988 we made major purchases of Federal Home Loan Mortgage Pfd. (\"Freddie Mac\") and Coca Cola.",
+    "press":{"text":"「当我们持有由优秀管理层经营的杰出企业的一部分时，我们最喜欢的持有期限是永远。」","src":"伯克希尔 1988 年致股东信","line":"L2","orig":"When we own portions of outstanding businesses with outstanding managements, our favorite holding period is forever.","coach":"长期持有是经营优势持续之后的结论，不是跳过价格与风险检查的口号。"}
+   },
+   {
+    "id":"t2","text":"「观察可口可乐 52 年后，我们的眼睛终于和大脑接上了。」","src":"伯克希尔 1989 年致股东信","line":"L5","anchors":[{"accession":"BRK-COKE-OFFICIAL","line":"L5"}],"orig":"After 52 years of watching Coca-Cola, our eyes finally made contact with our brains.",
+    "press":{"text":"「1989 年末，伯克希尔持有 23,350,000 股，成本 1,023,920,000 美元，市值 1,803,787,000 美元。」","src":"伯克希尔 1989 年致股东信","line":"L4","orig":"At yearend 1989 Berkshire held 23,350,000 shares at a cost of $1,023,920,000 and a market value of $1,803,787,000.","coach":"这里把故事拉回了可核对的持股、成本与市值。"}
+   }
+  ],
+  "no_record":{"text":"「这份公开材料没有写到这个问题。」","coach":"史料的边界也是答案的一部分。不要让人物推演填补材料没有留下的动机。"}
  },
  "beats": [
   {

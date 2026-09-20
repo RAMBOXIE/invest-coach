@@ -2,7 +2,7 @@
  "case_id": "burry-mortgage-2007",
  "title": "评级背后的那栋房子",
  "subtitle": "2005—2007 年 · 迈克尔·伯里拆开次贷证券",
- "company": "锡安资本与美国次级按揭市场",
+ "company": "赛恩资本与美国次级按揭市场",
  "era": "2007",
  "status": "settled",
  "hook": "债券写着高评级，最后还钱的却是一批两年后就要重定价的房贷。",
@@ -18,7 +18,7 @@
    "id": "burry",
    "name": "迈克尔·伯里",
    "avatar": "人物",
-   "role": "锡安资本基金经理",
+   "role": "赛恩资本基金经理",
    "intro": "故事依据其向金融危机调查委员会提供的公开记录，不模仿本人发言。",
    "rule": "只引用公开记录；解释选择，不改写历史事实。"
   }
@@ -32,24 +32,34 @@
    "信用风险",
    "模型边界"
   ],
+  "timeline":[
+   {"date":"2005 年上半年","title":"贷款标准松动","text":"新增房贷中近四分之一为只付息贷款。","fact":"burry-reset-evidence"},
+   {"date":"2005 年","title":"把债券拆回房贷","text":"伯里逐笔看浮息、收入证明和重定价时点。","fact":"burry-reset-evidence"},
+   {"date":"2007 年中","title":"等待仍在消耗现金","text":"底层风险兑现前，信用违约互换保费持续流出。","fact":"burry-reset-evidence"}
+  ],
+  "glossary":[
+   {"id":"arm-reset","term":"利率重定价","plain":"优惠期结束后，贷款利率和月供按合同重新计算。","example":"借款人前两年还得起，不代表重定价后的月供也还得起。"},
+   {"id":"cds-premium","term":"信用违约互换保费","plain":"为获得债券违约时的赔付权，在等待期间持续支付的费用。","example":"方向看对但等得太久，保费也可能先耗尽现金。"},
+   {"id":"look-through","term":"穿透分析","plain":"追到最终谁负责还钱、合同何时改变，而不是停在证券名称和评级。","example":"高评级证券的现金最终来自一批借款人的月供。"}
+  ],
   "roles": [
    {
     "id": "researcher",
     "title": "抵押贷款研究员",
     "goal": "把债券拆回一笔笔房贷",
-    "pressure": "模型已经给出漂亮的评级。"
+    "pressure": "模型已经给出漂亮的评级。","brief":"你拿到贷款明细，要找出收入、首付、文件质量和重定价集中在哪些月份。","win_condition":"画出违约可能出现的月份分布","risk":"被证券评级挡在底层借款人之外"
    },
    {
     "id": "risk",
     "title": "基金风控负责人",
     "goal": "算清保费能撑多久",
-    "pressure": "客户开始质疑为什么一直在亏保费。"
+    "pressure": "客户开始质疑为什么一直在亏保费。","brief":"你不争论房价方向，只确保保费、追加担保和赎回不会先耗尽现金。","win_condition":"给交易一条能活到催化时点的现金底线","risk":"观点正确，基金却先失去持有能力"
    },
    {
     "id": "allocator",
     "title": "基金经理",
     "goal": "让判断、催化时点和仓位匹配",
-    "pressure": "看对太早，也可能先被拖死。"
+    "pressure": "看对太早，也可能先被拖死。","brief":"你要把底层信贷判断、催化时点和仓位放进同一笔交易。","win_condition":"说清做空对象、触发条件和最大成本","risk":"把逻辑清楚误当成路径确定"
    }
   ],
   "initial_scene": "opening",
@@ -69,9 +79,20 @@
      "桌上是一只分散得很漂亮的抵押贷款证券。",
      "把它拆开后，你看见大量浮动利率贷款：前两年还款很轻，重定价之后才开始承受压力。"
     ],
+    "role_lines":{"researcher":["你面前是一张贷款清单。每行都有借款人收入、首付、审核文件和第一次重定价日期。"],"risk":["研究员说底层会坏。你先问另一件事：在它坏之前，每月要烧掉多少保费与流动性？"],"allocator":["你可以用信用违约互换表达判断，但交易能否活到兑现，取决于合约、对手方与仓位。"]},
+    "briefings":[
+     {"label":"只付息贷款占比","value":"近四分之一","note":"2005 年上半年新增房贷。","fact":"burry-reset-evidence","roles":["researcher","allocator"]},
+     {"label":"低或无文件审核","value":"68%","note":"两家大型机构发放的选择权浮息贷款。","fact":"burry-reset-evidence","roles":["researcher","risk"]},
+     {"label":"关键时钟","value":"两年后重定价","note":"优惠月供结束，合同开始检验借款人。","fact":"burry-reset-evidence"}
+    ],
+    "terms":["look-through","arm-reset"],
+    "known":{"researcher":"文件质量下降，优惠期掩盖了重定价后的真实月供。","risk":"交易在违约发生前要持续付费，客户还可能赎回。","allocator":"底层信用恶化与证券价格重估之间存在时间差。"},
+    "unknown":{"researcher":"哪些贷款会先断供，以及损失怎样穿过分层结构。","risk":"催化需要多久，期间最大现金消耗是多少。","allocator":"市场何时承认损失，对手方是否能履约。"},
+    "decision":{"researcher":"先按什么字段给贷款分组？","risk":"先锁住哪一条生存约束？","allocator":"怎样把判断变成不会被时间拖死的交易？"},
     "actions": [
      {
       "id": "read-loans",
+      "roles":["researcher"],
       "kind": "拆到底层",
       "label": "逐笔看借款人收入、首付和重定价日期",
       "prompt": "别从评级开始，从谁在还钱开始。",
@@ -82,6 +103,7 @@
      },
      {
       "id": "trust-rating",
+      "roles":["researcher"],
       "kind": "相信评级",
       "label": "既然分散又有高评级，不必逐笔看",
       "prompt": "把模型输出当成调查终点。",
@@ -89,19 +111,28 @@
       "result_title": "整齐的模型关掉了调查",
       "narration": "评级描述模型里的风险，不会替你检查模型漏掉了什么。",
       "next": "development"
-     }
+     },
+     {"id":"budget-premium","roles":["risk"],"kind":"先算生存期","label":"把保费、赎回和追加担保放进同一张现金表","prompt":"先确认基金能活多久。","consequence":"观点没有变，但交易多了一条现金边界。只有基金能活到贷款重定价时，这笔仓位才成立。","result_title":"风险有了时钟","evidence_used":"两年期重定价给出了催化区间。","tradeoff":"仓位会比最激进方案更小。","narration":"风控的第一职责，是让正确判断有机会等到被证明。","next":"development"},
+     {"id":"cap-premium-only","roles":["risk"],"kind":"只限保费","label":"只给年度保费设上限，不估赎回与担保压力","prompt":"把显性费用当成全部风险。","consequence":"预算看起来清楚，却漏掉客户资金与对手方要求。市场继续上涨时，现金缺口会从表外冒出来。","result_title":"预算少算了两条现金出口","evidence_missed":"赎回和追加担保可能早于违约赔付发生。","tradeoff":"账面仓位更大，生存期更短。","narration":"衍生品的损失路径，不只写在保费那一栏。","next":"development"},
+     {"id":"select-contracts","roles":["allocator"],"kind":"挑选合约","label":"只买底层最差、重定价最集中的保护","prompt":"用标的选择减少等待误差。","consequence":"你不再做空抽象的房地产市场，而是针对最容易在明确月份承压的贷款池。","result_title":"宏大观点变成具体合约","evidence_used":"文件质量、贷款类型与重定价日期。","tradeoff":"集中选择提高研究要求，也带来对手方风险。","narration":"交易的锋利来自标的具体，不来自口号更响。","next":"development"},
+     {"id":"short-index","roles":["allocator"],"kind":"做空大盘","label":"住房会转弱，直接做空整个市场","prompt":"用宏观判断替代标的筛选。","consequence":"方向也许一致，持有成本、时点与底层暴露却变得模糊。你更难解释为什么这笔交易应该先兑现。","result_title":"观点放大，证据变薄","evidence_missed":"没有把最差贷款池和重定价时点绑定。","tradeoff":"操作简单，误差来源更多。","narration":"越大的观点，越需要更具体的兑现路径。","next":"development"}
     ]
    },
    {
     "id": "development",
     "eyebrow": "故事发展",
-    "place": "锡安资本投资者电话会",
+    "place": "赛恩资本投资者电话会",
     "time": "保费不断流出",
     "title": "方向可能对，时间也可能把你耗死",
     "lines": [
      "你买下信用违约互换后，房地产没有立刻下跌。",
      "每个月都要付保费，投资者看到的只有亏损和一封越来越难解释的信。"
     ],
+    "briefings":[{"label":"催化窗口","value":"重定价批次到来","note":"月供变化比市场口号更接近现金流拐点。","fact":"burry-reset-evidence"},{"label":"交易成本","value":"持续支付保费","note":"尚未违约时，保护买方先承担现金流出。","roles":["risk","allocator"]}],
+    "terms":["cds-premium","arm-reset"],
+    "known":"底层标准已经恶化，重定价时点可以从合同中排出来。",
+    "unknown":"证券价格何时反映损失，以及客户能否忍受等待期。",
+    "decision":{"researcher":"怎样把底层风险转换成可跟踪的坏账时间表？","risk":"现金预算至少要覆盖哪些压力？","allocator":"观点、催化与仓位怎样互相约束？"},
     "actions": [
      {
       "id": "match-clock",
@@ -169,6 +200,16 @@
     ]
    }
   ]
+ },
+ "interrogation":{
+  "opening":"你可以问伯里：为什么不从房价预测开始，而从一张张贷款合同开始？",
+  "howto":"带行号的是调查委员会记录的译文；AI 人物推演只能使用这些当年材料。",
+  "cards":[{"id":"c-doc","t":"68% 的选择权浮息贷款采用低文件或无文件审核","fact":"burry-reset-evidence"},{"id":"c-reset","t":"两年期浮息贷款重定价构成时间表","fact":"burry-reset-evidence"},{"id":"c-io","t":"新增房贷中近四分之一为只付息贷款","fact":"burry-reset-evidence"}],
+  "testimony":[
+   {"id":"t1","text":"「我盯住的是自己认为毒性最强的一类：浮动利率抵押贷款。」","src":"美国金融危机调查委员会记录","line":"L1","anchors":[{"accession":"FCIC-BURRY-OFFICIAL","line":"L1"}],"orig":"Burry focused on what he considered the most toxic mortgages, adjustable-rate mortgages.","press":{"text":"「我看着这些贷款的信用标准不断向更差的借款人迁移。」","src":"美国金融危机调查委员会记录","line":"L2","orig":"He watched the credit standards for those mortgages migrate down the credit spectrum.","coach":"他研究借款人的还款能力与合同条件，没有停在抽象房价上。"}},
+   {"id":"t2","text":"「房价在上涨，但工资和收入几乎没有增长。」","src":"美国金融危机调查委员会记录","line":"L3","anchors":[{"accession":"FCIC-BURRY-OFFICIAL","line":"L3"}],"orig":"House prices rose even though there was virtually no wage or income growth.","press":{"text":"「两年期浮动利率贷款的重定价，将成为住房市场最后的检验。」","src":"美国金融危机调查委员会记录","line":"L4","orig":"The reset of two-year adjustable-rate mortgages would be the final judgment on the housing market.","coach":"这句话把方向判断变成了可排进日历的催化时点。"}}
+  ],
+  "no_record":{"text":"「这份调查材料没有记录这个问题。」","coach":"缺失的材料不能由人物推演补齐。把它写进待查清单。"}
  },
  "beats": [
   {

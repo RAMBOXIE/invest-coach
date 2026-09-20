@@ -1,11 +1,11 @@
 {
  "case_id": "lynch-fidelity-1985",
- "title": "购物车里的线索",
- "subtitle": "1985 年 · 彼得·林奇从日常消费追到公司年报",
- "company": "富达麦哲伦基金",
- "era": "1985",
+ "title": "塑料蛋里的丝袜生意",
+ "subtitle": "20 世纪 70 年代 · 彼得·林奇从一枚塑料蛋追到恒适公司",
+ "company": "恒适公司与塑料蛋丝袜产品",
+ "era": "1970",
  "status": "settled",
- "hook": "你在商店里发现一个爆款。它可能是一只好股票，也可能只是一个好产品。",
+ "hook": "妻子带回一只装丝袜的塑料蛋。林奇没有立刻买股票，他先去查这件商品为什么能离开百货公司，进入超市。",
  "knowledge_node": "growth-rate",
  "learning_goal": "把生活观察写成可证伪假设，再用增长质量和估值完成判断。",
  "skills": [
@@ -24,7 +24,7 @@
   }
  ],
  "rpg": {
-  "title": "购物车里的线索",
+  "title": "塑料蛋里的丝袜生意",
   "premise": "你在商店里发现一个爆款。它可能是一只好股票，也可能只是一个好产品。",
   "learning_goal": "把生活观察写成可证伪假设，再用增长质量和估值完成判断。",
   "learning_skills": [
@@ -32,24 +32,34 @@
    "增长质量",
    "估值纪律"
   ],
+  "timeline":[
+   {"date":"20 世纪 70 年代","title":"一只塑料蛋被带回家","text":"卡罗琳买回塑料蛋包装的丝袜，包装和渠道先引起注意。","fact":"lynch-leggs-channel"},
+   {"date":"同一周","title":"观察变成电话","text":"林奇联系公司，追问产品、渠道与消费者为什么会换品牌。","fact":"lynch-leggs-channel"},
+   {"date":"研究继续","title":"从货架回到公司","text":"当时约 95% 袜类仍在百货与专卖店销售，这款产品的变化在渠道。","fact":"lynch-leggs-channel"}
+  ],
+  "glossary":[
+   {"id":"channel-shift","term":"渠道迁移","plain":"同一类商品从原有销售场景进入新的购买地点，并改变触达频率与成本。","example":"丝袜从百货专柜进入消费者更常去的超市。"},
+   {"id":"falsifiable","term":"可证伪假设","plain":"写清什么事实出现时，你会承认原判断不成立。","example":"若超市销量增加但复购、利润或现金没有改善，渠道故事就没有变成好生意。"},
+   {"id":"inventory","term":"库存","plain":"公司已经生产但尚未卖给最终消费者的商品。","example":"收入增长而库存更快堆积，可能是向渠道发货，不一定是消费者买走。"}
+  ],
   "roles": [
    {
     "id": "researcher",
     "title": "消费行业研究员",
     "goal": "把货架观察变成待验证的假设",
-    "pressure": "团队已经被产品体验打动。"
+    "pressure": "团队已经被产品体验打动。","brief":"你把塑料蛋、合身度和超市货架拆成能向公司求证的问题。","win_condition":"交出三条支持或推翻渠道假设的证据","risk":"把自己的家庭体验外推成全国需求"
    },
    {
     "id": "risk",
     "title": "组合风控负责人",
     "goal": "区分产品增长和公司增长",
-    "pressure": "错过热门公司看起来比买贵更难受。"
+    "pressure": "错过热门公司看起来比买贵更难受。","brief":"你检查新品是否挤压旧品、库存是否堆积，以及渠道扩张会不会透支现金。","win_condition":"写出产品成功但股票失败的路径","risk":"只盯销售热度，忽略库存与估值"
    },
    {
     "id": "allocator",
     "title": "基金经理",
     "goal": "让增长速度和估值匹配",
-    "pressure": "基金规模要求你今天给出结论。"
+    "pressure": "基金规模要求你今天给出结论。","brief":"你决定这条生活线索是否值得进入组合，以及什么价格才保留误差。","win_condition":"把线索、公司盈利与买入价格连成证据链","risk":"发现得早，却因为付价过高拿不到回报"
    }
   ],
   "initial_scene": "opening",
@@ -62,16 +72,23 @@
    {
     "id": "opening",
     "eyebrow": "故事开始",
-    "place": "波士顿郊外的商场 · 1985 年",
-    "time": "周末购物之后",
+    "place": "林奇家中 · 20 世纪 70 年代",
+    "time": "卡罗琳刚把塑料蛋丝袜带回家",
     "title": "你发现了产品，还没有发现股票",
     "lines": [
-     "货架前排着队，身边的人都在谈同一个新产品。",
-     "这个观察很值钱，但它只够让公司进入研究名单。"
+     "一双丝袜装在透明塑料蛋里，不在百货专柜，而在消费者每周都会经过的超市。",
+     "包装很醒目，可能改变生意的是渠道：购买丝袜不再需要专程进百货公司。"
     ],
+    "role_lines":{"researcher":["你先写下三个问题：谁在买、为什么复购、超市渠道会不会把低质量旧产品换成这款丝袜。"],"risk":["产品好看并不自动意味着公司赚钱。你要找库存、促销与渠道压货可能制造的假增长。"],"allocator":["生活观察让你更早看见变化，但下单还缺两步：公司能赚多少，以及这个价格已经预支多少增长。"]},
+    "briefings":[{"label":"原有主渠道","value":"约 95%","note":"当时袜类主要在百货与专卖店销售。","fact":"lynch-leggs-channel"},{"label":"新渠道","value":"超市","note":"更高购买频率，也改变陈列和补货方式。","fact":"lynch-leggs-channel"},{"label":"产品主张","value":"高质量与合身度","note":"要继续验证它是否带来复购。","fact":"lynch-leggs-channel"}],
+    "terms":["channel-shift","falsifiable"],
+    "known":{"researcher":"产品、包装和销售地点都与原有丝袜不同。","risk":"一处家庭观察无法说明全国复购和公司利润。","allocator":"渠道迁移可能扩大市场，但还没有完成估值。"},
+    "unknown":{"researcher":"消费者是尝鲜还是持续复购，超市补货是否跟上。","risk":"增长是卖给消费者，还是先压进渠道库存。","allocator":"公司盈利弹性与当前价格之间是否留有余地。"},
+    "decision":{"researcher":"先向公司验证哪条假设？","risk":"先找哪条能推翻爆款故事的证据？","allocator":"现在是下单时点，还是进入研究名单？"},
     "actions": [
      {
       "id": "write-hypothesis",
+      "roles":["researcher"],
       "kind": "写成问题",
       "label": "先写下：它会怎样出现在下一份年报里",
       "prompt": "收入、同店增长、库存和利润率至少要有一项响应。",
@@ -82,6 +99,7 @@
      },
      {
       "id": "buy-product",
+      "roles":["researcher"],
       "kind": "凭体验下注",
       "label": "我自己都在买，市场一定会继续买",
       "prompt": "把个人体验外推成全国需求。",
@@ -89,7 +107,11 @@
       "result_title": "产品体验替公司签了字",
       "narration": "好产品和好股票之间，还隔着公司、竞争和价格。",
       "next": "development"
-     }
+     },
+     {"id":"check-inventory","roles":["risk"],"kind":"先找反证","label":"查库存、退货和促销，再判断热销是否真实","prompt":"从最容易制造假增长的地方开始。","consequence":"你没有否定产品，而是要求渠道销量最终能在补货、库存和现金里对上。","result_title":"爆款故事有了反证口","evidence_used":"个人体验只能证明产品存在，不能证明全国需求。","tradeoff":"研究更慢，但避免把铺货当成消费。","narration":"风险分析的价值，是让喜欢这件产品的人也知道何时该改口。","next":"development"},
+     {"id":"fear-missing","roles":["risk"],"kind":"先占位置","label":"先买一点，免得它涨起来再也追不上","prompt":"用小仓位缓解错过焦虑。","consequence":"仓位虽然小，却会改变后续研究：团队更愿意搜集支持材料，不愿承认最初线索很普通。","result_title":"小仓位先买走了中立","evidence_missed":"还没有库存、复购与利润证据。","tradeoff":"缓解了焦虑，增加了确认偏误。","narration":"仓位大小会变，心理立场往往在第一笔成交时就形成。","next":"development"},
+     {"id":"research-list","roles":["allocator"],"kind":"进入观察名单","label":"先把恒适公司放进研究名单，不急着下单","prompt":"给团队一周补齐渠道与盈利数据。","consequence":"你保留了早发现的优势，也没有让一只塑料蛋替整个公司完成估值。","result_title":"线索进入流程，没有直接进入组合","evidence_used":"新渠道与高质量产品值得跟踪。","tradeoff":"若市场立刻重估，你可能买得更贵。","narration":"早发现的价值，是比别人早开始研究，不是比别人早停止研究。","next":"development"},
+     {"id":"starter-position","roles":["allocator"],"kind":"建立试探仓位","label":"先建仓，再让研究补上理由","prompt":"用仓位迫使自己关注。","consequence":"你会更认真跟踪公司，也更难在证据不支持时退出。","result_title":"行动提高了注意力，也提高了偏见","evidence_missed":"公司盈利与买入价格尚未连成证据链。","tradeoff":"信息跟踪更紧，判断独立性更弱。","narration":"仓位能提醒你研究，也会悄悄要求你为过去辩护。","next":"development"}
     ]
    },
    {
@@ -102,6 +124,11 @@
      "你找到了收入增长，也看见库存和门店扩张。",
      "现在要判断：增长来自更多人反复购买，还是公司把货铺得更满？"
     ],
+    "briefings":[{"label":"渠道假设","value":"超市替代专程购买","note":"购买便利必须转化为复购和补货。","fact":"lynch-leggs-channel"},{"label":"核对顺序","value":"销量 → 库存 → 现金","note":"三者要讲同一个故事。"}],
+    "terms":["inventory","falsifiable"],
+    "known":"渠道变化已经观察到，产品质量主张也可以向公司求证。",
+    "unknown":"增长来自真实复购还是一次铺货，以及价格是否透支增长。",
+    "decision":{"researcher":"哪几张表能把渠道假设串成证据？","risk":"什么情况说明产品成功但公司回报不佳？","allocator":"在什么估值边界内，这条增长线索才值得进入组合？"},
     "actions": [
      {
       "id": "cross-check",
@@ -170,14 +197,24 @@
    }
   ]
  },
+ "interrogation":{
+  "opening":"你可以问林奇：一件家里人买回来的商品，怎样才配进入基金研究？",
+  "howto":"人物只根据富达公开访谈中的这段案例回答；带行号内容为公开记录译文。",
+  "cards":[{"id":"c-channel","t":"约 95% 袜类原本通过百货与专卖店销售","fact":"lynch-leggs-channel"},{"id":"c-quality","t":"超市旧有丝袜通常质量较低","fact":"lynch-leggs-channel"},{"id":"c-research","t":"发现产品后，林奇继续联系公司研究","fact":"lynch-leggs-channel"}],
+  "testimony":[
+   {"id":"t1","text":"「卡罗琳带回了装在塑料蛋里的丝袜。」","src":"富达彼得·林奇访谈文字稿","line":"L1","anchors":[{"accession":"FIDELITY-LYNCH-LEGGS","line":"L1"}],"orig":"Carolyn came home with L'eggs pantyhose packaged in a plastic egg.","press":{"text":"「我没有停在看见产品这一步；我联系了公司，继续研究。」","src":"富达彼得·林奇访谈文字稿","line":"L2","orig":"Lynch did not stop at seeing the product; he called the company and continued the research.","coach":"生活观察负责发现问题，联系公司与读材料才负责验证。"}},
+   {"id":"t2","text":"「当时约 95% 的袜类产品通过百货公司和专卖店销售。」","src":"富达彼得·林奇访谈文字稿","line":"L3","anchors":[{"accession":"FIDELITY-LYNCH-LEGGS","line":"L3"}],"orig":"About 95% of hosiery had been sold through department and specialty stores.","press":{"text":"「这款丝袜质量很高，并强调合身度。」","src":"富达彼得·林奇访谈文字稿","line":"L5","orig":"L'eggs offered a high-quality product and emphasized fit.","coach":"要验证的是高质量产品能否借新渠道触达更多消费者，包装新奇只负责引起注意。"}}
+  ],
+  "no_record":{"text":"「这段公开访谈没有写到这个问题。」","coach":"人物记忆不是无限资料库。把缺失问题带回公司原始材料。"}
+ },
  "beats": [
   {
    "id": "s0",
    "kind": "cold_open",
    "eyebrow": "故事开始",
-   "title": "购物车里的线索",
+   "title": "塑料蛋里的丝袜生意",
    "lines": [
-    "你在商店里发现一个爆款。它可能是一只好股票，也可能只是一个好产品。",
+    "一只装丝袜的塑料蛋，可能是渠道变化的线索，也可能只是醒目的包装。",
     "你会先看到当时能看到的材料，做完决定以后，历史才会翻牌。"
    ]
   },

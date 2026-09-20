@@ -1,0 +1,10 @@
+SOURCE: Costco Wholesale Corporation FY2000 Form 10-K, including FY1999 comparative data.
+URL: https://www.sec.gov/Archives/edgar/data/909832/000091205701540243/a2063635z10-k405.htm
+
+L1 Fiscal 1999 net sales were $26.976 billion.
+L2 Fiscal 1999 membership fees were $479.578 million, equal to 1.78% of net sales.
+L3 Fiscal 1999 gross margin was $2.806254 billion, equal to 10.40% of net sales.
+L4 Comparable warehouse sales increased 10% in fiscal 1999.
+L5 Costco's strategy is to offer low prices on a limited selection of products to produce high sales volumes and rapid inventory turnover.
+L6 Volume purchasing, efficient distribution and reduced handling allow Costco to operate profitably at lower gross margins.
+L7 Membership and entrance controls have helped keep inventory losses below 0.2% of net sales.

@@ -1,0 +1,11 @@
+SOURCE: Financial Crisis Inquiry Commission, The Financial Crisis Inquiry Report and official testimony materials.
+URL: https://www.govinfo.gov/content/pkg/GPO-FCIC/pdf/GPO-FCIC.pdf
+URL: https://fcic.law.stanford.edu/
+
+L1 Burry focused on what he considered the most toxic mortgages, adjustable-rate mortgages.
+L2 He watched the credit standards for those mortgages migrate down the credit spectrum.
+L3 House prices rose even though there was virtually no wage or income growth.
+L4 The reset of two-year adjustable-rate mortgages would be the final judgment on the housing market.
+L5 By mid-2007, Burry had credit default swaps on billions of dollars of mortgage-backed securities and on the financial companies most exposed to housing.
+L6 In the first half of 2005, nearly one-quarter of mortgages originated were interest-only loans.
+L7 Sixty-eight percent of option ARMs originated by Countrywide and Washington Mutual had low or no documentation.
