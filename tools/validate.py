@@ -699,10 +699,21 @@ def validate_stories(release=False):
         # 引文锚、剧透闸和真实浏览器回归共同保证；旧 x_prov 只保留为迁移记录。
         rpg = c.get("rpg") or {}
         if rpg:
-            roles = {x.get("id") for x in rpg.get("roles") or []}
+            role_items = rpg.get("roles") or []
+            roles = {x.get("id") for x in role_items}
             scenes = rpg.get("scenes") or []
             if len(roles) < 2:
                 errors.append(f"S10 {cid}: RPG 至少需要两个真实职责不同的角色")
+            focus_lines = []
+            for ri, role in enumerate(role_items):
+                focus = role.get("focus") or {}
+                missing_focus = [k for k in ("knowledge", "watch", "read") if not focus.get(k)]
+                if missing_focus:
+                    errors.append(f"S10 {cid}/role[{ri}]: 缺角色观察线字段 {missing_focus}")
+                else:
+                    focus_lines.append((focus["knowledge"], focus["watch"], focus["read"]))
+            if len(focus_lines) != len(set(focus_lines)):
+                errors.append(f"S10 {cid}: 不同角色不得共用同一条知识点与数据观察线")
             if len(scenes) < 2:
                 errors.append(f"S10 {cid}: RPG 至少需要故事发展与关键决定两个场景")
             for si, scene in enumerate(scenes):

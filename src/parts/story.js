@@ -134,10 +134,11 @@
       `<div class="rpg-time"><time>${esc(x.date)}</time><div><b>${esc(x.title || '')}</b><p>${md(x.text || '')}</p>${factButton(x.fact, '核对来源')}</div></div>`).join('')}</section>`;
   }
   function briefingHTML(items) {
-    const visible = (items || []).filter(x => !x.roles || x.roles.includes(ST.role));
+    const visible = items || [];
     if (!visible.length) return '';
-    return `<section class="rpg-ledger"><div class="rpg-section-label">你手里的数据</div>${visible.map(x =>
-      `<article class="rpg-number"><span>${esc(x.label)}</span><strong>${esc(x.value)}</strong>${x.note ? `<p>${md(x.note)}</p>` : ''}${factButton(x.fact, '查看口径与出处')}</article>`).join('')}</section>`;
+    const focus = activeRole().focus || {};
+    return `<section class="rpg-ledger"><div class="rpg-section-label">案头数据${focus.knowledge ? ` · 用来判断${esc(focus.knowledge)}` : ''}</div>${visible.map(x =>
+      `<article class="rpg-number${!x.roles || x.roles.includes(ST.role) ? ' is-focus' : ''}"><span>${esc(x.label)}</span><strong>${esc(x.value)}</strong>${x.note ? `<p>${md(x.note)}</p>` : ''}${factButton(x.fact, '查看口径与出处')}</article>`).join('')}</section>`;
   }
   function termsHTML(ids) {
     const all = STORY.rpg.glossary || [];
@@ -153,8 +154,14 @@
   }
   function roleBrief() {
     const r = activeRole();
+    const f = r.focus || {}, term = (STORY.rpg.glossary || []).find(x => x.term === f.knowledge);
+    const knowledge = term
+      ? `<button class="rpg-focus-term" data-term="${esc(term.id)}">${esc(f.knowledge)} ${ic('right')}</button>`
+      : `<strong>${esc(f.knowledge || '')}</strong>`;
     return `<section class="rpg-mission"><div class="rpg-section-label">你的席位 · ${esc(r.title || '')}</div>
-      <p>${md(r.brief || r.goal || '')}</p><dl><div><dt>交付</dt><dd>${esc(r.win_condition || r.goal || '')}</dd></div><div><dt>最怕漏掉</dt><dd>${esc(r.risk || r.pressure || '')}</dd></div></dl></section>`;
+      <p>${md(r.brief || r.goal || '')}</p>${f.knowledge ? `<div class="rpg-focus"><div><span>这次要学会</span>${knowledge}</div>
+      <div><span>先看哪组数</span><b>${esc(f.watch || '')}</b></div><div><span>这些数说明什么</span><p>${md(f.read || '')}</p></div></div>` : ''}
+      <dl><div><dt>你要交付</dt><dd>${esc(r.win_condition || r.goal || '')}</dd></div><div><dt>最容易看错</dt><dd>${esc(r.risk || r.pressure || '')}</dd></div></dl></section>`;
   }
   function rpgEvidenceV2(ids) {
     return (ids || []).map(rpgBeat).filter(Boolean).map(b => {
@@ -220,8 +227,8 @@
     const phase = s.eyebrow || (sceneIndex === 0 ? '故事开始' : final ? '故事高潮' : '故事发展');
     const lines = sceneLines(s);
     bodyEl.innerHTML = `<header class="rpg-scene-head"><div class="eyebrow">${esc(phase)}</div><div class="rpg-scene-meta"><span>${esc(s.place || '')}</span><span>${esc(s.time || '')}</span></div><h2>${esc(s.title)}</h2></header>
-      ${roleBrief()}${(Array.isArray(lines) ? lines : [lines]).map(x => `<p class="ln">${md(x)}</p>`).join('')}
-      ${sceneIndex === 0 ? timelineHTML(r.timeline) : ''}${briefingHTML(s.briefings)}${rpgEvidenceV2(s.evidence)}${termsHTML(s.terms || (sceneIndex === 0 ? (r.glossary || []).map(x => x.id) : []))}
+      ${roleBrief()}${briefingHTML(s.briefings)}${rpgEvidenceV2(s.evidence)}
+      ${(Array.isArray(lines) ? lines : [lines]).map(x => `<p class="ln">${md(x)}</p>`).join('')}${sceneIndex === 0 ? timelineHTML(r.timeline) : termsHTML(s.terms || [])}
       ${dialogueButton(s)}${action ? resultHTML(action) : `${decisionFrame(s)}<div class="rpg-actions">${actions}</div>`}`;
     const nextScene = action && (r.scenes || []).find(x => x.id === action.next);
     const nextLabel = final ? '翻开历史记录' : (nextScene?.final ? '进入关键时刻' : '让时间继续');
@@ -273,8 +280,10 @@
   window.render_game_to_text = function () {
     if (!ST) return JSON.stringify({ screen: 'story-list' });
     const s = ST.mode === 'rpg' ? rpgScene() : STORY.beats[ST.i];
+    const r = activeRole(), focus = r.focus || {};
     return JSON.stringify({ case_id: STORY.case_id, mode: ST.mode, role: ST.role,
       scene: s && s.id, title: s && s.title, action: ST.rpgAction,
+      focus: focus.knowledge ? { knowledge:focus.knowledge, watch:focus.watch, read:focus.read } : null,
       options: ST.mode === 'rpg' && s ? rpgActions(s).map(a => ({ id: a.id, label: a.label })) : [] });
   };
   window.advanceTime = function () {};

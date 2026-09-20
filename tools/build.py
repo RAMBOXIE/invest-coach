@@ -164,6 +164,13 @@ def strip_story_runtime(story):
         rpg.pop("learning_goal", None)
     if rpg.get("learning_skills") == story.get("skills"):
         rpg.pop("learning_skills", None)
+    # 角色深描落地后，旧 goal / pressure 只在没有新字段时兜底。两套同时下发既浪费
+    # 首屏体积，也会让运行时出现两份措辞来源。
+    for role in rpg.get("roles") or []:
+        if role.get("brief"):
+            role.pop("goal", None)
+        if role.get("win_condition") and role.get("risk"):
+            role.pop("pressure", None)
     return story
 
 

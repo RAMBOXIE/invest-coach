@@ -73,7 +73,7 @@
 | 字段 | 层级 | 说明 | 状态 |
 |---|---|---|---|
 | `rpg` | 故事顶层 | `{premise, roles[], timeline[], glossary[], dialogue?, initial_scene, scenes[]}`。定义玩家进入真实金融事件时的身份、当时能看到的事实和场景图；真实结局只在 reveal 后出现 | 在用 |
-| `rpg.roles[]` | RPG 身份 | `{id, title, goal, pressure, brief?, win_condition?, risk?}`。`brief` 说明这一席位实际负责什么，`win_condition` 是本幕交付物，`risk` 是该角色最容易漏掉的风险 | 在用 |
+| `rpg.roles[]` | RPG 身份 | `{id, title, goal, pressure, brief?, win_condition?, risk?, focus}`。`focus:{knowledge,watch,read}` 把席位关注的数据、训练的知识点和数据应如何变成判断连成一条观察线；同一故事各角色必须不同 | 在用 |
 | `rpg.timeline[]` | 当时时间线 | `{date,title,text,fact?}`。只写该决策时点已经发生的事；`fact` 可点回数字账本 | 在用 |
 | `rpg.glossary[]` | 术语 | `{id,term,plain,example?}`。`plain` 必须用非专业读者能复述的话解释；场景以 `terms:[id]` 引用 | 在用 |
 | `rpg.scenes[]` | RPG 场景 | `{id, eyebrow, place, time, title, lines[], role_lines?, briefings?, known?, unknown?, decision?, terms?, evidence[], actions[], final?}`。先呈现角色责任和数据，再呈现已知/未知/必须决定，最后才给行动 | 在用 |
