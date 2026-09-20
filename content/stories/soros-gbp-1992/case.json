@@ -1,13 +1,13 @@
 {
  "case_id": "soros-gbp-1992",
- "title": "The Night a Currency Broke",
- "subtitle": "A real decision told through the lens of Soros.",
+ "title": "货币防线崩溃的那一夜",
+ "subtitle": "1992 年 · George Soros 面对英镑与政策约束",
  "company": "Bank of England / British pound sterling",
  "era": "1992",
  "status": "settled",
- "hook": "A government promise is not the same thing as the ability to keep it.",
+ "hook": "政府的承诺，不等于它有能力守住承诺。",
  "knowledge_node": "base-rate",
- "learning_goal": "Learn to separate policy promises, hard constraints, catalysts, and position risk.",
+ "learning_goal": "区分政策承诺、硬约束、催化剂和仓位风险。",
  "skills": [
   "macro constraints",
   "catalysts",
@@ -30,19 +30,19 @@
   "roles": [
    {
     "id": "researcher",
-    "title": "Evidence researcher",
+    "title": "证据研究员",
     "goal": "Test macro constraints",
     "pressure": "The room wants a fast answer."
    },
    {
     "id": "risk",
-    "title": "Risk officer",
+    "title": "风险负责人",
     "goal": "Define catalysts",
     "pressure": "Conviction is being rewarded."
    },
    {
     "id": "allocator",
-    "title": "Capital allocator",
+    "title": "资本配置人",
     "goal": "Protect risk budget",
     "pressure": "The opportunity feels time-sensitive."
    }
@@ -273,8 +273,8 @@
   "drafted_by": "automated-rpg-seed",
   "model": "frozen-historical-scaffold",
   "drafted_at": "2026-09-20",
-  "reviewed_by": "automated-gates",
+  "reviewed_by": "content-migration-auto",
   "reviewed_at": "2026-09-20",
-  "reviewed_hash": "b8f32b39cfaf0b52"
+  "reviewed_hash": "06481500c40d8db0"
  }
 }

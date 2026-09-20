@@ -1,13 +1,13 @@
 {
  "case_id": "lynch-fidelity-1985",
- "title": "The Clue in the Shopping Cart",
- "subtitle": "A real decision told through the lens of Lynch.",
+ "title": "购物车里的线索",
+ "subtitle": "1985 年 · Peter Lynch 从日常消费追到公司年报",
  "company": "Fidelity Magellan Fund",
  "era": "1985",
  "status": "settled",
- "hook": "A product you love is a clue, not a conclusion. The filing must still answer the question.",
+ "hook": "喜欢一种产品只是线索，不是结论；年报必须回答剩下的问题。",
  "knowledge_node": "growth-rate",
- "learning_goal": "Learn to turn daily observation into a falsifiable hypothesis, then verify it in filings and valuation.",
+ "learning_goal": "把日常观察变成可证伪假设，再回到年报和估值验证。",
  "skills": [
   "observation to hypothesis",
   "growth quality",
@@ -30,19 +30,19 @@
   "roles": [
    {
     "id": "researcher",
-    "title": "Evidence researcher",
+    "title": "证据研究员",
     "goal": "Test observation to hypothesis",
     "pressure": "The room wants a fast answer."
    },
    {
     "id": "risk",
-    "title": "Risk officer",
+    "title": "风险负责人",
     "goal": "Define growth quality",
     "pressure": "Conviction is being rewarded."
    },
    {
     "id": "allocator",
-    "title": "Capital allocator",
+    "title": "资本配置人",
     "goal": "Protect valuation discipline",
     "pressure": "The opportunity feels time-sensitive."
    }
@@ -273,8 +273,8 @@
   "drafted_by": "automated-rpg-seed",
   "model": "frozen-historical-scaffold",
   "drafted_at": "2026-09-20",
-  "reviewed_by": "automated-gates",
+  "reviewed_by": "content-migration-auto",
   "reviewed_at": "2026-09-20",
-  "reviewed_hash": "9851e1f68dd55a0b"
+  "reviewed_hash": "ab3df1625889cd59"
  }
 }

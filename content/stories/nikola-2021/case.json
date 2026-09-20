@@ -474,7 +474,7 @@
   "drafted_by": "llm",
   "model": "claude-opus-5",
   "drafted_at": "2026-08-26",
-  "reviewed_by": "automated-gates",
+  "reviewed_by": "content-migration-auto",
   "reviewed_at": "2026-09-20",
   "reviewed_hash": "eb22ef297d3bc196"
  },

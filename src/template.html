@@ -212,7 +212,8 @@
   .pick{padding:30px 2px 8px}
   .story-front{padding:22px 2px 8px}
   .story-front-kicker{font-size:var(--size-13);letter-spacing:var(--track-eyebrow);color:var(--state-focus);text-transform:uppercase}
-  .story-front-title{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);margin:12px 0 8px;color:var(--text-display-color)}
+  .story-front-title{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);margin:12px 0 6px;color:var(--text-display-color);overflow-wrap:anywhere}
+  .story-front-company{font-size:var(--size-15);line-height:var(--lh-read);color:var(--state-focus);overflow-wrap:anywhere}
   .story-front-sub{font-size:var(--size-17);line-height:var(--lh-read);color:var(--text-body-color);margin:0 0 18px}
   .story-front-role{display:grid;gap:3px;padding:14px 16px;margin:0 0 18px;border-left:3px solid var(--state-focus);background:var(--surface-card)}
   .story-front-role span,.story-front-role small{color:var(--text-meta-color)}
@@ -447,8 +448,8 @@
 </div>
 
 <div class="tabbar">
-  <button data-tab="today" class="on"><span class="i" data-ic="today"></span>学习</button>
-  <button data-tab="atlas"><span class="i" data-ic="atlas"></span>目录</button>
+  <button data-tab="today" class="on"><span class="i" data-ic="today"></span>现场</button>
+  <button data-tab="atlas"><span class="i" data-ic="atlas"></span>档案</button>
   <button data-tab="me"><span class="i" data-ic="me"></span>我</button>
 </div>
 
@@ -891,14 +892,15 @@ function storyFront(){
     const r = x.rpg && x.rpg.roles && x.rpg.roles[0];
     return `<button class="rowbtn story-row" data-story="${x.case_id}">
       <span class="ic">${x.cast && x.cast[0] ? (x.cast[0].avatar || '◈') : '◈'}</span>
-      <span><span class="nm">${x.company || x.title}</span><span class="mt">${x.era || ''} · ${x.title} · ${r ? r.title : '进入事件现场'}</span></span>
+      <span><span class="nm">${x.company || x.title}</span><span class="mt"> · ${x.era || ''} · ${x.title} · ${r ? r.title : '进入事件现场'}</span></span>
       <span class="chipS ${done ? 'lit' : 'open'}">${done ? '已完成' : '进入'}</span>
     </button>`;
   }).join('');
   return `<div class="story-front">
     <div class="story-front-kicker">真实事件 · 你的判断改变下一幕</div>
-    <h2 class="story-front-title">${first.company || first.title}</h2>
-    <p class="story-front-sub">${first.title} · ${first.subtitle || first.hook || ''}</p>
+    <h2 class="story-front-title">${first.title}</h2>
+    <div class="story-front-company">${first.company || '真实主体见原档'} · ${first.era || ''}</div>
+    <p class="story-front-sub">${first.subtitle || first.hook || ''}</p>
     <div class="story-front-role"><span>你先扮演</span><b>${role ? role.title : '事件中的决策者'}</b><small>${role ? role.goal : '从原始材料出发，做出一个会产生后果的选择。'}</small></div>
     <button class="cta" id="go-story" data-cid="${first.case_id}">进入现场 · 约 8 分钟</button>
     <div class="story-front-rule">先看材料，再选行动。每一步都会把你推向下一间会议室。</div>

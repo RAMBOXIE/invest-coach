@@ -1,13 +1,13 @@
 {
  "case_id": "burry-mortgage-2007",
- "title": "The Mortgage Behind the Rating",
- "subtitle": "A real decision told through the lens of Burry.",
+ "title": "评级背后的房贷",
+ "subtitle": "2007 年 · Michael Burry 拆开次贷证券",
  "company": "Scion Capital / U.S. subprime mortgage market",
  "era": "2007",
  "status": "settled",
- "hook": "A rating is a label. The real risk lives in the cash flows underneath.",
+ "hook": "评级只是标签，风险藏在底层借款人的现金流里。",
  "knowledge_node": "three-statements",
- "learning_goal": "Learn to look through structured products to borrowers, contracts, cash flow, and incentives.",
+ "learning_goal": "穿透结构化产品，看到借款人、合同、现金流和激励。",
  "skills": [
   "look-through analysis",
   "credit risk",
@@ -30,19 +30,19 @@
   "roles": [
    {
     "id": "researcher",
-    "title": "Evidence researcher",
+    "title": "证据研究员",
     "goal": "Test look-through analysis",
     "pressure": "The room wants a fast answer."
    },
    {
     "id": "risk",
-    "title": "Risk officer",
+    "title": "风险负责人",
     "goal": "Define credit risk",
     "pressure": "Conviction is being rewarded."
    },
    {
     "id": "allocator",
-    "title": "Capital allocator",
+    "title": "资本配置人",
     "goal": "Protect model limits",
     "pressure": "The opportunity feels time-sensitive."
    }
@@ -273,8 +273,8 @@
   "drafted_by": "automated-rpg-seed",
   "model": "frozen-historical-scaffold",
   "drafted_at": "2026-09-20",
-  "reviewed_by": "automated-gates",
+  "reviewed_by": "content-migration-auto",
   "reviewed_at": "2026-09-20",
-  "reviewed_hash": "9e4e572e18658d08"
+  "reviewed_hash": "261a2695b3a45916"
  }
 }

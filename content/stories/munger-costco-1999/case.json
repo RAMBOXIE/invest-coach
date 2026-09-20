@@ -1,13 +1,13 @@
 {
  "case_id": "munger-costco-1999",
- "title": "The One Dollar Question",
- "subtitle": "A real decision told through the lens of Munger.",
+ "title": "一美元的问题",
+ "subtitle": "1999 年 · 查理·芒格面对 Costco 的薄利模式",
  "company": "Costco Wholesale Corporation",
  "era": "1999",
  "status": "settled",
- "hook": "A thin margin can be a strategy when turnover, membership, and trust reinforce one another.",
+ "hook": "当周转、会员和信任互相强化时，薄利本身也可以是一种战略。",
  "knowledge_node": "gross-margin",
- "learning_goal": "Learn how low margin, high turnover, membership, and capital returns work as one system.",
+ "learning_goal": "看懂低利润率、高周转、会员费和资本回报如何组成一个系统。",
  "skills": [
   "turnover",
   "unit economics",
@@ -30,19 +30,19 @@
   "roles": [
    {
     "id": "researcher",
-    "title": "Evidence researcher",
+    "title": "证据研究员",
     "goal": "Test turnover",
     "pressure": "The room wants a fast answer."
    },
    {
     "id": "risk",
-    "title": "Risk officer",
+    "title": "风险负责人",
     "goal": "Define unit economics",
     "pressure": "Conviction is being rewarded."
    },
    {
     "id": "allocator",
-    "title": "Capital allocator",
+    "title": "资本配置人",
     "goal": "Protect quality versus price",
     "pressure": "The opportunity feels time-sensitive."
    }
@@ -273,8 +273,8 @@
   "drafted_by": "automated-rpg-seed",
   "model": "frozen-historical-scaffold",
   "drafted_at": "2026-09-20",
-  "reviewed_by": "automated-gates",
+  "reviewed_by": "content-migration-auto",
   "reviewed_at": "2026-09-20",
-  "reviewed_hash": "9e49d5abfa3b7292"
+  "reviewed_hash": "178e5fc73bd3013a"
  }
 }

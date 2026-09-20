@@ -1,13 +1,13 @@
 {
  "case_id": "buffett-coke-1988",
- "title": "Buying a Wonderful Brand",
- "subtitle": "A real decision told through the lens of Buffett.",
+ "title": "买下一种伟大的品牌",
+ "subtitle": "1988 年 · 巴菲特面对 Coca-Cola 的定价问题",
  "company": "The Coca-Cola Company",
  "era": "1988",
  "status": "settled",
- "hook": "A famous brand can be a great business and still be a bad investment at the wrong price.",
+ "hook": "伟大的生意，也可能因为买得太贵而成为糟糕的投资。",
  "knowledge_node": "moat",
- "learning_goal": "Learn to turn brand stories into pricing power, returns on capital, cash flow, and a margin of safety.",
+ "learning_goal": "把品牌故事拆成定价权、资本回报、现金流和安全边际。",
  "skills": [
   "pricing power",
   "capital returns",
@@ -30,19 +30,19 @@
   "roles": [
    {
     "id": "researcher",
-    "title": "Evidence researcher",
+    "title": "证据研究员",
     "goal": "Test pricing power",
     "pressure": "The room wants a fast answer."
    },
    {
     "id": "risk",
-    "title": "Risk officer",
+    "title": "风险负责人",
     "goal": "Define capital returns",
     "pressure": "Conviction is being rewarded."
    },
    {
     "id": "allocator",
-    "title": "Capital allocator",
+    "title": "资本配置人",
     "goal": "Protect intrinsic value",
     "pressure": "The opportunity feels time-sensitive."
    }
@@ -273,8 +273,8 @@
   "drafted_by": "automated-rpg-seed",
   "model": "frozen-historical-scaffold",
   "drafted_at": "2026-09-20",
-  "reviewed_by": "automated-gates",
+  "reviewed_by": "content-migration-auto",
   "reviewed_at": "2026-09-20",
-  "reviewed_hash": "8e0fac0a76b34f64"
+  "reviewed_hash": "a1933c9e7e7abff8"
  }
 }
