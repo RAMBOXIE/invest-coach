@@ -14,6 +14,7 @@
 | `x_version` | string | 内容版本（如 ch1-graph-v1） | 在用 |
 | `x_coaches` | array | 教练原型 `{id, name, school, intro, canon_sources[], style_lines: [{when, t}]}`；`when ∈ correct/wrong/overconfident/underconfident/hint_used/na_honest/na_dodge/pair_repeat/streak/complete`，`t` ≤40 字；人格字段（name/style_lines）不得用真人名，出处字段（intro/canon_sources）必须真名真书 | 在用 |
 | `x_review_bank` | array | 复训变体题库 `{pair_id, side: "a"\|"b", quiz}`，每对每面 ≥1 题；screens 已填节点的混淆对缺库=ERROR，未填=WARN（增量门禁）；复训变体题可为构造题（不指名真实公司、不含市场事实主张），指名真实公司时须走数字核定 | 在用 |
+| `x_chapters` | object | 多章（D11）：`{章号(字符串) → 章名}`，如 `{"1":"看穿假账","2":"一家公司好在哪"}`。前端进度分章、章名展示用；只在合并后的 SITE 里出现，单章 site.json 可省略 | 在用 |
 
 ## canon
 
@@ -39,6 +40,7 @@
 | `x_level` | string | 题面材料难度 L1/L2；**有 x_level 的节点必须有 1–3 个 x_pairs**（校验器以此判定红旗/案例节点） | 在用 |
 | `x_pairs` | array | 混淆对 `{id, look, a, b, key}`；`id` 自第 2 步起必填（复训与档案主键） | 在用 |
 | `x_coach_notes` | object | `{coach_id → ≤80 字点评}`，仅 2 个 whole-task 节点三声道 | 第 2 步 |
+| `x_chapter` | int | 多章（D11）：节点所属章号。缺省=1（第一章节点不写此字段）。前端 `chOf()` 按它分章排课/算进度；第二章起每个节点须显式写 `"x_chapter": 2` | 在用 |
 
 ## 屏 / 题
 
@@ -50,6 +52,7 @@
 | `quiz.x_pair` | string | 题目挂靠的混淆对 id | 在用 |
 | `quiz.opts[].na` | bool | 「信息不足，无法判断」选项标记 | 在用 |
 | `quiz.x_kind` | string | 题的角色：`main`（正题，计分）/ `pretest`（前测，不计分，第一案）/ `decision`（决策转化，可多正确）/ `review`（复训变体） | 在用 |
+| `quiz.x_next` | string | D14：当「无法判断」是正确答案时，答对后给的「接下来该去查什么」方法清单（确定性内容，只讲流程不含公司事实）。前端在 na 答对时红标【LLM教练说】展示；接后端时作为 LLM 讨论的种子。**凡 na 为正确答案的题必填**（check_coach 强校验） | 在用 |
 
 ## 负面契约
 

@@ -9,11 +9,13 @@
 import json
 import pathlib
 import re
+import shutil
 import subprocess
 import sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CONTENT = ROOT / "content" / "ch1" / "site.json"
+CONTENT_CH2 = ROOT / "content" / "ch2" / "site.json"
 TPL = ROOT / "src" / "template.html"
 OUT = ROOT / "dist" / "index.html"
 DATA_MARKER = "/*__DATA__*/null"
@@ -206,10 +208,53 @@ def main(argv):
         return 1
 
     data = strip_coach_persona(strip_dev(json.loads(CONTENT.read_text(encoding="utf-8"))))
+
+    # ── 多章合并（D11）──────────────────────────────────────────
+    # 第二章不是「换一份 SITE」，是把它的 nodes/edges/x_review_bank 并进同一个 SITE。
+    # 第二章节点自带 ageStart 8–11 与 domain「盈利质量」，前端已按 ageStart 分层、
+    # 按 edges 解锁，所以合并即渲染，**前端零改动**。这是最低侵入的多章方案：
+    # 不引入第二个 SITE 对象、不改前端根逻辑（byId/PAIRS/BANK 都从单一 SITE 派生）。
+    #
+    # 防呆:两章 id 不许冲突——一旦某个节点/题/幕 id 撞了，前端的 byId 会静默覆盖，
+    # 是典型的「只查形状不查真值」翻车点，所以在这里当场拦。
+    if CONTENT_CH2.exists():
+        r = subprocess.run([sys.executable, str(ROOT / "tools" / "validate.py"), str(CONTENT_CH2)])
+        if r.returncode != 0:
+            print("第二章校验 FAIL —— 拒绝构建")
+            return 1
+        ch2 = strip_coach_persona(strip_dev(json.loads(CONTENT_CH2.read_text(encoding="utf-8"))))
+        ids1 = {n["id"] for n in data["nodes"]}
+        for n in ch2.get("nodes", []):
+            if n["id"] in ids1:
+                print(f"多章合并 FAIL：节点 id「{n['id']}」两章冲突")
+                return 1
+        def _rvid(item):
+            return (item.get("quiz") or {}).get("x_id")
+        q1 = {_rvid(q) for q in data.get("x_review_bank", [])}
+        for q in ch2.get("x_review_bank", []):
+            if _rvid(q) in q1:
+                print(f"多章合并 FAIL：复习题 x_id「{_rvid(q)}」两章冲突")
+                return 1
+        data["nodes"] += ch2.get("nodes", [])
+        data["edges"] += ch2.get("edges", [])
+        data["x_review_bank"] = (data.get("x_review_bank") or []) + (ch2.get("x_review_bank") or [])
+        data["x_coaches"] = data.get("x_coaches") or ch2.get("x_coaches")  # 教练语料共用一份
+        # 章名映射：两章各自登记的 x_chapters 合并（第二章至少要给出自己的章名）
+        chmap = dict(data.get("x_chapters") or {})
+        chmap.update(ch2.get("x_chapters") or {})
+        if chmap:
+            data["x_chapters"] = chmap
+        print(f"多章合并: 第二章 {len(ch2.get('nodes', []))} 节点已并入(共 {len(data['nodes'])} 节点)")
+
     # 溯源徽标需要事实条目：把 facts.json 的 facts 按 id 注入 SITE.x_facts（只读展示用）
     fp = CONTENT.parent / "facts.json"
+    facts = {}
     if fp.exists():
-        data["x_facts"] = {f["id"]: f for f in json.loads(fp.read_text(encoding="utf-8")).get("facts", [])}
+        facts.update({f["id"]: f for f in json.loads(fp.read_text(encoding="utf-8")).get("facts", [])})
+    fp2 = CONTENT_CH2.parent / "facts.json"
+    if fp2.exists():
+        facts.update({f["id"]: f for f in json.loads(fp2.read_text(encoding="utf-8")).get("facts", [])})
+    data["x_facts"] = facts
     st = [strip_dev(x) for x in load_stories()]
     if st:
         data["x_stories"] = st
@@ -236,6 +281,26 @@ def main(argv):
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(html, encoding="utf-8")
     print(f"构建完成: {OUT}（{OUT.stat().st_size / 1024:.1f} KB）")
+
+    # ── 部署产物：干净的 publish/ ──────────────────────────────
+    # dist/ 里混着离线分发物（旧的「第一章离线版.html」、zip、_archive/、netlify/ 缓存…）。
+    # 直接发 dist/ 会把过时/无关文件推上公网。所以另建一个**只含 index.html + _headers**
+    # 的专用目录，每次构建先清空重建，杜绝任何东西悄悄搭车上线。
+    HEADERS = (
+        "/*\n"
+        "  X-Robots-Tag: noindex, nofollow, noarchive\n"
+        "  X-Content-Type-Options: nosniff\n"
+        "  Referrer-Policy: no-referrer\n"
+        "  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; "
+        "style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; "
+        "base-uri 'none'; form-action 'none'; frame-ancestors 'none'\n")
+    PUB = ROOT / "publish"
+    if PUB.exists():
+        shutil.rmtree(PUB)
+    PUB.mkdir()
+    (PUB / "index.html").write_text(html, encoding="utf-8")
+    (PUB / "_headers").write_text(HEADERS, encoding="utf-8")
+    print(f"部署产物: {PUB}（只含 index.html + _headers，供 netlify deploy --dir=publish）")
 
     # 自查：给了 --backend 就必须在产物里找得到它。
     # 上面那个坑的教训是「参数被接受了、什么也没发生、还打印了一句让你去查别处的话」——

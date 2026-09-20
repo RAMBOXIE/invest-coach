@@ -582,8 +582,44 @@ function line(w){const c=coach();if(!c)return null;
   li[w]=((li[w]||0)+1)%ls.length;return{who:coachName(),t:ls[li[w]].t};}
 function coachHTML(w){const l=line(w);return l?`<div class="coach"><span class="w">${l.who}：</span><span>${l.t}</span></div>`:'';}
 
+/* D14：答对「无法判断」之后，给「接下来该去查什么」。判分已由规则完成（na=对，见铁律），
+   这一格只讨论方法、不产事实、不荐股。静态/离线展示确定性清单（x_next，人工写、非 LLM 产出）；
+   接后端时同一格由 LLM 就这几步展开讨论。红标【LLM教练说】沿用全站口径。 */
+const naCache={},naInflight={};
+function naNext(q){
+  if(!q||!q.x_next)return '';
+  const llm=naCache[q.x_id];                       // 已从后端拿到 LLM 讨论就用它
+  const on=(typeof BACKEND!=='undefined'&&BACKEND);
+  const tag=(llm||on)?'<span class="llm-tag">【LLM教练说】</span>'
+                     :'<span class="llm-tag off">【LLM教练说 · 未连接，本地占位】</span>';
+  const say=llm
+    ? llm
+    : `答对了。信息确实不够，这一步的功课就是承认判不了、再去补证据。接下来该去查：${q.x_next}`;
+  return `<div class="coach coach-back" id="na-${q.x_id}"><span class="w">${tag}</span><span>${say}</span>`
+    +(llm||on?'':'<div class="tip">这条是本机按规则给的固定清单，没有联网。接上后端，教练会就这几步和你展开讨论：为什么先查这个、具体怎么查。</div>')
+    +`</div>`;
+}
+/* 接后端时：判分已由规则完成(na=对)，这里让 LLM 就 x_next 那几步展开讨论，替换本地占位。
+   种子只含题干 + 区分线索 + x_next(全是方法，无真实公司事实)。失败静默回落到本地清单。 */
+function scheduleNa(q){
+  if(!q||!q.x_next||typeof BACKEND==='undefined'||!BACKEND)return;
+  if(naCache[q.x_id]||naInflight[q.x_id])return;
+  naInflight[q.x_id]=1;
+  const key=(PAIRS[(BANKQ[q.x_id]||{}).pair]||{}).key||'';
+  const seed=`题目：${q.q}\n区分这类判断的线索：${key}\n该去补的证据：${q.x_next}`;
+  fetch(BACKEND+'/api/v1/next-steps',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({device:S.device,quiz_id:q.x_id,question:'我该从哪一步开始查，为什么？',seed})})
+    .then(r=>r.json()).then(d=>{naInflight[q.x_id]=0;
+      if(d&&d.text){naCache[q.x_id]=d.text;const el=document.getElementById('na-'+q.x_id);if(el)el.outerHTML=naNext(q);}
+      track('nextsteps',{quiz:q.x_id,src:d&&d.text?'llm':'fallback'});})
+    .catch(()=>{naInflight[q.x_id]=0;});
+}
+
 /* ============ 状态与调度 ============ */
 function stateOf(n){if(lit.has(n.id))return'lit';
+  /* 多章(D11)章闸:未到本章一律锁死。这是「第一章通关→解锁第二章」的唯一执行点——
+     目录/调度/课程都走 stateOf,一处收口,不必给每个 ch2 节点补跨章硬边(那会被 validate 拒)。 */
+  if(chOf(n)>curChapter())return'locked';
   return SITE.edges.filter(e=>e.to===n.id&&e.type==='hard').map(e=>e.from).every(p=>lit.has(p))?'open':'locked';}
 function ensurePair(p){if(!S.pairs[p])S.pairs[p]={seen:0,wrong:0,hl:1,due:Date.now()+DAY,lastSide:null,lastWrong:null};return S.pairs[p];}
 function duePairs(){const t=Date.now();return Object.keys(S.pairs).filter(p=>PAIRS[p]&&BANK[p]&&S.pairs[p].due<=t);}
@@ -805,8 +841,22 @@ function plan(){
   return {q,dues,nx,stories,weak,read:stories.filter(x=>(S.story||{})[x.case_id])};
 }
 
+/* 多章(D11):节点用 x_chapter 标章(第一章节点无此字段,默认 1)。
+   进度条与「全部通过」按**当前章**算,不按全局——否则合并第二章后第一章永远
+   显示不满、永不「完成」。当前章 = 还有未点亮节点的最低章(第一章没走完就停在
+   第一章;走完了自动进第二章)。 */
+function chOf(n){return n.x_chapter||1;}
+function allChapters(){return [...new Set(SITE.nodes.map(chOf))].sort((a,b)=>a-b);}
+function curChapter(){
+  for(const ch of allChapters()){
+    if(SITE.nodes.filter(n=>chOf(n)===ch).some(n=>!lit.has(n.id)))return ch;
+  }
+  return allChapters().slice(-1)[0]||1;
+}
+
 function viewToday(){
-  const P=plan(), done=lit.size, total=SITE.nodes.length, pf=profile();
+  const ch=curChapter(), chNodes=SITE.nodes.filter(n=>chOf(n)===ch);
+  const P=plan(), done=chNodes.filter(n=>lit.has(n.id)).length, total=chNodes.length, pf=profile();
   // 体验 §5：首个动作是选主教练。没选过就只给这一件事，别的都不显示。
   if(!pf.tone) return coachPicker();
   const head=P.q[0], rest=P.q.slice(1);
@@ -868,9 +918,11 @@ function heroCard(it){
 }
 
 function allLit(){
-  return `<div class="hero"><div class="hero-eye">第一章</div>
+  const ch=curChapter(), chNodes=SITE.nodes.filter(n=>chOf(n)===ch);
+  const chName=(SITE.x_chapters&&SITE.x_chapters[ch])||('第 '+ch+' 章');
+  return `<div class="hero"><div class="hero-eye">${chName}</div>
     <h3 class="hero-t">全部通过</h3>
-    <p class="hero-s">${SITE.nodes.length} 个节点都过了闭卷题。接下来靠复习维持——它比新课更能说明你学会了没有。</p>
+    <p class="hero-s">${chNodes.length} 个节点都过了闭卷题。接下来靠复习维持——它比新课更能说明你学会了没有。</p>
     <button class="cta" id="go-card">复制成绩单</button></div>`;
 }
 
@@ -913,9 +965,21 @@ function viewAtlas(){
   const stN={lit:'已通过',open:'可进入',locked:'未解锁'};
   const dues=new Set(duePairs().map(p=>PAIRS[p].node.id));
   const L={};SITE.nodes.forEach(n=>{const l=n.ageStart||1;(L[l]=L[l]||[]).push(n);});
-  let h='';
+  let h='',curCh=null;
   Object.keys(L).map(Number).sort((a,b)=>a-b).forEach(l=>{
     const arr=L[l];
+    /* 多章(D11):章变了先插一条章头,让 12 层/两章的目录读得出边界。 */
+    const ch=chOf(arr[0]);
+    if(ch!==curCh){
+      curCh=ch;
+      if(allChapters().length>1){
+        const chName=(SITE.x_chapters&&SITE.x_chapters[ch])||('第 '+ch+' 章');
+        const cn=SITE.nodes.filter(n=>chOf(n)===ch), cd=cn.filter(n=>lit.has(n.id)).length;
+        const locked=ch>curChapter();
+        h+=`<div class="sec"><h2>第 ${ch} 章 · ${chName}</h2>
+          <div class="tip">${locked?'未解锁：先做完上一章。':`共 ${cn.length} 节 · 已过 ${cd}`}</div></div>`;
+      }
+    }
     h+=`<div class="sec"><h2>${arr[0].age||('第 '+l+' 层')} · ${arr[0].domain||''}</h2>`;
     for(const n of arr){
       const st=stateOf(n);
@@ -1397,7 +1461,7 @@ function cc(){
       SB().querySelectorAll('[data-o]:not([disabled])').forEach(b=>b.onclick=()=>{
         const i=+b.dataset.o,o=shownOpts(q)[i],first=!R.tried.size&&!S.answers[q.x_id];
         R.tried.add(i);
-        if(o.ok){R.done=true;R.fb=q.fb;R.fbGood=true;R.concl=i;}
+        if(o.ok){R.done=true;R.fb=q.fb+(o.na?naNext(q):'');R.fbGood=true;R.concl=i;}
         else if(q.x_kind==='pretest'){R.done=true;R.fb=q.fb;R.fbGood=false;R.concl=i;}
         else{
           /* 答错时给的必须是**针对这个错误选项**的话。
@@ -1415,7 +1479,7 @@ function cc(){
         R.cl=line(o.na&&o.ok?'na_honest':o.na?'na_dodge':!o.ok&&R.conf===.95?'overconfident':!o.ok?'wrong':R.hint?'hint_used':'correct');
         if(first)recordFirst(q,{c:o.ok?1:0,na:o.na?1:0,naok:(o.na&&o.ok)?1:0,conf:R.conf,h:R.hint,
           k:q.x_kind||'main',ms:Date.now()-R.t0,noscore:NOSCORE.has(R.node.id)?1:0});
-        drawStage(1);});}};
+        drawStage(1);if(o.na&&o.ok)scheduleNa(q);});}};
 }
 /* ① 系统主动触发：不摆「有问题问我」，由规则触发教练介入 */
 function maybeIntervene(ctx){
@@ -1566,7 +1630,7 @@ function an(){
         const i=+b.dataset.a,o=shownOpts(q)[i];R.aTried.add(i);
         const a=S.anchors[R.node.id]=S.anchors[R.node.id]||{attempts:0,seen:[]};
         a.attempts++;if(!a.seen.includes(R.anchor.quiz.x_id))a.seen.push(R.anchor.quiz.x_id);
-        if(o.ok){R.aDone=true;R.aPass=true;R.aFb='✓ '+q.fb;a.passed_at=Date.now();}
+        if(o.ok){R.aDone=true;R.aPass=true;R.aFb='✓ '+q.fb+(o.na?naNext(q):'');a.passed_at=Date.now();}
         else{R.aDone=true;R.aPass=false;R.aFb=q.fb+'<br><br><b>这一节还没通过</b>——不扣分，回去把材料和证据链再走一遍，换一道闭卷题再来。';
           setTimeout(()=>maybeIntervene({anchorFail:1}),650);}
         if(R.anchor.pair){const p=ensurePair(R.anchor.pair);p.seen++;p.lastSide=R.anchor.side;
@@ -1576,7 +1640,7 @@ function an(){
         recordFirst(q,{c:o.ok?1:0,na:o.na?1:0,naok:(o.na&&o.ok)?1:0,conf:R.aConf,h:0,k:'anchor',
           side:R.anchor.side,ms:0,noscore:0});
         track('anchor_answer',{node:R.node.id,quiz_id:q.x_id,correct:o.ok?1:0,attempts:a.attempts});
-        save();drawStage(1);});
+        save();drawStage(1);if(o.na&&o.ok)scheduleNa(q);});
       const rt=document.getElementById('st-retry');
       if(rt)rt.onclick=()=>{R.step=0;R.anchor=null;R.cards=new Set();R.ruleout={};R.self=new Set();R.logged=false;drawStage();};
       const lb=document.getElementById('st-light');
@@ -1585,8 +1649,14 @@ function an(){
 function lightUp(){
   const n=R.node;lit.add(n.id);save();track('node_lit',{node:n.id});
   const unlocked=SITE.nodes.filter(x=>!lit.has(x.id)&&stateOf(x)==='open').map(x=>x.name);
-  const done=lit.size===SITE.nodes.length;
-  if(done&&!S.finished){S.finished=Date.now();save();track('chapter_complete',{});}
+  const ch=chOf(n), chNodes=SITE.nodes.filter(x=>chOf(x)===ch);
+  const done=chNodes.every(x=>lit.has(x.id));
+  const chName=(SITE.x_chapters&&SITE.x_chapters[ch])||('第 '+ch+' 章');
+  S.finishedCh=S.finishedCh||{};
+  if(done&&!S.finishedCh[ch]){S.finishedCh[ch]=Date.now();if(ch===allChapters()[0])S.finished=S.finished||Date.now();save();track('chapter_complete',{chapter:ch});}
+  /* 章通关时:若后面还有章,报「下一章已解锁」;否则(末章)报「靠复习维持」。 */
+  const nextCh=allChapters().find(c=>c>ch);
+  const nextName=nextCh?((SITE.x_chapters&&SITE.x_chapters[nextCh])||('第 '+nextCh+' 章')):null;
   document.getElementById('stage-body').innerHTML=
     `<div class="endpad"><div class="pop-ic">${nic(n.icon)}</div>
       <h3>「${n.name}」已通过</h3>
@@ -1594,7 +1664,7 @@ function lightUp(){
         ? '你是靠一道闭卷题通过的的——不是靠看完材料。'
         : '这一节是基础概念，没有闭卷题；判完结论即可通过。<b>后面的节点要过闭卷题才算。</b>'}</p>
       ${unlocked.length?`<p>新的材料已开放：${unlocked.join('、')}</p>`:''}
-      ${done?`<div class="fb good">第一章全部通过。接下来靠复习维持——它比新课更能说明你学会了没有。</div>`:''}
+      ${done?`<div class="fb good">${chName}全部通过。${nextCh?`第 ${nextCh} 章「${nextName}」已解锁，回到学习页继续。`:'接下来靠复习维持，它比新课更能说明你学会了没有。'}</div>`:''}
       ${coachHTML(done?'complete':'streak')}</div>`;
   document.getElementById('stage-foot').innerHTML=`<button class="cta" id="st-done">回到今日</button>`;
   document.getElementById('stage-prog').style.width='100%';
@@ -1783,7 +1853,7 @@ function drawReview(){
   SB().querySelectorAll('[data-cf]').forEach(x=>x.onclick=()=>{R.conf=+x.dataset.cf;drawReview();});
   SB().querySelectorAll('[data-o]:not([disabled])').forEach(x=>x.onclick=()=>{
     const i=+x.dataset.o,o=shownOpts(q)[i];R.tried.add(i);
-    if(o.ok){R.done=true;R.fb=q.fb;R.fbGood=true;R.ok++;}
+    if(o.ok){R.done=true;R.fb=q.fb+(o.na?naNext(q):'');R.fbGood=true;R.ok++;}
     else{R.done=true;R.fb=(o.why?o.why+'<br><br>':'')+q.fb;R.fbGood=false;
       if(o.mis){S.mis[o.mis]=(S.mis[o.mis]||0)+1;}}
     R.cl=line(o.na&&o.ok?'na_honest':!o.ok?'pair_repeat':'correct');
@@ -1793,7 +1863,7 @@ function drawReview(){
     a.due=Date.now()+a.hl*DAY;
     recordFirst(q,{c:o.ok?1:0,na:o.na?1:0,naok:(o.na&&o.ok)?1:0,conf:R.conf,h:0,k:'review',side:it.side,ms:0,noscore:0});
     track('review_answer',{quiz_id:q.x_id,pair_id:it.pid,side:it.side,correct:o.ok?1:0});
-    save();drawReview();});
+    save();drawReview();if(o.na&&o.ok)scheduleNa(q);});
   document.getElementById('rv-next').onclick=()=>{R.qi++;R.tried=new Set();R.done=false;R.conf=null;R.fb=null;R.cl=null;drawReview();};
 }
 
