@@ -70,12 +70,12 @@
     const r = choiceReading(STORY, mine, ST.conf, ST.stats || { pressed: 0, broke: 0 }, ST.prior);
     const nm = coachName();
     return `<div class="reading"><div class="rd-hd"><span class="rd-av">${ic('coach')}</span>
-        <span class="rd-nm">${nm}????????</span></div>
+        <span class="rd-nm">${nm}的解读</span></div>
       <p class="rd-h">${md(r.head)}</p><p class="rd-b">${md(r.body)}</p>
       ${r.extra.map(x => `<p class="rd-x">${md(x)}</p>`).join('')}</div>`;
   }
   function vo(t) {
-    const c = (typeof coachName === "function") ? coachName() : "????";
+    const c = (typeof coachName === "function") ? coachName() : "你的教练";
     return t ? `<div class="vo"><span class="who">${c}</span><span class="txt">${t}</span></div>` : '';
   }
 
@@ -103,10 +103,10 @@
   function rpgScene() {
     if (ST.sceneId === '__rpg_pressure__') {
       const p = ST.rpgPressure || {};
-      return { id: '__rpg_pressure__', eyebrow: '?????????', place: p.place || '????', time: p.time || '????',
-        title: p.title || '????????', lines: p.lines || [], evidence: p.evidence || [],
-        actions: [{ id: 'continue', kind: '????', label: '???????', prompt: '?????????????',
-          consequence: p.consequence || '', result_title: p.result_title || '??????', narration: p.narration || '', next: ST.rpgReturn }] };
+      return { id: '__rpg_pressure__', eyebrow: '选择之后', place: p.place || '事件现场', time: p.time || '此刻',
+        title: p.title || '后果正在发生', lines: p.lines || [], evidence: p.evidence || [],
+        actions: [{ id: 'continue', kind: '后果', label: '继续前进', prompt: '看看你的选择如何改变局面',
+          consequence: p.consequence || '', result_title: p.result_title || '选择的代价', narration: p.narration || '', next: ST.rpgReturn }] };
     }
     return (STORY.rpg.scenes || []).find(s => s.id === ST.sceneId);
   }
@@ -128,7 +128,7 @@
   }
   function rpgRoleCard() {
     const role = (STORY.rpg.roles || []).find(r => r.id === ST.role);
-    return role ? `<div class="rpg-active-role"><span>???</span><b>${esc(role.title)}</b><small>${esc(role.goal)}</small></div>` : '';
+    return role ? `<div class="rpg-active-role"><span>当前身份</span><b>${esc(role.title)}</b><small>${esc(role.goal)}</small></div>` : '';
   }
   function drawRpg() {
     const r = STORY.rpg;
@@ -140,26 +140,26 @@
     const final = s.final === true;
     const voice = action ? (ST.rpgVoice || action.narration || '') : '';
     const actions = action ? '' : available.map(a =>
-      `<button class="rpg-action" data-rpg-action="${esc(a.id)}"><span class="rpg-action-kind">${esc(a.kind || '??')}</span><b>${esc(a.label)}</b><small>${esc(a.prompt || '')}</small></button>`).join('');
-    const conf = final && action ? `<div class="eyebrow rpg-conf-label">????????????</div>
+      `<button class="rpg-action" data-rpg-action="${esc(a.id)}"><span class="rpg-action-kind">${esc(a.kind || '行动')}</span><b>${esc(a.label)}</b><small>${esc(a.prompt || '')}</small></button>`).join('');
+    const conf = final && action ? `<div class="eyebrow rpg-conf-label">你对这个判断有多大把握？</div>
       <div class="seg2">${CONF.map(c => `<button data-rpg-conf="${c.v}" class="${ST.conf === c.v ? 'on' : ''}">${c.t}</button>`).join('')}</div>` : '';
     const nextDisabled = final ? !action || ST.conf == null : !action;
-    bodyEl.innerHTML = `<div class="eyebrow">${esc(s.eyebrow || '????')}</div>
+    bodyEl.innerHTML = `<div class="eyebrow">${esc(s.eyebrow || '现场')}</div>
       <div class="rpg-scene-meta"><span>${esc(s.place || '')}</span><span>${esc(s.time || '')}</span></div>
       <h2>${esc(s.title)}</h2>${rpgRoleCard()}
       ${(s.path_lines?.[ST.rpgPath] || s.role_lines?.[ST.role] || s.lines || []).map(x => `<p class="ln">${md(x)}</p>`).join('')}
       ${rpgEvidence(s.evidence)}
-      ${action ? `<div class="rpg-result"><div class="rpg-result-title">${esc(action.result_title || '??????????')}</div>
+      ${action ? `<div class="rpg-result"><div class="rpg-result-title">${esc(action.result_title || '行动结果')}</div>
         <p class="ln">${md(action.consequence || '')}</p>
-        <p class="rpg-pressure" id="rpg-voice-${STORY.case_id}"><b>???</b>${md(voice)}</p></div>` : `<div class="rpg-actions">${actions}</div>`}`;
-    footEl.innerHTML = action ? `${final ? conf : ''}<button class="sty-cta" id="rpg-next" ${nextDisabled ? 'disabled' : ''}>${final ? '??????' : '??'}</button>` : '';
+        <p class="rpg-pressure" id="rpg-voice-${STORY.case_id}"><b>画外音</b>${md(voice)}</p></div>` : `<div class="rpg-actions">${actions}</div>`}`;
+    footEl.innerHTML = action ? `${final ? conf : ''}<button class="sty-cta" id="rpg-next" ${nextDisabled ? 'disabled' : ''}>${final ? '进入原档揭示' : '继续'}</button>` : '';
     dotsEl.innerHTML = (r.scenes || []).map(x => `<i class="${x.id === s.id ? 'on' : ''}"></i>`).join('');
     if (action) narrateChoice(action, 'rpg-voice-' + STORY.case_id);
     bindRpg(s);
   }
   function drawRpgRoles() {
     const r = STORY.rpg;
-    bodyEl.innerHTML = `<div class="eyebrow">????</div><h2>${esc(r.title || '??????')}</h2>
+    bodyEl.innerHTML = `<div class="eyebrow">角色选择</div><h2>${esc(r.title || '选择你的身份')}</h2>
       <p class="ln">${md(r.premise || '')}</p><div class="rpg-role-list">${(r.roles || []).map(x =>
         `<button class="rpg-role-choice" data-rpg-role="${esc(x.id)}"><b>${esc(x.title)}</b><span>${esc(x.goal)}</span><small>${esc(x.pressure || '')}</small></button>`).join('')}</div>`;
     bodyEl.insertAdjacentHTML('afterbegin', learningCard(STORY.rpg.learning_goal || STORY.learning_goal, STORY.rpg.learning_skills || STORY.skills));
@@ -196,8 +196,8 @@
         if (ST.i < 0) ST.i = 0;
       } else {
         ST.rpgPath = ST.rpgAction; ST.rpgReturn = a.next; ST.rpgAction = 'continue'; ST.rpgVoice = null;
-        ST.rpgPressure = { place: s.place, time: s.time, title: a.result_title || '????????',
-          lines: [`${a.label}?????????????????????????`],
+        ST.rpgPressure = { place: s.place, time: s.time, title: a.result_title || '选择的后果',
+          lines: [`${a.label}之后，房间里的压力改变了。`],
           consequence: a.consequence, result_title: a.result_title, narration: a.narration };
         ST.sceneId = '__rpg_pressure__';
       }
@@ -215,17 +215,17 @@
   function roleCard() {
     const r = STORY.rpg;
     if (!r || !r.role) return '';
-    return `<div class="rpg-role"><div class="rpg-kicker">????????</div>
+    return `<div class="rpg-role"><div class="rpg-kicker">角色约束</div>
       <div class="rpg-title">${esc(r.role.title)}</div>
-      <div class="rpg-goal"><b>??</b>${esc(r.role.goal)}</div>
-      <div class="rpg-goal"><b>??</b>${esc(r.role.constraint)}</div></div>`;
+      <div class="rpg-goal"><b>目标</b>${esc(r.role.goal)}</div>
+      <div class="rpg-goal"><b>约束</b>${esc(r.role.constraint)}</div></div>`;
   }
 
   /* ????????owner ??????????????????????????
      ?????????????????????????????????????? */
   function ctxStrip(items) {
     if (!items || !items.length) return '';
-    return `<div class="ctx"><div class="ctx-h">??</div>${items.map(c =>
+    return `<div class="ctx"><div class="ctx-h">当时</div>${items.map(c =>
       `<div class="ctx-i"><span class="ctx-d">${c.date}</span><span class="ctx-t">${md(c.t)}</span>${c.src ? `<span class="ctx-s">${c.src}${c.line ? ' ? ' + c.line : ''}</span>` : ''}</div>`).join('')}</div>`;
   }
 
@@ -237,7 +237,7 @@
         ${ctxStrip(b.context)}
         ${b.lines.map((l, i) => `<p class="ln${i === b.lines.length - 1 ? '' : ' dim'}">${md(l)}</p>`).join('')}
         ${vo(b.narration)}`,
-      foot: `<button class="sty-cta" id="sty-next">????</button>`
+      foot: `<button class="sty-cta" id="sty-next">继续</button>`
     };
   }
 
@@ -248,9 +248,9 @@
     return {
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${path.title || b.title}</h2>
         <div class="rpg-consequence"><p class="ln">${md(path.body || '')}</p>
-          <p class="rpg-pressure"><b>??????</b>${md(path.pressure || '')}</p></div>
+          <p class="rpg-pressure"><b>画外音</b>${md(path.pressure || '')}</p></div>
         <div id="${voiceId}">${vo(path.narration || '')}</div>`,
-      foot: `<button class="sty-cta" id="sty-next">??????</button>`,
+      foot: `<button class="sty-cta" id="sty-next">继续</button>`,
       bind() { narrateChoice(path, voiceId); }
     };
   }
@@ -265,7 +265,7 @@
       method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl.signal,
       body: JSON.stringify({ device: S.device, case_id: STORY.case_id,
         narrator: r.narrator, choice: path.title || path.label, pressure: path.pressure || path.consequence,
-        seed: path.narration, question: '????????????????????????????' })
+        seed: path.narration, question: '请解释这次选择带来的压力。' })
     }).then(x => x.json()).then(d => {
       clearTimeout(tm);
       if (d && d.text && target) target.innerHTML = vo(esc(d.text));
@@ -280,7 +280,7 @@
         <div class="qchips">${(b.panel.rows || []).filter(r => r.fact).map(r =>
           `<button data-f="${r.fact}">${ic('link')} ${r.k}</button>`).join('')}</div>
         ${vo(b.narration)}`,
-      foot: `<button class="sty-cta" id="sty-next">??</button>`,
+      foot: `<button class="sty-cta" id="sty-next">查看下一页</button>`,
       bind() { bindFacts(); }
     };
   }
@@ -288,10 +288,10 @@
     bodyEl.querySelectorAll('[data-f]').forEach(x => x.onclick = () => {
       const f = F(x.dataset.f);
       if (!f) return;
-      sheet(`<h3 style="margin:0 0 8px;font-size:17px">${ic('link')} ??</h3>
+      sheet(`<h3 style="margin:0 0 8px;font-size:17px">${ic('link')} 原档事实</h3>
         <p style="font-size:17px;line-height:1.8"><b>${f.item}</b><br>${f.value}</p>
-        <p class="tip">???${f.basis || '?'}<br>???${f.accession} ? ${f.line}<br>???${f.company}</p>
-        <p class="tip">?????????????????????????????????????</p>`);
+        <p class="tip">依据：${f.basis || '未填写'}<br>出处：${f.accession || '未填写'} · ${f.line || ''}<br>公司：${f.company || '未填写'}</p>
+        <p class="tip">这条证据来自已归档的原始材料。</p>`);
     });
   }
 
@@ -305,15 +305,15 @@
           const c = window.__court && window.__court.story === STORY ? window.__court.stats : null;
           const acted = c ? (c.pressed || 0) + (c.broke || 0) : 0;
           const label = !acted
-            ? `??? ${STORY.cast[0].name}?${STORY.interrogation.testimony.length} ????`
-            : `???? ${STORY.cast[0].name}???? ${c.pressed} ?${c.broke ? ` ? ???? ${c.broke} ?` : ''}?`;
+            ? `向${STORY.cast[0].name}追问 · ${STORY.interrogation.testimony.length} 条陈述`
+            : `已追问${STORY.cast[0].name} · ${c.pressed} 次${c.broke ? ` · 找到破绽 ${c.broke} 处` : ''}`;
           return `<button class="askbtn${acted ? ' done' : ''}" id="sty-ask">${ic('scale')} ${label}</button>`;
         })() : ''}
         ${b.options.map(o => `<button class="choice${ST.pick === o.id ? ' on' : ''}" data-p="${o.id}">
             <span class="kd">${o.kind}</span>${o.t}</button>`).join('')}
-        ${picked ? `<div class="eyebrow" style="margin-top:20px">???????</div>
+        ${picked ? `<div class="eyebrow" style="margin-top:20px">信心</div>
           <div class="seg2">${CONF.map(c => `<button data-cf="${c.v}" class="${ST.conf === c.v ? 'on' : ''}">${c.t}</button>`).join('')}</div>` : ''}`,
-      foot: `<button class="sty-cta" id="sty-next" ${picked && conf ? '' : 'disabled'}>?????</button>`,
+      foot: `<button class="sty-cta" id="sty-next" ${picked && conf ? '' : 'disabled'}>确认判断</button>`,
       bind() {
         bodyEl.querySelectorAll('[data-p]').forEach(x => x.onclick = () => { ST.pick = x.dataset.p; draw(); });
         bodyEl.querySelectorAll('[data-cf]').forEach(x => x.onclick = () => { ST.conf = +x.dataset.cf; draw(); });
@@ -329,9 +329,9 @@
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
         ${docQuote(b.quote)}
         ${b.lines.map(l => `<p class="ln">${md(l)}</p>`).join('')}
-        <div class="qchips"><button data-f="${b.quote.fact}">${ic('link')} ?????</button></div>
+        <div class="qchips"><button data-f="${b.quote.fact}">${ic('link')} 查看原档</button></div>
         ${vo(b.narration)}`,
-      foot: `<button class="sty-cta" id="sty-next">???????</button>`,
+      foot: `<button class="sty-cta" id="sty-next">进入下一段</button>`,
       bind() { bindFacts(); }
     };
   }
@@ -339,7 +339,7 @@
   /* S5 ???? + knowhow */
   function bContrast(b) {
     const dec = STORY.beats.find(x => x.kind === 'decision');
-    const mine = (dec.options || []).find(o => o.id === ST.pick) || { t: '?????', kind: '?' };
+    const mine = (dec.options || []).find(o => o.id === ST.pick) || { t: '未选择', kind: '?' };
     const confT = (CONF.find(c => c.v === ST.conf) || {}).t || '?';
     if (!ST.logged) {
       ST.logged = true;
@@ -366,16 +366,16 @@
         <div class="trio">
           <div class="c you"><div class="lbl">${b.columns.you}</div>
             <div class="hd2">${mine.t}</div>
-            <div class="dt2">???????${confT}</div></div>
+            <div class="dt2">信心：${confT}</div></div>
           <div class="c"><div class="lbl">${b.columns.them}</div>
             <div class="hd2">${b.them.t}</div><div class="dt2">${b.them.detail}</div></div>
           <div class="c canon"><div class="lbl">${b.columns.canon}</div>
             <div class="hd2">${b.canon.t}</div><div class="dt2">${b.canon.detail}<br><span style="opacity:.75">${b.canon.src}</span></div></div>
         </div>
         ${readingHTML(mine)}
-        <div class="kn"><h3>?????</h3><ul>${b.knowhow.map(k => `<li>${md(k)}</li>`).join('')}</ul></div>
+        <div class="kn"><h3>带走的方法</h3><ul>${b.knowhow.map(k => `<li>${md(k)}</li>`).join('')}</ul></div>
         ${vo(b.narration)}`,
-      foot: `<button class="sty-cta" id="sty-next">???????</button>`
+      foot: `<button class="sty-cta" id="sty-next">继续</button>`
     };
   }
 
@@ -384,14 +384,14 @@
     return {
       body: `<div class="eyebrow">${b.eyebrow}</div><h2>${b.title}</h2>
         <div class="fade3">
-          <div class="f"><div class="t">???</div><div class="b">${b.story_form}</div></div>
-          <div class="f"><div class="t">????</div><div class="b">${b.rule}</div></div>
-          <div class="f"><div class="t">???</div><div class="b">${b.formula}</div></div>
-          <div class="f tag"><div class="t">???????????</div><div class="b">${b.label}</div></div>
+          <div class="f"><div class="t">故事</div><div class="b">${b.story_form}</div></div>
+          <div class="f"><div class="t">规则</div><div class="b">${b.rule}</div></div>
+          <div class="f"><div class="t">公式</div><div class="b">${b.formula}</div></div>
+          <div class="f tag"><div class="t">适用边界</div><div class="b">${b.label}</div></div>
         </div>
-        <p class="ln dim">???${b.boundary}</p>
+        <p class="ln dim">边界：${b.boundary}</p>
         ${vo(b.narration)}`,
-      foot: `<button class="sty-cta" id="sty-next">????</button>`
+      foot: `<button class="sty-cta" id="sty-next">继续</button>`
     };
   }
 
@@ -406,8 +406,8 @@
         ${answered ? `<div class="kn"><p style="font-size:17px;line-height:1.85;margin:0">${b.fb}</p></div>` : ''}
         ${answered ? vo(b.narration) : ''}`,
       foot: answered
-        ? `<button class="sty-cta" id="sty-done">??????</button>`
-        : `<button class="sty-cta" disabled>???</button>`,
+        ? `<button class="sty-cta" id="sty-done">完成案例</button>`
+        : `<button class="sty-cta" disabled>先选择一个答案</button>`,
       bind() {
         bodyEl.querySelectorAll('[data-t]').forEach(x => x.onclick = () => {
           const i = +x.dataset.t;
@@ -425,13 +425,13 @@
     const node = STORY.knowledge_node;
     bodyEl.innerHTML = `<div class="fin">
       <div class="fin-ic">${ic('doc')}</div>
-      <h2>???????</h2>
-      <p class="ln">????????????????????????${STORY.beats.find(x => x.kind === 'abstract').label}??????????????</p>
-      <p class="ln dim">?????????????????????????????????????</p>
-      ${vo('???????????????????????')}</div>`;
-    footEl.innerHTML = `<button class="sty-cta" id="sty-toprac">??????</button>
+      <h2>案例完成</h2>
+      <p class="ln">你已经把这次事件里的判断、证据和后果走完了一遍。</p>
+      <p class="ln dim">把这套方法带到下一份真实年报里。</p>
+      ${vo('下一次遇到相似材料，先问：我现在看到的是事实、解释，还是愿望？')}</div>`;
+    footEl.innerHTML = `<button class="sty-cta" id="sty-toprac">回到现场</button>
       <div style="height:8px"></div>
-      <button class="sty-cta ghost" id="sty-back">????</button>`;
+      <button class="sty-cta ghost" id="sty-back">查看档案</button>`;
     // ???? ? ???????????????????
     if (typeof ensurePair === 'function') {
       const n = byId[node];
