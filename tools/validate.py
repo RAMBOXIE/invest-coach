@@ -716,11 +716,17 @@ def validate_stories(release=False):
                 errors.append(f"S10 {cid}: 不同角色不得共用同一条知识点与数据观察线")
             if len(scenes) < 2:
                 errors.append(f"S10 {cid}: RPG 至少需要故事发展与关键决定两个场景")
+            deliberations = rpg.get("deliberations") or {}
             for si, scene in enumerate(scenes):
                 actions = scene.get("actions") or []
                 if not actions:
                     errors.append(f"S10 {cid}/scene[{si}]: 场景没有可执行行动")
                 for ai, action in enumerate(actions):
+                    note_key = f"{scene.get('id')}.{action.get('id')}"
+                    note = deliberations.get(note_key) or {}
+                    missing_note = [k for k in ("assumption", "verify", "lesson") if not note.get(k)]
+                    if missing_note:
+                        errors.append(f"S10 {cid}/{note_key}: 缺选择推理字段 {missing_note}")
                     bad_roles = set(action.get("roles") or []) - roles
                     if bad_roles:
                         errors.append(f"S10 {cid}/scene[{si}]/action[{ai}]: 未知角色 {sorted(bad_roles)}")

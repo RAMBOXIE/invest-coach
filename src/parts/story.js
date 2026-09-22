@@ -21,7 +21,7 @@
     ST = { i: 0, pick: null, conf: null, twinOk: null, asked: [], seen: new Set(),
       mode: STORY.rpg && STORY.rpg.scenes ? 'rpg' : 'legacy',
       role: null, sceneId: STORY.rpg && STORY.rpg.initial_scene || null, rpgPath: null,
-      rpgAction: null, rpgReturn: null, rpgPressure: null, rpgHistory: [] };
+      rpgAction: null, rpgDraft: null, rpgReturn: null, rpgPressure: null, rpgHistory: [] };
     el.classList.add('show');
     track('story_open', { case: STORY.case_id });
     draw();
@@ -120,6 +120,13 @@
   function rpgScene() { return (STORY.rpg.scenes || []).find(s => s.id === ST.sceneId); }
   function activeRole() { return (STORY.rpg.roles || []).find(r => r.id === ST.role) || {}; }
   function rpgActions(s) { return (s.actions || []).filter(a => !a.roles || a.roles.includes(ST.role)); }
+  function deliberation(s, a) { return ((STORY.rpg.deliberations || {})[`${s.id}.${a.id}`] || {}); }
+  function scrollRpgTo(selector) {
+    requestAnimationFrame(() => {
+      const node = bodyEl.querySelector(selector);
+      if (node) bodyEl.scrollTop = Math.max(0, node.offsetTop - 24);
+    });
+  }
   function roleValue(v) { return v && typeof v === 'object' && !Array.isArray(v) ? (v[ST.role] || v.default || '') : (v || ''); }
   function sceneLines(s) {
     const byPath = s.path_lines && ST.rpgPath ? s.path_lines[ST.rpgPath] : null;
@@ -163,6 +170,13 @@
       <div><span>先看哪组数</span><b>${esc(f.watch || '')}</b></div><div><span>这些数说明什么</span><p>${md(f.read || '')}</p></div></div>` : ''}
       <dl><div><dt>你要交付</dt><dd>${esc(r.win_condition || r.goal || '')}</dd></div><div><dt>最容易看错</dt><dd>${esc(r.risk || r.pressure || '')}</dd></div></dl></section>`;
   }
+  function continuityHTML() {
+    const last = ST.rpgHistory && ST.rpgHistory[ST.rpgHistory.length - 1];
+    if (!last || !last.assumption || !last.verify) return '';
+    return `<section class="rpg-continuity"><div class="rpg-section-label">上一决定还没结束</div>
+      <p><b>${esc(last.label)}</b>把一个前提带进了现在：${md(last.assumption)}</p>
+      <p><span>这一段继续追</span>${md(last.verify)}</p></section>`;
+  }
   function rpgEvidenceV2(ids) {
     return (ids || []).map(rpgBeat).filter(Boolean).map(b => {
       if (b.panel) return `<section class="rpg-legacy-evidence"><div class="rpg-section-label">当时的材料</div>${evPanel(b.panel)}${derived(b.derived)}</section>`;
@@ -171,11 +185,22 @@
     }).join('');
   }
   function resultHTML(a) {
+    const d = deliberation(rpgScene(), a);
     const used = roleValue(a.evidence_used), missed = roleValue(a.evidence_missed), tradeoff = roleValue(a.tradeoff);
     return `<section class="rpg-audit"><div class="rpg-section-label">决策复盘</div><h3>${esc(a.result_title || '局面改变了')}</h3>
       <p class="rpg-outcome">${md(a.consequence || '')}</p><dl>
       ${used ? `<div><dt>你用到的证据</dt><dd>${md(used)}</dd></div>` : ''}${missed ? `<div><dt>你漏掉的证据</dt><dd>${md(missed)}</dd></div>` : ''}${tradeoff ? `<div><dt>这一步的代价</dt><dd>${md(tradeoff)}</dd></div>` : ''}</dl>
-      ${a.narration ? `<p class="rpg-takeaway"><b>此刻该记住</b>${md(a.narration)}</p>` : ''}</section>`;
+      ${d.lesson ? `<p class="rpg-takeaway"><b>${esc(activeRole().focus?.knowledge || '知识落点')}</b>${md(d.lesson)}</p>` : ''}
+      ${a.narration ? `<p class="rpg-afterword"><b>继续往下想</b>${md(a.narration)}</p>` : ''}</section>`;
+  }
+  function deliberationHTML(s, a) {
+    const d = deliberation(s, a), focus = activeRole().focus || {};
+    return `<section class="rpg-deliberation"><div class="rpg-section-label">决策草稿 · ${esc(focus.knowledge || '先把理由写清')}</div>
+      <h3>${esc(a.label)}</h3><p class="rpg-draft-prompt">${md(a.prompt || '')}</p>
+      <div class="rpg-reasoning"><div><span>它依赖的前提</span><p>${md(d.assumption || '')}</p></div>
+      <div><span>确认前要核对</span><p>${md(d.verify || '')}</p></div></div>
+      <p class="rpg-draft-note">这里还没有标准答案。你是在决定：是否愿意带着这两个条件承担后果。</p>
+      <div class="rpg-draft-actions"><button id="rpg-redraft">换个方案</button><button id="rpg-confirm">确认这个选择</button></div></section>`;
   }
   function dialogueButton(s) {
     if ((!STORY.interrogation && !STORY.rpg.dialogue) || s.dialogue === false) return '';
@@ -218,8 +243,8 @@
     if (!ST.role) return drawRpgRoles();
     const s = rpgScene();
     if (!s) return drawRpgFinish();
-    const available = rpgActions(s), action = available.find(a => a.id === ST.rpgAction), final = s.final === true;
-    const actions = action ? '' : available.map(a => `<button class="rpg-action" data-rpg-action="${esc(a.id)}">
+    const available = rpgActions(s), action = available.find(a => a.id === ST.rpgAction), draft = available.find(a => a.id === ST.rpgDraft), final = s.final === true;
+    const actions = action || draft ? '' : available.map(a => `<button class="rpg-action" data-rpg-action="${esc(a.id)}">
       <span class="rpg-action-kind">${esc(a.kind || '行动')}</span><b>${esc(a.label)}</b><small>${esc(a.prompt || '')}</small></button>`).join('');
     const conf = final && action ? `<div class="rpg-confidence"><span>你对这个判断有多大把握？</span><div class="seg2">${CONF.map(c => `<button data-rpg-conf="${c.v}" class="${ST.conf === c.v ? 'on' : ''}">${c.t}</button>`).join('')}</div></div>` : '';
     const nextDisabled = final ? !action || ST.conf == null : !action;
@@ -227,9 +252,9 @@
     const phase = s.eyebrow || (sceneIndex === 0 ? '故事开始' : final ? '故事高潮' : '故事发展');
     const lines = sceneLines(s);
     bodyEl.innerHTML = `<header class="rpg-scene-head"><div class="eyebrow">${esc(phase)}</div><div class="rpg-scene-meta"><span>${esc(s.place || '')}</span><span>${esc(s.time || '')}</span></div><h2>${esc(s.title)}</h2></header>
-      ${roleBrief()}${briefingHTML(s.briefings)}${rpgEvidenceV2(s.evidence)}
+      ${continuityHTML()}${roleBrief()}${briefingHTML(s.briefings)}${rpgEvidenceV2(s.evidence)}
       ${(Array.isArray(lines) ? lines : [lines]).map(x => `<p class="ln">${md(x)}</p>`).join('')}${sceneIndex === 0 ? timelineHTML(r.timeline) : termsHTML(s.terms || [])}
-      ${dialogueButton(s)}${action ? resultHTML(action) : `${decisionFrame(s)}<div class="rpg-actions">${actions}</div>`}`;
+      ${dialogueButton(s)}${action ? resultHTML(action) : draft ? deliberationHTML(s, draft) : `${decisionFrame(s)}<div class="rpg-actions">${actions}</div>`}`;
     const nextScene = action && (r.scenes || []).find(x => x.id === action.next);
     const nextLabel = final ? '翻开历史记录' : (nextScene?.final ? '进入关键时刻' : '让时间继续');
     footEl.innerHTML = action ? `${conf}<button class="sty-cta" id="rpg-next" ${nextDisabled ? 'disabled' : ''}>${nextLabel}</button>` : '';
@@ -244,8 +269,8 @@
     footEl.innerHTML = '';
     dotsEl.innerHTML = `<i class="on"></i>${(r.scenes || []).map(() => '<i></i>').join('')}`;
     bodyEl.querySelectorAll('[data-rpg-role]').forEach(x => x.onclick = () => {
-      ST.role = x.dataset.rpgRole; ST.sceneId = r.initial_scene; ST.rpgAction = null; ST.rpgPath = null; ST.rpgHistory = [];
-      track('story_role', { case: STORY.case_id, role: ST.role }); draw();
+      ST.role = x.dataset.rpgRole; ST.sceneId = r.initial_scene; ST.rpgAction = null; ST.rpgDraft = null; ST.rpgPath = null; ST.rpgHistory = [];
+      track('story_role', { case: STORY.case_id, role: ST.role }); draw(); bodyEl.scrollTop = 0;
     });
   }
   function bindRpg(s) {
@@ -257,23 +282,30 @@
     const talk = document.getElementById('rpg-dialogue');
     if (talk) talk.onclick = openRpgDialogue;
     bodyEl.querySelectorAll('[data-rpg-action]').forEach(x => x.onclick = () => {
-      ST.rpgAction = x.dataset.rpgAction;
+      ST.rpgDraft = x.dataset.rpgAction; track('story_deliberation', { case: STORY.case_id, scene: s.id, action: ST.rpgDraft, role: ST.role }); draw(); scrollRpgTo('.rpg-deliberation');
+    });
+    const redraft = document.getElementById('rpg-redraft');
+    if (redraft) redraft.onclick = () => { ST.rpgDraft = null; draw(); scrollRpgTo('.rpg-actions'); };
+    const confirm = document.getElementById('rpg-confirm');
+    if (confirm) confirm.onclick = () => {
+      ST.rpgAction = ST.rpgDraft; ST.rpgDraft = null;
       const a = rpgActions(s).find(y => y.id === ST.rpgAction);
       if (s.final && a && ['a', 'b', 'c'].includes(a.id)) ST.pick = a.id;
-      track('story_action', { case: STORY.case_id, scene: s.id, action: ST.rpgAction, role: ST.role }); draw();
-    });
+      track('story_action', { case: STORY.case_id, scene: s.id, action: ST.rpgAction, role: ST.role }); draw(); scrollRpgTo('.rpg-audit');
+    };
     footEl.querySelectorAll('[data-rpg-conf]').forEach(x => x.onclick = () => { ST.conf = +x.dataset.rpgConf; draw(); });
     const next = document.getElementById('rpg-next');
     if (next) next.onclick = () => {
       const a = rpgActions(s).find(y => y.id === ST.rpgAction); if (!a) return;
-      ST.rpgHistory.push({ scene: s.id, action: a.id, label: a.label });
+      const d = deliberation(s, a);
+      ST.rpgHistory.push({ scene: s.id, action: a.id, label: a.label, assumption: d.assumption, verify: d.verify });
       if (s.final || a.next === '__legacy_reveal') {
         S.storyLearning = S.storyLearning || {};
         S.storyLearning[STORY.case_id] = { goal: STORY.rpg.learning_goal || STORY.learning_goal, skills: STORY.rpg.learning_skills || STORY.skills || [], role: ST.role, path: ST.rpgHistory, at: Date.now() };
         save(); track('story_learning_checkpoint', { case: STORY.case_id, skills: (STORY.rpg.learning_skills || STORY.skills || []).length });
         ST.mode = 'legacy'; ST.i = STORY.beats.findIndex(x => x.kind === 'reveal'); if (ST.i < 0) ST.i = 0;
-      } else { ST.rpgPath = ST.rpgAction; ST.sceneId = a.next; ST.rpgAction = null; }
-      draw();
+      } else { ST.rpgPath = ST.rpgAction; ST.sceneId = a.next; ST.rpgAction = null; ST.rpgDraft = null; }
+      draw(); bodyEl.scrollTop = 0;
     };
   }
 
@@ -282,8 +314,9 @@
     const s = ST.mode === 'rpg' ? rpgScene() : STORY.beats[ST.i];
     const r = activeRole(), focus = r.focus || {};
     return JSON.stringify({ case_id: STORY.case_id, mode: ST.mode, role: ST.role,
-      scene: s && s.id, title: s && s.title, action: ST.rpgAction,
+      scene: s && s.id, title: s && s.title, draft: ST.rpgDraft, action: ST.rpgAction,
       focus: focus.knowledge ? { knowledge:focus.knowledge, watch:focus.watch, read:focus.read } : null,
+      carry: ST.rpgHistory && ST.rpgHistory.length ? ST.rpgHistory[ST.rpgHistory.length - 1] : null,
       options: ST.mode === 'rpg' && s ? rpgActions(s).map(a => ({ id: a.id, label: a.label })) : [] });
   };
   window.advanceTime = function () {};

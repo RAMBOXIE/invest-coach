@@ -79,6 +79,7 @@
 | `rpg.scenes[]` | RPG 场景 | `{id, eyebrow, place, time, title, lines[], role_lines?, briefings?, known?, unknown?, decision?, terms?, evidence[], actions[], final?}`。先呈现角色责任和数据，再呈现已知/未知/必须决定，最后才给行动 | 在用 |
 | `rpg.scenes[].briefings[]` | 数据账本 | `{label,value,note?,fact?,roles?}`。`roles` 控制哪些席位能先看到该材料；真实数字必须先进入 `facts.json` | 在用 |
 | `rpg.scenes[].actions[]` | RPG 行动 | `{id, roles?, kind, label, prompt, consequence, result_title, evidence_used?, evidence_missed?, tradeoff?, narration, next}`。结果页必须解释用了什么、漏了什么、付出什么代价；不得只给口号 | 在用 |
+| `rpg.deliberations` | 选择推理 | `{场景id.行动id → {assumption,verify,lesson}}`。`assumption` 写选择成立依赖的前提，`verify` 写确认前应核对的具体材料，`lesson` 在后果发生后把知识点落回此次决策；所有行动必须逐一登记 | 在用 |
 | `rpg.dialogue` | 人物推演 | `{name,role,notice,material[],prompts[],no_record}`。LLM 只能读取 `material`，输出受数字、时代、建议与出戏词出口闸约束；界面必须标明“AI 推演，不是本人原话” | 在用 |
 | `rpg.narrator` | 兼容字段 | 旧画外音设定。RPG v2 不再调用生成式画外音；选择后改为确定性的证据复盘 | 兼容 |
 | `beats[].kind=consequence` | 兼容字段 | 旧线性播放器的决策后果拍。新 RPG 故事优先使用 `rpg.scenes[].actions[]`，该字段仅为未迁移故事保留 | 兼容 |

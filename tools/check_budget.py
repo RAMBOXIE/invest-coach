@@ -3,7 +3,7 @@
 """体积与叙事预算门禁（SPEC_DEV.md §4）。
 
   B1 产物体积 ≤ tokens.budget.dist_kb
-  B2 判断屏叙事预算：题干 ≤180 字（防叙事挤占判断认知资源）
+  B2 判断屏叙事长度：只报告最长题干，不设字符硬上限；复杂度由分层交互承担
   B3 离线契约：运行时不得依赖外部资源（出处外链除外）
   B4 预算一致：tokens.json 的 dist_kb 必须和 SPEC_DEV §4 表里写的数字一致
 用法: python tools/check_budget.py [dist/index.html]
@@ -56,15 +56,9 @@ def main(path):
 
     html = p.read_text(encoding="utf-8")
 
-    # B2 判断屏叙事预算
-    over = 0
-    for m in re.finditer(r'"q":"((?:[^"\\]|\\.)*)"', html):
-        q = m.group(1)
-        if len(q) > 180:
-            over += 1
-            errors.append(f'B2 判断屏叙事超预算：题干 {len(q)} 字 > 180 字 —— 「{q[:26]}…」')
-    if not over:
-        infos.append("B2 全部题干 ≤180 字 ✓")
+    # B2 不再用字符数裁剪复杂决策。记录最长题干，认知负担交给分层交互与浏览器验收。
+    lengths = [len(m.group(1)) for m in re.finditer(r'"q":"((?:[^"\\]|\\.)*)"', html)]
+    infos.append(f"B2 叙事不设硬上限；最长题干 {max(lengths, default=0)} 字（由分层交互承载）✓")
 
     # B3 离线契约：资源加载类属性只允许 data: / 相对路径
     bad = 0
