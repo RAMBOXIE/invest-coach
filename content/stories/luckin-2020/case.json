@@ -5,6 +5,7 @@
  "company": "瑞幸咖啡公司",
  "era": "2019",
  "status": "settled",
+ "curriculum": {"stage":1,"stage_title":"看见事实","sequence":1,"primary":"收入证据链","supporting":["客户与门店口径","关联交易","原档核查"],"prerequisites":[]},
  "hook": "门店在涨，客户在涨，收入也在涨。三个数字都能写进招股书，但它们并不由同一套证据证明。",
  "knowledge_node": "case-first-look",
  "rpg": {

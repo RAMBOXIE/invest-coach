@@ -5,6 +5,7 @@
  "company": "新光公司",
  "era": "1998",
  "status": "settled",
+ "curriculum": {"stage":1,"stage_title":"看见事实","sequence":2,"primary":"权责发生制与收入确认","supporting":["应收账款","经营现金流","渠道压货"],"prerequisites":["收入证据链"]},
  "hook": "华尔街最爱的转型故事，年报里藏着一句话。",
  "knowledge_node": "rf1",
  "twin_case_ref": "dell-1998",

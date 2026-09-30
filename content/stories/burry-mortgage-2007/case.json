@@ -5,6 +5,7 @@
  "company": "赛恩资本与美国次级按揭市场",
  "era": "2007",
  "status": "settled",
+ "curriculum": {"stage":4,"stage_title":"看懂信用与银行","sequence":9,"primary":"底层现金流穿透","supporting":["浮息重定价","信用风险","模型边界"],"prerequisites":["三张表的分工","现金时间表"]},
  "hook": "债券写着高评级，最后还钱的却是一批两年后就要重定价的房贷。",
  "knowledge_node": "three-statements",
  "learning_goal": "穿透证券名称和评级，找到借款人、合同条款、重定价时点和损失路径。",

@@ -180,6 +180,36 @@
    "sha256": "61a936a8e68327d2388038ddbfa71709c5f9436e7d1633382542c1ead8d3509d",
    "source": "英格兰银行 1990、1992 年季度公报官方节选",
    "accession": "BOE-ERM-1992"
+  },
+  {
+   "file": "evidence/sec-gamestop-2021-excerpts.txt",
+   "sha256": "90bd8d7d76967a55a9d31cebea093c562f981c76bf96096c243b912c9474bd3f",
+   "source": "美国证券交易委员会 2021 年游戏驿站市场结构报告官方节选",
+   "accession": "SEC-GME-2021"
+  },
+  {
+   "file": "evidence/fed-svb-2023-excerpts.txt",
+   "sha256": "4c1c143aaf08c194b32706c7596bb805234263a57f276e78535764a382dfa8c9",
+   "source": "美联储 2023 年硅谷银行监管复盘官方节选",
+   "accession": "FED-SVB-2023"
+  },
+  {
+   "file": "evidence/treasury-ltcm-1999-excerpts.txt",
+   "sha256": "cd6ebc77941b741fc8a6d6d34c0ca31b961a3027455632f12c06ec0d282bc62d",
+   "source": "美国总统金融市场工作组 1999 年长期资本管理公司报告官方节选",
+   "accession": "PWG-LTCM-1999"
+  },
+  {
+   "file": "evidence/boe-barings-1995-excerpts.txt",
+   "sha256": "ae4f5cb0216610b1b1a412b29b11fb636b8ed29bdecb2f5f296b23a573525dcf",
+   "source": "英国银行监管委员会巴林银行调查及英格兰银行复盘官方节选",
+   "accession": "BOE-BARINGS-1995"
+  },
+  {
+   "file": "evidence/sec-aol-timewarner-2002-excerpts.txt",
+   "sha256": "ad299d35a6792dd083bfb557ae304aa3f2b97f4c0db4861fe748223f0749f0c9",
+   "source": "美国证券交易委员会文件与美国在线时代华纳 2002 年 10-K 官方节选",
+   "accession": "SEC-AOLTW-2002"
   }
  ],
  "facts": [
@@ -731,6 +761,177 @@
    "basis": "英格兰银行 1990、1992 年季度公报",
    "accession": "BOE-ERM-1992",
    "line": "L1-L6"
+  },
+  {
+   "id": "gme-market-build",
+   "company": "游戏驿站公司",
+   "item": "2021 年 1 月价格、成交与参与账户变化",
+   "value": "1 月 27 日收盘 347.51 美元，次日盘中最高 483 美元；1 月 13 日至 29 日日均成交约 1 亿股，较 2020 年均值增加逾 1,400%；单日交易账户由月初不足 1 万增至接近 90 万",
+   "basis": "美国证券交易委员会 2021 年市场结构报告",
+   "accession": "SEC-GME-2021",
+   "line": "L2-L4"
+  },
+  {
+   "id": "gme-short-structure",
+   "company": "游戏驿站公司",
+   "item": "卖空比例与价格上涨归因",
+   "value": "卖空股数相当于流通股 122.97%；监管报告认为持续数周的上涨主要由积极情绪而非空头回补维持，也未发现伽马挤压证据",
+   "basis": "美国证券交易委员会 2021 年市场结构报告",
+   "accession": "SEC-GME-2021",
+   "line": "L1/L5"
+  },
+  {
+   "id": "gme-clearing-margin",
+   "company": "游戏驿站公司",
+   "item": "清算保证金冲击",
+   "value": "1 月 27 日，国家证券清算公司向 36 个清算成员追加盘中保证金 69 亿美元，使全体成员所需保证金升至 255 亿美元",
+   "basis": "美国证券交易委员会 2021 年市场结构报告",
+   "accession": "SEC-GME-2021",
+   "line": "L6-L7"
+  },
+  {
+   "id": "gme-broker-restrictions",
+   "company": "游戏驿站公司",
+   "item": "经纪商限制交易的直接约束",
+   "value": "部分经纪商因国家证券清算公司的保证金要求与资本费用限制客户交易；清算机构没有要求其停止某只股票的交易",
+   "basis": "美国证券交易委员会 2021 年市场结构报告",
+   "accession": "SEC-GME-2021",
+   "line": "L7"
+  },
+  {
+   "id": "svb-duration-funding",
+   "company": "硅谷银行金融集团",
+   "item": "存款结构与证券久期",
+   "value": "2022 年末约 94% 存款未受保险；持有至到期证券加权平均久期 6.2 年，多数为期限 10 年以上的机构抵押贷款支持证券",
+   "basis": "美联储 2023 年硅谷银行监管复盘",
+   "accession": "FED-SVB-2023",
+   "line": "L1-L3"
+  },
+  {
+   "id": "svb-balance-sheet-concentration",
+   "company": "硅谷银行金融集团",
+   "item": "证券资产与持有至到期分类集中度",
+   "value": "2022 年末证券占总资产 55%，大型银行同业为 25%；持有至到期证券占全部证券 78%，同业为 42%",
+   "basis": "美联储 2023 年硅谷银行监管复盘",
+   "accession": "FED-SVB-2023",
+   "line": "L3"
+  },
+  {
+   "id": "svb-capital-plan",
+   "company": "硅谷银行金融集团",
+   "item": "2023 年 3 月 8 日资产负债表重组",
+   "value": "出售 210 亿美元可供出售证券并确认 18 亿美元税后损失，同时寻求筹集 22.5 亿美元资本",
+   "basis": "美联储 2023 年硅谷银行监管复盘",
+   "accession": "FED-SVB-2023",
+   "line": "L4"
+  },
+  {
+   "id": "svb-deposit-run",
+   "company": "硅谷银行金融集团",
+   "item": "两日存款挤兑",
+   "value": "3 月 9 日流失逾 400 亿美元存款，管理层预计 3 月 10 日还会流失逾 1,000 亿美元，合计约为存款基础的 85%",
+   "basis": "美联储 2023 年硅谷银行监管复盘",
+   "accession": "FED-SVB-2023",
+   "line": "L5-L6"
+  },
+  {
+   "id": "ltcm-leverage",
+   "company": "长期资本管理公司",
+   "item": "资本、资产与资产负债表杠杆",
+   "value": "1997 年末向投资人返还 27 亿美元后资本降至 48 亿美元；1998 年 8 月 31 日资产逾 1,250 亿美元，资产负债表杠杆超过 25 倍",
+   "basis": "美国总统金融市场工作组 1999 年报告",
+   "accession": "PWG-LTCM-1999",
+   "line": "L1-L2"
+  },
+  {
+   "id": "ltcm-derivatives",
+   "company": "长期资本管理公司",
+   "item": "衍生品名义本金规模",
+   "value": "期货合约逾 5,000 亿美元、掉期逾 7,500 亿美元、期权及其他场外衍生品逾 1,500 亿美元",
+   "basis": "美国总统金融市场工作组 1999 年报告",
+   "accession": "PWG-LTCM-1999",
+   "line": "L3"
+  },
+  {
+   "id": "ltcm-liquidity-rescue",
+   "company": "长期资本管理公司",
+   "item": "流动性冲击与债权人注资",
+   "value": "1998 年 8 月亏损 18 亿美元后资本仅余 23 亿美元；随后参与机构投入约 36 亿美元，换取 90% 权益与运营控制权",
+   "basis": "美国总统金融市场工作组 1999 年报告",
+   "accession": "PWG-LTCM-1999",
+   "line": "L4-L6"
+  },
+  {
+   "id": "ltcm-market-shock",
+   "company": "长期资本管理公司",
+   "item": "俄罗斯冲击与相关性变化",
+   "value": "1998 年 8 月 17 日俄罗斯贬值并暂停偿债，资金转向安全资产，风险价差与流动性溢价扩大，不同市场之间的相关性同时上升",
+   "basis": "美国总统金融市场工作组 1999 年报告",
+   "accession": "PWG-LTCM-1999",
+   "line": "L4"
+  },
+  {
+   "id": "barings-hidden-account",
+   "company": "巴林银行",
+   "item": "88888 隐藏账户",
+   "value": "88888 账户于 1992 年 7 月设立并被排除在发往伦敦的交易、价格与持仓日报之外；伦敦管理层称直到 1995 年 2 月 23 日才知道该账户存在",
+   "basis": "英国银行监管委员会 1995 年调查",
+   "accession": "BOE-BARINGS-1995",
+   "line": "L1-L2"
+  },
+  {
+   "id": "barings-control-failure",
+   "company": "巴林银行",
+   "item": "交易与结算未分离",
+   "value": "同一人同时控制交易和后台结算；1994 年 8 月内部审计已指出这一问题，但整改建议没有执行",
+   "basis": "英格兰银行 1997 年金融稳定复盘",
+   "accession": "BOE-BARINGS-1995",
+   "line": "L3/L5-L6"
+  },
+  {
+   "id": "barings-loss-path",
+   "company": "巴林银行",
+   "item": "隐藏亏损扩张路径",
+   "value": "1993 年末累计亏损逾 2,000 万英镑，1994 年末逾 2 亿英镑，1995 年 2 月 26 日倒闭后累计达到 8.27 亿英镑",
+   "basis": "英国银行监管委员会 1995 年调查",
+   "accession": "BOE-BARINGS-1995",
+   "line": "L4"
+  },
+  {
+   "id": "barings-margin-red-flags",
+   "company": "巴林银行",
+   "item": "保证金汇款与报告之间的矛盾",
+   "value": "伦敦向新加坡汇出巨额资金以满足保证金要求，但相关金额与当地保证金报告冲突，异常没有在早期被彻底追查",
+   "basis": "英国银行监管委员会 1995 年调查",
+   "accession": "BOE-BARINGS-1995",
+   "line": "L5-L6"
+  },
+  {
+   "id": "aoltw-merger-value",
+   "company": "美国在线时代华纳",
+   "item": "合并估值与换股条款",
+   "value": "2000 年 1 月宣布的合并隐含价值约 2,000 亿美元；2001 年 1 月 11 日完成，每份时代华纳权益证券转换为 1.5 份合并公司同类权益证券",
+   "basis": "美国证券交易委员会文件",
+   "accession": "SEC-AOLTW-2002",
+   "line": "L1-L2"
+  },
+  {
+   "id": "aoltw-goodwill-impairment",
+   "company": "美国在线时代华纳",
+   "item": "2002 年商誉及无形资产减值",
+   "value": "第一季度商誉减值 541.99 亿美元，第四季度再减值 455.38 亿美元，全年两项合计约 997.37 亿美元",
+   "basis": "美国在线时代华纳 2002 年 10-K",
+   "accession": "SEC-AOLTW-2002",
+   "line": "L3-L6"
+  },
+  {
+   "id": "aoltw-impairment-breakdown",
+   "company": "美国在线时代华纳",
+   "item": "第四季度减值分部与第一季度减值原因",
+   "value": "第四季度减值包括美国在线 334.89 亿美元、有线电视 105.50 亿美元、音乐商誉 6.46 亿美元及音乐品牌和商标 8.53 亿美元；第一季度减值主要反映自 2000 年 1 月合并定价以来股价下跌",
+   "basis": "美国在线时代华纳 2002 年 10-K",
+   "accession": "SEC-AOLTW-2002",
+   "line": "L5-L6"
   }
  ],
  "approved_tokens": {

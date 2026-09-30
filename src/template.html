@@ -215,14 +215,22 @@
   .story-front{padding:22px 2px 8px}
   .story-front-title{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);margin:0 0 6px;color:var(--text-display-color);overflow-wrap:anywhere}
   .story-front-company{font-size:var(--size-15);line-height:var(--lh-read);color:var(--state-focus);overflow-wrap:anywhere}
+  .story-front-path{display:flex;flex-wrap:wrap;gap:7px;margin:10px 0 16px}
+  .story-front-path span{padding:5px 9px;border:1px solid var(--surface-rule);border-radius:var(--radius-pill);font-size:var(--size-13);color:var(--text-meta-color);background:var(--surface-card)}
+  .story-front-path b{font-weight:700;color:var(--state-focus)}
   .story-front-sub{font-size:var(--size-17);line-height:var(--lh-read);color:var(--text-body-color);margin:4px 0 18px}
   .story-front-role{display:grid;gap:3px;padding:14px 16px;margin:0 0 18px;border:1px solid var(--surface-rule);background:var(--surface-card)}
   .story-front-role span,.story-front-role small{color:var(--text-meta-color)}
   .story-front-role b{font-size:var(--size-19);color:var(--text-display-color)}
   .story-front-list{display:grid;gap:8px;margin-top:24px;padding-top:18px;border-top:1px solid var(--surface-rule)}
+  .story-stage{display:grid;gap:8px;margin-top:10px}
+  .story-stage-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:9px 2px 2px;border-top:1px solid var(--surface-rule)}
+  .story-stage-head b{font-size:var(--size-15);color:var(--text-display-color)}
+  .story-stage-head span{font-size:var(--size-13);color:var(--text-meta-color)}
   .story-row{margin:0}
   .story-row-copy{display:grid;gap:2px;min-width:0}
   .story-row .nm,.story-row .mt{display:block;overflow-wrap:anywhere}
+  .story-row .kf{display:block;font-size:var(--size-13);line-height:var(--lh-ui);color:var(--state-focus);overflow-wrap:anywhere}
   .story-row-go{margin-left:auto;font-size:var(--size-24);line-height:1;color:var(--text-meta-color)}
   .story-atlas{display:grid;gap:8px;padding-top:22px}
   @media(max-width:480px){.story-front-title{font-size:var(--size-32)}}
@@ -397,9 +405,10 @@
      「先质问」「核这个数字」，抽屉在幕底下渲染得好好的，用户看到的是屏幕纹丝不动。 */
   .sheet{position:fixed;left:0;right:0;bottom:0;z-index:80;background:var(--card);color:var(--ink);
     border-radius:18px 18px 0 0;padding:16px 16px calc(18px + env(safe-area-inset-bottom));
-    transform:translateY(101%);transition:transform .25s;max-height:80dvh;overflow-y:auto;
+    transform:translateY(101%);visibility:hidden;pointer-events:none;
+    transition:transform .25s,visibility 0s linear .25s;max-height:80dvh;overflow-y:auto;
     box-shadow:0 -8px 30px rgba(0,0,0,.4)}
-  .sheet.show{transform:none}
+  .sheet.show{transform:none;visibility:visible;pointer-events:auto;transition-delay:0s}
   .scrim{position:fixed;inset:0;background:rgba(8,10,24,.55);z-index:79;display:none}
   .scrim.show{display:block}
   .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(16px);opacity:0;
@@ -553,7 +562,7 @@ const isDeep=n=>!!n.x_level;
 /* 幕序：先能查到（原档里写着）→ 再查不到（原档里没写）→ 自己算错（机会成本）
    → 最后是根本没有数字（分母趋零）。不在这张表里的幕会被 indexOf 排到最前，
    所以新增幕必须在这里登记。 */
-const ORDER=['sunbeam-1998','lehman-2008','buffett-1993','nikola-2021'];
+const ORDER=['luckin-2020','sunbeam-1998','nikola-2021','lynch-fidelity-1985','munger-costco-1999','buffett-coke-1988','buffett-1993','aol-timewarner-2000','burry-mortgage-2007','lehman-2008','svb-2023','soros-gbp-1992','gamestop-2021','barings-1995','ltcm-1998'];
 function canonLabel(s){s=s||'';
   const b=ic('book')+' ';
   if(s.includes('Graham'))return b+'格雷厄姆怎么说';
@@ -888,33 +897,55 @@ function viewToday(){
 function storyMeta(x){
   return [x.company,x.era].filter(Boolean).join(' · ');
 }
+function storySequence(x){
+  return (x.curriculum && Number.isFinite(+x.curriculum.sequence)) ? +x.curriculum.sequence : 999;
+}
+function sortedStories(items){
+  return (items || []).slice().sort((a,b)=>storySequence(a)-storySequence(b));
+}
+function storyFocus(x){
+  return x.curriculum && x.curriculum.primary ? x.curriculum.primary : (x.learning_goal || '');
+}
 function storyLead(x){
   return (x.subtitle||x.hook||'')
     .replace(/^\s*(?:19|20)\d{2}\s*年(?:\s*\d{1,2}\s*月)?\s*[·｜|]\s*/,'');
 }
 function storyRow(x,done){
   return `<button class="rowbtn story-row" data-story="${x.case_id}">
-    <span class="story-row-copy"><span class="nm">${x.title}</span><span class="mt">${storyMeta(x)}</span></span>
+    <span class="story-row-copy"><span class="nm">${x.title}</span><span class="mt">${storyMeta(x)}</span><span class="kf">训练：${storyFocus(x)}</span></span>
     ${done
       ? '<span class="chipS lit">已完成</span>'
       : '<span class="story-row-go" aria-hidden="true">›</span>'}
   </button>`;
 }
+function storyGroups(stories,completed){
+  const groups=[];
+  sortedStories(stories).forEach(x=>{
+    const c=x.curriculum||{}, key=String(c.stage||'');
+    let group=groups.find(g=>g.key===key);
+    if(!group){group={key,title:c.stage_title||'其他事件',items:[]};groups.push(group);}
+    group.items.push(x);
+  });
+  return groups.map(g=>`<section class="story-stage"><div class="story-stage-head"><b>${g.title}</b><span>${g.items.length} 个事件</span></div>
+    ${g.items.map(x=>storyRow(x,!!completed[x.case_id])).join('')}</section>`).join('');
+}
 function storyFront(){
-  const stories = (SITE.x_stories || []).slice();
+  const stories = sortedStories(SITE.x_stories || []);
   const completed = S.story || {};
   const first = stories.find(x => !completed[x.case_id]) || stories[0];
   const rest = stories.filter(x => x.case_id !== (first && first.case_id));
   if(!first) return `<div class="hero"><h3 class="hero-t">暂无案例</h3></div>`;
   const role = first.rpg && first.rpg.roles && first.rpg.roles[0];
-  const cards = rest.map(x => storyRow(x,!!completed[x.case_id])).join('');
+  const cards = storyGroups(rest,completed);
+  const course = first.curriculum || {};
   return `<div class="story-front">
     <h2 class="story-front-title">${first.title}</h2>
     <div class="story-front-company">${storyMeta(first)}</div>
+    ${course.primary ? `<div class="story-front-path"><span>第 ${course.stage} 阶段 · ${course.stage_title}</span><span>核心训练：<b>${course.primary}</b></span></div>` : ''}
     <p class="story-front-sub">${storyLead(first)}</p>
     <div class="story-front-role"><span>你先扮演</span><b>${role ? role.title : '事件中的决策者'}</b><small>${role ? role.goal : '从原始材料出发，做出一个会产生后果的选择。'}</small></div>
     <button class="cta" id="go-story" data-cid="${first.case_id}">进入现场 · 约 8 分钟</button>
-    ${rest.length ? `<div class="story-front-list"><div class="eyebrow">其他故事</div>${cards}</div>` : ''}
+    ${rest.length ? `<div class="story-front-list"><div class="eyebrow">十五个真实事件 · 由浅入深</div>${cards}</div>` : ''}
   </div>`;
 }
 
@@ -1001,9 +1032,9 @@ function dw(title,body){
 }
 
 function storyAtlas(){
-  const stories = SITE.x_stories || [];
+  const stories = sortedStories(SITE.x_stories || []);
   return `<div class="story-atlas">
-    ${stories.map(x => storyRow(x,!!((S.story || {})[x.case_id]))).join('')}
+    ${storyGroups(stories,S.story || {})}
   </div>`;
 }
 

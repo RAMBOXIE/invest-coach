@@ -5,6 +5,7 @@
  "company": "尼古拉公司",
  "era": "2021",
  "status": "settled",
+ "curriculum": {"stage":1,"stage_title":"看见事实","sequence":3,"primary":"主张与兑现","supporting":["研发投入","收入构成","可证伪节点"],"prerequisites":["原档核查"]},
  "hook": "所有人都在讲这个故事。年报的第一行写着另一件事。",
  "knowledge_node": "growth-rate",
  "twin_case_ref": "moderna-2019",

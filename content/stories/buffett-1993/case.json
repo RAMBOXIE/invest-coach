@@ -5,6 +5,7 @@
  "company": "德克斯特鞋业与伯克希尔·哈撒韦",
  "era": "1993",
  "status": "settled",
+ "curriculum": {"stage":3,"stage_title":"给资产定价","sequence":7,"primary":"支付方式与机会成本","supporting":["股票稀释","可证伪竞争优势","二阶代价"],"prerequisites":["定价权","内在价值"]},
  "hook": "交易只剩最后一页：德克斯特值不值得买，和该不该交出伯克希尔股票，是两道不同的问题。",
  "knowledge_node": "falsification",
  "twin_case_ref": "sunbeam-1998",

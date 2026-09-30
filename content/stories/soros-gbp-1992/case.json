@@ -5,6 +5,7 @@
  "company": "英格兰银行与英镑",
  "era": "1992",
  "status": "settled",
+ "curriculum": {"stage":5,"stage_title":"看懂市场与杠杆","sequence":12,"primary":"宏观硬约束","supporting":["催化时点","路径风险","仓位预算"],"prerequisites":["现金时间表","风险预算"]},
  "hook": "政府承诺守住汇率，可国内经济已经承受不起德国式高利率。哪一边先让步？",
  "knowledge_node": "base-rate",
  "learning_goal": "把政策承诺、硬约束、催化时点和仓位风险分开判断。",

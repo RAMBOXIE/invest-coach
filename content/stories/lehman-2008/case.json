@@ -5,6 +5,7 @@
  "company": "雷曼兄弟控股公司",
  "era": "2008",
  "status": "settled",
+ "curriculum": {"stage":4,"stage_title":"看懂信用与银行","sequence":10,"primary":"报告日与期间风险","supporting":["回购融资","窗口修饰","融资依赖"],"prerequisites":["底层现金流穿透"]},
  "hook": "季报里的现金和杠杆都能逐行核对。更危险的问题是：季末那一刻，能不能代表整个季度？",
  "knowledge_node": "base-rate",
  "twin_case_ref": "sunbeam-1998",

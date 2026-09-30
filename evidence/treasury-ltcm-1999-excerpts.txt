@@ -1,0 +1,8 @@
+Source: President's Working Group on Financial Markets, Hedge Funds, Leverage, and the Lessons of Long-Term Capital Management, April 1999.
+Official URL: https://home.treasury.gov/system/files/236/hedgfund.pdf
+L1: At the end of 1997, LTCM returned approximately $2.7 billion in capital to investors, reducing its capital base by about 36 percent to $4.8 billion without reducing the scale of its investment positions.
+L2: On August 31, 1998, LTCM held over $125 billion in assets; against $4.8 billion of January equity, balance-sheet leverage exceeded 25-to-1.
+L3: Gross notional contracts exceeded $500 billion in futures, $750 billion in swaps, and $150 billion in options and other over-the-counter derivatives.
+L4: Russia's August 17, 1998 devaluation and debt moratorium triggered a flight to quality, widening risk spreads and liquidity premiums while correlations rose across markets.
+L5: LTCM lost $1.8 billion during August 1998, leaving $2.3 billion of capital, and found it difficult to reduce positions because of their size and declining market liquidity.
+L6: Participating firms invested about $3.6 billion in new equity for a 90 percent stake and operational control of LTCM's portfolio.

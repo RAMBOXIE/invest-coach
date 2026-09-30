@@ -5,6 +5,7 @@
  "company": "好市多公司",
  "era": "1999",
  "status": "settled",
+ "curriculum": {"stage":2,"stage_title":"看懂生意","sequence":5,"primary":"单位经济学","supporting":["会员费","周转效率","低毛利模式"],"prerequisites":["三张表的分工"]},
  "hook": "毛利压得这么低，看起来不像好生意。可会员却一年又一年回来。",
  "knowledge_node": "gross-margin",
  "learning_goal": "理解低毛利、高周转、会员费和顾客信任如何组成同一套系统。",

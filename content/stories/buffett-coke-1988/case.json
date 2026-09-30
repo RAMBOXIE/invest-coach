@@ -5,6 +5,7 @@
  "company": "可口可乐公司",
  "era": "1988",
  "status": "settled",
+ "curriculum": {"stage":2,"stage_title":"看懂生意","sequence":6,"primary":"定价权","supporting":["资本回报","分批建仓","内在价值"],"prerequisites":["单位经济学"]},
  "hook": "人人都知道可口可乐。难的是回答：为什么偏偏是 1988 年，它值这个价？",
  "knowledge_node": "moat",
  "learning_goal": "把品牌好感拆成定价权、资本回报、现金流和买入价格。",

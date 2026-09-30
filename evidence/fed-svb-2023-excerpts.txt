@@ -1,0 +1,8 @@
+Source: Board of Governors of the Federal Reserve System, Review of the Federal Reserve's Supervision and Regulation of Silicon Valley Bank, April 2023.
+Official URL: https://www.federalreserve.gov/publications/files/svb-review-20230428.pdf
+L1: As of year-end 2022, approximately 94 percent of SVBFG's total deposits were uninsured.
+L2: As of December 31, 2022, SVBFG's held-to-maturity securities portfolio had a weighted-average duration of 6.2 years; most of the portfolio consisted of agency mortgage-backed securities with a maturity of 10 years or more.
+L3: At year-end 2022, securities were 55 percent of SVBFG assets versus 25 percent for large-bank peers; held-to-maturity securities were 78 percent of total securities versus 42 percent for peers.
+L4: On March 8, 2023, SVBFG announced that it had sold $21 billion of available-for-sale securities, was booking a $1.8 billion after-tax loss, and was seeking to raise $2.25 billion in capital.
+L5: On March 9, SVB lost over $40 billion in deposits and management expected to lose over $100 billion more on March 10, together roughly 85 percent of the bank's deposit base.
+L6: SVB did not have enough cash or collateral to meet the extraordinary outflows and was closed on March 10, 2023.

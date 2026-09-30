@@ -1,0 +1,8 @@
+Source: Board of Banking Supervision inquiry into the collapse of Barings, HC 673, July 1995; Bank of England Financial Stability Review, Autumn 1997.
+Official URLs: https://assets.publishing.service.gov.uk/media/5a7ca783ed915d6969f46688/0673.pdf ; https://www.bankofengland.co.uk/-/media/boe/files/financial-stability-report/1997/autumn-1997.pdf
+L1: Account 88888 was set up in July 1992 and software was changed to exclude it from daily trade, price, and position reports sent to London.
+L2: The hidden account had been used for more than two and a half years to take unauthorized positions; London management said it did not know the account existed until February 23, 1995.
+L3: Leeson controlled both dealing and back-office operations, allowing him to check his own trades; an August 1994 internal audit identified the lack of segregation but its recommendation was not implemented.
+L4: Cumulative losses exceeded £20 million by the end of 1993, exceeded £200 million by the end of 1994, and reached £827 million after the February 26, 1995 collapse.
+L5: Huge transfers from London to Singapore to cover margin calls conflicted with margin reports, but the discrepancy was not fully examined at an early stage.
+L6: The official inquiry concluded that checks and balances failed at multiple levels and in more than one location.

@@ -359,6 +359,7 @@ def validate_stories(release=False):
     accs = {e["accession"] for e in F["evidence_files"]}
 
     errors, warns = [], []
+    curriculum_rows = []
     cases = sorted((root / "content" / "stories").glob("*/case.json"))
     if not cases:
         return ["S0 找不到任何 content/stories/*/case.json"], []
@@ -377,6 +378,20 @@ def validate_stories(release=False):
                 errors.append(f"S1 {cid}: 缺顶层字段 {k}")
         if c.get("case_id") != cid:
             errors.append(f"S1 {cid}: case_id「{c.get('case_id')}」与目录名不一致")
+
+        # S11 课程投放：故事可以自由进入，但推荐顺序必须是一条完整、无冲突的学习路径。
+        curriculum = c.get("curriculum") or {}
+        missing_curriculum = [k for k in (
+            "stage", "stage_title", "sequence", "primary", "supporting", "prerequisites"
+        ) if curriculum.get(k) in (None, "")]
+        if missing_curriculum:
+            errors.append(f"S11 {cid}: 缺课程字段 {missing_curriculum}")
+        else:
+            if not isinstance(curriculum.get("supporting"), list) or not curriculum["supporting"]:
+                errors.append(f"S11 {cid}: supporting 必须是至少含一项的列表")
+            if not isinstance(curriculum.get("prerequisites"), list):
+                errors.append(f"S11 {cid}: prerequisites 必须是列表")
+            curriculum_rows.append((cid, curriculum))
 
         # S2 拍的种类与顺序
         kinds = [b.get("kind") for b in c.get("beats", [])]
@@ -737,6 +752,29 @@ def validate_stories(release=False):
                 missing = set(scene.get("terms") or []) - glossary
                 if missing:
                     errors.append(f"S10 {cid}/{scene.get('id')}: 未定义术语 {sorted(missing)}")
+
+    if len(curriculum_rows) == len(cases):
+        sequences = [x[1].get("sequence") for x in curriculum_rows]
+        if any(not isinstance(x, int) or isinstance(x, bool) for x in sequences):
+            errors.append("S11: curriculum.sequence 必须是整数")
+        else:
+            duplicate_sequences = sorted({x for x in sequences if sequences.count(x) > 1})
+            if duplicate_sequences:
+                errors.append(f"S11: 课程顺序重复 {duplicate_sequences}")
+            expected = list(range(1, len(cases) + 1))
+            if sorted(sequences) != expected:
+                errors.append(f"S11: 课程顺序必须连续覆盖 1..{len(cases)}，实际 {sorted(sequences)}")
+        stages = [x[1].get("stage") for x in curriculum_rows]
+        if sorted(set(stages)) != [1, 2, 3, 4, 5]:
+            errors.append(f"S11: 课程阶段必须连续覆盖 1..5，实际 {sorted(set(stages))}")
+        stage_titles = {}
+        for cid, curriculum in curriculum_rows:
+            stage = curriculum.get("stage")
+            title = curriculum.get("stage_title")
+            if stage in stage_titles and stage_titles[stage] != title:
+                errors.append(
+                    f"S11 {cid}: 第 {stage} 阶段名称「{title}」与「{stage_titles[stage]}」不一致")
+            stage_titles[stage] = title
 
     # 原档登记自检
     for e in F["evidence_files"]:

@@ -5,6 +5,7 @@
  "company": "恒适公司与塑料蛋丝袜产品",
  "era": "1970",
  "status": "settled",
+ "curriculum": {"stage":2,"stage_title":"看懂生意","sequence":4,"primary":"从产品观察到经营假设","supporting":["渠道验证","增长质量","估值纪律"],"prerequisites":["主张与兑现"]},
  "hook": "妻子带回一只装丝袜的塑料蛋。林奇没有立刻买股票，他先去查这件商品为什么能离开百货公司，进入超市。",
  "knowledge_node": "growth-rate",
  "learning_goal": "把生活观察写成可证伪假设，再用增长质量和估值完成判断。",
