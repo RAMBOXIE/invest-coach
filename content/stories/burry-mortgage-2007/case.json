@@ -32,6 +32,7 @@
    "信用风险",
    "模型边界"
   ],
+  "initial_timeline_items": 2,
   "timeline":[
    {"date":"2005 年上半年","title":"贷款标准松动","text":"新增房贷中近四分之一为只付息贷款。","fact":"burry-reset-evidence"},
    {"date":"2005 年","title":"把债券拆回房贷","text":"伯里逐笔看浮息、收入证明和重定价时点。","fact":"burry-reset-evidence"},

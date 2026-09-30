@@ -113,6 +113,12 @@
     if (ST.i < 0) ST.i = 0;
     draw();
   }
+  function pathTrailHTML() {
+    const path = ST.rpgHistory || [];
+    if (!path.length) return '';
+    return `<section class="rpg-path-trail"><div class="rpg-section-label">你留下的决策路径</div>${path.map((x, i) =>
+      `<div><span>${String(i + 1).padStart(2, '0')}</span><p>${esc(x.label || x.action || '')}</p></div>`).join('')}</section>`;
+  }
 
   /* ===== 史料驱动 RPG v2 =====
      旧播放器保留给已经进入「历史翻牌」的兼容拍；进入事件后的体验只读 case.json，
@@ -135,10 +141,13 @@
   function factButton(id, label) {
     return id ? `<button class="rpg-source" data-f="${esc(id)}">${ic('link')} ${esc(label || '查看原始材料')}</button>` : '';
   }
-  function timelineHTML(items) {
+  function timelineHTML(items, options) {
     if (!items || !items.length) return '';
-    return `<section class="rpg-timeline"><div class="rpg-section-label">事情走到这里</div>${items.map(x =>
-      `<div class="rpg-time"><time>${esc(x.date)}</time><div><b>${esc(x.title || '')}</b><p>${md(x.text || '')}</p>${factButton(x.fact, '核对来源')}</div></div>`).join('')}</section>`;
+    const cfg = options || {}, limit = Math.max(0, Math.min(items.length, cfg.limit == null ? items.length : cfg.limit));
+    const visible = items.slice(0, limit), locked = items.length - visible.length;
+    return `<section class="rpg-timeline"><div class="rpg-section-label">${esc(cfg.label || '事情走到这里')}</div>${visible.map(x =>
+      `<div class="rpg-time"><time>${esc(x.date)}</time><div><b>${esc(x.title || '')}</b><p>${md(x.text || '')}</p>${factButton(x.fact, '核对来源')}</div></div>`).join('')}
+      ${locked ? `<p class="rpg-timeline-lock">${ic('lock')} 还有 ${locked} 条后续记录封存。做完决定，历史才会翻牌。</p>` : ''}</section>`;
   }
   function briefingHTML(items) {
     const visible = items || [];
@@ -159,13 +168,15 @@
       <div><span>仍不知道</span><p>${md(unknown || '结果尚未发生。')}</p></div>
       <div class="ask"><span>你必须决定</span><p>${md(decision || '下一步做什么？')}</p></div></section>`;
   }
-  function roleBrief() {
+  function roleBrief(compact) {
     const r = activeRole();
     const f = r.focus || {}, term = (STORY.rpg.glossary || []).find(x => x.term === f.knowledge);
     const knowledge = term
       ? `<button class="rpg-focus-term" data-term="${esc(term.id)}">${esc(f.knowledge)} ${ic('right')}</button>`
       : `<strong>${esc(f.knowledge || '')}</strong>`;
-    return `<section class="rpg-mission"><div class="rpg-section-label">你的席位 · ${esc(r.title || '')}</div>
+    if (compact) return `<section class="rpg-seatline"><div><span>你仍坐在</span><b>${esc(r.title || '')}</b></div>
+      <p><span>这一段先盯</span>${esc(f.watch || r.win_condition || r.goal || '')}</p></section>`;
+    return `<section class="rpg-mission"><div class="rpg-section-label">本段任务书 · ${esc(r.title || '')}</div>
       <p>${md(r.brief || r.goal || '')}</p>${f.knowledge ? `<div class="rpg-focus"><div><span>这次要学会</span>${knowledge}</div>
       <div><span>先看哪组数</span><b>${esc(f.watch || '')}</b></div><div><span>这些数说明什么</span><p>${md(f.read || '')}</p></div></div>` : ''}
       <dl><div><dt>你要交付</dt><dd>${esc(r.win_condition || r.goal || '')}</dd></div><div><dt>最容易看错</dt><dd>${esc(r.risk || r.pressure || '')}</dd></div></dl></section>`;
@@ -173,9 +184,9 @@
   function continuityHTML() {
     const last = ST.rpgHistory && ST.rpgHistory[ST.rpgHistory.length - 1];
     if (!last || !last.assumption || !last.verify) return '';
-    return `<section class="rpg-continuity"><div class="rpg-section-label">上一决定还没结束</div>
-      <p><b>${esc(last.label)}</b>把一个前提带进了现在：${md(last.assumption)}</p>
-      <p><span>这一段继续追</span>${md(last.verify)}</p></section>`;
+    return `<section class="rpg-continuity"><div class="rpg-continuity-mark">上一段的决定跟过来了</div>
+      <div><span>你当时签下</span><b>${esc(last.label)}</b></div>
+      <p>${md(last.assumption)}</p><p><span>这一段必须追完</span>${md(last.verify)}</p></section>`;
   }
   function rpgEvidenceV2(ids) {
     return (ids || []).map(rpgBeat).filter(Boolean).map(b => {
@@ -187,11 +198,12 @@
   function resultHTML(a) {
     const d = deliberation(rpgScene(), a);
     const used = roleValue(a.evidence_used), missed = roleValue(a.evidence_missed), tradeoff = roleValue(a.tradeoff);
-    return `<section class="rpg-audit"><div class="rpg-section-label">决策复盘</div><h3>${esc(a.result_title || '局面改变了')}</h3>
+    return `<section class="rpg-audit"><div class="rpg-decision-seal"><span>决定已生效</span><b>${esc(a.label || '')}</b></div>
+      <div class="rpg-section-label">局面随之改变</div><h3>${esc(a.result_title || '局面改变了')}</h3>
       <p class="rpg-outcome">${md(a.consequence || '')}</p><dl>
-      ${used ? `<div><dt>你用到的证据</dt><dd>${md(used)}</dd></div>` : ''}${missed ? `<div><dt>你漏掉的证据</dt><dd>${md(missed)}</dd></div>` : ''}${tradeoff ? `<div><dt>这一步的代价</dt><dd>${md(tradeoff)}</dd></div>` : ''}</dl>
-      ${d.lesson ? `<p class="rpg-takeaway"><b>${esc(activeRole().focus?.knowledge || '知识落点')}</b>${md(d.lesson)}</p>` : ''}
-      ${a.narration ? `<p class="rpg-afterword"><b>继续往下想</b>${md(a.narration)}</p>` : ''}</section>`;
+      ${used ? `<div><dt>你守住的证据</dt><dd>${md(used)}</dd></div>` : ''}${missed ? `<div><dt>你漏看的证据</dt><dd>${md(missed)}</dd></div>` : ''}${tradeoff ? `<div><dt>你为此付出的代价</dt><dd>${md(tradeoff)}</dd></div>` : ''}</dl>
+      ${d.lesson ? `<p class="rpg-takeaway"><b>这一手练的是：${esc(activeRole().focus?.knowledge || '判断')}</b>${md(d.lesson)}</p>` : ''}
+      ${a.narration ? `<p class="rpg-afterword"><b>留到下一段</b>${md(a.narration)}</p>` : ''}</section>`;
   }
   function deliberationHTML(s, a) {
     const d = deliberation(s, a), focus = activeRole().focus || {};
@@ -199,8 +211,8 @@
       <h3>${esc(a.label)}</h3><p class="rpg-draft-prompt">${md(a.prompt || '')}</p>
       <div class="rpg-reasoning"><div><span>它依赖的前提</span><p>${md(d.assumption || '')}</p></div>
       <div><span>确认前要核对</span><p>${md(d.verify || '')}</p></div></div>
-      <p class="rpg-draft-note">这里还没有标准答案。你是在决定：是否愿意带着这两个条件承担后果。</p>
-      <div class="rpg-draft-actions"><button id="rpg-redraft">换个方案</button><button id="rpg-confirm">确认这个选择</button></div></section>`;
+      <p class="rpg-draft-note">现在还可以反悔。签字以后，这个前提和这项核查会一起跟进下一段。</p>
+      <div class="rpg-draft-actions"><button id="rpg-redraft">换个方案</button><button id="rpg-confirm">签下这个决定</button></div></section>`;
   }
   function dialogueButton(s) {
     if ((!STORY.interrogation && !STORY.rpg.dialogue) || s.dialogue === false) return '';
@@ -244,28 +256,37 @@
     const s = rpgScene();
     if (!s) return drawRpgFinish();
     const available = rpgActions(s), action = available.find(a => a.id === ST.rpgAction), draft = available.find(a => a.id === ST.rpgDraft), final = s.final === true;
-    const actions = action || draft ? '' : available.map(a => `<button class="rpg-action" data-rpg-action="${esc(a.id)}">
-      <span class="rpg-action-kind">${esc(a.kind || '行动')}</span><b>${esc(a.label)}</b><small>${esc(a.prompt || '')}</small></button>`).join('');
-    const conf = final && action ? `<div class="rpg-confidence"><span>你对这个判断有多大把握？</span><div class="seg2">${CONF.map(c => `<button data-rpg-conf="${c.v}" class="${ST.conf === c.v ? 'on' : ''}">${c.t}</button>`).join('')}</div></div>` : '';
+    const actions = action || draft ? '' : available.map((a, i) => `<button class="rpg-action" data-rpg-action="${esc(a.id)}">
+      <span class="rpg-action-index">${['壹','贰','叁','肆'][i] || String(i + 1)}</span><span class="rpg-action-kind">${esc(a.kind || '行动')}</span>
+      <b>${esc(a.label)}</b><small>${esc(a.prompt || '')}</small><span class="rpg-action-enter">先推演后果 ${ic('right')}</span></button>`).join('');
+    const conf = final && action ? `<div class="rpg-confidence"><span>历史翻牌前，留下你此刻的确信程度</span><div class="seg2">${CONF.map(c => `<button data-rpg-conf="${c.v}" class="${ST.conf === c.v ? 'on' : ''}">${c.t}</button>`).join('')}</div></div>` : '';
     const nextDisabled = final ? !action || ST.conf == null : !action;
     const sceneIndex = (r.scenes || []).findIndex(x => x.id === s.id);
     const phase = s.eyebrow || (sceneIndex === 0 ? '故事开始' : final ? '故事高潮' : '故事发展');
     const lines = sceneLines(s);
-    bodyEl.innerHTML = `<header class="rpg-scene-head"><div class="eyebrow">${esc(phase)}</div><div class="rpg-scene-meta"><span>${esc(s.place || '')}</span><span>${esc(s.time || '')}</span></div><h2>${esc(s.title)}</h2></header>
-      ${continuityHTML()}${roleBrief()}${briefingHTML(s.briefings)}${rpgEvidenceV2(s.evidence)}
-      ${(Array.isArray(lines) ? lines : [lines]).map(x => `<p class="ln">${md(x)}</p>`).join('')}${sceneIndex === 0 ? timelineHTML(r.timeline) : termsHTML(s.terms || [])}
+    bodyEl.innerHTML = `<header class="rpg-scene-head"><div class="rpg-scene-kicker"><span>${esc(phase)}</span><b>第 ${sceneIndex + 1} / ${(r.scenes || []).length} 段</b></div>
+      <div class="rpg-scene-meta"><span>${esc(s.place || '')}</span><span>${esc(s.time || '')}</span></div><h2>${esc(s.title)}</h2></header>
+      ${continuityHTML()}${roleBrief(sceneIndex > 0)}${briefingHTML(s.briefings)}${rpgEvidenceV2(s.evidence)}
+      ${(Array.isArray(lines) ? lines : [lines]).map((x, i) => `<p class="ln${i === 0 ? ' rpg-lead' : ''}">${md(x)}</p>`).join('')}${sceneIndex === 0 ? timelineHTML(r.timeline, { limit:r.initial_timeline_items, label:'此刻以前，已经发生' }) : termsHTML(s.terms || [])}
       ${dialogueButton(s)}${action ? resultHTML(action) : draft ? deliberationHTML(s, draft) : `${decisionFrame(s)}<div class="rpg-actions">${actions}</div>`}`;
     const nextScene = action && (r.scenes || []).find(x => x.id === action.next);
-    const nextLabel = final ? '翻开历史记录' : (nextScene?.final ? '进入关键时刻' : '让时间继续');
+    const nextLabel = final ? '翻开历史记录' : (nextScene?.final ? '进入关键时刻' : nextScene?.place ? `前往${nextScene.place}` : '让时间继续');
     footEl.innerHTML = action ? `${conf}<button class="sty-cta" id="rpg-next" ${nextDisabled ? 'disabled' : ''}>${nextLabel}</button>` : '';
     dotsEl.innerHTML = (r.scenes || []).map((x, i) => `<i class="${i < sceneIndex ? 'done' : x.id === s.id ? 'on' : ''}"></i>`).join('');
     bindRpg(s);
   }
   function drawRpgRoles() {
     const r = STORY.rpg;
-    bodyEl.innerHTML = `<header class="rpg-role-head"><div class="eyebrow">进入真实事件</div><h2>${esc(STORY.title)}</h2><p>${md(STORY.hook || r.premise || '')}</p></header>
-      <div class="rpg-role-list">${(r.roles || []).map(x => `<button class="rpg-role-choice" data-rpg-role="${esc(x.id)}"><span>扮演</span><b>${esc(x.title)}</b><p>${esc(x.brief || x.goal || '')}</p><small>${esc(x.win_condition || x.pressure || '')}</small></button>`).join('')}</div>
-      <p class="rpg-truth-note">历史结果不会因你改变；你改变的是进入事件的席位、能先看到的材料，以及必须承担的决策责任。</p>`;
+    const opening = (r.scenes || []).find(x => x.id === r.initial_scene) || r.scenes?.[0] || {};
+    bodyEl.innerHTML = `<header class="rpg-role-head"><div class="rpg-case-mark"><span>真实事件档案</span><b>${esc(STORY.era || '')}</b></div>
+      <div class="eyebrow">结局尚未公开</div><h2>${esc(STORY.title)}</h2><p>${md(STORY.hook || r.premise || '')}</p>
+      <dl class="rpg-intake"><div><dt>公司 / 事件</dt><dd>${esc(STORY.company || STORY.title)}</dd></div>
+      <div><dt>进入地点</dt><dd>${esc(opening.place || '历史现场')}</dd></div><div><dt>倒计时</dt><dd>${esc(opening.time || '决定之前')}</dd></div></dl></header>
+      <div class="rpg-role-list">${(r.roles || []).map((x, i) => `<button class="rpg-role-choice" data-rpg-role="${esc(x.id)}">
+        <span class="rpg-role-index">0${i + 1}</span><span class="rpg-role-enter">从这个席位进入 ${ic('right')}</span><b>${esc(x.title)}</b>
+        <p>${esc(x.brief || x.goal || '')}</p>${x.focus ? `<span class="rpg-role-lens"><em>先盯</em>${esc(x.focus.watch || '')}</span>
+        <span class="rpg-role-lens"><em>要练</em>${esc(x.focus.knowledge || '')}</span>` : ''}<small>你要交付：${esc(x.win_condition || x.goal || '')}</small></button>`).join('')}</div>
+      <p class="rpg-truth-note"><b>选席位，不是选难度。</b>同一段历史会向你露出不同的证据、压力和责任；结局要等你做完决定才打开。</p>`;
     footEl.innerHTML = '';
     dotsEl.innerHTML = `<i class="on"></i>${(r.scenes || []).map(() => '<i></i>').join('')}`;
     bodyEl.querySelectorAll('[data-rpg-role]').forEach(x => x.onclick = () => {
@@ -454,11 +475,13 @@
     const sourceCard = b.quote ? docQuote(q)
       : `<div class="doc"><div class="dh"><span>${ic('doc')} 史实摘要 · ${q.src}</span><span class="ln">${q.line}</span></div><div class="dt">${q.text}</div></div>`;
     const factButton = b.quote && b.quote.fact ? `<div class="qchips"><button data-f="${b.quote.fact}">${ic('link')} 查看原档</button></div>` : '';
+    const role = activeRole(), decisions = (ST.rpgHistory || []).length;
     return {
       body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${b.title}</h2>
+        <section class="rpg-reveal-lead"><span>封存解除</span><p>你以<b>${esc(role.title || '决策者')}</b>的席位走到这里，留下了 ${decisions} 次决定。现在把你的理由和真实记录放在同一张桌上。</p></section>
         ${sourceCard}
         ${b.lines.map(l => `<p class="ln">${md(l)}</p>`).join('')}
-        ${factButton}
+        ${factButton}${timelineHTML(STORY.rpg && STORY.rpg.timeline, { label:'历史完整时间线' })}
         ${vo(b.narration)}`,
       foot: `<button class="sty-cta" id="sty-next">回看我的决定</button>`,
       bind() { bindFacts(); }
@@ -468,7 +491,14 @@
   /* S5 对照复盘与方法提炼 */
   function bContrast(b) {
     const dec = STORY.beats.find(x => x.kind === 'decision');
-    const mine = (dec.options || []).find(o => o.id === ST.pick) || { t: '未选择', kind: '未记录' };
+    const oldPick = (dec && dec.options || []).find(o => o.id === ST.pick);
+    const finalScene = STORY.rpg && (STORY.rpg.scenes || []).find(x => x.final);
+    const rpgPick = (finalScene && finalScene.actions || []).find(o => o.id === ST.pick);
+    const picked = oldPick || rpgPick || {};
+    const mine = Object.assign({}, picked, {
+      t: picked.t || picked.label || '未选择', kind: picked.kind || '未记录',
+      verdict: picked.verdict || ({ a:'prudent', b:'risky', c:'hasty' }[ST.pick]) || 'uncertain'
+    });
     const confT = (CONF.find(c => c.v === ST.conf) || {}).t || '未记录';
     if (!ST.logged) {
       ST.logged = true;
@@ -489,6 +519,7 @@
     }
     return {
       body: `<div class="eyebrow">${beatPhase(b)}</div><h2>${b.title}</h2>
+        ${pathTrailHTML()}
         <div class="trio">
           <div class="c you"><div class="lbl">${b.columns.you}</div>
             <div class="hd2">${mine.t}</div>
@@ -551,15 +582,19 @@
 
   function finish() {
     const node = STORY.knowledge_node;
+    const role = activeRole(), focus = role.focus || {}, path = ST.rpgHistory || [];
+    const skills = STORY.rpg?.learning_skills || STORY.skills || [];
     bodyEl.innerHTML = `<div class="fin">
-      <div class="fin-ic">${ic('doc')}</div>
-      <h2>案例完成</h2>
-      <p class="ln">你已经把这次事件里的判断、证据和后果走完了一遍。</p>
-      <p class="ln dim">把这套方法带到下一份真实年报里。</p>
-      ${vo('下一次遇到相似材料，先问：我现在看到的是事实、解释，还是愿望？')}</div>`;
-    footEl.innerHTML = `<button class="sty-cta" id="sty-toprac">回到现场</button>
+      <div class="rpg-case-mark fin-mark"><span>卷宗封存</span><b>${esc(STORY.era || '')}</b></div>
+      <div class="fin-ic">${ic('doc')}</div><h2>${esc(STORY.title)}，你走完了</h2>
+      <p class="ln">你以<b>${esc(role.title || '决策者')}</b>的席位做了 ${path.length} 次决定。历史没有被改写，但你已经知道下一次该先看什么。</p>
+      <div class="fin-ledger"><div><span>带走的观察线</span><b>${esc(focus.watch || focus.knowledge || '证据与后果')}</b></div>
+      <div><span>最该防住的误判</span><b>${esc(role.risk || role.pressure || '让结果替过程辩护')}</b></div></div>
+      ${skills.length ? `<div class="rpg-skill-list fin-skills">${skills.map(x => `<span>${esc(x)}</span>`).join('')}</div>` : ''}
+      ${vo(focus.read || '下一次遇到相似材料，先把事实、解释和愿望分开。')}</div>`;
+    footEl.innerHTML = `<button class="sty-cta" id="sty-toprac">换个席位，再走一次</button>
       <div style="height:8px"></div>
-      <button class="sty-cta ghost" id="sty-back">查看档案</button>`;
+      <button class="sty-cta ghost" id="sty-back">回到事件档案</button>`;
     // 完成故事后，把对应易混概念加入复习队列。
     if (typeof ensurePair === 'function') {
       const n = byId[node];
@@ -580,9 +615,8 @@
     save();
     track('story_finish', { case: STORY.case_id });
     document.getElementById('sty-toprac').onclick = () => {
-      close();
-      // 回到与本故事关联的知识节点。
-      if (typeof openNode === 'function') openNode(node);
+      track('story_replay', { case: STORY.case_id });
+      openStory(STORY.case_id);
     };
     document.getElementById('sty-back').onclick = close;
   }

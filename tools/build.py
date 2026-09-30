@@ -152,7 +152,8 @@ def strip_story_runtime(story):
     rpg = story.get("rpg") or {}
     used = {bid for scene in rpg.get("scenes") or [] for bid in scene.get("evidence") or []}
     story["beats"] = [b for b in story.get("beats") or []
-                      if b.get("id") in used or b.get("kind") in ("reveal", "contrast", "consequence")]
+                      if b.get("id") in used or b.get("kind") in
+                      ("reveal", "contrast", "abstract", "twin", "consequence")]
     for b in story["beats"]:
         b.pop("narration", None)
     rpg.pop("narrator", None)

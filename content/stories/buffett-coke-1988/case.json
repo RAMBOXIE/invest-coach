@@ -32,6 +32,7 @@
    "资本回报",
    "内在价值"
   ],
+  "initial_timeline_items": 1,
   "timeline": [
    {"date":"1936 年","title":"奥马哈街头","text":"巴菲特六瓶一组买入可口可乐，再逐瓶卖出。产品很熟，股票却还没买。"},
    {"date":"1988 年末","title":"第一年建仓","text":"伯克希尔已持有 14,172,500 股。","fact":"coke-position-build"},
@@ -113,7 +114,7 @@
     "allocator":["公司很好已经不是争议。你要回答的是：第一笔买多少，什么证据出现后再加第二笔。"]
    },
    "briefings": [
-    {"label":"1988 年末持股","value":"14,172,500 股","note":"这是第一年末的已建仓数量。","fact":"coke-position-build","roles":["allocator"]},
+    {"label":"第一笔仓位","value":"尚未写下","note":"此刻你只能决定建仓规则，年末持股要等历史翻牌。","roles":["allocator"]},
     {"label":"观察期","value":"52 年","note":"熟悉产品很久，不等于早已完成投资判断。","fact":"coke-position-build","roles":["researcher","risk"]},
     {"label":"持有前提","value":"经营优势持续","note":"长期持有是结论，前提仍要逐年验证。","roles":["risk","allocator"]}
    ],

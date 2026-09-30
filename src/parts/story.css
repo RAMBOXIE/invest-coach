@@ -43,6 +43,7 @@
 .sty .ln{font-size:var(--size-narrative);line-height:var(--lh-read);
   margin:0 0 var(--space-4);max-width:var(--measure-read);color:var(--ink)}
 .sty .ln.dim{color:var(--soft)}
+.sty .ln.rpg-lead{font-weight:650;letter-spacing:.005em}
 
 /* RPG 角色卡与后果拍：让“我在事件里”先于知识点出现。 */
 .rpg-role{margin:0 0 var(--space-5);padding:var(--space-3) var(--space-4);
@@ -56,28 +57,52 @@
 .rpg-pressure{margin:var(--space-4) 0 0;padding-top:var(--space-3);
   border-top:1px solid rgba(255,255,255,.22);font-size:var(--size-17);line-height:var(--lh-read);color:var(--gold)}
 .rpg-pressure b{display:block;font-size:var(--size-13);letter-spacing:.12em;margin-bottom:var(--space-2)}
-.rpg-scene-meta{display:flex;justify-content:space-between;gap:var(--space-3);margin:-var(--space-3) 0 var(--space-4);
+.rpg-scene-kicker{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);margin-bottom:var(--space-3);
+  font-size:var(--size-13);letter-spacing:.16em;color:var(--gold)}
+.rpg-scene-kicker b{font-family:var(--font-mono);font-weight:500;color:var(--soft);letter-spacing:.04em}
+.rpg-scene-meta{display:flex;justify-content:space-between;gap:var(--space-3);margin:0 0 var(--space-4);
   font-size:var(--size-13);letter-spacing:.08em;color:var(--soft)}
 .rpg-role-list,.rpg-actions{display:flex;flex-direction:column;gap:var(--space-2);max-width:var(--measure-read)}
-.rpg-learning{max-width:var(--measure-read);margin:var(--space-4) 0;padding:var(--space-3) var(--space-4);border-left:3px solid var(--gold);background:rgba(255,209,102,.08)}
+.rpg-learning{max-width:var(--measure-read);margin:var(--space-4) 0;padding:var(--space-3) var(--space-4);border:1px solid rgba(255,209,102,.45);background:rgba(255,209,102,.08)}
 .rpg-learning p{margin:0 0 var(--space-3);line-height:var(--lh-ui)}
 .rpg-skill-list{display:flex;flex-wrap:wrap;gap:var(--space-2)}
 .rpg-skill-list span{padding:4px 8px;border:1px solid rgba(255,209,102,.35);border-radius:999px;color:var(--gold);font-size:var(--size-13)}
-.rpg-role-choice,.rpg-action{display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;text-align:left;
+.rpg-role-choice,.rpg-action{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;width:100%;text-align:left;
   min-height:var(--tap-rec);padding:var(--space-3) var(--space-4);border:1px solid rgba(255,255,255,.2);
   border-radius:var(--radius-md);background:rgba(255,255,255,.06);color:var(--ink)}
-.rpg-role-choice:hover,.rpg-action:hover{border-color:var(--gold);background:rgba(255,209,102,.12)}
+.rpg-role-choice:hover,.rpg-action:hover{border-color:var(--gold);background:rgba(255,209,102,.12);transform:translateX(4px)}
 .rpg-role-choice b,.rpg-action b{font-size:var(--size-17)}
 .rpg-role-choice span,.rpg-role-choice small,.rpg-action small{font-size:var(--size-15);line-height:var(--lh-ui);color:var(--soft)}
 .rpg-action-kind{font-size:var(--size-13);letter-spacing:.12em;color:var(--gold)}
+.rpg-action{padding:var(--space-4) calc(var(--space-4) + 2.8rem) var(--space-4) var(--space-4)}
+.rpg-action-index{position:absolute;right:var(--space-4);top:var(--space-4);font-family:var(--font-mono);
+  font-size:var(--size-24);line-height:1;color:rgba(255,255,255,.24)}
+.rpg-action-enter{display:flex;align-items:center;gap:4px;margin-top:var(--space-2);font-size:var(--size-13);color:var(--gold)}
 
 /* 史料驱动 RPG：先给席位，再给材料，最后才给按钮。 */
 .rpg-role-head{max-width:var(--measure-read);margin-bottom:var(--space-4)}
 .rpg-role-head h2{margin-bottom:var(--space-3)}
 .rpg-role-head p{font-size:var(--size-17);line-height:var(--lh-read);color:var(--soft);margin:0}
-.rpg-role-choice>span{font-size:var(--size-13);letter-spacing:.14em;color:var(--gold)}
-.rpg-role-choice p{margin:2px 0;font-size:var(--size-17);line-height:var(--lh-ui);color:var(--ink)}
-.rpg-truth-note{max-width:var(--measure-read);margin:var(--space-4) 0 0;font-size:var(--size-13);line-height:var(--lh-ui);color:var(--soft)}
+.rpg-case-mark{display:inline-flex;align-items:stretch;margin-bottom:var(--space-4);border:1px solid rgba(255,209,102,.45);border-radius:var(--radius-sm);overflow:hidden}
+.rpg-case-mark span,.rpg-case-mark b{padding:7px 10px;font-size:var(--size-13);letter-spacing:.12em}
+.rpg-case-mark span{color:var(--gold)}
+.rpg-case-mark b{font-family:var(--font-mono);background:var(--gold);color:var(--on-gold)}
+.rpg-intake{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin:var(--space-5) 0 0;padding-top:var(--space-3);border-top:1px solid rgba(255,255,255,.18)}
+.rpg-intake>div:first-child{grid-column:1/-1}
+.rpg-intake dt{font-size:var(--size-13);color:var(--soft);margin-bottom:4px}
+.rpg-intake dd{margin:0;font-size:var(--size-15);line-height:var(--lh-ui);color:var(--ink)}
+.rpg-role-choice{display:block;min-height:0;padding:var(--space-4) var(--space-5) var(--space-4) calc(var(--space-5) + 2rem);overflow:hidden}
+.rpg-role-choice .rpg-role-index{position:absolute;left:var(--space-4);top:var(--space-4);font-family:var(--font-mono);font-size:var(--size-13);color:var(--gold)}
+.rpg-role-choice .rpg-role-enter{position:absolute;right:var(--space-4);top:var(--space-4);display:flex;align-items:center;gap:4px;
+  font-size:var(--size-13);letter-spacing:0;color:var(--soft)}
+.rpg-role-choice b{display:block;padding-right:6.5rem;margin-bottom:var(--space-2);font-size:var(--size-17)}
+.rpg-role-choice p{margin:0 0 var(--space-3);font-size:var(--size-15);line-height:var(--lh-ui);color:var(--ink)}
+.rpg-role-choice .rpg-role-lens{display:flex;gap:var(--space-2);margin-top:6px;font-size:var(--size-13);line-height:var(--lh-ui);letter-spacing:0;color:var(--soft)}
+.rpg-role-lens em{flex:none;min-width:2.5em;color:var(--gold);font-style:normal}
+.rpg-role-choice small{display:block;margin-top:var(--space-3);padding-top:var(--space-2);border-top:1px solid rgba(255,255,255,.12)}
+.rpg-truth-note{max-width:var(--measure-read);margin:var(--space-4) 0 0;padding-top:var(--space-3);border-top:1px solid rgba(255,255,255,.15);
+  font-size:var(--size-13);line-height:var(--lh-ui);color:var(--soft)}
+.rpg-truth-note b{color:var(--ink)}
 .rpg-scene-head{max-width:var(--measure-read)}
 .rpg-section-label{font-size:var(--size-13);letter-spacing:.16em;color:var(--gold);margin-bottom:var(--space-3)}
 .rpg-mission{max-width:var(--measure-read);margin:0 0 var(--space-5);padding:var(--space-4);border:1px solid rgba(255,209,102,.45);border-radius:var(--radius-md);background:rgba(255,209,102,.06)}
@@ -90,20 +115,32 @@
 .rpg-focus strong,.rpg-focus b{font-size:var(--size-17);line-height:var(--lh-ui);color:var(--ink)}
 .rpg-focus p{font-size:var(--size-15);line-height:var(--lh-ui);margin:0;color:var(--ink)}
 .rpg-focus-term{display:inline-flex;align-items:center;gap:4px;padding:0;background:none;border:none;color:var(--gold);font-size:var(--size-17);font-weight:700;text-align:left}
-.rpg-continuity{max-width:var(--measure-read);margin:0 0 var(--space-5);padding:var(--space-3) 0;border-top:1px solid rgba(255,209,102,.4);border-bottom:1px solid rgba(255,209,102,.4)}
+.rpg-continuity{position:relative;max-width:var(--measure-read);margin:0 0 var(--space-5);padding:var(--space-4);
+  border:1px solid rgba(255,209,102,.4);border-radius:var(--radius-md);background:rgba(255,209,102,.055)}
+.rpg-continuity-mark{display:inline-block;margin-bottom:var(--space-3);padding:5px 8px;background:var(--gold);color:var(--on-gold);
+  font-size:var(--size-13);font-weight:800;letter-spacing:.08em}
+.rpg-continuity>div:not(.rpg-continuity-mark){display:flex;flex-direction:column;gap:3px;margin-bottom:var(--space-2)}
 .rpg-continuity p{font-size:var(--size-15);line-height:var(--lh-ui);margin:0}
-.rpg-continuity p+p{margin-top:var(--space-2);color:var(--soft)}
-.rpg-continuity b{color:var(--gold)}
+.rpg-continuity p+p{margin-top:var(--space-3);padding-top:var(--space-3);border-top:1px solid rgba(255,255,255,.14);color:var(--soft)}
+.rpg-continuity b{color:var(--ink);font-size:var(--size-17)}
 .rpg-continuity span{display:block;font-size:var(--size-13);color:var(--gold);margin-bottom:2px}
 .rpg-mission dl,.rpg-audit dl{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin:0}
 .rpg-mission dl div,.rpg-audit dl div{min-width:0}
 .rpg-mission dt,.rpg-audit dt{font-size:var(--size-13);color:var(--soft);margin-bottom:4px}
 .rpg-mission dd,.rpg-audit dd{margin:0;font-size:var(--size-15);line-height:var(--lh-ui);color:var(--ink)}
+.rpg-seatline{display:flex;justify-content:space-between;gap:var(--space-4);max-width:var(--measure-read);margin:0 0 var(--space-5);
+  padding:var(--space-3) 0;border-top:1px solid rgba(255,209,102,.42);border-bottom:1px solid rgba(255,209,102,.42)}
+.rpg-seatline>div{flex:none}
+.rpg-seatline span{display:block;margin-bottom:3px;font-size:var(--size-13);color:var(--soft)}
+.rpg-seatline b{font-size:var(--size-15);color:var(--gold)}
+.rpg-seatline p{max-width:22rem;margin:0;font-size:var(--size-15);line-height:var(--lh-ui)}
 .rpg-timeline{max-width:var(--measure-read);margin:var(--space-5) 0}
 .rpg-time{display:grid;grid-template-columns:6.8em 1fr;gap:var(--space-3);padding:var(--space-3) 0;border-top:1px solid rgba(255,255,255,.14)}
 .rpg-time time{font-family:var(--font-mono);font-size:var(--size-13);color:var(--gold)}
 .rpg-time b{font-size:var(--size-15)}
 .rpg-time p{font-size:var(--size-15);line-height:var(--lh-ui);color:var(--soft);margin:4px 0}
+.rpg-timeline-lock{display:flex;align-items:center;gap:var(--space-2);margin:var(--space-3) 0 0;padding:var(--space-3);
+  border:1px dashed rgba(255,209,102,.5);border-radius:var(--radius-md);font-size:var(--size-13);line-height:var(--lh-ui);color:var(--soft)}
 .rpg-ledger{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-2);max-width:var(--measure-read);margin:var(--space-5) 0}
 .rpg-ledger>.rpg-section-label{grid-column:1/-1}
 .rpg-number{padding:var(--space-3);border:1px solid rgba(255,255,255,.16);border-radius:var(--radius-md);background:rgba(255,255,255,.04)}
@@ -123,7 +160,11 @@
 .rpg-frame p{margin:6px 0 0;font-size:var(--size-15);line-height:var(--lh-ui)}
 .rpg-dialogue{display:flex;flex-direction:column;align-items:flex-start;gap:3px;max-width:var(--measure-read);width:100%;padding:var(--space-3) var(--space-4);margin:var(--space-3) 0;border:1px dashed rgba(255,209,102,.65);border-radius:var(--radius-md);background:transparent;color:var(--gold);font-size:var(--size-15);text-align:left}
 .rpg-dialogue small{color:var(--soft);font-size:var(--size-13);line-height:var(--lh-ui)}
-.rpg-audit{max-width:var(--measure-read);margin:var(--space-5) 0;padding:var(--space-4);border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-md);background:rgba(255,255,255,.045)}
+.rpg-audit{max-width:var(--measure-read);margin:var(--space-5) 0;padding:var(--space-4);border:1px solid rgba(255,255,255,.24);border-radius:var(--radius-md);background:rgba(255,255,255,.045)}
+.rpg-decision-seal{display:flex;flex-direction:column;gap:4px;margin:calc(var(--space-4) * -1) calc(var(--space-4) * -1) var(--space-4);
+  padding:var(--space-3) var(--space-4);border-bottom:1px solid rgba(255,209,102,.4);background:rgba(255,209,102,.1)}
+.rpg-decision-seal span{font-size:var(--size-13);letter-spacing:.14em;color:var(--gold)}
+.rpg-decision-seal b{font-size:var(--size-15);line-height:var(--lh-ui)}
 .rpg-audit h3{font-size:var(--size-24);margin:0 0 var(--space-3)}
 .rpg-outcome{font-size:var(--size-17);line-height:var(--lh-read);margin:0 0 var(--space-4)}
 .rpg-takeaway{margin:var(--space-4) 0 0;padding-top:var(--space-3);border-top:1px solid rgba(255,209,102,.35);font-size:var(--size-15);line-height:var(--lh-ui);color:var(--gold)}
@@ -142,6 +183,14 @@
 .rpg-draft-actions button:first-child{border:1px solid rgba(255,255,255,.2);background:transparent;color:var(--ink)}
 .rpg-draft-actions button:last-child{background:var(--gold);color:var(--on-gold)}
 .rpg-confidence>span{display:block;font-size:var(--size-13);color:var(--soft);margin-bottom:var(--space-2)}
+.rpg-reveal-lead{max-width:var(--measure-read);margin:0 0 var(--space-5);padding:var(--space-4) 0;border-top:1px solid var(--gold);border-bottom:1px solid rgba(255,209,102,.35)}
+.rpg-reveal-lead>span{display:block;margin-bottom:var(--space-2);font-size:var(--size-13);letter-spacing:.16em;color:var(--gold)}
+.rpg-reveal-lead p{margin:0;font-size:var(--size-17);line-height:var(--lh-read)}
+.rpg-reveal-lead b{color:var(--gold)}
+.rpg-path-trail{max-width:var(--measure-read);margin:0 0 var(--space-5)}
+.rpg-path-trail>div:not(.rpg-section-label){display:grid;grid-template-columns:2.5rem 1fr;gap:var(--space-3);padding:var(--space-2) 0;border-top:1px solid rgba(255,255,255,.14)}
+.rpg-path-trail span{font-family:var(--font-mono);font-size:var(--size-13);color:var(--gold)}
+.rpg-path-trail p{margin:0;font-size:var(--size-15);line-height:var(--lh-ui)}
 .term-sheet h3{font-size:var(--size-24);margin:0 0 var(--space-3)}
 .term-sheet>p{font-size:var(--size-17);line-height:var(--lh-read)}
 .rpg-talk-log{display:flex;flex-direction:column;gap:var(--space-3);margin:var(--space-4) 0}
@@ -151,8 +200,8 @@
 
 /* 画外音：教练常驻，不打断 */
 .vo{display:flex;gap:var(--space-2);align-items:flex-start;margin-top:var(--space-5);
-  padding:var(--space-3) var(--space-3);border-left:2px solid var(--gold);
-  background:rgba(255,209,102,.07);border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+  padding:var(--space-3);border:1px solid rgba(255,209,102,.38);
+  background:rgba(255,209,102,.07);border-radius:var(--radius-sm)}
 .vo .who{flex:none;font-size:var(--size-13);color:var(--gold);font-weight:700}
 .vo .txt{font-size:var(--size-15);line-height:var(--lh-ui);color:var(--ink);max-width:var(--measure-read)}
 
@@ -264,17 +313,26 @@
 .sty-cta:disabled{opacity:.4}
 
 @media(prefers-reduced-motion:no-preference){
-  .sty-body>*{animation:rise var(--dur-trans) ease both}
+  .sty-body>*{animation:rise var(--dur-trans) cubic-bezier(.22,1,.36,1) both}
+  .rpg-role-choice,.rpg-action{transition:transform var(--dur-trans) cubic-bezier(.22,1,.36,1),background-color var(--dur-trans),border-color var(--dur-trans)}
   /* 交互控件不参与入场位移，避免动画中的父层短暂覆盖按钮命中区域。 */
   .sty-body>.rpg-actions,.sty-body>.rpg-role-list,.sty-body>.seg2{animation:none}
   @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 }
 
 /* 结束屏：单个居中容器，桌面双栏时要横跨两栏 */
-.fin{text-align:center}
+.fin{text-align:left;max-width:var(--measure-read);margin:0 auto}
+.fin-mark{margin-bottom:var(--space-5)}
+.fin-ic{display:flex;align-items:center;justify-content:center;width:48px;height:48px;margin-bottom:var(--space-3);
+  border:1px solid rgba(255,209,102,.45);border-radius:50%;color:var(--gold)}
 .fin h2{margin:var(--space-3) auto var(--space-4)}
-.fin .ln{margin-left:auto;margin-right:auto}
-.fin .vo{display:inline-flex;text-align:left}
+.fin .ln{margin-left:0;margin-right:0}
+.fin-ledger{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin:var(--space-5) 0;padding:var(--space-4) 0;
+  border-top:1px solid rgba(255,255,255,.18);border-bottom:1px solid rgba(255,255,255,.18)}
+.fin-ledger span{display:block;margin-bottom:5px;font-size:var(--size-13);color:var(--soft)}
+.fin-ledger b{font-size:var(--size-15);line-height:var(--lh-ui)}
+.fin-skills{margin-bottom:var(--space-4)}
+.fin .vo{display:flex;text-align:left}
 
 /* ===== 幕的桌面双栏：叙事 | 原档对照 =====
    手机是自然流：读一段，再翻一张表。桌面有横向余量，就该让「他说了什么」
@@ -306,6 +364,9 @@
 
 @media(max-width:560px){
   .rpg-ledger,.rpg-audit dl,.rpg-frame,.rpg-focus,.rpg-reasoning,.rpg-draft-actions{grid-template-columns:1fr}
+  .rpg-intake,.fin-ledger{grid-template-columns:1fr}
+  .rpg-intake>div:first-child{grid-column:1}
+  .rpg-seatline{flex-direction:column;gap:var(--space-3)}
   .rpg-focus>div{padding:0 0 var(--space-3)}
   .rpg-focus>div+div{padding-top:var(--space-3);border-top:1px solid rgba(255,255,255,.12)}
   .rpg-focus>div:last-child{grid-column:1;margin-top:0}
@@ -313,10 +374,14 @@
   .rpg-time{grid-template-columns:1fr;gap:4px}
   .ev-list-row{grid-template-columns:1fr;gap:6px}
   .ev-list-row .rpg-source{justify-self:start}
+  .rpg-role-choice{padding-left:calc(var(--space-4) + 1.8rem);padding-right:var(--space-4)}
+  .rpg-role-choice .rpg-role-enter{position:static;margin:0 0 var(--space-2);justify-content:flex-start}
+  .rpg-role-choice b{padding-right:0}
+  .rpg-scene-kicker,.rpg-scene-meta{align-items:flex-start}
 }
 
 /* 「当时」时间线（冷开场）。幕是暗场：文字用幕上的前景令牌，日期用幕上的金色 */
-.ctx{margin:10px 0 14px;padding:10px 12px;border-left:2px solid var(--gold);background:var(--card);border-radius:8px}
+.ctx{margin:10px 0 14px;padding:10px 12px;border:1px solid rgba(255,209,102,.4);background:var(--card);border-radius:8px}
 .ctx-h{font-size:var(--size-13);letter-spacing:var(--track-eyebrow);color:var(--gold);margin-bottom:6px}
 .ctx-i{display:grid;grid-template-columns:6.8em 1fr;gap:2px 10px;padding:4px 0;font-size:var(--size-15);line-height:1.55}
 .ctx-d{color:var(--gold);font-variant-numeric:tabular-nums}

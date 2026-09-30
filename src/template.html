@@ -116,8 +116,8 @@
   .strip-t{font-size:var(--size-13);color:var(--text-meta-color)}
   .strip-due{font-size:var(--size-13);font-weight:700;color:var(--state-focus)}
   .bar{height:3px;background:var(--surface-shell-alt);margin-top:11px;overflow:hidden}
-  .bar i{display:block;height:100%;background:var(--text-display-color);
-    transition:width var(--dur-trans)}
+  .bar i{display:block;width:100%;height:100%;background:var(--text-display-color);transform:scaleX(var(--p,0));transform-origin:left;
+    transition:transform var(--dur-trans)}
   .strip-m{margin-top:9px;font-size:var(--size-13);color:var(--text-meta-color);
     font-family:var(--font-mono)}
 
@@ -216,7 +216,7 @@
   .story-front-title{font-family:var(--font-display);font-size:var(--size-display);line-height:var(--lh-tight);margin:0 0 6px;color:var(--text-display-color);overflow-wrap:anywhere}
   .story-front-company{font-size:var(--size-15);line-height:var(--lh-read);color:var(--state-focus);overflow-wrap:anywhere}
   .story-front-sub{font-size:var(--size-17);line-height:var(--lh-read);color:var(--text-body-color);margin:4px 0 18px}
-  .story-front-role{display:grid;gap:3px;padding:14px 16px;margin:0 0 18px;border-left:3px solid var(--state-focus);background:var(--surface-card)}
+  .story-front-role{display:grid;gap:3px;padding:14px 16px;margin:0 0 18px;border:1px solid var(--surface-rule);background:var(--surface-card)}
   .story-front-role span,.story-front-role small{color:var(--text-meta-color)}
   .story-front-role b{font-size:var(--size-19);color:var(--text-display-color)}
   .story-front-list{display:grid;gap:8px;margin-top:24px;padding-top:18px;border-top:1px solid var(--surface-rule)}
@@ -284,7 +284,7 @@
     border-bottom:1px solid var(--line);flex:none}
   .sbar .x{font-size:var(--size-15);color:var(--soft);min-height:44px;padding:0 6px}
   .prog{flex:1;height:6px;border-radius:3px;background:var(--surface-shell-alt);overflow:hidden}
-  .prog i{display:block;height:100%;background:var(--violet);transition:width .3s}
+  .prog i{display:block;width:100%;height:100%;background:var(--violet);transform:scaleX(var(--p,0));transform-origin:left;transition:transform .3s}
   .sbar .n{font-size:var(--size-13);color:var(--soft)}
   .body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 8px}
   .foot2{flex:none;padding:10px 16px calc(12px + env(safe-area-inset-bottom));
@@ -317,7 +317,7 @@
   .cfbrief{font-size:var(--size-narrative);line-height:1.8;max-width:34em;font-weight:600;margin:2px 0 12px}
   .cfnote{font-size:var(--size-15);line-height:1.75;color:var(--soft);background:var(--c-amber-wash);
     border-radius:10px;padding:9px 11px;margin:9px 0}
-  .cq{margin:10px 0;padding:11px 13px;background:var(--surface-shell);border-left:3px solid var(--violet);
+  .cq{margin:10px 0;padding:11px 13px;background:var(--surface-shell);border:1px solid var(--surface-rule);
     border-radius:0 10px 10px 0;font-size:var(--size-15);line-height:1.755}
   .cq cite{display:block;margin-top:6px;font-size:var(--size-13);color:var(--soft);font-style:normal}
   .cfdis{font-size:var(--size-13);line-height:1.6;color:var(--soft);border-top:1px dashed var(--line);
@@ -499,6 +499,7 @@ const ICON={
  me:'<circle cx="12" cy="8.5" r="3.3"/><path d="M5 20a7 7 0 0 1 14 0"/>',
  coach:'<path d="M4 5.5h16v10H9.5L4 19.5z"/><path d="M8 9.5h8M8 12.5h5"/>',
  close:'<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/>',
+ right:'<path d="M5 12h13M13.5 6.5 19 12l-5.5 5.5"/>',
  book:'<path d="M4 4.5h6.2a1.8 1.8 0 0 1 1.8 1.8V20a1.8 1.8 0 0 0-1.8-1.7H4z"/><path d="M20 4.5h-6.2a1.8 1.8 0 0 0-1.8 1.8V20a1.8 1.8 0 0 1 1.8-1.7H20z"/>',
  link:'<path d="M10.3 13.2a4 4 0 0 0 5.7.3l2.3-2.3a4 4 0 0 0-5.6-5.7l-1.3 1.3"/><path d="M13.7 10.8a4 4 0 0 0-5.7-.3l-2.3 2.3a4 4 0 0 0 5.6 5.7l1.3-1.3"/>',
  doc:'<path d="M14 3.5H7.5a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V7z"/><path d="M13.6 3.5V7.4h3.9"/><path d="M9.5 12h5M9.5 15.5h3.5"/>',
@@ -938,7 +939,7 @@ function statusStrip(done,total,nDue){
     <div class="strip-top">
       <span class="strip-p"><b class="num">${done}</b><span class="strip-t">/${total} 已通过</span></span>
       ${nDue?`<span class="strip-due">${nDue} 道题该复习了</span>`:''}</div>
-    <div class="bar"><i style="width:${total?Math.round(done/total*100):0}%"></i></div>
+    <div class="bar"><i style="--p:${total?done/total:0}"></i></div>
     ${bits.length?`<div class="strip-m">${bits.join(' · ')}</div>`:''}
   </div>`;
 }
@@ -1286,7 +1287,7 @@ let _sy=null;
 function drawStage(keepScroll){
   const _b=document.getElementById('stage-body'); _sy=_b?_b.scrollTop:null;
   const {node,steps,step}=R;
-  document.getElementById('stage-prog').style.width=((step+1)/steps.length*100)+'%';
+  document.getElementById('stage-prog').style.setProperty('--p',(step+1)/steps.length);
   document.getElementById('stage-n').textContent=(step+1)+'/'+steps.length;
   const b=document.getElementById('stage-body'),f=document.getElementById('stage-foot');
   const kind=steps[step];
@@ -1716,7 +1717,7 @@ function lightUp(){
       ${done?`<div class="fb good">${chName}全部通过。${nextCh?`第 ${nextCh} 章「${nextName}」已解锁，回到学习页继续。`:'接下来靠复习维持，它比新课更能说明你学会了没有。'}</div>`:''}
       ${coachHTML(done?'complete':'streak')}</div>`;
   document.getElementById('stage-foot').innerHTML=`<button class="cta" id="st-done">回到今日</button>`;
-  document.getElementById('stage-prog').style.width='100%';
+  document.getElementById('stage-prog').style.setProperty('--p',1);
   document.getElementById('st-done').onclick=()=>{stage.classList.remove('show');R=null;render();flush();};
 }
 
@@ -1779,7 +1780,7 @@ function labWanted(lc){
 
 function drawLab(){
   const lc=R.case, cs=labCases(), idx=cs.indexOf(lc)+1;
-  document.getElementById('stage-prog').style.width=(R.step?100:50)+'%';
+  document.getElementById('stage-prog').style.setProperty('--p',R.step?1:.5);
   document.getElementById('stage-n').textContent=(R.step+1)+'/2';
   const b=SB(),f=document.getElementById('stage-foot');
   if(R.step===0){
@@ -1866,7 +1867,7 @@ function startReview(){
 function drawReview(){
   const it=R.queue[R.qi];
   const b=document.getElementById('stage-body'),f=document.getElementById('stage-foot');
-  document.getElementById('stage-prog').style.width=((R.qi+(R.done?1:0))/R.queue.length*100)+'%';
+  document.getElementById('stage-prog').style.setProperty('--p',(R.qi+(R.done?1:0))/R.queue.length);
   document.getElementById('stage-n').textContent=(R.qi+1)+'/'+R.queue.length;
   if(!it){
     /* 做完一轮之后，把「还练不练」交回给用户。
