@@ -694,7 +694,7 @@
    "id": "lk-stores-ipo",
    "company": "Luckin Coffee",
    "item": "门店数（2019-03-31，招股书自证）",
-   "value": "2,370 家门店、28 个城市",
+   "value": "2,370 家门店、28 个城市；其中 2,163 家快取店、109 家悠享店、98 家外卖厨房",
    "basis": "F-1 招股书自证",
    "accession": "0001047469-19-002450",
    "line": "2,370 stores 段"
@@ -707,6 +707,96 @@
    "basis": "F-1 招股书自证",
    "accession": "0001047469-19-002450",
    "line": "16.8 million 段"
+  },
+  {
+   "id": "lk-app-transaction-route",
+   "company": "Luckin Coffee",
+   "item": "移动端获客与订单路径（招股书自证）",
+   "value": "2018 年 91.3% 的新客户经移动端获取，95.6% 的订单通过瑞幸移动应用完成；付款可经微信支付、支付宝、银联或咖啡钱包中的代金券",
+   "basis": "F-1 招股书 Our Mobile Apps",
+   "accession": "0001047469-19-002450",
+   "line": "L3546-L3561"
+  },
+  {
+   "id": "lk-q2-reported",
+   "company": "Luckin Coffee",
+   "item": "2019 年二季度公开业绩及后来认定的虚增",
+   "value": "当时披露总净收入 9.091 亿元、产品净收入 8.70 亿元，同比增加 698%；市场此前预计约 1.30 亿至 1.33 亿美元；后来 SEC 起诉状称其中约 2.50 亿元为虚构，收入虚增超过 27%",
+   "basis": "SEC 起诉状第 40 段对 2019 年二季度 6-K 的复述及调查结论",
+   "accession": "SEC-LUCKIN-2020",
+   "line": "p.11 ¶40"
+  },
+  {
+   "id": "lk-q3-reported",
+   "company": "Luckin Coffee",
+   "item": "2019 年三季度公开业绩及后来认定的虚增",
+   "value": "当时披露总净收入 15.416 亿元，同比增加 540%；后来 SEC 起诉状称其中约 7.00 亿元为虚构，收入虚增约 45%",
+   "basis": "SEC 起诉状第 45-46 段对 2019 年三季度 6-K 的复述及调查结论",
+   "accession": "SEC-LUCKIN-2020",
+   "line": "p.12 ¶45-46"
+  },
+  {
+   "id": "lk-price-response",
+   "company": "Luckin Coffee",
+   "item": "三季度业绩后的股价变化",
+   "value": "每份 ADS 从 2019 年 11 月 12 日的 18.98 美元升至 11 月 18 日的 28.16 美元；2019 年末为 39.36 美元，2020 年 1 月 17 日升至 50.02 美元，较 IPO 接近上涨 200%",
+   "basis": "SEC 起诉状第 50、53、56 段",
+   "accession": "SEC-LUCKIN-2020",
+   "line": "p.13-p.14 ¶50, ¶53, ¶56"
+  },
+  {
+   "id": "lk-jan-financing",
+   "company": "Luckin Coffee",
+   "item": "2020 年 1 月后续融资",
+   "value": "2020 年 1 月 14 日通过增发融资约 4.18 亿美元，并通过可转换债券融资约 4.467 亿美元",
+   "basis": "SEC 起诉状第 54 段",
+   "accession": "SEC-LUCKIN-2020",
+   "line": "p.13 ¶54"
+  },
+  {
+   "id": "lk-preliminary-investigation",
+   "company": "Luckin Coffee",
+   "item": "2020 年 4 月 2 日特别委员会初步披露",
+   "value": "初步调查称 2019 年二至四季度与虚构交易有关的销售额约 22 亿元；此前财务报表和业绩指引不应继续依赖",
+   "basis": "公司 2020 年 4 月 2 日 Form 6-K 公告",
+   "accession": "0001104659-21-087180",
+   "line": "Non-Reliance Background"
+  },
+  {
+   "id": "lk-three-coupon-schemes",
+   "company": "Luckin Coffee",
+   "item": "虚构代金券销售的三套路径",
+   "value": "第一套借个人账户购买并虚假核销代金券；第二套借 4 家受关联人员控制的企业客户；第三套借壳公司充当虚构代理商，并贡献近 90% 的虚构收入",
+   "basis": "SEC 起诉状第 21-29 段",
+   "accession": "SEC-LUCKIN-2020",
+   "line": "p.6-p.8 ¶21-29"
+  },
+  {
+   "id": "lk-fabricated-database",
+   "company": "Luckin Coffee",
+   "item": "两套业务数据库与财务取数隔离",
+   "value": "员工另建包含真实与虚构交易的数据库，并把财务报表取数源切换过去；财务部门只能访问加工后的数据库，无法区分真实和虚构交易",
+   "basis": "SEC 起诉状第 30-31 段",
+   "accession": "SEC-LUCKIN-2020",
+   "line": "p.8-p.9 ¶30-31"
+  },
+  {
+   "id": "lk-fund-recycling",
+   "company": "Luckin Coffee",
+   "item": "通过虚构费用把资金退回出资公司",
+   "value": "包括向 13 家未供货的原料供应商付款、向 2 家人力外包商多付款，并向 3 家未提供服务的公司支付配送费",
+   "basis": "SEC 起诉状第 33-35 段",
+   "accession": "SEC-LUCKIN-2020",
+   "line": "p.9-p.10 ¶33-35"
+  },
+  {
+   "id": "lk-supplier-warning",
+   "company": "Luckin Coffee",
+   "item": "2019 年 10 月内部邮件中的供应链异常警告",
+   "value": "邮件称同店收入可以维持超过 35% 的增速，但可信度会被质疑；供应商也会因公司没有采购那么多而发现增长异常",
+   "basis": "SEC 起诉状第 37 段对内部邮件的复述",
+   "accession": "SEC-LUCKIN-2020",
+   "line": "p.10 ¶37"
   },
   {
    "id": "coke-position-build",

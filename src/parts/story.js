@@ -149,11 +149,11 @@
       `<div class="rpg-time"><time>${esc(x.date)}</time><div><b>${esc(x.title || '')}</b><p>${md(x.text || '')}</p>${factButton(x.fact, '核对来源')}</div></div>`).join('')}
       ${locked ? `<p class="rpg-timeline-lock">${ic('lock')} 还有 ${locked} 条后续记录封存。做完决定，历史才会翻牌。</p>` : ''}</section>`;
   }
-  function briefingHTML(items) {
+  function briefingHTML(items, label) {
     const visible = items || [];
     if (!visible.length) return '';
     const focus = activeRole().focus || {};
-    return `<section class="rpg-ledger"><div class="rpg-section-label">案头数据${focus.knowledge ? ` · 用来判断${esc(focus.knowledge)}` : ''}</div>${visible.map(x =>
+    return `<section class="rpg-ledger"><div class="rpg-section-label">${esc(label || '本轮新到的数据')}${focus.knowledge ? ` · 用来判断${esc(focus.knowledge)}` : ''}</div>${visible.map(x =>
       `<article class="rpg-number${!x.roles || x.roles.includes(ST.role) ? ' is-focus' : ''}"><span>${esc(x.label)}</span><strong>${esc(x.value)}</strong>${x.note ? `<p>${md(x.note)}</p>` : ''}${factButton(x.fact, '查看口径与出处')}</article>`).join('')}</section>`;
   }
   function termsHTML(ids) {
@@ -168,14 +168,15 @@
       <div><span>仍不知道</span><p>${md(unknown || '结果尚未发生。')}</p></div>
       <div class="ask"><span>你必须决定</span><p>${md(decision || '下一步做什么？')}</p></div></section>`;
   }
-  function roleBrief(compact) {
+  function roleBrief(compact, scene) {
     const r = activeRole();
     const f = r.focus || {}, term = (STORY.rpg.glossary || []).find(x => x.term === f.knowledge);
     const knowledge = term
       ? `<button class="rpg-focus-term" data-term="${esc(term.id)}">${esc(f.knowledge)} ${ic('right')}</button>`
       : `<strong>${esc(f.knowledge || '')}</strong>`;
-    if (compact) return `<section class="rpg-seatline"><div><span>你仍坐在</span><b>${esc(r.title || '')}</b></div>
-      <p><span>这一段先盯</span>${esc(f.watch || r.win_condition || r.goal || '')}</p></section>`;
+    const currentQuestion = roleValue(scene && scene.role_question) || roleValue(scene && scene.decision) || (scene && scene.prompt) || f.watch || r.goal || '';
+    if (compact) return `<section class="rpg-seatline"><div><span>你的席位</span><b>${esc(r.title || '')}</b></div>
+      <p><span>这一轮要回答</span>${esc(currentQuestion)}</p></section>`;
     return `<section class="rpg-mission"><div class="rpg-section-label">本段任务书 · ${esc(r.title || '')}</div>
       <p>${md(r.brief || r.goal || '')}</p>${f.knowledge ? `<div class="rpg-focus"><div><span>这次要学会</span>${knowledge}</div>
       <div><span>先看哪组数</span><b>${esc(f.watch || '')}</b></div><div><span>这些数说明什么</span><p>${md(f.read || '')}</p></div></div>` : ''}
@@ -184,16 +185,38 @@
   function continuityHTML() {
     const last = ST.rpgHistory && ST.rpgHistory[ST.rpgHistory.length - 1];
     if (!last || !last.assumption || !last.verify) return '';
-    return `<section class="rpg-continuity"><div class="rpg-continuity-mark">上一段的决定跟过来了</div>
-      <div><span>你当时签下</span><b>${esc(last.label)}</b></div>
-      <p>${md(last.assumption)}</p><p><span>这一段必须追完</span>${md(last.verify)}</p></section>`;
+    return `<section class="rpg-continuity"><div class="rpg-continuity-mark">刚才留下的待查项</div>
+      <div><span>你的决定</span><b>${esc(last.label)}</b></div>
+      <p><span>接着核对</span>${md(last.verify)}</p></section>`;
+  }
+  function materialKey(x) {
+    return x && (x.id || [x.fact || '', x.label || '', x.value || ''].join('|'));
+  }
+  function visitedRpgScenes() {
+    const ids = new Set((ST.rpgHistory || []).map(x => x.scene));
+    return (STORY.rpg.scenes || []).filter(x => ids.has(x.id));
+  }
+  function freshEvidenceIds(s) {
+    const seen = new Set(visitedRpgScenes().flatMap(x => x.evidence || []));
+    return [...new Set(s.evidence || [])].filter(id => !seen.has(id));
+  }
+  function freshBriefings(s) {
+    const seen = new Set(visitedRpgScenes().flatMap(x => x.briefings || []).map(materialKey));
+    const current = new Set();
+    return (s.briefings || []).filter(x => {
+      const key = materialKey(x);
+      if (!key || seen.has(key) || current.has(key)) return false;
+      current.add(key);
+      return true;
+    });
   }
   function rpgEvidenceV2(ids) {
-    return (ids || []).map(rpgBeat).filter(Boolean).map(b => {
-      if (b.panel) return `<section class="rpg-legacy-evidence"><div class="rpg-section-label">当时的材料</div>${evPanel(b.panel)}${derived(b.derived)}</section>`;
+    const cards = (ids || []).map(rpgBeat).filter(Boolean).map(b => {
+      if (b.panel) return `${evPanel(b.panel)}${derived(b.derived)}`;
       if (b.quote) return docQuote(b.quote);
       return '';
-    }).join('');
+    }).filter(Boolean);
+    return cards.length ? `<section class="rpg-legacy-evidence"><div class="rpg-section-label">本轮新到的材料</div>${cards.join('')}</section>` : '';
   }
   function resultHTML(a) {
     const d = deliberation(rpgScene(), a);
@@ -203,7 +226,7 @@
       <p class="rpg-outcome">${md(a.consequence || '')}</p><dl>
       ${used ? `<div><dt>你守住的证据</dt><dd>${md(used)}</dd></div>` : ''}${missed ? `<div><dt>你漏看的证据</dt><dd>${md(missed)}</dd></div>` : ''}${tradeoff ? `<div><dt>你为此付出的代价</dt><dd>${md(tradeoff)}</dd></div>` : ''}</dl>
       ${d.lesson ? `<p class="rpg-takeaway"><b>这一手练的是：${esc(activeRole().focus?.knowledge || '判断')}</b>${md(d.lesson)}</p>` : ''}
-      ${a.narration ? `<p class="rpg-afterword"><b>留到下一段</b>${md(a.narration)}</p>` : ''}</section>`;
+      ${a.narration ? `<p class="rpg-afterword"><b>接下来要查</b>${md(a.narration)}</p>` : ''}</section>`;
   }
   function deliberationHTML(s, a) {
     const d = deliberation(s, a), focus = activeRole().focus || {};
@@ -264,10 +287,13 @@
     const sceneIndex = (r.scenes || []).findIndex(x => x.id === s.id);
     const phase = s.eyebrow || (sceneIndex === 0 ? '故事开始' : final ? '故事高潮' : '故事发展');
     const lines = sceneLines(s);
-    bodyEl.innerHTML = `<header class="rpg-scene-head"><div class="rpg-scene-kicker"><span>${esc(phase)}</span><b>第 ${sceneIndex + 1} / ${(r.scenes || []).length} 段</b></div>
+    const newBriefings = freshBriefings(s), newEvidence = freshEvidenceIds(s);
+    bodyEl.innerHTML = `<header class="rpg-scene-head"><div class="rpg-scene-kicker"><span>${esc(phase)}</span><b>第 ${sceneIndex + 1} / ${(r.scenes || []).length} 个关键节点</b></div>
       <div class="rpg-scene-meta"><span>${esc(s.place || '')}</span><span>${esc(s.time || '')}</span></div><h2>${esc(s.title)}</h2></header>
-      ${continuityHTML()}${roleBrief(sceneIndex > 0)}${briefingHTML(s.briefings)}${rpgEvidenceV2(s.evidence)}
-      ${(Array.isArray(lines) ? lines : [lines]).map((x, i) => `<p class="ln${i === 0 ? ' rpg-lead' : ''}">${md(x)}</p>`).join('')}${sceneIndex === 0 ? timelineHTML(r.timeline, { limit:r.initial_timeline_items, label:'此刻以前，已经发生' }) : termsHTML(s.terms || [])}
+      ${roleBrief(sceneIndex > 0, s)}
+      ${(Array.isArray(lines) ? lines : [lines]).map((x, i) => `<p class="ln${i === 0 ? ' rpg-lead' : ''}">${md(x)}</p>`).join('')}${continuityHTML()}
+      ${briefingHTML(newBriefings, sceneIndex === 0 ? '你此刻拿到的数据' : '本轮新到的数据')}${rpgEvidenceV2(newEvidence)}
+      ${sceneIndex === 0 ? timelineHTML(r.timeline, { limit:r.initial_timeline_items, label:'此刻以前，已经发生' }) : termsHTML(s.terms || [])}
       ${dialogueButton(s)}${action ? resultHTML(action) : draft ? deliberationHTML(s, draft) : `${decisionFrame(s)}<div class="rpg-actions">${actions}</div>`}`;
     const nextScene = action && (r.scenes || []).find(x => x.id === action.next);
     const nextLabel = final ? '翻开历史记录' : (nextScene?.final ? '进入关键时刻' : nextScene?.place ? `前往${nextScene.place}` : '让时间继续');

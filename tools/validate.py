@@ -732,7 +732,31 @@ def validate_stories(release=False):
             if len(scenes) < 2:
                 errors.append(f"S10 {cid}: RPG 至少需要故事发展与关键决定两个场景")
             deliberations = rpg.get("deliberations") or {}
+            seen_evidence = {}
+            seen_briefings = {}
             for si, scene in enumerate(scenes):
+                scene_id = scene.get("id") or f"scene[{si}]"
+                for evidence_id in scene.get("evidence") or []:
+                    if evidence_id in seen_evidence:
+                        errors.append(
+                            f"S10 {cid}/{scene_id}: 重复展示材料 {evidence_id}"
+                            f"（首次出现在 {seen_evidence[evidence_id]}；后续节点只允许披露新材料）"
+                        )
+                    else:
+                        seen_evidence[evidence_id] = scene_id
+                for briefing in scene.get("briefings") or []:
+                    briefing_key = briefing.get("id") or (
+                        briefing.get("fact"),
+                        briefing.get("label"),
+                        briefing.get("value"),
+                    )
+                    if briefing_key in seen_briefings:
+                        errors.append(
+                            f"S10 {cid}/{scene_id}: 重复展示数据 {briefing.get('label') or briefing_key}"
+                            f"（首次出现在 {seen_briefings[briefing_key]}；后续节点只允许披露新数据）"
+                        )
+                    else:
+                        seen_briefings[briefing_key] = scene_id
                 actions = scene.get("actions") or []
                 if not actions:
                     errors.append(f"S10 {cid}/scene[{si}]: 场景没有可执行行动")
